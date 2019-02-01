@@ -126,7 +126,8 @@ export class RESTClient {
   }
 
   /**
-   *
+   * Run the request and return a promise. This promise will resolve if the request is successful
+   * and reject otherwise.
    */
   go(): Promise<ClientResponse> {
     return new Promise<ClientResponse>((resolve, reject) => {
