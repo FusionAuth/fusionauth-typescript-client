@@ -885,7 +885,8 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the actions for the user with the given Id.
+   * Retrieves all of the actions for the user with the given Id. This will return all time based actions that are active,
+   * and inactive as well as non-time based actions.
    *
    * @param {string} userId The Id of the user to fetch the actions for.
    */
@@ -893,6 +894,35 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
+        .withMethod("Get")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the actions for the user with the given Id that are currently preventing the User from logging in.
+   *
+   * @param {string} userId The Id of the user to fetch the actions for.
+   */
+  retrieveActionsPreventingLogin(userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/action')
+        .withParameter('userId', userId)
+        .withParameter('preventingLogin', true)
+        .withMethod("Get")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the actions for the user with the given Id that are currently active.
+   * An active action means one that is time based and has not been canceled, and has not ended.
+   *
+   * @param {string} userId The Id of the user to fetch the actions for.
+   */
+  retrieveActiveActions(userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/action')
+        .withParameter('userId', userId)
+        .withParameter('active', true)
         .withMethod("Get")
         .go();
   }
@@ -1162,6 +1192,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the last number of login records.
+   *
+   * @param {number} offset The initial record. e.g. 0 is the last login, 100 will be the 100th most recent login.
+   * @param {number} limit (Optional, defaults to 10) The number of records to retrieve.
+   */
+  retrieveRecentLogins(offset: number, limit: number): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/recent-login')
+        .withParameter('offset', offset)
+        .withParameter('limit', limit)
+        .withMethod("Get")
+        .go();
+  }
+
+  /**
    * Retrieves the refresh tokens that belong to the user with the given Id.
    *
    * @param {string} userId The Id of the user.
@@ -1398,15 +1443,55 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
+   * login counts for that application.
+   *
+   * @param {string} applicationId (Optional) The application id.
+   * @param {string} userId The userId id.
+   * @param {number} start The start instant as UTC milliseconds since Epoch.
+   * @param {number} end The end instant as UTC milliseconds since Epoch.
+   */
+  retrieveUserLoginReport(applicationId: string, userId: string, start: number, end: number): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/report/login')
+        .withParameter('applicationId', applicationId)
+        .withParameter('userId', userId)
+        .withParameter('start', start)
+        .withParameter('end', end)
+        .withMethod("Get")
+        .go();
+  }
+
+  /**
+   * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+   * login counts for that application.
+   *
+   * @param {string} applicationId (Optional) The application id.
+   * @param {string} loginId The userId id.
+   * @param {number} start The start instant as UTC milliseconds since Epoch.
+   * @param {number} end The end instant as UTC milliseconds since Epoch.
+   */
+  retrieveUserLoginReportByLoginId(applicationId: string, loginId: string, start: number, end: number): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/report/login')
+        .withParameter('applicationId', applicationId)
+        .withParameter('loginId', loginId)
+        .withParameter('start', start)
+        .withParameter('end', end)
+        .withMethod("Get")
+        .go();
+  }
+
+  /**
    * Retrieves the last number of login records for a user.
    *
    * @param {string} userId The Id of the user.
    * @param {number} offset The initial record. e.g. 0 is the last login, 100 will be the 100th most recent login.
    * @param {number} limit (Optional, defaults to 10) The number of records to retrieve.
    */
-  retrieveUserLoginReport(userId: string, offset: number, limit: number): Promise<ClientResponse> {
+  retrieveUserRecentLogins(userId: string, offset: number, limit: number): Promise<ClientResponse> {
     return this.start()
-        .withUri('/api/report/user-login')
+        .withUri('/api/user/recent-login')
         .withParameter('userId', userId)
         .withParameter('offset', offset)
         .withParameter('limit', limit)
