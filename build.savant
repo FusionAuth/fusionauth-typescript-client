@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2019, FusionAuth, All Rights Reserved
+ */
+savantVersion = "1.0.0"
+
+project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.4.0", licenses: ["ApacheV2_0"]) {
+  workflow {
+    standard()
+  }
+
+  publishWorkflow {
+    subversion(repository: "http://svn.inversoft.org/savant")
+  }
+
+  publications {
+    main {
+      publication(name: "fusionauth-typescript-client", type: "zip", file: "build/fusionauth-typescript-client-${project.version}.zip")
+    }
+  }
+}
+
+// Plugins
+file = loadPlugin(id: "org.savantbuild.plugin:file:${savantVersion}")
+idea = loadPlugin(id: "org.savantbuild.plugin:idea:1.0.1")
+release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
+
+target(name: "clean", description: "Cleans build directory") {
+  file.prune(dir: "build")
+  file.delete {
+    fileSet(dir: ".", includePatterns: [~/.+\.zip/])
+  }
+}
+
+target(name: "int", description: "Releases a local integration build of the project") {
+  file.copy(to: "build/lib") {
+    fileSet(dir: "lib")
+  }
+
+  file.delete {
+    fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
+  }
+
+  file.zip(file: "build/fusionauth-typescript-client.zip") {
+    fileSet(dir: "build/lib", includePatterns: [])
+  }
+}
+
+target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
+  idea.iml()
+}
+
+target(name: "test", description: "Runs the tests") {
+}
+
+target(name: "release", description: "Releases a full version of the project", dependsOn: ["int"]) {
+  release.release()
+}
