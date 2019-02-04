@@ -3,7 +3,7 @@
  */
 savantVersion = "1.0.0"
 
-project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.4.0", licenses: ["ApacheV2_0"]) {
+project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.4.1", licenses: ["ApacheV2_0"]) {
   workflow {
     standard()
   }
