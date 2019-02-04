@@ -1,0 +1,4 @@
+**/build
+npm-debug.log
+*.zip
+package-lock.json
