@@ -44,8 +44,8 @@ target(name: "clean", description: "Cleans build directory") {
 }
 
 target(name: "int", description: "Releases a local integration build of the project") {
-  file.copy(to: "build/lib") {
-    fileSet(dir: "lib")
+  file.copy(to: "build/src") {
+    fileSet(dir: "src")
   }
 
   file.delete {
@@ -53,7 +53,7 @@ target(name: "int", description: "Releases a local integration build of the proj
   }
 
   file.zip(file: "build/fusionauth-typescript-client.zip") {
-    fileSet(dir: "build/lib", includePatterns: [])
+    fileSet(dir: "build/src", includePatterns: [])
   }
 }
 
