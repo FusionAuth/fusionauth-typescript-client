@@ -14,8 +14,6 @@
 * language governing permissions and limitations under the License.
 */
 
-/// <reference lib="es2015"/>
-
 'use strict';
 
 import {ClientResponse, RESTClient} from "./RESTClient"
@@ -1900,6 +1898,6 @@ export class FusionAuthClient {
    * @private
    */
   private start() {
-    return new RESTClient().withAuthorization(this.apiKey).withUri(this.host);
+    return new RESTClient(this.host).withAuthorization(this.apiKey);
   }
 }

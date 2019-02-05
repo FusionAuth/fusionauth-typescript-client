@@ -14,8 +14,6 @@
  * language governing permissions and limitations under the License.
  */
 
-/// <reference lib="es2015"/>
-
 export class ClientResponse {
   public statusCode: number;
   public response: String;
@@ -36,7 +34,7 @@ export class RESTClient {
   public parameters: Map<string, string> = new Map();
   public uri: string;
 
-  constructor() {
+  constructor(public host: string) {
   }
 
   /**
@@ -45,7 +43,7 @@ export class RESTClient {
    * @param {string} key The value of the authorization header.
    * @returns {RESTClient}
    */
-  withAuthorization(key) {
+  withAuthorization(key): RESTClient {
     if (key === null || typeof key === 'undefined') {
       return this;
     }
@@ -57,12 +55,15 @@ export class RESTClient {
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment) {
+  withUriSegment(segment): RESTClient {
+    if (segment === null || segment === undefined) {
+      return this;
+    }
     if (this.uri === null) {
       this.uri = '';
     }
     if (this.uri.charAt(this.uri.length - 1) !== '/') {
-      this.uri = this.uri + '/';
+      this.uri += '/';
     }
     this.uri = this.uri + segment;
     return this;
@@ -72,7 +73,7 @@ export class RESTClient {
    * Get the full url + parameter list
    */
   getFullUrl() {
-    return this.uri + this.getQueryString();
+    return this.host + this.uri + this.getQueryString();
   }
 
   /**
@@ -81,7 +82,7 @@ export class RESTClient {
    * @param key The name of the header.
    * @param value The value of the header.
    */
-  withHeader(key: string, value: string) {
+  withHeader(key: string, value: string): RESTClient {
     this.headers.set(key, value);
     return this;
   }
@@ -91,7 +92,7 @@ export class RESTClient {
    *
    * @param body The object to be written to the request body as JSON.
    */
-  withJSONBody(body: object) {
+  withJSONBody(body: object): RESTClient {
     this.body = JSON.stringify(body);
     this.withHeader('Content-Type', 'application/json');
     // Omit the Content-Length, this is set by the browser. It is considered an un-safe header to set manually.
@@ -101,7 +102,7 @@ export class RESTClient {
   /**
    * Sets the http method for the request
    */
-  withMethod(method) {
+  withMethod(method): RESTClient {
     this.method = method;
     return this;
   }
@@ -109,7 +110,7 @@ export class RESTClient {
   /**
    * Sets the uri of the request
    */
-  withUri(uri) {
+  withUri(uri): RESTClient {
     this.uri = uri;
     return this;
   }
@@ -120,7 +121,7 @@ export class RESTClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name, value) {
+  withParameter(name, value): RESTClient {
     this.parameters = this.parameters.set(name, value);
     return this;
   }
@@ -144,7 +145,7 @@ export class RESTClient {
             } catch (e) {
             }
 
-            clientResponse.response = xhr.response;
+            clientResponse.response = json;
 
             if (clientResponse.wasSuccessful()) {
               resolve(clientResponse);
@@ -155,7 +156,7 @@ export class RESTClient {
         };
 
         xhr.open(this.method, this.getFullUrl(), true);
-        this.headers.forEach((key, value, _) => {
+        this.headers.forEach((value, key, _) => {
           xhr.setRequestHeader(key, value);
         });
         xhr.send(this.body);
@@ -168,7 +169,7 @@ export class RESTClient {
 
   private getQueryString() {
     var queryString = '';
-    this.parameters.forEach((key, value, _) => {
+    this.parameters.forEach((value, key, _) => {
       queryString += (queryString.length === 0) ? '?' : '&';
       queryString += key + '=' + encodeURIComponent(value);
     });
