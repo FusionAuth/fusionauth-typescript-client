@@ -29,13 +29,13 @@ describe('#FusionAuthClient()', function () {
     try {
       await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
       const applicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
-      var response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+      let response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
       chai.assert.strictEqual(response.statusCode, 200);
       chai.assert.isNotNull(response.response);
     } catch (response) {
       if (response.statusCode === 404) {
         const applicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
-        return client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+        await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
       } else {
         console.info(response);
         console.info(response.statusCode);
@@ -50,11 +50,11 @@ describe('#FusionAuthClient()', function () {
   });
 
   it('Retrieve and Update System Configuration', async () => {
-    var clientResponse = await client.retrieveSystemConfiguration();
+    let clientResponse = await client.retrieveSystemConfiguration();
     chai.assert.strictEqual(clientResponse.statusCode, 200);
     chai.assert.isNotNull(clientResponse.response);
     chai.expect(clientResponse.response).to.have.property('systemConfiguration');
-    var systemConfiguration = clientResponse.response.systemConfiguration;
+    let systemConfiguration = clientResponse.response.systemConfiguration;
     chai.expect(systemConfiguration).to.have.property('emailConfiguration');
     chai.expect(systemConfiguration).to.have.property('failedAuthenticationConfiguration');
     chai.expect(systemConfiguration).to.have.property('jwtConfiguration');
@@ -71,7 +71,7 @@ describe('#FusionAuthClient()', function () {
   });
 
   it('Create and Delete a User', async () => {
-    var clientResponse = await client.createUser(null, {
+    let clientResponse = await client.createUser(null, {
       'user': {
         'email': 'nodejs@fusionauth.io',
         'firstName': 'Jäne',
