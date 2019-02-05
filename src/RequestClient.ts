@@ -14,24 +14,19 @@
  * language governing permissions and limitations under the License.
  */
 
-export class ClientResponse {
-  public statusCode: number;
-  public response: String;
-  public exception: Error;
+import {ClientResponse, IRestClient} from "./IRestClient";
 
-  wasSuccessful() {
-    return this.statusCode >= 200 && this.statusCode < 300;
-  }
-}
+let request = require("request");
 
 /**
  * @author Brett P
+ * @author Tyler Scott
  */
-export class RESTClient {
+export class RequestClient implements IRestClient {
   public body: string;
-  public headers: Map<string, string> = new Map();
+  public headers: {[key: string]:string} = {};
   public method: string;
-  public parameters: Map<string, string> = new Map();
+  public parameters: {[key: string]:string} = {};
   public uri: string;
 
   constructor(public host: string) {
@@ -41,9 +36,9 @@ export class RESTClient {
    * Sets the authorization header using a key
    *
    * @param {string} key The value of the authorization header.
-   * @returns {RESTClient}
+   * @returns {RequestClient}
    */
-  withAuthorization(key): RESTClient {
+  withAuthorization(key): RequestClient {
     if (key === null || typeof key === 'undefined') {
       return this;
     }
@@ -55,7 +50,7 @@ export class RESTClient {
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment): RESTClient {
+  withUriSegment(segment): RequestClient {
     if (segment === null || segment === undefined) {
       return this;
     }
@@ -82,8 +77,8 @@ export class RESTClient {
    * @param key The name of the header.
    * @param value The value of the header.
    */
-  withHeader(key: string, value: string): RESTClient {
-    this.headers.set(key, value);
+  withHeader(key: string, value: string): RequestClient {
+    this.headers[key] = value;
     return this;
   }
 
@@ -92,7 +87,7 @@ export class RESTClient {
    *
    * @param body The object to be written to the request body as JSON.
    */
-  withJSONBody(body: object): RESTClient {
+  withJSONBody(body: object): RequestClient {
     this.body = JSON.stringify(body);
     this.withHeader('Content-Type', 'application/json');
     // Omit the Content-Length, this is set by the browser. It is considered an un-safe header to set manually.
@@ -102,7 +97,7 @@ export class RESTClient {
   /**
    * Sets the http method for the request
    */
-  withMethod(method): RESTClient {
+  withMethod(method): RequestClient {
     this.method = method;
     return this;
   }
@@ -110,7 +105,7 @@ export class RESTClient {
   /**
    * Sets the uri of the request
    */
-  withUri(uri): RESTClient {
+  withUri(uri): RequestClient {
     this.uri = uri;
     return this;
   }
@@ -121,8 +116,8 @@ export class RESTClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name, value): RESTClient {
-    this.parameters = this.parameters.set(name, value);
+  withParameter(name, value): RequestClient {
+    this.parameters[name] = value;
     return this;
   }
 
@@ -132,47 +127,41 @@ export class RESTClient {
    */
   go(): Promise<ClientResponse> {
     return new Promise<ClientResponse>((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
-      var clientResponse = new ClientResponse();
-      try {
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            clientResponse.statusCode = xhr.status;
+      request({
+        uri: this.getFullUrl(),
+        method: this.method,
+        headers: this.headers,
+        body: this.body
+      }, (error, response, body) => {
+        let clientResponse = new ClientResponse();
+        if (error) {
+          clientResponse.exception = error;
+          reject(clientResponse);
+        } else {
+          clientResponse.statusCode = response.statusCode;
+          clientResponse.response = body;
 
-            var json = xhr.response;
-            try {
-              json = JSON.parse(xhr.response)
-            } catch (e) {
-            }
-
-            clientResponse.response = json;
-
-            if (clientResponse.wasSuccessful()) {
-              resolve(clientResponse);
-            } else {
-              reject(clientResponse)
-            }
+          try { // Try parsing as json
+            clientResponse.response = JSON.parse(body);
+          } catch (e) {
           }
-        };
 
-        xhr.open(this.method, this.getFullUrl(), true);
-        this.headers.forEach((value, key, _) => {
-          xhr.setRequestHeader(key, value);
-        });
-        xhr.send(this.body);
-      } catch (e) {
-        clientResponse.exception = e;
-        reject(clientResponse)
-      }
+          if (clientResponse.wasSuccessful()) {
+            resolve(clientResponse);
+          } else {
+            reject(clientResponse)
+          }
+        }
+      });
     });
   }
 
   private getQueryString() {
     var queryString = '';
-    this.parameters.forEach((value, key, _) => {
+    for (let key in this.parameters) {
       queryString += (queryString.length === 0) ? '?' : '&';
-      queryString += key + '=' + encodeURIComponent(value);
-    });
+      queryString += key + '=' + encodeURIComponent(this.parameters[key]);
+    }
     return queryString;
   }
 }

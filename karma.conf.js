@@ -18,7 +18,6 @@ const mocha = require("karma-mocha");
 const mochaReporter = require("karma-mocha-reporter");
 const chai = require("karma-chai");
 const chrome = require("karma-chrome-launcher");
-const typescript = require("karma-typescript");
 
 // Karma configuration
 module.exports = function(config) {
@@ -28,33 +27,25 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai', 'karma-typescript'],
+    frameworks: ['mocha', 'chai'],
 
     // list of files / patterns to load in the browser (hosted files)
     files: [
-      'index.ts',
-      'src/*.ts',
-      'test/*.ts'
+      'dist/fusionauth-typescript-client-test.js'
     ],
-
-    karmaTypescriptConfig: require("./tsconfig.json"),
 
     // list of files to exclude
     exclude: [],
 
-
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-      "**/*.ts": "karma-typescript" // *.tsx for React Jsx
-    },
+    preprocessors: {},
 
     plugins: [
         mocha,
         chai,
         mochaReporter,
         chrome,
-        typescript
     ],
 
 

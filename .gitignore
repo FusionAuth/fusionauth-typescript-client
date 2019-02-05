@@ -6,3 +6,4 @@ index.js*
 npm-debug.log
 *.zip
 package-lock.json
+dist/fusionauth-typescript-client-test.js

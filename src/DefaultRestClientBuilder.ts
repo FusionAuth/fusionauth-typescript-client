@@ -14,6 +14,11 @@
  * language governing permissions and limitations under the License.
  */
 
-export * from './src/FusionAuthClient';
-export * from './src/IRestClient';
-export * from './src/DefaultRestClientBuilder';
+import {IRestClient, IRestClientBuilder} from "./IRestClient";
+import {RequestClient} from "./RequestClient";
+
+export class DefaultRestClientBuilder implements IRestClientBuilder {
+  build(host: string): IRestClient {
+    return new RequestClient(host);
+  }
+}

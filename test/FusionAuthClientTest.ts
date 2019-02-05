@@ -18,7 +18,8 @@
 
 import {FusionAuthClient} from '../index';
 import * as chai from 'chai'
-import 'mocha'
+import './nodejs-tls-fix'
+// import 'mocha'
 
 let client;
 
@@ -86,10 +87,15 @@ describe('#FusionAuthClient()', function () {
 
     clientResponse = await client.deleteUser(clientResponse.response.user.id);
     chai.assert.strictEqual(clientResponse.statusCode, 200);
-    chai.assert.isEmpty(clientResponse.response);
+    if (clientResponse.response === null) {
+      chai.assert.isNull(clientResponse.response);
+    } else {
+      chai.assert.isEmpty(clientResponse.response);
+    }
 
     try {
       await client.retrieveUserByEmail('nodejs@fusionauth.io');
+      chai.expect.fail("The user should have been deleted!");
     } catch (clientResponse) {
       chai.assert.strictEqual(clientResponse.statusCode, 404);
     }

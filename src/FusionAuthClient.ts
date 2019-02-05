@@ -14,11 +14,13 @@
 * language governing permissions and limitations under the License.
 */
 
-'use strict';
-
-import {ClientResponse, RESTClient} from "./RESTClient"
+import {ClientResponse, IRestClient, IRestClientBuilder} from "./IRestClient"
+import {DefaultRestClientBuilder} from "./DefaultRestClientBuilder";
 
 export class FusionAuthClient {
+
+  public clientBuilder: IRestClientBuilder = new DefaultRestClientBuilder();
+
   constructor(public apiKey: string, public host: string) {
   }
 
@@ -1894,10 +1896,10 @@ export class FusionAuthClient {
   /**
    * creates a rest client
    *
-   * @returns {RESTClient} The RESTClient that will be used to call.
+   * @returns {IRestClient} The RESTClient that will be used to call.
    * @private
    */
   private start() {
-    return new RESTClient(this.host).withAuthorization(this.apiKey);
+    return this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
   }
 }
