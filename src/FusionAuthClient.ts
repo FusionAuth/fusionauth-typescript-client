@@ -1070,6 +1070,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves all of the actions for the user with the given Id that are currently inactive.
+   * An inactive action means one that is time based and has been canceled or has expired, or is not time based.
+   *
+   * @param {string} userId The Id of the user to fetch the actions for.
+   */
+  retrieveInactiveActions(userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/action')
+        .withParameter('userId', userId)
+        .withParameter('active', false)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves all of the applications that are currently inactive.
    *
    */
