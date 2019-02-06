@@ -1,6 +1,7 @@
 node_modules
 src/*.js*
 test/*.js*
+!test/nodejs-tls-fix.js
 index.js*
 **/build
 npm-debug.log
