@@ -2330,8 +2330,8 @@ let request = require("request");
 class RequestClient {
     constructor(host) {
         this.host = host;
-        this.headers = new Map();
-        this.parameters = new Map();
+        this.headers = {};
+        this.parameters = {};
     }
     /**
      * Sets the authorization header using a key
@@ -2375,7 +2375,7 @@ class RequestClient {
      * @param value The value of the header.
      */
     withHeader(key, value) {
-        this.headers.set(key, value);
+        this.headers[key] = value;
         return this;
     }
     /**
@@ -2386,7 +2386,7 @@ class RequestClient {
     withJSONBody(body) {
         this.body = JSON.stringify(body);
         this.withHeader('Content-Type', 'application/json');
-        // Omit the Content-Length, this is set by the browser. It is considered an un-safe header to set manually.
+        // Omit the Content-Length, this is set auto-magically by the request library
         return this;
     }
     /**
@@ -2410,7 +2410,7 @@ class RequestClient {
      * @param value The value of the parameter, may be a string, object or number.
      */
     withParameter(name, value) {
-        this.parameters = this.parameters.set(name, value);
+        this.parameters[name] = value;
         return this;
     }
     /**
@@ -2434,7 +2434,7 @@ class RequestClient {
                     clientResponse.statusCode = response.statusCode;
                     clientResponse.response = body;
                     try { // Try parsing as json
-                        clientResponse.response = response.toJSON();
+                        clientResponse.response = JSON.parse(body);
                     }
                     catch (e) {
                     }
@@ -2450,10 +2450,10 @@ class RequestClient {
     }
     getQueryString() {
         var queryString = '';
-        this.parameters.forEach((value, key, _) => {
+        for (let key in this.parameters) {
             queryString += (queryString.length === 0) ? '?' : '&';
-            queryString += key + '=' + encodeURIComponent(value);
-        });
+            queryString += key + '=' + encodeURIComponent(this.parameters[key]);
+        }
         return queryString;
     }
 }

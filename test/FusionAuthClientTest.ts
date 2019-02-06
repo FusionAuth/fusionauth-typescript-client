@@ -87,6 +87,7 @@ describe('#FusionAuthClient()', function () {
 
     clientResponse = await client.deleteUser(clientResponse.response.user.id);
     chai.assert.strictEqual(clientResponse.statusCode, 200);
+    // Browser will return empty, node will return null, account for both scenarios
     if (clientResponse.response === null) {
       chai.assert.isNull(clientResponse.response);
     } else {

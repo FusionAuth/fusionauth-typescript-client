@@ -90,7 +90,7 @@ export class RequestClient implements IRestClient {
   withJSONBody(body: object): RequestClient {
     this.body = JSON.stringify(body);
     this.withHeader('Content-Type', 'application/json');
-    // Omit the Content-Length, this is set by the browser. It is considered an un-safe header to set manually.
+    // Omit the Content-Length, this is set auto-magically by the request library
     return this;
   }
 
