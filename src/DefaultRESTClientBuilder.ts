@@ -14,11 +14,11 @@
  * language governing permissions and limitations under the License.
  */
 
-import {IRestClient, IRestClientBuilder} from "./IRestClient";
-import {RequestClient} from "./RequestClient";
+import {IRESTClient, IRESTClientBuilder} from "./IRESTClient";
+import {DefaultRESTClient} from "./DefaultRESTClient";
 
-export class DefaultRestClientBuilder implements IRestClientBuilder {
-  build(host: string): IRestClient {
-    return new RequestClient(host);
+export class DefaultRESTClientBuilder implements IRESTClientBuilder {
+  build(host: string): IRESTClient {
+    return new DefaultRESTClient(host);
   }
 }

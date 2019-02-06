@@ -24,23 +24,23 @@ export class ClientResponse {
   }
 }
 
-export interface IRestClientBuilder {
-  build(host: string): IRestClient;
+export interface IRESTClientBuilder {
+  build(host: string): IRESTClient;
 }
 
-export interface IRestClient {
+export interface IRESTClient {
   /**
    * Sets the authorization header using a key
    *
    * @param {string} key The value of the authorization header.
-   * @returns {IRestClient}
+   * @returns {IRESTClient}
    */
-  withAuthorization(key): IRestClient;
+  withAuthorization(key): IRESTClient;
 
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment): IRestClient;
+  withUriSegment(segment): IRESTClient;
 
   /**
    * Adds a header to the request.
@@ -48,24 +48,24 @@ export interface IRestClient {
    * @param key The name of the header.
    * @param value The value of the header.
    */
-  withHeader(key: string, value: string): IRestClient;
+  withHeader(key: string, value: string): IRESTClient;
 
   /**
    * Sets the body of the client request.
    *
    * @param body The object to be written to the request body as JSON.
    */
-  withJSONBody(body: object): IRestClient;
+  withJSONBody(body: object): IRESTClient;
 
   /**
    * Sets the http method for the request
    */
-  withMethod(method): IRestClient;
+  withMethod(method): IRESTClient;
 
   /**
    * Sets the uri of the request
    */
-  withUri(uri): IRestClient;
+  withUri(uri): IRESTClient;
 
   /**
    * Adds parameters to the request.
@@ -73,7 +73,7 @@ export interface IRestClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name, value): IRestClient;
+  withParameter(name, value): IRESTClient;
 
   /**
    * Run the request and return a promise. This promise will resolve if the request is successful

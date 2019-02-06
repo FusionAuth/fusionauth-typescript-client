@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  */
 
-import {ClientResponse, IRestClient} from "./IRestClient";
+import {ClientResponse, IRESTClient} from "./IRESTClient";
 
 let request = require("request");
 
@@ -22,7 +22,7 @@ let request = require("request");
  * @author Brett P
  * @author Tyler Scott
  */
-export class RequestClient implements IRestClient {
+export class DefaultRESTClient implements IRESTClient {
   public body: string;
   public headers: {[key: string]:string} = {};
   public method: string;
@@ -36,9 +36,9 @@ export class RequestClient implements IRestClient {
    * Sets the authorization header using a key
    *
    * @param {string} key The value of the authorization header.
-   * @returns {RequestClient}
+   * @returns {DefaultRESTClient}
    */
-  withAuthorization(key): RequestClient {
+  withAuthorization(key): DefaultRESTClient {
     if (key === null || typeof key === 'undefined') {
       return this;
     }
@@ -50,7 +50,7 @@ export class RequestClient implements IRestClient {
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment): RequestClient {
+  withUriSegment(segment): DefaultRESTClient {
     if (segment === null || segment === undefined) {
       return this;
     }
@@ -77,7 +77,7 @@ export class RequestClient implements IRestClient {
    * @param key The name of the header.
    * @param value The value of the header.
    */
-  withHeader(key: string, value: string): RequestClient {
+  withHeader(key: string, value: string): DefaultRESTClient {
     this.headers[key] = value;
     return this;
   }
@@ -87,7 +87,7 @@ export class RequestClient implements IRestClient {
    *
    * @param body The object to be written to the request body as JSON.
    */
-  withJSONBody(body: object): RequestClient {
+  withJSONBody(body: object): DefaultRESTClient {
     this.body = JSON.stringify(body);
     this.withHeader('Content-Type', 'application/json');
     // Omit the Content-Length, this is set auto-magically by the request library
@@ -97,7 +97,7 @@ export class RequestClient implements IRestClient {
   /**
    * Sets the http method for the request
    */
-  withMethod(method): RequestClient {
+  withMethod(method): DefaultRESTClient {
     this.method = method;
     return this;
   }
@@ -105,7 +105,7 @@ export class RequestClient implements IRestClient {
   /**
    * Sets the uri of the request
    */
-  withUri(uri): RequestClient {
+  withUri(uri): DefaultRESTClient {
     this.uri = uri;
     return this;
   }
@@ -116,7 +116,7 @@ export class RequestClient implements IRestClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name, value): RequestClient {
+  withParameter(name, value): DefaultRESTClient {
     this.parameters[name] = value;
     return this;
   }

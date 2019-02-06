@@ -15,5 +15,5 @@
  */
 
 export * from './src/FusionAuthClient';
-export * from './src/IRestClient';
-export * from './src/DefaultRestClientBuilder';
+export * from './src/IRESTClient';
+export * from './src/DefaultRESTClientBuilder';

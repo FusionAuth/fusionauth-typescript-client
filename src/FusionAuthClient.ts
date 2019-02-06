@@ -14,12 +14,12 @@
 * language governing permissions and limitations under the License.
 */
 
-import {ClientResponse, IRestClient, IRestClientBuilder} from "./IRestClient"
-import {DefaultRestClientBuilder} from "./DefaultRestClientBuilder";
+import {ClientResponse, IRESTClient, IRESTClientBuilder} from "./IRESTClient"
+import {DefaultRESTClientBuilder} from "./DefaultRESTClientBuilder";
 
 export class FusionAuthClient {
 
-  public clientBuilder: IRestClientBuilder = new DefaultRestClientBuilder();
+  public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
 
   constructor(public apiKey: string, public host: string) {
   }
@@ -38,7 +38,7 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withUriSegment(actioneeUserId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -53,7 +53,7 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withUriSegment(actionId)
         .withJSONBody(request)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -69,7 +69,7 @@ export class FusionAuthClient {
         .withUri('/api/user/change-password')
         .withUriSegment(changePasswordId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -84,7 +84,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/change-password')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -97,7 +97,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/comment')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -112,7 +112,7 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -131,7 +131,7 @@ export class FusionAuthClient {
         .withUriSegment("role")
         .withUriSegment(roleId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -146,7 +146,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/system/audit-log')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -161,7 +161,7 @@ export class FusionAuthClient {
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -176,7 +176,7 @@ export class FusionAuthClient {
         .withUri('/api/group')
         .withUriSegment(groupId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -189,7 +189,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/group/member')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -204,7 +204,7 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -219,7 +219,7 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -234,7 +234,7 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withUriSegment(userId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -250,7 +250,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -266,7 +266,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -281,7 +281,7 @@ export class FusionAuthClient {
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -294,7 +294,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -307,7 +307,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -320,7 +320,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -333,7 +333,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/bulk')
         .withParameter('userId', userIds)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -350,7 +350,7 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withParameter('hardDelete', true)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -367,7 +367,7 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withUriSegment("role")
         .withUriSegment(roleId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -380,7 +380,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -393,7 +393,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -406,7 +406,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/group/member')
         .withJSONBody(request)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -419,7 +419,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -434,7 +434,7 @@ export class FusionAuthClient {
         .withUri('/api/user/registration')
         .withUriSegment(userId)
         .withUriSegment(applicationId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -447,7 +447,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -462,7 +462,7 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withUriSegment(userId)
         .withParameter('hardDelete', true)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -477,7 +477,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
         .withParameter('hardDelete', true)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -490,7 +490,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -503,7 +503,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/bulk')
         .withJSONBody(request)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -516,7 +516,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -531,7 +531,7 @@ export class FusionAuthClient {
         .withUri('/api/user/two-factor')
         .withParameter('userId', userId)
         .withParameter('code', code)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -546,7 +546,7 @@ export class FusionAuthClient {
         .withUri('/api/user/two-factor')
         .withUriSegment(userId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -559,7 +559,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/jwt/refresh')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -572,7 +572,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/forgot-password')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -587,7 +587,7 @@ export class FusionAuthClient {
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
         .withParameter('sendVerifyPasswordEmail', false)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -604,7 +604,7 @@ export class FusionAuthClient {
         .withParameter('email', email)
         .withParameter('sendVerifyPasswordEmail', false)
         .withParameter('applicationId', applicationId)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -617,7 +617,7 @@ export class FusionAuthClient {
   generateTwoFactorSecret(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/two-factor/secret')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -632,7 +632,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/two-factor/secret')
         .withAuthorization('JWT ' + encodedJWT)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -647,7 +647,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/identity-provider/login')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -662,7 +662,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/import')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -681,7 +681,7 @@ export class FusionAuthClient {
         .withUri('/api/jwt/issue')
         .withAuthorization('JWT ' + encodedJWT)
         .withParameter('applicationId', applicationId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -694,7 +694,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/login')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -715,7 +715,7 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withUriSegment(applicationId)
         .withParameter('ipAddress', callerIPAddress)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -735,7 +735,7 @@ export class FusionAuthClient {
         .withUri('/api/logout')
         .withParameter('global', global)
         .withParameter('refreshToken', refreshToken)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -749,7 +749,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/identity-provider/lookup')
         .withParameter('domain', domain)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -765,7 +765,7 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withUriSegment(actionId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -779,7 +779,7 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withParameter('reactivate', true)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -793,7 +793,7 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withUriSegment(userId)
         .withParameter('reactivate', true)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -807,7 +807,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
         .withParameter('reactivate', true)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -820,7 +820,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/jwt/reconcile')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -839,7 +839,7 @@ export class FusionAuthClient {
         .withUri('/api/user/registration')
         .withUriSegment(userId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -852,7 +852,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -867,7 +867,7 @@ export class FusionAuthClient {
         .withUri('/api/user/verify-registration')
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -880,7 +880,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/action')
         .withUriSegment(actionId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -894,7 +894,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -908,7 +908,7 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withParameter('userId', userId)
         .withParameter('preventingLogin', true)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -923,7 +923,7 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withParameter('userId', userId)
         .withParameter('active', true)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -936,7 +936,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -947,7 +947,7 @@ export class FusionAuthClient {
   retrieveApplications(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/application')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -960,7 +960,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/system/audit-log')
         .withUriSegment(auditLogId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -978,7 +978,7 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -991,7 +991,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1006,7 +1006,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/email/template/preview')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1017,7 +1017,7 @@ export class FusionAuthClient {
   retrieveEmailTemplates(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/email/template')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1030,7 +1030,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1041,7 +1041,7 @@ export class FusionAuthClient {
   retrieveGroups(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/group')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1054,7 +1054,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1065,7 +1065,7 @@ export class FusionAuthClient {
   retrieveIdentityProviders(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/identity-provider')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1077,7 +1077,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/application')
         .withParameter('inactive', true)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1089,7 +1089,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user-action')
         .withParameter('inactive', true)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1100,7 +1100,7 @@ export class FusionAuthClient {
   retrieveIntegration(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/integration')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1115,7 +1115,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/jwt/public-key')
         .withUriSegment(keyId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1126,7 +1126,7 @@ export class FusionAuthClient {
   retrieveJWTPublicKeys(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/jwt/public-key')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1144,7 +1144,7 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1162,7 +1162,7 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1176,7 +1176,7 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withUriSegment("oauth-configuration")
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1187,7 +1187,7 @@ export class FusionAuthClient {
   retrievePasswordValidationRules(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/system-configuration/password-validation-rules')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1202,7 +1202,7 @@ export class FusionAuthClient {
         .withUri('/api/user/recent-login')
         .withParameter('offset', offset)
         .withParameter('limit', limit)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1215,7 +1215,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/jwt/refresh')
         .withParameter('userId', userId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1230,7 +1230,7 @@ export class FusionAuthClient {
         .withUri('/api/user/registration')
         .withUriSegment(userId)
         .withUriSegment(applicationId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1248,7 +1248,7 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1259,7 +1259,7 @@ export class FusionAuthClient {
   retrieveSystemConfiguration(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/system-configuration')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1272,7 +1272,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1283,7 +1283,7 @@ export class FusionAuthClient {
   retrieveTenants(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/tenant')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1295,7 +1295,7 @@ export class FusionAuthClient {
   retrieveTotalReport(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/report/totals')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1308,7 +1308,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1322,7 +1322,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1336,7 +1336,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1347,7 +1347,7 @@ export class FusionAuthClient {
   retrieveUserActionReasons(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/user-action-reason')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1358,7 +1358,7 @@ export class FusionAuthClient {
   retrieveUserActions(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/user-action')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1372,7 +1372,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withParameter('changePasswordId', changePasswordId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1385,7 +1385,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withParameter('email', email)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1398,7 +1398,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withParameter('loginId', loginId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1411,7 +1411,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withParameter('username', username)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1425,7 +1425,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withParameter('verificationId', verificationId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1438,7 +1438,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/comment')
         .withUriSegment(userId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1458,7 +1458,7 @@ export class FusionAuthClient {
         .withParameter('userId', userId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1478,7 +1478,7 @@ export class FusionAuthClient {
         .withParameter('loginId', loginId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1495,7 +1495,7 @@ export class FusionAuthClient {
         .withParameter('userId', userId)
         .withParameter('offset', offset)
         .withParameter('limit', limit)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1508,7 +1508,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user')
         .withAuthorization('JWT ' + encodedJWT)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1521,7 +1521,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1532,7 +1532,7 @@ export class FusionAuthClient {
   retrieveWebhooks(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/webhook')
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1550,7 +1550,7 @@ export class FusionAuthClient {
         .withParameter('token', token)
         .withParameter('userId', userId)
         .withParameter('applicationId', applicationId)
-        .withMethod("Delete")
+        .withMethod("DELETE")
         .go();
   }
 
@@ -1563,7 +1563,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/system/audit-log/search')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1576,7 +1576,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/search')
         .withParameter('ids', ids)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1590,7 +1590,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/search')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1606,7 +1606,7 @@ export class FusionAuthClient {
         .withUri('/api/email/send')
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1619,7 +1619,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/two-factor/send')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1633,7 +1633,7 @@ export class FusionAuthClient {
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/two-factor/send')
         .withUriSegment(twoFactorId)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1646,7 +1646,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/two-factor/login')
         .withJSONBody(request)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1661,7 +1661,7 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1679,7 +1679,7 @@ export class FusionAuthClient {
         .withUriSegment("role")
         .withUriSegment(roleId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1694,7 +1694,7 @@ export class FusionAuthClient {
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1709,7 +1709,7 @@ export class FusionAuthClient {
         .withUri('/api/group')
         .withUriSegment(groupId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1724,7 +1724,7 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1737,7 +1737,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/integration')
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1752,7 +1752,7 @@ export class FusionAuthClient {
         .withUri('/api/user/registration')
         .withUriSegment(userId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1765,7 +1765,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/system-configuration')
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1780,7 +1780,7 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1795,7 +1795,7 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withUriSegment(userId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1810,7 +1810,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1825,7 +1825,7 @@ export class FusionAuthClient {
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1840,7 +1840,7 @@ export class FusionAuthClient {
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
         .withJSONBody(request)
-        .withMethod("Put")
+        .withMethod("PUT")
         .go();
   }
 
@@ -1856,7 +1856,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/jwt/validate')
         .withAuthorization('JWT ' + encodedJWT)
-        .withMethod("Get")
+        .withMethod("GET")
         .go();
   }
 
@@ -1870,7 +1870,7 @@ export class FusionAuthClient {
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/verify-email')
         .withUriSegment(verificationId)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
@@ -1884,7 +1884,7 @@ export class FusionAuthClient {
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/verify-registration')
         .withUriSegment(verificationId)
-        .withMethod("Post")
+        .withMethod("POST")
         .go();
   }
 
