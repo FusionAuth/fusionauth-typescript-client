@@ -858,6 +858,20 @@ class FusionAuthClient {
             .go();
     }
     /**
+     * Creates a Lambda. You can optionally specify an Id for the lambda, if not provided one will be generated.
+     *
+     * @param {string} lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
+     * @param {Object} request The request object that contains all of the information used to create the lambda.
+     */
+    createLambda(lambdaId, request) {
+        return this.start()
+            .withUri('/api/lambda')
+            .withUriSegment(lambdaId)
+            .withJSONBody(request)
+            .withMethod("POST")
+            .go();
+    }
+    /**
      * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
      *
      * @param {string} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -1054,6 +1068,18 @@ class FusionAuthClient {
         return this.start()
             .withUri('/api/identity-provider')
             .withUriSegment(identityProviderId)
+            .withMethod("DELETE")
+            .go();
+    }
+    /**
+     * Deletes the lambda for the given Id.
+     *
+     * @param {string} lambdaId The Id of the lambda to delete.
+     */
+    deleteLambda(lambdaId) {
+        return this.start()
+            .withUri('/api/lambda')
+            .withUriSegment(lambdaId)
             .withMethod("DELETE")
             .go();
     }
@@ -1381,6 +1407,18 @@ class FusionAuthClient {
             .go();
     }
     /**
+     * Complete a login request using a passwordless code
+     *
+     * @param {Object} request The passwordless login request that contains all of the information used to complete login.
+     */
+    passwordlessLogin(request) {
+        return this.start()
+            .withUri('/api/passwordless/login')
+            .withJSONBody(request)
+            .withMethod("POST")
+            .go();
+    }
+    /**
      * Reactivates the application with the given Id.
      *
      * @param {string} applicationId The Id of the application to reactivate.
@@ -1659,6 +1697,20 @@ class FusionAuthClient {
             .go();
     }
     /**
+     * Retrieves all of the actions for the user with the given Id that are currently inactive.
+     * An inactive action means one that is time based and has been canceled or has expired, or is not time based.
+     *
+     * @param {string} userId The Id of the user to fetch the actions for.
+     */
+    retrieveInactiveActions(userId) {
+        return this.start()
+            .withUri('/api/user/action')
+            .withParameter('userId', userId)
+            .withParameter('active', false)
+            .withMethod("GET")
+            .go();
+    }
+    /**
      * Retrieves all of the applications that are currently inactive.
      *
      */
@@ -1711,6 +1763,28 @@ class FusionAuthClient {
     retrieveJWTPublicKeys() {
         return this.start()
             .withUri('/api/jwt/public-key')
+            .withMethod("GET")
+            .go();
+    }
+    /**
+     * Retrieves the lambda for the given Id.
+     *
+     * @param {string} lambdaId The Id of the lambda.
+     */
+    retrieveLambda(lambdaId) {
+        return this.start()
+            .withUri('/api/lambda')
+            .withUriSegment(lambdaId)
+            .withMethod("GET")
+            .go();
+    }
+    /**
+     * Retrieves all of the lambdas.
+     *
+     */
+    retrieveLambdas() {
+        return this.start()
+            .withUri('/api/lambda')
             .withMethod("GET")
             .go();
     }
@@ -2121,6 +2195,18 @@ class FusionAuthClient {
             .go();
     }
     /**
+     * Searches the event logs with the specified criteria and pagination.
+     *
+     * @param {Object} request The search criteria and pagination information.
+     */
+    searchEventLogs(request) {
+        return this.start()
+            .withUri('/api/system/event-log/search')
+            .withJSONBody(request)
+            .withMethod("POST")
+            .go();
+    }
+    /**
      * Retrieves the users for the given ids. If any id is invalid, it is ignored.
      *
      * @param {Array<string>} ids The user ids to search for.
@@ -2156,6 +2242,18 @@ class FusionAuthClient {
         return this.start()
             .withUri('/api/email/send')
             .withUriSegment(emailTemplateId)
+            .withJSONBody(request)
+            .withMethod("POST")
+            .go();
+    }
+    /**
+     * Send a passwordless authentication code in an email to complete login.
+     *
+     * @param {Object} request The passwordless send request that contains all of the information used to send an email containing a code.
+     */
+    sendPasswordlessCode(request) {
+        return this.start()
+            .withUri('/api/passwordless/send')
             .withJSONBody(request)
             .withMethod("POST")
             .go();
@@ -2278,6 +2376,20 @@ class FusionAuthClient {
     updateIntegrations(request) {
         return this.start()
             .withUri('/api/integration')
+            .withJSONBody(request)
+            .withMethod("PUT")
+            .go();
+    }
+    /**
+     * Updates the lambda with the given Id.
+     *
+     * @param {string} lambdaId The Id of the lambda to update.
+     * @param {Object} request The request that contains all of the new lambda information.
+     */
+    updateLambda(lambdaId, request) {
+        return this.start()
+            .withUri('/api/lambda')
+            .withUriSegment(lambdaId)
             .withJSONBody(request)
             .withMethod("PUT")
             .go();
