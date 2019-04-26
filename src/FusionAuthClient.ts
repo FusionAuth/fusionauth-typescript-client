@@ -439,6 +439,19 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the key for the given Id.
+   *
+   * @param {string} keyOd The Id of the key to delete.
+   */
+  deleteKey(keyOd: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key')
+        .withUriSegment(keyOd)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the lambda for the given Id.
    *
    * @param {string} lambdaId The Id of the lambda to delete.
@@ -620,6 +633,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Generate a new RSA or EC key pair or an HMAC secret.
+   *
+   * @param {string} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
+   * @param {Object} request The request object that contains all of the information used to create the key.
+   */
+  generateKey(keyId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key/generate')
+        .withUriSegment(keyId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Generate a new Application Registration Verification Id to be used with the Verify Registration API. This API will not attempt to send an
    * email to the User. This API may be used to collect the verificationId for use with a third party system.
    *
@@ -674,6 +702,21 @@ export class FusionAuthClient {
   identityProviderLogin(request): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/identity-provider/login')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Import an existing RSA or EC key pair or an HMAC secret.
+   *
+   * @param {string} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
+   * @param {Object} request The request object that contains all of the information used to create the key.
+   */
+  importKey(keyId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key/import')
+        .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -1063,6 +1106,19 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves a single event log for the given Id.
+   *
+   * @param {number} eventLogId The Id of the event log to retrieve.
+   */
+  retrieveEventLog(eventLogId: number): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/system/event-log')
+        .withUriSegment(eventLogId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the group for the given Id.
    *
    * @param {string} groupId The Id of the group.
@@ -1187,6 +1243,30 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the key for the given Id.
+   *
+   * @param {string} keyId The Id of the key.
+   */
+  retrieveKey(keyId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key')
+        .withUriSegment(keyId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the keys.
+   *
+   */
+  retrieveKeys(): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the lambda for the given Id.
    *
    * @param {string} lambdaId The Id of the lambda.
@@ -1206,6 +1286,19 @@ export class FusionAuthClient {
   retrieveLambdas(): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/lambda')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the lambdas for the provided type.
+   *
+   * @param {Object} type The type of the lambda to return.
+   */
+  retrieveLambdasByType(type): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/lambda')
+        .withParameter('type', type)
         .withMethod("GET")
         .go();
   }
@@ -1842,6 +1935,21 @@ export class FusionAuthClient {
   updateIntegrations(request): Promise<ClientResponse> {
     return this.start()
         .withUri('/api/integration')
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the key with the given Id.
+   *
+   * @param {string} keyId The Id of the key to update.
+   * @param {Object} request The request that contains all of the new key information.
+   */
+  updateKey(keyId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/key')
+        .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
