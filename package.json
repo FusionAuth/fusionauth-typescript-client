@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "karma start && mocha",
-    "prepare": "npx browserify index.ts -p tsify -o dist/fusionauth-typescript-client.js",
+    "prepare": "npx browserify index.ts --debug -p tsify -o dist/fusionauth-typescript-client.js",
     "pretest": "npx browserify test/FusionAuthClientTest.ts --debug -p tsify -o dist/fusionauth-typescript-client-test.js && tsc"
   },
   "repository": {

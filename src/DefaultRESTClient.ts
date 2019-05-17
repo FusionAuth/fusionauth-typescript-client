@@ -14,7 +14,8 @@
  * language governing permissions and limitations under the License.
  */
 
-import {ClientResponse, IRESTClient} from "./IRESTClient";
+import IRESTClient from "./IRESTClient";
+import ClientResponse from "./ClientResponse";
 
 let request = require("request");
 
@@ -22,7 +23,7 @@ let request = require("request");
  * @author Brett P
  * @author Tyler Scott
  */
-export class DefaultRESTClient implements IRESTClient {
+export default class DefaultRESTClient implements IRESTClient {
   public body: string;
   public headers: {[key: string]:string} = {};
   public method: string;
@@ -125,15 +126,15 @@ export class DefaultRESTClient implements IRESTClient {
    * Run the request and return a promise. This promise will resolve if the request is successful
    * and reject otherwise.
    */
-  go(): Promise<ClientResponse> {
-    return new Promise<ClientResponse>((resolve, reject) => {
+  go<T>(): Promise<ClientResponse<T>> {
+    return new Promise<ClientResponse<T>>((resolve, reject) => {
       request({
         uri: this.getFullUrl(),
         method: this.method,
         headers: this.headers,
         body: this.body
       }, (error, response, body) => {
-        let clientResponse = new ClientResponse();
+        let clientResponse = new ClientResponse<T>();
         if (error) {
           clientResponse.exception = error;
           reject(clientResponse);

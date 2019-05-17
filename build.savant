@@ -64,6 +64,7 @@ target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
 target(name: "test", description: "Runs the tests") {
   def npmInstall = 'npm install'.execute()
   npmInstall.consumeProcessOutput(System.out, System.err)
+  npmInstall.waitFor()
   if (new ProcessBuilder('npm', 'test').inheritIO().start().waitFor() != 0) {
     fail("Tests failed")
   }

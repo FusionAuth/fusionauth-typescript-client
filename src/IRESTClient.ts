@@ -14,21 +14,9 @@
  * language governing permissions and limitations under the License.
  */
 
-export class ClientResponse {
-  public statusCode: number;
-  public response: object | string;
-  public exception: Error;
+import ClientResponse from "./ClientResponse";
 
-  wasSuccessful() {
-    return this.statusCode >= 200 && this.statusCode < 300;
-  }
-}
-
-export interface IRESTClientBuilder {
-  build(host: string): IRESTClient;
-}
-
-export interface IRESTClient {
+export default interface IRESTClient {
   /**
    * Sets the authorization header using a key
    *
@@ -79,5 +67,5 @@ export interface IRESTClient {
    * Run the request and return a promise. This promise will resolve if the request is successful
    * and reject otherwise.
    */
-  go(): Promise<ClientResponse>;
+  go<T>(): Promise<ClientResponse<T>>;
 }

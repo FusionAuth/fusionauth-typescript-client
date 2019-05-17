@@ -13,10 +13,8 @@
  * either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
+import IRESTClient from "./IRESTClient";
 
-export * from './src/FusionAuthClient';
-export * from './src/IRESTClient';
-export * from './src/DefaultRESTClientBuilder';
-export * from './src/ClientResponse';
-export * from './src/IRESTClient';
-export * from './src/IRESTClientBuilder';
+export default interface IRESTClientBuilder {
+  build(host: string): IRESTClient;
+}

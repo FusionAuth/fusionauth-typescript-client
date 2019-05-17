@@ -16,7 +16,7 @@
 
 'use strict';
 
-import {FusionAuthClient} from '../index';
+import {ApplicationRequest, FusionAuthClient} from '../index';
 import * as chai from 'chai'
 import './nodejs-tls-fix'
 // import 'mocha'
@@ -29,13 +29,13 @@ describe('#FusionAuthClient()', function () {
     client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'https://local.fusionauth.io');
     try {
       await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
-      const applicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
+      const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
       let response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
       chai.assert.strictEqual(response.statusCode, 200);
       chai.assert.isNotNull(response.response);
     } catch (response) {
       if (response.statusCode === 404) {
-        const applicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
+        const applicationRequest: ApplicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
         await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
       } else {
         console.info(response);
@@ -62,7 +62,7 @@ describe('#FusionAuthClient()', function () {
     // Modify the System Configuration and assert the change.
     systemConfiguration.jwtConfiguration.issuer = 'node.fusionauth.io';
 
-    clientResponse = await client.updateSystemConfiguration({'systemConfiguration': systemConfiguration});
+    clientResponse = await client.updateSystemConfiguration({systemConfiguration: systemConfiguration});
     chai.assert.strictEqual(clientResponse.statusCode, 200);
     chai.assert.isNotNull(clientResponse.response);
     chai.expect(clientResponse.response).to.have.property('systemConfiguration');

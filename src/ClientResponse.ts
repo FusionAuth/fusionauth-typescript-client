@@ -14,9 +14,12 @@
  * language governing permissions and limitations under the License.
  */
 
-export * from './src/FusionAuthClient';
-export * from './src/IRESTClient';
-export * from './src/DefaultRESTClientBuilder';
-export * from './src/ClientResponse';
-export * from './src/IRESTClient';
-export * from './src/IRESTClientBuilder';
+export default class ClientResponse<T> {
+  public statusCode: number;
+  public response: T;
+  public exception: Error;
+
+  wasSuccessful() {
+    return this.statusCode >= 200 && this.statusCode < 300;
+  }
+}
