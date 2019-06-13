@@ -46,6 +46,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Adds a user to an existing family. The family id must be specified.
+   *
+   * @param {string} familyId The id of the family.
+   * @param {Object} request The request object that contains all of the information used to determine which user to add to the family.
+   */
+  addUserToFamily(familyId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family')
+        .withUriSegment(familyId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Cancels the user action.
    *
    * @param {string} actionId The action id of the action to cancel.
@@ -161,6 +176,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a user consent type. You can optionally specify an Id for the consent type, if not provided one will be generated.
+   *
+   * @param {string} consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
+   * @param {Object} request The request object that contains all of the information used to create the consent.
+   */
+  createConsent(consentId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/consent')
+        .withUriSegment(consentId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates an email template. You can optionally specify an Id for the template, if not provided one will be generated.
    *
    * @param {string} emailTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
@@ -174,6 +204,22 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("POST")
         .go<EmailTemplateResponse>();
+  }
+
+  /**
+   * Creates a family with the user id in the request as the owner and sole member of the family. You can optionally specify an id for the
+   * family, if not provided one will be generated.
+   *
+   * @param {string} familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
+   * @param {Object} request The request object that contains all of the information used to create the family.
+   */
+  createFamily(familyId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family')
+        .withUriSegment(familyId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
   }
 
   /**
@@ -305,6 +351,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a single User consent.
+   *
+   * @param {string} userConsentId (Optional) The Id for the User consent. If not provided a secure random UUID will be generated.
+   * @param {Object} request The request that contains the user consent information.
+   */
+  createUserConsent(userConsentId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withUriSegment(userConsentId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a webhook. You can optionally specify an Id for the webhook, if not provided one will be generated.
    *
    * @param {string} webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
@@ -410,6 +471,19 @@ export class FusionAuthClient {
         .withUriSegment(roleId)
         .withMethod("DELETE")
         .go<void>();
+  }
+
+  /**
+   * Deletes the consent for the given Id.
+   *
+   * @param {string} consentId The Id of the consent to delete.
+   */
+  deleteConsent(consentId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/consent')
+        .withUriSegment(consentId)
+        .withMethod("DELETE")
+        .go();
   }
 
   /**
@@ -991,6 +1065,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Removes a user from the family with the given id.
+   *
+   * @param {string} familyId The id of the family to remove the user from.
+   * @param {string} userId The id of the user to remove from the family.
+   */
+  removeUserFromFamily(familyId: string, userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family')
+        .withUriSegment(familyId)
+        .withUriSegment(userId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Re-sends the verification email to the user.
    *
    * @param {string} email The email address of the user that needs a new verification email.
@@ -1121,6 +1210,30 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the Consent for the given Id.
+   *
+   * @param {string} consentId The Id of the consent.
+   */
+  retrieveConsent(consentId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/consent')
+        .withUriSegment(consentId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the consent.
+   *
+   */
+  retrieveConsents(): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/consent')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the daily active user report between the two instants. If you specify an application id, it will only
    * return the daily active counts for that application.
    *
@@ -1193,6 +1306,32 @@ export class FusionAuthClient {
         .withUriSegment(eventLogId)
         .withMethod("GET")
         .go<EventLogResponse>();
+  }
+
+  /**
+   * Retrieves all of the families that a user belongs to.
+   *
+   * @param {string} userId The User's id
+   */
+  retrieveFamilies(userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family')
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the members of a family by the unique Family Id.
+   *
+   * @param {string} familyId The unique Id of the Family.
+   */
+  retrieveFamilyMembersByFamilyId(familyId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family')
+        .withUriSegment(familyId)
+        .withMethod("GET")
+        .go();
   }
 
   /**
@@ -1458,6 +1597,19 @@ export class FusionAuthClient {
         .withUri('/api/system-configuration/password-validation-rules')
         .withMethod("GET")
         .go<PasswordValidationRulesResponse>();
+  }
+
+  /**
+   * Retrieves all of the children for the given parent email address.
+   *
+   * @param {string} parentEmail The email of the parent.
+   */
+  retrievePendingChildren(parentEmail: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family/pending')
+        .withParameter('parentEmail', parentEmail)
+        .withMethod("GET")
+        .go();
   }
 
   /**
@@ -1731,6 +1883,32 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieve a single User consent by Id.
+   *
+   * @param {string} userConsentId The User consent Id
+   */
+  retrieveUserConsent(userConsentId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withUriSegment(userConsentId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the consents for a User.
+   *
+   * @param {string} userId The User's Id
+   */
+  retrieveUserConsents(userId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
    * login counts for that application.
    *
@@ -1850,6 +2028,19 @@ export class FusionAuthClient {
   }
 
   /**
+   * Revokes a single User consent by Id.
+   *
+   * @param {string} userConsentId The User Consent Id
+   */
+  revokeUserConsent(userConsentId: string): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withUriSegment(userConsentId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Searches the audit logs with the specified criteria and pagination.
    *
    * @param {AuditLogSearchRequest} request The search criteria and pagination information.
@@ -1875,6 +2066,19 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("POST")
         .go<EventLogSearchResponse>();
+  }
+
+  /**
+   * Searches the login records with the specified criteria and pagination.
+   *
+   * @param {Object} request The search criteria and pagination information.
+   */
+  searchLoginRecords(request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/system/login-record/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
   }
 
   /**
@@ -1921,6 +2125,19 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("POST")
         .go<SendResponse>();
+  }
+
+  /**
+   * Sends out an email to a parent that they need to register and create a family or need to log in and add a child to their existing family.
+   *
+   * @param {Object} request The request object that contains the parent email.
+   */
+  sendFamilyRequestEmail(request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/family/request')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
   }
 
   /**
@@ -2013,6 +2230,21 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("PUT")
         .go<ApplicationResponse>();
+  }
+
+  /**
+   * Updates the consent with the given Id.
+   *
+   * @param {string} consentId The Id of the consent to update.
+   * @param {Object} request The request that contains all of the new consent information.
+   */
+  updateConsent(consentId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/consent')
+        .withUriSegment(consentId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
   }
 
   /**
@@ -2201,6 +2433,21 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("PUT")
         .go<UserActionReasonResponse>();
+  }
+
+  /**
+   * Updates a single User consent by Id.
+   *
+   * @param {string} userConsentId The User Consent Id
+   * @param {Object} request The request that contains the user consent information.
+   */
+  updateUserConsent(userConsentId: string, request): Promise<ClientResponse> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withUriSegment(userConsentId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
   }
 
   /**
