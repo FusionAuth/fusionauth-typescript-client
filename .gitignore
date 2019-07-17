@@ -1,9 +1,5 @@
 node_modules
-src/*.js*
-test/*.js*
-!test/nodejs-tls-fix.js
-index.js*
-**/build
+build
 npm-debug.log
 *.zip
 package-lock.json

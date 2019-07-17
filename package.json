@@ -2,15 +2,22 @@
   "name": "@fusionauth/typescript-client",
   "version": "1.7.2",
   "description": "A typescript implementation of the FusionAuth client.",
-  "main": "index.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "directories": {
-    "lib": "src",
+    "lib": "build",
     "test": "test"
   },
+  "files": [
+    "build/**/*.js",
+    "build/**/*.js.map",
+    "build/**/*.d.ts"
+  ],
   "scripts": {
     "test": "karma start && mocha",
-    "prepare": "npx browserify index.ts --debug -p tsify -o dist/fusionauth-typescript-client.js",
-    "pretest": "npx browserify test/FusionAuthClientTest.ts --debug -p tsify -o dist/fusionauth-typescript-client-test.js && tsc"
+    "build-browser": "npx browserify index.ts --debug -p tsify -o dist/fusionauth-typescript-client.js",
+    "pretest": "npx browserify test/FusionAuthClientTest.ts --debug -p tsify -o dist/fusionauth-typescript-client-test.js && tsc",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",

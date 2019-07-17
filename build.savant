@@ -43,11 +43,13 @@ target(name: "clean", description: "Cleans build directory") {
   }
 }
 
-target(name: "int", description: "Releases a local integration build of the project") {
-  file.copy(to: "build/src") {
-    fileSet(dir: "src")
-  }
+target(name: "build", description: "Builds the js files") {
+  def proc = 'npm run prepare'.execute()
+  proc.consumeProcessOutput(System.out, System.err)
+  proc.waitFor()
+}
 
+target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["build"]) {
   file.delete {
     fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
   }
