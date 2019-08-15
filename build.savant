@@ -44,7 +44,7 @@ target(name: "clean", description: "Cleans build directory") {
 }
 
 target(name: "build", description: "Builds the js files") {
-  def proc = 'npm run prepare'.execute()
+  def proc = 'npm install'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
 }
