@@ -23,7 +23,7 @@ export class FusionAuthClient {
 
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
 
-  constructor(public apiKey: string, public host: string) {
+  constructor(public apiKey: string, public host: string, public tenantId?: string) {
   }
 
   /**
@@ -2531,6 +2531,15 @@ export class FusionAuthClient {
         .go<void>();
   }
 
+   /**
+   * Sets the tenant id, that will be included in the X-FusionAuth-TenantId header.
+   *
+   * @param {string | null} tenantId The value of the X-FusionAuth-TenantId header.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  setTenantId(tenantId: string | null) {
+    this.tenantId = tenantId;
+  }
 
   /* ===================================================================================================================
    * Private methods
@@ -2543,7 +2552,7 @@ export class FusionAuthClient {
    * @private
    */
   private start(): IRESTClient {
-    return this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
+    return this.clientBuilder.build(this.host).withAuthorization(this.apiKey).withTenantId(this.tenantId);
   }
 }
 

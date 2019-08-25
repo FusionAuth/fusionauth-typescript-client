@@ -17,6 +17,16 @@
 import ClientResponse from "./ClientResponse";
 
 export default interface IRESTClient {
+
+   /**
+   * Sets the authorization header using a key
+   *
+   * @param {string} tenantId The value of the X-FusionAuth-TenantId header.
+   * @returns {DefaultRESTClient}
+   */
+  withTenantId(tenantId): IRESTClient;
+
+
   /**
    * Sets the authorization header using a key
    *
