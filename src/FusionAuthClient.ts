@@ -2544,6 +2544,7 @@ export class FusionAuthClient {
         .go<void>();
   }
 
+
   /* ===================================================================================================================
    * Private methods
    * ===================================================================================================================*/
@@ -2811,6 +2812,7 @@ export interface BaseExportRequest {
 export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
   applicationConfiguration?: Map<string, D>;
   data?: Map<string, any>;
+  debug?: boolean;
   id?: string;
   name?: string;
   type?: IdentityProviderType;
