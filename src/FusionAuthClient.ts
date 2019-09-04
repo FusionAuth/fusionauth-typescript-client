@@ -20,10 +20,23 @@ import IRESTClientBuilder from "./IRESTClientBuilder";
 import ClientResponse from "./ClientResponse";
 
 export class FusionAuthClient {
-
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
 
   constructor(public apiKey: string, public host: string, public tenantId?: string) {
+    this.apiKey = apiKey;
+    this.host = host;
+    this.tenantId = tenantId;
+  }
+
+  /**
+   * Sets the tenant id, that will be included in the X-FusionAuth-TenantId header.
+   *
+   * @param {string | null} tenantId The value of the X-FusionAuth-TenantId header.
+   * @returns {FusionAuthClient}
+   */
+  setTenantId(tenantId: string | null) {
+    this.tenantId = tenantId;
+    return this;
   }
 
   /**
@@ -2531,16 +2544,6 @@ export class FusionAuthClient {
         .go<void>();
   }
 
-   /**
-   * Sets the tenant id, that will be included in the X-FusionAuth-TenantId header.
-   *
-   * @param {string | null} tenantId The value of the X-FusionAuth-TenantId header.
-   * @returns {Promise<ClientResponse<void>>}
-   */
-  setTenantId(tenantId: string | null) {
-    this.tenantId = tenantId;
-  }
-
   /* ===================================================================================================================
    * Private methods
    * ===================================================================================================================*/
@@ -2552,7 +2555,13 @@ export class FusionAuthClient {
    * @private
    */
   private start(): IRESTClient {
-    return this.clientBuilder.build(this.host).withAuthorization(this.apiKey).withTenantId(this.tenantId);
+    let client = this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
+
+    if (this.tenantId !== null && typeof(this.tenantId) !== 'undefined') {
+      client.withHeader('X-FusionAuth-TenantId', this.tenantId);
+    }
+
+    return client;
   }
 }
 
