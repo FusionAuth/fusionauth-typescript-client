@@ -3635,7 +3635,7 @@ export interface IssueResponse {
  * @author Daniel DeGroff
  */
 export interface JWKSResponse {
-  keys?: Array<Map<string, any>>;
+  keys?: Array<object>;
 }
 
 /**
@@ -5183,7 +5183,7 @@ export interface UserUpdateEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface ValidateResponse {
-  jwt?: Map<string, any>;
+  jwt?: object;
 }
 
 /**
