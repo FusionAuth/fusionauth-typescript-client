@@ -49,6 +49,21 @@ export default class DefaultRESTClient implements IRESTClient {
   }
 
   /**
+   * Sets the authorization header using a key
+   *
+   * @param {string} tenantId The value of the X-FusionAuth-TenantId header.
+   * @returns {DefaultRESTClient}
+   */
+  withTenantId(tenantId): DefaultRESTClient {
+    if (tenantId === null || typeof tenantId === 'undefined') {
+      return this;
+    }
+
+    this.withHeader('X-FusionAuth-TenantId', tenantId);
+    return this;
+  }
+
+  /**
    * Adds a segment to the request uri
    */
   withUriSegment(segment): DefaultRESTClient {
