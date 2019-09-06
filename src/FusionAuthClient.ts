@@ -4814,7 +4814,6 @@ export interface Theme {
   data?: Map<string, any>;
   id?: string;
   insertInstant?: number;
-  isDefault?: boolean;
   lastUpdateInstant?: number;
   name?: string;
   stylesheet?: string;
