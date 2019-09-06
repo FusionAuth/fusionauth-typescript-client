@@ -20,10 +20,23 @@ import IRESTClientBuilder from "./IRESTClientBuilder";
 import ClientResponse from "./ClientResponse";
 
 export class FusionAuthClient {
-
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
 
-  constructor(public apiKey: string, public host: string) {
+  constructor(public apiKey: string, public host: string, public tenantId?: string) {
+    this.apiKey = apiKey;
+    this.host = host;
+    this.tenantId = tenantId;
+  }
+
+  /**
+   * Sets the tenant id, that will be included in the X-FusionAuth-TenantId header.
+   *
+   * @param {string | null} tenantId The value of the X-FusionAuth-TenantId header.
+   * @returns {FusionAuthClient}
+   */
+  setTenantId(tenantId: string | null) {
+    this.tenantId = tenantId;
+    return this;
   }
 
   /**
@@ -301,6 +314,22 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("POST")
         .go<TenantResponse>();
+  }
+
+  /**
+   * Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
+   *
+   * @param {string} themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
+   * @param {ThemeRequest} request The request object that contains all of the information used to create the theme.
+   * @returns {Promise<ClientResponse<ThemeResponse>>}
+   */
+  createTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withUriSegment(themeId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go<ThemeResponse>();
   }
 
   /**
@@ -606,6 +635,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the theme for the given Id.
+   *
+   * @param {string} themeId The Id of the theme to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteTheme(themeId: string): Promise<ClientResponse<void>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withUriSegment(themeId)
+        .withMethod("DELETE")
+        .go<void>();
+  }
+
+  /**
    * Deletes the user for the given Id. This permanently deletes all information, metrics, reports and data associated
    * with the user.
    *
@@ -750,7 +793,7 @@ export class FusionAuthClient {
     return this.start()
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
-        .withParameter('sendVerifyPasswordEmail', false)
+        .withParameter('sendVerifyEmail', false)
         .withMethod("PUT")
         .go<VerifyEmailResponse>();
   }
@@ -888,7 +931,9 @@ export class FusionAuthClient {
   }
 
   /**
-   * Logs a user in.
+   * Authenticates a user to FusionAuth. 
+   * 
+   * This API optionally requires an API key. See <code>Application.loginConfiguration.requireAuthentication</code>.
    *
    * @param {LoginRequest} request The login request that contains the user credentials used to log them in.
    * @returns {Promise<ClientResponse<LoginResponse>>}
@@ -1047,6 +1092,21 @@ export class FusionAuthClient {
         .withJSONBody(request)
         .withMethod("POST")
         .go<LoginResponse>();
+  }
+
+  /**
+   * Request a refresh of the User search index. This API is not generally necessary and the search index will become consistent in a
+   * reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be 
+   * if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
+   *  ensure the index immediately current before making a query request to the search index.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  refreshUserSearchIndex(): Promise<ClientResponse<void>> {
+    return this.start()
+        .withUri('/api/user/search')
+        .withMethod("PUT")
+        .go<void>();
   }
 
   /**
@@ -1451,17 +1511,29 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the Public Key configured for verifying JSON Web Tokens (JWT) by the key Id. If the key Id is provided a
-   * single public key will be returned if one is found by that id. If the optional parameter key Id is not provided all
-   * public keys will be returned.
+   * Retrieves the Public Key configured for verifying JSON Web Tokens (JWT) by the key Id (kid).
    *
-   * @param {string} keyId (Optional) The Id of the public key.
+   * @param {string} keyId The Id of the public key (kid).
    * @returns {Promise<ClientResponse<PublicKeyResponse>>}
    */
   retrieveJWTPublicKey(keyId: string): Promise<ClientResponse<PublicKeyResponse>> {
     return this.start()
         .withUri('/api/jwt/public-key')
-        .withUriSegment(keyId)
+        .withParameter('kid', keyId)
+        .withMethod("GET")
+        .go<PublicKeyResponse>();
+  }
+
+  /**
+   * Retrieves the Public Key configured for verifying the JSON Web Tokens (JWT) issued by the Login API by the Application Id.
+   *
+   * @param {string} applicationId The Id of the Application for which this key is used.
+   * @returns {Promise<ClientResponse<PublicKeyResponse>>}
+   */
+  retrieveJWTPublicKeyByApplicationId(applicationId: string): Promise<ClientResponse<PublicKeyResponse>> {
+    return this.start()
+        .withUri('/api/jwt/public-key')
+        .withParameter('applicationId', applicationId)
         .withMethod("GET")
         .go<PublicKeyResponse>();
   }
@@ -1598,13 +1670,32 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the password validation rules.
+   * Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided 
+   * through the use of a Tenant scoped API key or an HTTP header X-FusionAuth-TenantId to specify the Tenant Id.
+   * 
+   * This API does not require an API key.
    *
    * @returns {Promise<ClientResponse<PasswordValidationRulesResponse>>}
    */
   retrievePasswordValidationRules(): Promise<ClientResponse<PasswordValidationRulesResponse>> {
     return this.start()
-        .withUri('/api/system-configuration/password-validation-rules')
+        .withUri('/api/tenant/password-validation-rules')
+        .withMethod("GET")
+        .go<PasswordValidationRulesResponse>();
+  }
+
+  /**
+   * Retrieves the password validation rules for a specific tenant.
+   * 
+   * This API does not require an API key.
+   *
+   * @param {string} tenantId The Id of the tenant.
+   * @returns {Promise<ClientResponse<PasswordValidationRulesResponse>>}
+   */
+  retrievePasswordValidationRulesWithTenantId(tenantId: string): Promise<ClientResponse<PasswordValidationRulesResponse>> {
+    return this.start()
+        .withUri('/api/tenant/password-validation-rules')
+        .withUriSegment(tenantId)
         .withMethod("GET")
         .go<PasswordValidationRulesResponse>();
   }
@@ -1724,6 +1815,32 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withMethod("GET")
         .go<TenantResponse>();
+  }
+
+  /**
+   * Retrieves the theme for the given Id.
+   *
+   * @param {string} themeId The Id of the theme.
+   * @returns {Promise<ClientResponse<ThemeResponse>>}
+   */
+  retrieveTheme(themeId: string): Promise<ClientResponse<ThemeResponse>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withUriSegment(themeId)
+        .withMethod("GET")
+        .go<ThemeResponse>();
+  }
+
+  /**
+   * Retrieves all of the themes.
+   *
+   * @returns {Promise<ClientResponse<ThemeResponse>>}
+   */
+  retrieveThemes(): Promise<ClientResponse<ThemeResponse>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withMethod("GET")
+        .go<ThemeResponse>();
   }
 
   /**
@@ -2405,6 +2522,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the theme with the given Id.
+   *
+   * @param {string} themeId The Id of the theme to update.
+   * @param {ThemeRequest} request The request that contains all of the new theme information.
+   * @returns {Promise<ClientResponse<ThemeResponse>>}
+   */
+  updateTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withUriSegment(themeId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go<ThemeResponse>();
+  }
+
+  /**
    * Updates the user with the given Id.
    *
    * @param {string} userId The Id of the user to update.
@@ -2543,7 +2676,13 @@ export class FusionAuthClient {
    * @private
    */
   private start(): IRESTClient {
-    return this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
+    let client = this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
+
+    if (this.tenantId !== null && typeof(this.tenantId) !== 'undefined') {
+      client.withHeader('X-FusionAuth-TenantId', this.tenantId);
+    }
+
+    return client;
   }
 }
 
@@ -2778,6 +2917,7 @@ export interface AuthenticationTokenConfiguration extends Enableable {
 export interface BaseEvent {
   createInstant?: number;
   id?: string;
+  tenantId?: string;
   type?: EventType;
 }
 
@@ -2793,6 +2933,7 @@ export interface BaseExportRequest {
 export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
   applicationConfiguration?: Map<string, D>;
   data?: Map<string, any>;
+  debug?: boolean;
   id?: string;
   name?: string;
   type?: IdentityProviderType;
@@ -2936,6 +3077,15 @@ export enum ContentStatus {
   REJECTED
 }
 
+export interface CORSConfiguration extends Enableable {
+  allowCredentials?: boolean;
+  allowedHeaders?: Array<string>;
+  allowedMethods?: Array<HTTPMethod>;
+  allowedOrigins?: Array<string>;
+  exposedHeaders?: Array<string>;
+  preflightMaxAgeInSeconds?: number;
+}
+
 /**
  * @author Brian Pontarelli
  */
@@ -3024,7 +3174,10 @@ export interface EmailAddress {
   display?: string;
 }
 
-export interface EmailConfiguration extends Enableable {
+/**
+ * @author Brian Pontarelli
+ */
+export interface EmailConfiguration {
   forgotPasswordEmailTemplateId?: string;
   host?: string;
   password?: string;
@@ -3125,6 +3278,9 @@ export interface Errors {
   generalErrors?: Array<Error>;
 }
 
+/**
+ * @author Brian Pontarelli
+ */
 export interface EventConfiguration {
   events?: Map<EventType, EventConfigurationData>;
 }
@@ -3227,6 +3383,8 @@ export enum EventType {
   UserRegistrationCreate,
   UserRegistrationUpdate,
   UserRegistrationDelete,
+  UserRegistrationVerified,
+  UserEmailVerified,
   Test
 }
 
@@ -3242,13 +3400,21 @@ export enum ExpiryUnit {
   YEARS
 }
 
+/**
+ * @author Daniel DeGroff
+ */
 export interface ExternalIdentifierConfiguration {
   authorizationGrantIdTimeToLiveInSeconds?: number;
+  changePasswordIdGenerator?: SecureGeneratorConfiguration;
   changePasswordIdTimeToLiveInSeconds?: number;
+  emailVerificationIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
+  passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
+  registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
+  setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
@@ -3321,6 +3487,21 @@ export interface FailedAuthenticationConfiguration {
 export interface Family {
   id?: string;
   members?: Array<FamilyMember>;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface FamilyConfiguration extends Enableable {
+  allowChildRegistrations?: boolean;
+  confirmChildEmailTemplateId?: string;
+  deleteOrphanedAccounts?: boolean;
+  deleteOrphanedAccountsDays?: number;
+  familyRequestEmailTemplateId?: string;
+  maximumChildAge?: number;
+  minimumOwnerAge?: number;
+  parentEmailRequired?: boolean;
+  parentRegistrationEmailTemplateId?: string;
 }
 
 export interface FamilyConfiguration extends Enableable {
@@ -3505,6 +3686,15 @@ export interface HistoryItem {
 export interface HTTPHeaders extends Map<string, string> {
 }
 
+export enum HTTPMethod {
+  GET,
+  POST,
+  PUT,
+  DELETE,
+  HEAD,
+  OPTIONS
+}
+
 /**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
  *
@@ -3635,7 +3825,7 @@ export interface IssueResponse {
  * @author Daniel DeGroff
  */
 export interface JWKSResponse {
-  keys?: Array<Map<string, any>>;
+  keys?: Array<object>;
 }
 
 /**
@@ -3672,6 +3862,7 @@ export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
   applicationId?: string;
   applicationTimeToLiveInSeconds?: Map<string, number>;
   type?: EventType;
+  user?: User;
   userId?: string;
 }
 
@@ -3928,29 +4119,6 @@ export interface LoginResponse {
   user?: User;
 }
 
-export interface LoginTheme extends Enableable {
-  emailComplete?: string;
-  emailSend?: string;
-  emailVerify?: string;
-  helpers?: string;
-  lastModified?: number;
-  oauth2Authorize?: string;
-  oauth2ChildRegistrationNotAllowed?: string;
-  oauth2ChildRegistrationNotAllowedComplete?: string;
-  oauth2CompleteRegistration?: string;
-  oauth2Error?: string;
-  oauth2Register?: string;
-  oauth2TwoFactor?: string;
-  passwordChange?: string;
-  passwordComplete?: string;
-  passwordForgot?: string;
-  passwordSent?: string;
-  registrationComplete?: string;
-  registrationSend?: string;
-  registrationVerify?: string;
-  stylesheet?: string;
-}
-
 /**
  * @author Daniel DeGroff
  */
@@ -4069,6 +4237,9 @@ export enum OAuthErrorReason {
   invalid_user_credentials,
   invalid_grant_type,
   invalid_origin,
+  invalid_pkce_code_verifier,
+  invalid_pkce_code_challenge,
+  invalid_pkce_code_challenge_method,
   invalid_redirect_uri,
   invalid_response_type,
   grant_type_disabled,
@@ -4458,6 +4629,22 @@ export interface SecretResponse {
 /**
  * @author Daniel DeGroff
  */
+export interface SecureGeneratorConfiguration {
+  length?: number;
+  type?: SecureGeneratorType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum SecureGeneratorType {
+  randomDigits,
+  randomBytes
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface SecureIdentity {
   encryptionScheme?: string;
   factor?: number;
@@ -4510,21 +4697,10 @@ export interface SystemConfiguration {
   auditLogConfiguration?: AuditLogConfiguration;
   cookieEncryptionIV?: string;
   cookieEncryptionKey?: string;
+  corsConfiguration?: CORSConfiguration;
   data?: Map<string, any>;
-  emailConfiguration?: EmailConfiguration;
-  eventConfiguration?: EventConfiguration;
   eventLogConfiguration?: EventLogConfiguration;
-  externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
-  failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
-  httpSessionMaxInactiveInterval?: number;
-  issuer?: string;
-  jwtConfiguration?: JWTConfiguration;
   loginRecordConfiguration?: LoginRecordConfiguration;
-  logoutURL?: string;
-  maximumPasswordAge?: MaximumPasswordAge;
-  minimumPasswordAge?: MinimumPasswordAge;
-  passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
-  passwordValidationRules?: PasswordValidationRules;
   reportTimezone?: string;
   uiConfiguration?: UIConfiguration;
 }
@@ -4547,15 +4723,56 @@ export interface SystemConfigurationResponse {
   systemConfiguration?: SystemConfiguration;
 }
 
+export interface Templates {
+  emailComplete?: string;
+  emailSend?: string;
+  emailVerify?: string;
+  helpers?: string;
+  oauth2Authorize?: string;
+  oauth2ChildRegistrationNotAllowed?: string;
+  oauth2ChildRegistrationNotAllowedComplete?: string;
+  oauth2CompleteRegistration?: string;
+  oauth2Error?: string;
+  oauth2Passwordless?: string;
+  oauth2Register?: string;
+  oauth2TwoFactor?: string;
+  passwordChange?: string;
+  passwordComplete?: string;
+  passwordForgot?: string;
+  passwordSent?: string;
+  registrationComplete?: string;
+  registrationSend?: string;
+  registrationVerify?: string;
+}
+
 /**
  * @author Daniel DeGroff
  */
 export interface Tenant {
+  configured?: boolean;
   data?: Map<string, any>;
-  emailConfiguration?: TenantEmailConfiguration;
+  emailConfiguration?: EmailConfiguration;
+  eventConfiguration?: EventConfiguration;
+  externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
+  failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
   familyConfiguration?: FamilyConfiguration;
+  httpSessionMaxInactiveInterval?: number;
   id?: string;
+  issuer?: string;
+  jwtConfiguration?: JWTConfiguration;
+  logoutURL?: string;
+  maximumPasswordAge?: MaximumPasswordAge;
+  minimumPasswordAge?: MinimumPasswordAge;
   name?: string;
+  passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
+  passwordValidationRules?: PasswordValidationRules;
+  themeId?: string;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface Tenantable {
 }
 
 export interface TenantEmailConfiguration extends Enableable {
@@ -4588,6 +4805,39 @@ export interface TenantResponse {
 export interface TestEvent extends BaseEvent {
   message?: string;
   type?: EventType;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface Theme {
+  data?: Map<string, any>;
+  id?: string;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  stylesheet?: string;
+  templates?: Templates;
+}
+
+/**
+ * Theme API request object.
+ *
+ * @author Trevor Smith
+ */
+export interface ThemeRequest {
+  sourceThemeId?: string;
+  theme?: Theme;
+}
+
+/**
+ * Theme API response object.
+ *
+ * @author Trevor Smith
+ */
+export interface ThemeResponse {
+  theme?: Theme;
+  themes?: Array<Theme>;
 }
 
 /**
@@ -4708,7 +4958,6 @@ export interface TwoFactorSendRequest {
 
 export interface UIConfiguration {
   headerColor?: string;
-  loginTheme?: LoginTheme;
   logoURL?: string;
   menuFontColor?: string;
 }
@@ -5019,6 +5268,16 @@ export interface UserDeleteRequest {
 }
 
 /**
+ * Models the User Email Verify Event (and can be converted to JSON).
+ *
+ * @author Trevor Smith
+ */
+export interface UserEmailVerifiedEvent extends BaseEvent {
+  type?: EventType;
+  user?: User;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface UserinfoResponse extends Map<string, any> {
@@ -5070,7 +5329,6 @@ export interface UserReactivateEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface UserRegistration {
-  application?: Application;
   applicationId?: string;
   authenticationToken?: string;
   cleanSpeakId?: string;
@@ -5082,7 +5340,6 @@ export interface UserRegistration {
   roles?: Set<string>;
   timezone?: string;
   tokens?: Map<string, string>;
-  userId?: string;
   username?: string;
   usernameStatus?: ContentStatus;
   verified?: boolean;
@@ -5120,6 +5377,18 @@ export interface UserRegistrationDeleteEvent extends BaseEvent {
 export interface UserRegistrationUpdateEvent extends BaseEvent {
   applicationId?: string;
   original?: UserRegistration;
+  registration?: UserRegistration;
+  type?: EventType;
+  user?: User;
+}
+
+/**
+ * Models the User Registration Verified Event (and can be converted to JSON).
+ *
+ * @author Trevor Smith
+ */
+export interface UserRegistrationVerifiedEvent extends BaseEvent {
+  applicationId?: string;
   registration?: UserRegistration;
   type?: EventType;
   user?: User;
@@ -5183,7 +5452,7 @@ export interface UserUpdateEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface ValidateResponse {
-  jwt?: Map<string, any>;
+  jwt?: object;
 }
 
 /**
