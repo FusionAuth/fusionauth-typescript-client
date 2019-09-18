@@ -4812,9 +4812,11 @@ export interface TestEvent extends BaseEvent {
  */
 export interface Theme {
   data?: Map<string, any>;
+  defaultMessages?: string;
   id?: string;
   insertInstant?: number;
   lastUpdateInstant?: number;
+  localizedMessages?: LocalizedStrings;
   name?: string;
   stylesheet?: string;
   templates?: Templates;
