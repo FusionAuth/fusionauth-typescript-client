@@ -4252,6 +4252,7 @@ export enum OAuthErrorReason {
   missing_token,
   login_prevented,
   user_expired,
+  user_locked,
   user_not_found,
   client_authentication_missing,
   invalid_client_authentication_scheme,
