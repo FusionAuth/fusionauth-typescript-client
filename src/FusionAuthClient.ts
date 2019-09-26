@@ -4242,6 +4242,8 @@ export enum OAuthErrorReason {
   invalid_pkce_code_challenge_method,
   invalid_redirect_uri,
   invalid_response_type,
+  invalid_id_token_hint,
+  invalid_post_logout_redirect_uri,
   grant_type_disabled,
   missing_client_id,
   missing_code,
@@ -4289,7 +4291,10 @@ export interface OAuthResponse {
  */
 export interface OpenIdConfiguration {
   authorization_endpoint?: string;
+  backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
+  end_session_endpoint?: string;
+  frontchannel_logout_supported?: boolean;
   grant_types_supported?: Array<string>;
   id_token_signing_alg_values_supported?: Array<string>;
   issuer?: string;
@@ -4734,6 +4739,7 @@ export interface Templates {
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
   oauth2Error?: string;
+  oauth2Logout?: string;
   oauth2Passwordless?: string;
   oauth2Register?: string;
   oauth2TwoFactor?: string;
