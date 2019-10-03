@@ -23,12 +23,12 @@ export default interface IRESTClient {
    * @param {string} key The value of the authorization header.
    * @returns {IRESTClient}
    */
-  withAuthorization(key): IRESTClient;
+  withAuthorization(key: string): IRESTClient;
 
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment): IRESTClient;
+  withUriSegment(segment: string | number): IRESTClient;
 
   /**
    * Adds a header to the request.
@@ -48,12 +48,12 @@ export default interface IRESTClient {
   /**
    * Sets the http method for the request
    */
-  withMethod(method): IRESTClient;
+  withMethod(method: string): IRESTClient;
 
   /**
    * Sets the uri of the request
    */
-  withUri(uri): IRESTClient;
+  withUri(uri: string): IRESTClient;
 
   /**
    * Adds parameters to the request.
@@ -61,7 +61,14 @@ export default interface IRESTClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name, value): IRESTClient;
+  withParameter(name: string, value: any): IRESTClient;
+
+  /**
+   * Sets request's credentials.
+   * 
+   * @param value A string indicating whether credentials will be sent with the request always, never, or only when sent to a same-origin URL.
+   */
+  withCredentials(value: RequestCredentials): IRESTClient;
 
   /**
    * Run the request and return a promise. This promise will resolve if the request is successful
