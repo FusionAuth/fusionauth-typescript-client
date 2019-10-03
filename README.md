@@ -5,7 +5,10 @@ If you're integrating FusionAuth with a Typescript application, this library wil
 
 For additional information and documentation on FusionAuth refer to [https://fusionauth.io](https://fusionauth.io).
 
-Installation
+## Credits
+* Thanks to [@tjpeden](https://github.com/tjpeden) for your excellent contributions!
+
+## Installation
 To install fusionauth-typescript-client, use npm
 
 ```bash
