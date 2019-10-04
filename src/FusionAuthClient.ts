@@ -2761,16 +2761,16 @@ export interface ActionResponse {
  * @author Daniel DeGroff
  */
 export enum Algorithm {
-  ES256,
-  ES384,
-  ES512,
-  HS256,
-  HS384,
-  HS512,
-  RS256,
-  RS384,
-  RS512,
-  none
+  ES256 = "SHA256withECDSA",
+  ES384 = "SHA384withECDSA",
+  ES512 = "SHA512withECDSA",
+  HS256 = "HmacSHA256",
+  HS384 = "HmacSHA384",
+  HS512 = "HmacSHA512",
+  RS256 = "SHA256withRSA",
+  RS384 = "SHA384withRSA",
+  RS512 = "SHA512withRSA",
+  none = "None"
 }
 
 /**
@@ -3385,23 +3385,23 @@ export interface EventRequest {
  * @author Brian Pontarelli
  */
 export enum EventType {
-  UserDelete,
-  UserCreate,
-  UserUpdate,
-  UserDeactivate,
-  UserBulkCreate,
-  UserReactivate,
-  UserAction,
-  JWTRefreshTokenRevoke,
-  JWTPublicKeyUpdate,
-  UserLoginSuccess,
-  UserLoginFailed,
-  UserRegistrationCreate,
-  UserRegistrationUpdate,
-  UserRegistrationDelete,
-  UserRegistrationVerified,
-  UserEmailVerified,
-  Test
+  UserDelete = "user.delete",
+  UserCreate = "user.create",
+  UserUpdate = "user.update",
+  UserDeactivate = "user.deactivate",
+  UserBulkCreate = "user.bulk.create",
+  UserReactivate = "user.reactivate",
+  UserAction = "user.action",
+  JWTRefreshTokenRevoke = "jwt.refresh-token.revoke",
+  JWTPublicKeyUpdate = "jwt.public-key.update",
+  UserLoginSuccess = "user.login.success",
+  UserLoginFailed = "user.login.failed",
+  UserRegistrationCreate = "user.registration.create",
+  UserRegistrationUpdate = "user.registration.update",
+  UserRegistrationDelete = "user.registration.delete",
+  UserRegistrationVerified = "user.registration.verified",
+  UserEmailVerified = "user.email.verified",
+  Test = "test"
 }
 
 /**
@@ -3453,7 +3453,6 @@ export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<Extern
   headerKeyParameter?: string;
   keys?: Map<string, string>;
   oauth2?: IdentityProviderOauth2Configuration;
-  type?: IdentityProviderType;
   uniqueIdentityClaim?: string;
 }
 
@@ -3479,7 +3478,6 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
   client_secret?: string;
   fields?: string;
   permissions?: string;
-  type?: IdentityProviderType;
 }
 
 /**
@@ -3508,18 +3506,6 @@ export interface Family {
 /**
  * @author Brian Pontarelli
  */
-export interface FamilyConfiguration extends Enableable {
-  allowChildRegistrations?: boolean;
-  confirmChildEmailTemplateId?: string;
-  deleteOrphanedAccounts?: boolean;
-  deleteOrphanedAccountsDays?: number;
-  familyRequestEmailTemplateId?: string;
-  maximumChildAge?: number;
-  minimumOwnerAge?: number;
-  parentEmailRequired?: boolean;
-  parentRegistrationEmailTemplateId?: string;
-}
-
 export interface FamilyConfiguration extends Enableable {
   allowChildRegistrations?: boolean;
   confirmChildEmailTemplateId?: string;
@@ -3622,7 +3608,6 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
   client_id?: string;
   client_secret?: string;
   scope?: string;
-  type?: IdentityProviderType;
 }
 
 /**
@@ -3865,7 +3850,6 @@ export interface JWTConfiguration extends Enableable {
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
   applicationIds?: Set<string>;
-  type?: EventType;
 }
 
 /**
@@ -3877,7 +3861,6 @@ export interface JWTPublicKeyUpdateEvent extends BaseEvent {
 export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
   applicationId?: string;
   applicationTimeToLiveInSeconds?: Map<string, number>;
-  type?: EventType;
   user?: User;
   userId?: string;
 }
@@ -3915,15 +3898,15 @@ export interface Key {
 }
 
 export enum KeyAlgorithm {
-  ES256,
-  ES384,
-  ES512,
-  HS256,
-  HS384,
-  HS512,
-  RS256,
-  RS384,
-  RS512
+  ES256 = "SHA256withECDSA",
+  ES384 = "SHA384withECDSA",
+  ES512 = "SHA512withECDSA",
+  HS256 = "HmacSHA256",
+  HS384 = "HmacSHA384",
+  HS512 = "HmacSHA512",
+  RS256 = "SHA256withRSA",
+  RS384 = "SHA384withRSA",
+  RS512 = "SHA512withRSA"
 }
 
 /**
@@ -4000,10 +3983,10 @@ export interface LambdaResponse {
  * @author Brian Pontarelli
  */
 export enum LambdaType {
-  JWTPopulate,
-  OpenIDReconcile,
-  SAMLv2Reconcile,
-  SAMLv2Populate
+  JWTPopulate = "populate",
+  OpenIDReconcile = "reconcile",
+  SAMLv2Reconcile = "reconcile",
+  SAMLv2Populate = "populate"
 }
 
 /**
@@ -4342,7 +4325,6 @@ export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<Open
   domains?: Set<string>;
   lambdaConfiguration?: LambdaConfiguration;
   oauth2?: IdentityProviderOauth2Configuration;
-  type?: IdentityProviderType;
 }
 
 /**
@@ -4551,33 +4533,6 @@ export interface Requirable extends Enableable {
 /**
  * @author Brian Pontarelli
  */
-export interface SAML2ApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonImageURL?: string;
-  buttonText?: string;
-}
-
-/**
- * SAML v2 identity provider configuration.
- *
- * @author Brian Pontarelli
- */
-export interface SAML2IdentityProvider extends BaseIdentityProvider<SAML2ApplicationConfiguration> {
-  buttonImageURL?: string;
-  buttonText?: string;
-  claimMap?: Map<string, string>;
-  domains?: Set<string>;
-  emailClaim?: string;
-  idpEndpoint?: string;
-  requestPrivateKey?: string;
-  requestPublicKey?: string;
-  responsePublicKey?: string;
-  rolesClaim?: string;
-  type?: IdentityProviderType;
-}
-
-/**
- * @author Brian Pontarelli
- */
 export interface SAMLv2ApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
   buttonImageURL?: string;
   buttonText?: string;
@@ -4607,7 +4562,6 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   issuer?: string;
   keyId?: string;
   lambdaConfiguration?: LambdaConfiguration;
-  type?: IdentityProviderType;
   useNameIdForEmail?: boolean;
 }
 
@@ -4798,15 +4752,6 @@ export interface Tenant {
 export interface Tenantable {
 }
 
-export interface TenantEmailConfiguration extends Enableable {
-  forgotPasswordEmailTemplateId?: string;
-  passwordlessEmailTemplateId?: string;
-  setPasswordEmailTemplateId?: string;
-  verificationEmailTemplateId?: string;
-  verifyEmail?: boolean;
-  verifyEmailWhenChanged?: boolean;
-}
-
 /**
  * @author Daniel DeGroff
  */
@@ -4827,7 +4772,6 @@ export interface TenantResponse {
  */
 export interface TestEvent extends BaseEvent {
   message?: string;
-  type?: EventType;
 }
 
 /**
@@ -4942,7 +4886,6 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
   buttonText?: string;
   consumerKey?: string;
   consumerSecret?: string;
-  type?: IdentityProviderType;
 }
 
 /**
@@ -5072,7 +5015,6 @@ export interface UserActionEvent extends BaseEvent {
   phase?: UserActionPhase;
   reason?: string;
   reasonCode?: string;
-  type?: EventType;
 }
 
 /**
@@ -5180,7 +5122,6 @@ export interface UserActionResponse {
  * @author Brian Pontarelli
  */
 export interface UserBulkCreateEvent extends BaseEvent {
-  type?: EventType;
   users?: Array<User>;
 }
 
@@ -5257,7 +5198,6 @@ export interface UserConsentResponse {
  * @author Brian Pontarelli
  */
 export interface UserCreateEvent extends BaseEvent {
-  type?: EventType;
   user?: User;
 }
 
@@ -5267,7 +5207,6 @@ export interface UserCreateEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface UserDeactivateEvent extends BaseEvent {
-  type?: EventType;
   user?: User;
 }
 
@@ -5278,7 +5217,6 @@ export interface UserDeactivateEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface UserDeleteEvent extends BaseEvent {
-  type?: EventType;
   user?: User;
 }
 
@@ -5298,7 +5236,6 @@ export interface UserDeleteRequest {
  * @author Trevor Smith
  */
 export interface UserEmailVerifiedEvent extends BaseEvent {
-  type?: EventType;
   user?: User;
 }
 
@@ -5316,7 +5253,6 @@ export interface UserinfoResponse extends Map<string, any> {
 export interface UserLoginFailedEvent extends BaseEvent {
   applicationId?: string;
   authenticationType?: string;
-  type?: EventType;
   user?: User;
 }
 
@@ -5330,7 +5266,6 @@ export interface UserLoginSuccessEvent extends BaseEvent {
   authenticationType?: string;
   identityProviderId?: string;
   identityProviderName?: string;
-  type?: EventType;
   user?: User;
 }
 
@@ -5344,7 +5279,6 @@ export interface UsernameModeration extends Enableable {
  * @author Brian Pontarelli
  */
 export interface UserReactivateEvent extends BaseEvent {
-  type?: EventType;
   user?: User;
 }
 
@@ -5378,7 +5312,6 @@ export interface UserRegistration {
 export interface UserRegistrationCreateEvent extends BaseEvent {
   applicationId?: string;
   registration?: UserRegistration;
-  type?: EventType;
   user?: User;
 }
 
@@ -5390,7 +5323,6 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
 export interface UserRegistrationDeleteEvent extends BaseEvent {
   applicationId?: string;
   registration?: UserRegistration;
-  type?: EventType;
   user?: User;
 }
 
@@ -5403,7 +5335,6 @@ export interface UserRegistrationUpdateEvent extends BaseEvent {
   applicationId?: string;
   original?: UserRegistration;
   registration?: UserRegistration;
-  type?: EventType;
   user?: User;
 }
 
@@ -5415,7 +5346,6 @@ export interface UserRegistrationUpdateEvent extends BaseEvent {
 export interface UserRegistrationVerifiedEvent extends BaseEvent {
   applicationId?: string;
   registration?: UserRegistration;
-  type?: EventType;
   user?: User;
 }
 
@@ -5469,7 +5399,6 @@ export enum UserState {
  */
 export interface UserUpdateEvent extends BaseEvent {
   original?: User;
-  type?: EventType;
   user?: User;
 }
 
