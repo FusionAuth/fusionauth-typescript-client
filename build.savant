@@ -72,7 +72,7 @@ target(name: "test", description: "Runs the tests") {
   }
 }
 
-target(name: "npm-publish", description: "Publish in NPM", dependsOn: ["int"]) {
+target(name: "publish", description: "Publish in NPM", dependsOn: ["clean", "int"]) {
   def npmPublish = 'npm publish --access=public'.execute()
   npmPublish.consumeProcessOutput(System.out, System.err)
 }
