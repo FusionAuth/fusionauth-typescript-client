@@ -2707,10 +2707,8 @@ export class FusionAuthClient {
  */
 export interface AccessToken {
   access_token?: string;
-  clientId?: string;
   expires_in?: number;
   id_token?: string;
-  redirectURI?: string;
   refresh_token?: string;
   scope?: string;
   token_type?: TokenType;
@@ -2718,19 +2716,14 @@ export interface AccessToken {
 }
 
 export interface ActionData {
-  action?: UserAction;
-  actionee?: User;
   actioneeUserId?: string;
-  actioner?: User;
   actionerUserId?: string;
   applicationIds?: Array<string>;
   comment?: string;
   emailUser?: boolean;
   expiry?: number;
-  log?: UserActionLog;
   notifyUser?: boolean;
   option?: string;
-  reason?: UserActionReason;
   reasonId?: string;
   userActionId?: string;
 }
@@ -2832,9 +2825,7 @@ export interface ApplicationResponse {
  * @author Seth Musselman
  */
 export interface ApplicationRole {
-  applicationId?: string;
   description?: string;
-  display?: string;
   id?: string;
   isDefault?: boolean;
   isSuperRole?: boolean;
@@ -2934,7 +2925,6 @@ export interface BaseEvent {
   createInstant?: number;
   id?: string;
   tenantId?: string;
-  type?: EventType;
 }
 
 /**
@@ -3232,7 +3222,6 @@ export interface EmailTemplate {
   defaultTextTemplate?: string;
   fromEmail?: string;
   id?: string;
-  localizations?: Set<string>;
   localizedFromNames?: LocalizedStrings;
   localizedHtmlTemplates?: LocalizedStrings;
   localizedSubjects?: LocalizedStrings;
@@ -3281,7 +3270,6 @@ export interface Enableable {
 export interface Error {
   code?: string;
   message?: string;
-  values?: Array<any>;
 }
 
 /**
@@ -3826,7 +3814,28 @@ export interface IssueResponse {
  * @author Daniel DeGroff
  */
 export interface JWKSResponse {
-  keys?: Array<object>;
+  keys?: Array<any>;
+}
+
+/**
+ * JSON Web Token (JWT) as defined by RFC 7519.
+ * <pre>
+ * From RFC 7519 Section 1. Introduction:
+ *    The suggested pronunciation of JWT is the same as the English word "jot".
+ * </pre>
+ * The JWT is not Thread-Safe and should not be re-used.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWT {
+  aud?: any;
+  exp?: number;
+  iat?: number;
+  iss?: string;
+  jti?: string;
+  nbf?: number;
+  [otherClaims: string]: any; // Any other fields
+  sub?: string;
 }
 
 /**
@@ -3882,7 +3891,6 @@ export interface Key {
   algorithm?: KeyAlgorithm;
   certificate?: string;
   certificateInformation?: CertificateInformation;
-  displayName?: string;
   expirationInstant?: number;
   id?: string;
   insertInstant?: number;
@@ -4452,7 +4460,6 @@ export interface RefreshResponse {
  * @author Daniel DeGroff
  */
 export interface RefreshToken {
-  application?: Application;
   applicationId?: string;
   insertInstant?: number;
   metaData?: MetaData;
@@ -4938,7 +4945,6 @@ export interface UIConfiguration {
  */
 export interface User extends SecureIdentity {
   active?: boolean;
-  age?: number;
   birthDate?: string;
   cleanSpeakId?: string;
   data?: Map<string, any>;
@@ -4950,11 +4956,9 @@ export interface User extends SecureIdentity {
   insertInstant?: number;
   lastLoginInstant?: number;
   lastName?: string;
-  login?: string;
   memberships?: Array<GroupMember>;
   middleName?: string;
   mobilePhone?: string;
-  name?: string;
   parentEmail?: string;
   preferredLanguages?: Array<string>;
   registrations?: Array<UserRegistration>;
@@ -5406,7 +5410,7 @@ export interface UserUpdateEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface ValidateResponse {
-  jwt?: object;
+  jwt?: JWT;
 }
 
 /**

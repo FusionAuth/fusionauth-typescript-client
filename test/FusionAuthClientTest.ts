@@ -27,58 +27,32 @@ describe('#FusionAuthClient()', function () {
 
   beforeEach(async () => {
     client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'https://local.fusionauth.io');
+
     try {
       await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
+    } catch (ignore) {
+    }
+
+    try {
       const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
       let response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
       chai.assert.strictEqual(response.statusCode, 200);
       chai.assert.isNotNull(response.response);
     } catch (response) {
-      if (response.statusCode === 404) {
-        const applicationRequest: ApplicationRequest = {'application': {'name': 'Node.js FusionAuth Client'}};
-        await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
-      } else {
-        console.info(response);
-        console.info(response.statusCode);
-        if (!response.wasSuccessful()) {
-          console.error(JSON.stringify(response.response, null, 2));
-        } else {
-          console.error(response.exception);
-        }
-        chai.assert.isNotNull(null, 'Failed to setup FusionAuth');
-      }
+      console.error(JSON.stringify(response.response, null, 2));
+      throw new Error("Failed to setup FusionAuth Client for testing");
     }
-  });
-
-  it('Retrieve and Update System Configuration', async () => {
-    let clientResponse = await client.retrieveSystemConfiguration();
-    chai.assert.strictEqual(clientResponse.statusCode, 200);
-    chai.assert.isNotNull(clientResponse.response);
-    chai.expect(clientResponse.response).to.have.property('systemConfiguration');
-    let systemConfiguration = clientResponse.response.systemConfiguration;
-    chai.expect(systemConfiguration).to.have.property('emailConfiguration');
-    chai.expect(systemConfiguration).to.have.property('failedAuthenticationConfiguration');
-    chai.expect(systemConfiguration).to.have.property('jwtConfiguration');
-    // Modify the System Configuration and assert the change.
-    systemConfiguration.jwtConfiguration.issuer = 'node.fusionauth.io';
-
-    clientResponse = await client.updateSystemConfiguration({systemConfiguration: systemConfiguration});
-    chai.assert.strictEqual(clientResponse.statusCode, 200);
-    chai.assert.isNotNull(clientResponse.response);
-    chai.expect(clientResponse.response).to.have.property('systemConfiguration');
-    systemConfiguration = clientResponse.response.systemConfiguration;
-    chai.expect(systemConfiguration).to.have.property('jwtConfiguration');
-    chai.assert.equal('node.fusionauth.io', systemConfiguration.jwtConfiguration.issuer);
   });
 
   it('Create and Delete a User', async () => {
     let clientResponse = await client.createUser(null, {
-      'user': {
-        'email': 'nodejs@fusionauth.io',
-        'firstName': 'Jäne',
-        'password': 'password'
+      user: {
+        email: 'nodejs@fusionauth.io',
+        firstName: 'Jäne',
+        password: 'password'
       },
-      'skipVerification': true
+      skipVerification: true,
+      sendSetPasswordEmail: false
     });
     chai.assert.strictEqual(clientResponse.statusCode, 200);
     chai.assert.isNotNull(clientResponse.response);
@@ -91,7 +65,7 @@ describe('#FusionAuthClient()', function () {
     if (clientResponse.response === null) {
       chai.assert.isNull(clientResponse.response);
     } else {
-      chai.assert.isEmpty(clientResponse.response);
+      chai.assert.isUndefined(clientResponse.response);
     }
 
     try {
