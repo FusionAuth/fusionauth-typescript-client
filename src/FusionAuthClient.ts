@@ -2329,6 +2329,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Start a passwordless login request by generating a passwordless code. This code can be sent to the User using the Send
+   * Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
+   *
+   * @param {PasswordlessStartRequest} request The passwordless start request that contains all of the information used to begin the passwordless login request.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  startPasswordlessLogin(request: PasswordlessStartRequest): Promise<ClientResponse<void>> {
+    return this.start()
+        .withUri('/api/passwordless/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go<void>();
+  }
+
+  /**
    * Complete login using a 2FA challenge
    *
    * @param {TwoFactorLoginRequest} request The login request that contains the user credentials used to log them in.
@@ -4362,8 +4377,25 @@ export interface PasswordlessLoginRequest extends BaseLoginRequest {
  */
 export interface PasswordlessSendRequest {
   applicationId?: string;
+  code?: string;
   loginId?: string;
   state?: Map<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessStartRequest {
+  applicationId?: string;
+  loginId?: string;
+  state?: Map<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessStartResponse {
+  code?: string;
 }
 
 /**
