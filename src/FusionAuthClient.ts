@@ -3140,6 +3140,18 @@ export interface DeviceInfo {
   type?: DeviceType;
 }
 
+/**
+ * @author Trevor Smith
+ */
+export interface DeviceResponse {
+  device_code?: string;
+  expires_in?: number;
+  interval?: number;
+  user_code?: string;
+  verification_uri?: string;
+  verification_uri_complete?: string;
+}
+
 export enum DeviceType {
   BROWSER,
   DESKTOP,
@@ -3426,6 +3438,8 @@ export interface ExternalIdentifierConfiguration {
   authorizationGrantIdTimeToLiveInSeconds?: number;
   changePasswordIdGenerator?: SecureGeneratorConfiguration;
   changePasswordIdTimeToLiveInSeconds?: number;
+  deviceCodeTimeToLiveInSeconds?: number;
+  deviceUserCodeIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
@@ -3623,12 +3637,13 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
  * @author Daniel DeGroff
  */
 export enum GrantType {
-  authorization_code,
-  implicit,
-  password,
-  client_credentials,
-  refresh_token,
-  unknown
+  authorization_code = "authorization_code",
+  implicit = "implicit",
+  password = "password",
+  client_credentials = "client_credentials",
+  refresh_token = "refresh_token",
+  unknown = "unknown",
+  device_code = "urn:ietf:params:oauth:grant-type:device_code"
 }
 
 /**
@@ -4142,6 +4157,14 @@ export interface LoginResponse {
 }
 
 /**
+ * @author Matthew Altman
+ */
+export enum LogoutBehavior {
+  RedirectOnly,
+  AllApplications
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface LookupResponse {
@@ -4221,8 +4244,10 @@ export interface OAuth2Configuration {
   authorizedRedirectURLs?: Array<string>;
   clientId?: string;
   clientSecret?: string;
+  deviceVerificationURL?: string;
   enabledGrants?: Set<GrantType>;
   generateRefreshTokens?: boolean;
+  logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
   requireClientAuthentication?: boolean;
 }
@@ -4263,18 +4288,26 @@ export enum OAuthErrorReason {
   invalid_pkce_code_challenge,
   invalid_pkce_code_challenge_method,
   invalid_redirect_uri,
+  invalid_response_mode,
   invalid_response_type,
   invalid_id_token_hint,
   invalid_post_logout_redirect_uri,
+  invalid_device_code,
+  invalid_user_code,
+  invalid_additional_client_id,
   grant_type_disabled,
   missing_client_id,
   missing_code,
+  missing_device_code,
   missing_grant_type,
   missing_redirect_uri,
   missing_refresh_token,
   missing_response_type,
   missing_token,
+  missing_user_code,
+  missing_verification_uri,
   login_prevented,
+  user_code_expired,
   user_expired,
   user_locked,
   user_not_found,
@@ -4296,7 +4329,9 @@ export enum OAuthErrorType {
   unsupported_grant_type,
   unsupported_response_type,
   change_password_required,
-  two_factor_required
+  two_factor_required,
+  authorization_pending,
+  expired_token
 }
 
 /**
@@ -4306,7 +4341,7 @@ export interface OAuthResponse {
 }
 
 /**
- * OpenID Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
+ * OpenID Connect Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
  * Provider Metadata</a>.
  *
  * @author Daniel DeGroff
@@ -4315,12 +4350,14 @@ export interface OpenIdConfiguration {
   authorization_endpoint?: string;
   backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
+  device_authorization_endpoint?: string;
   end_session_endpoint?: string;
   frontchannel_logout_supported?: boolean;
   grant_types_supported?: Array<string>;
   id_token_signing_alg_values_supported?: Array<string>;
   issuer?: string;
   jwks_uri?: string;
+  response_modes_supported?: Array<string>;
   response_types_supported?: Array<string>;
   scopes_supported?: Array<string>;
   subject_types_supported?: Array<string>;
@@ -4654,7 +4691,9 @@ export interface SecureGeneratorConfiguration {
  */
 export enum SecureGeneratorType {
   randomDigits,
-  randomBytes
+  randomBytes,
+  randomAlpha,
+  randomAlphaNumeric
 }
 
 /**
@@ -4747,6 +4786,7 @@ export interface Templates {
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
+  oauth2Device?: string;
   oauth2Error?: string;
   oauth2Logout?: string;
   oauth2Passwordless?: string;
