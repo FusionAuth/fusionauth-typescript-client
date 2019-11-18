@@ -153,7 +153,9 @@ export default class DefaultRESTClient implements IRESTClient {
       );
   
       clientResponse.statusCode = response.status;
-      clientResponse.response = await response.json();
+      if (response.body) {
+        clientResponse.response = await response.json();
+      }
     } catch (error) {
       clientResponse.exception = error;
     }
