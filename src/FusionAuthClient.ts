@@ -3714,6 +3714,13 @@ export enum HTTPMethod {
   OPTIONS
 }
 
+export interface IdentityProviderDetails {
+  id?: string;
+  name?: string;
+  oauth2?: IdentityProviderOauth2Configuration;
+  type?: IdentityProviderType;
+}
+
 /**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
  *
@@ -4168,7 +4175,7 @@ export enum LogoutBehavior {
  * @author Daniel DeGroff
  */
 export interface LookupResponse {
-  identityProvider?: BaseIdentityProvider<any>;
+  identityProvider?: IdentityProviderDetails;
 }
 
 /**
