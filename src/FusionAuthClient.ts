@@ -4028,10 +4028,10 @@ export interface LambdaResponse {
  * @author Brian Pontarelli
  */
 export enum LambdaType {
-  JWTPopulate = "populate",
-  OpenIDReconcile = "reconcile",
-  SAMLv2Reconcile = "reconcile",
-  SAMLv2Populate = "populate"
+  JWTPopulate,
+  OpenIDReconcile,
+  SAMLv2Reconcile,
+  SAMLv2Populate
 }
 
 /**
