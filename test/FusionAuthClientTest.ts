@@ -26,7 +26,7 @@ let client;
 describe('#FusionAuthClient()', function () {
 
   beforeEach(async () => {
-    client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'https://local.fusionauth.io');
+    client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'http://localhost:9011');
 
     try {
       await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
@@ -74,5 +74,11 @@ describe('#FusionAuthClient()', function () {
     } catch (clientResponse) {
       chai.assert.strictEqual(clientResponse.statusCode, 404);
     }
+  });
+
+  it('Patch Application', async () => {
+    const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client patch', verifyRegistration: true}};
+    let response = await client.patchApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+    chai.assert.strictEqual(response.statusCode, 200);
   });
 });

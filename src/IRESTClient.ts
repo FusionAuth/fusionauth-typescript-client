@@ -31,6 +31,13 @@ export default interface IRESTClient {
   withUriSegment(segment: string | number): IRESTClient;
 
   /**
+   * Sets the body of the client request.
+   *
+   * @param body The object to be written to the request body as form data.
+   */
+  withFormData(body: FormData): IRESTClient;
+
+  /**
    * Adds a header to the request.
    *
    * @param key The name of the header.

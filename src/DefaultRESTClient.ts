@@ -25,7 +25,7 @@ import fetch from 'cross-fetch'
  * @author TJ Peden
  */
 export default class DefaultRESTClient implements IRESTClient {
-  public body: string;
+  public body: unknown;
   public headers: Record<string, string> = {};
   public method: string;
   public parameters: Record<string, string> = {};
@@ -72,6 +72,17 @@ export default class DefaultRESTClient implements IRESTClient {
    */
   getFullUrl() {
     return this.host + this.uri + this.getQueryString();
+  }
+
+  /**
+   * Sets the body of the client request.
+   *
+   * @param body The object to be written to the request body as form data.
+   */
+  withFormData(body: object): DefaultRESTClient {
+    this.body = body;
+    this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
+    return this;
   }
 
   /**
@@ -147,7 +158,7 @@ export default class DefaultRESTClient implements IRESTClient {
         {
           method: this.method,
           headers: this.headers,
-          body: this.body,
+          body: this.body as BodyInit,
           credentials: this.credentials,
         },
       );

@@ -111,7 +111,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
    */
   changePassword(changePasswordId: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/user/change-password')
         .withUriSegment(changePasswordId)
         .withJSONBody(request)
@@ -767,17 +767,95 @@ export class FusionAuthClient {
   }
 
   /**
+   * Exchanges an OAuth authorization code for an access token.
+   * If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
+   *
+   * @param {string} code The authorization code returned on the /oauth2/authorize response.
+   * @param {string} client_id (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} redirect_uri The URI to redirect to upon a successful request.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string): Promise<ClientResponse<AccessToken>> {
+    let body = new FormData();
+    body.append('code', code);
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('grant_type', 'authorization_code');
+    body.append('redirect_uri', redirect_uri);
+    return this.startAnonymous()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go<AccessToken>();
+  }
+
+  /**
+   * Exchange a Refresh Token for an Access Token.
+   * If you will be using the Refresh Token Grant, you will make a request to the Token endpoint to exchange the user’s refresh token for an access token.
+   *
+   * @param {string} refresh_token The refresh token that you would like to use to exchange for an access token.
+   * @param {string} client_id (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
+   * @param {string} user_code (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeRefreshTokenForAccessToken(refresh_token: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
+    let body = new FormData();
+    body.append('refresh_token', refresh_token);
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('grant_type', 'refresh_token');
+    body.append('scope', scope);
+    body.append('user_code', user_code);
+    return this.startAnonymous()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go<AccessToken>();
+  }
+
+  /**
    * Exchange a refresh token for a new JWT.
    *
    * @param {RefreshRequest} request The refresh request.
    * @returns {Promise<ClientResponse<RefreshResponse>>}
    */
   exchangeRefreshTokenForJWT(request: RefreshRequest): Promise<ClientResponse<RefreshResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/refresh')
         .withJSONBody(request)
         .withMethod("POST")
         .go<RefreshResponse>();
+  }
+
+  /**
+   * Exchange User Credentials for a Token.
+   * If you will be using the Resource Owner Password Credential Grant, you will make a request to the Token endpoint to exchange the user’s email and password for an access token.
+   *
+   * @param {string} username The login identifier of the user. The login identifier can be either the email or the username.
+   * @param {string} password The user’s password.
+   * @param {string} client_id (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
+   * @param {string} user_code (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeUserCredentialsForAccessToken(username: string, password: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
+    let body = new FormData();
+    body.append('username', username);
+    body.append('password', password);
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('grant_type', 'password');
+    body.append('scope', scope);
+    body.append('user_code', user_code);
+    return this.startAnonymous()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go<AccessToken>();
   }
 
   /**
@@ -787,7 +865,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ForgotPasswordResponse>>}
    */
   forgotPassword(request: ForgotPasswordRequest): Promise<ClientResponse<ForgotPasswordResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/user/forgot-password')
         .withJSONBody(request)
         .withMethod("POST")
@@ -883,7 +961,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<LoginResponse>>}
    */
   identityProviderLogin(request: IdentityProviderLoginRequest): Promise<ClientResponse<LoginResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/identity-provider/login')
         .withJSONBody(request)
         .withMethod("POST")
@@ -992,7 +1070,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   logout(global: boolean, refreshToken: string): Promise<ClientResponse<void>> {
-    return this.start()
+    return this.startAnonymous()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/logout')
         .withParameter('global', global)
@@ -1040,11 +1118,266 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<LoginResponse>>}
    */
   passwordlessLogin(request: PasswordlessLoginRequest): Promise<ClientResponse<LoginResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/passwordless/login')
         .withJSONBody(request)
         .withMethod("POST")
         .go<LoginResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the application with the given Id.
+   *
+   * @param {string} applicationId The Id of the application to update.
+   * @param {ApplicationRequest} request The request that contains just the new application information.
+   * @returns {Promise<ClientResponse<ApplicationResponse>>}
+   */
+  patchApplication(applicationId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+    return this.start()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<ApplicationResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the application role with the given id for the application.
+   *
+   * @param {string} applicationId The Id of the application that the role belongs to.
+   * @param {string} roleId The Id of the role to update.
+   * @param {ApplicationRequest} request The request that contains just the new role information.
+   * @returns {Promise<ClientResponse<ApplicationResponse>>}
+   */
+  patchApplicationRole(applicationId: string, roleId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+    return this.start()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("role")
+        .withUriSegment(roleId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<ApplicationResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the consent with the given Id.
+   *
+   * @param {string} consentId The Id of the consent to update.
+   * @param {ConsentRequest} request The request that contains just the new consent information.
+   * @returns {Promise<ClientResponse<ConsentResponse>>}
+   */
+  patchConsent(consentId: string, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
+    return this.start()
+        .withUri('/api/consent')
+        .withUriSegment(consentId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<ConsentResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the email template with the given Id.
+   *
+   * @param {string} emailTemplateId The Id of the email template to update.
+   * @param {EmailTemplateRequest} request The request that contains just the new email template information.
+   * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
+   */
+  patchEmailTemplate(emailTemplateId: string, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
+    return this.start()
+        .withUri('/api/email/template')
+        .withUriSegment(emailTemplateId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<EmailTemplateResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the group with the given Id.
+   *
+   * @param {string} groupId The Id of the group to update.
+   * @param {GroupRequest} request The request that contains just the new group information.
+   * @returns {Promise<ClientResponse<GroupResponse>>}
+   */
+  patchGroup(groupId: string, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
+    return this.start()
+        .withUri('/api/group')
+        .withUriSegment(groupId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<GroupResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the identity provider with the given Id.
+   *
+   * @param {string} identityProviderId The Id of the identity provider to update.
+   * @param {IdentityProviderRequest} request The request object that contains just the updated identity provider information.
+   * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
+   */
+  patchIdentityProvider(identityProviderId: string, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
+    return this.start()
+        .withUri('/api/identity-provider')
+        .withUriSegment(identityProviderId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<IdentityProviderResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the available integrations.
+   *
+   * @param {IntegrationRequest} request The request that contains just the new integration information.
+   * @returns {Promise<ClientResponse<IntegrationResponse>>}
+   */
+  patchIntegrations(request: IntegrationRequest): Promise<ClientResponse<IntegrationResponse>> {
+    return this.start()
+        .withUri('/api/integration')
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<IntegrationResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the lambda with the given Id.
+   *
+   * @param {string} lambdaId The Id of the lambda to update.
+   * @param {LambdaRequest} request The request that contains just the new lambda information.
+   * @returns {Promise<ClientResponse<LambdaResponse>>}
+   */
+  patchLambda(lambdaId: string, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
+    return this.start()
+        .withUri('/api/lambda')
+        .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<LambdaResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the registration for the user with the given id and the application defined in the request.
+   *
+   * @param {string} userId The Id of the user whose registration is going to be updated.
+   * @param {RegistrationRequest} request The request that contains just the new registration information.
+   * @returns {Promise<ClientResponse<RegistrationResponse>>}
+   */
+  patchRegistration(userId: string, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
+    return this.start()
+        .withUri('/api/user/registration')
+        .withUriSegment(userId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<RegistrationResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the system configuration.
+   *
+   * @param {SystemConfigurationRequest} request The request that contains just the new system configuration information.
+   * @returns {Promise<ClientResponse<SystemConfigurationResponse>>}
+   */
+  patchSystemConfiguration(request: SystemConfigurationRequest): Promise<ClientResponse<SystemConfigurationResponse>> {
+    return this.start()
+        .withUri('/api/system-configuration')
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<SystemConfigurationResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the tenant with the given Id.
+   *
+   * @param {string} tenantId The Id of the tenant to update.
+   * @param {TenantRequest} request The request that contains just the new tenant information.
+   * @returns {Promise<ClientResponse<TenantResponse>>}
+   */
+  patchTenant(tenantId: string, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
+    return this.start()
+        .withUri('/api/tenant')
+        .withUriSegment(tenantId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<TenantResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the theme with the given Id.
+   *
+   * @param {string} themeId The Id of the theme to update.
+   * @param {ThemeRequest} request The request that contains just the new theme information.
+   * @returns {Promise<ClientResponse<ThemeResponse>>}
+   */
+  patchTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+    return this.start()
+        .withUri('/api/theme')
+        .withUriSegment(themeId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<ThemeResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the user with the given Id.
+   *
+   * @param {string} userId The Id of the user to update.
+   * @param {UserRequest} request The request that contains just the new user information.
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  patchUser(userId: string, request: UserRequest): Promise<ClientResponse<UserResponse>> {
+    return this.start()
+        .withUri('/api/user')
+        .withUriSegment(userId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<UserResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the user action with the given Id.
+   *
+   * @param {string} userActionId The Id of the user action to update.
+   * @param {UserActionRequest} request The request that contains just the new user action information.
+   * @returns {Promise<ClientResponse<UserActionResponse>>}
+   */
+  patchUserAction(userActionId: string, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
+    return this.start()
+        .withUri('/api/user-action')
+        .withUriSegment(userActionId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<UserActionResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, the user action reason with the given Id.
+   *
+   * @param {string} userActionReasonId The Id of the user action reason to update.
+   * @param {UserActionReasonRequest} request The request that contains just the new user action reason information.
+   * @returns {Promise<ClientResponse<UserActionReasonResponse>>}
+   */
+  patchUserActionReason(userActionReasonId: string, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
+    return this.start()
+        .withUri('/api/user-action-reason')
+        .withUriSegment(userActionReasonId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<UserActionReasonResponse>();
+  }
+
+  /**
+   * Updates, via PATCH, a single User consent by Id.
+   *
+   * @param {string} userConsentId The User Consent Id
+   * @param {UserConsentRequest} request The request that contains just the new user consent information.
+   * @returns {Promise<ClientResponse<UserConsentResponse>>}
+   */
+  patchUserConsent(userConsentId: string, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
+    return this.start()
+        .withUri('/api/user/consent')
+        .withUriSegment(userConsentId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go<UserConsentResponse>();
   }
 
   /**
@@ -1099,7 +1432,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<LoginResponse>>}
    */
   reconcileJWT(request: IdentityProviderLoginRequest): Promise<ClientResponse<LoginResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/reconcile')
         .withJSONBody(request)
         .withMethod("POST")
@@ -1164,7 +1497,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<VerifyEmailResponse>>}
    */
   resendEmailVerification(email: string): Promise<ClientResponse<VerifyEmailResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
         .withMethod("PUT")
@@ -1179,7 +1512,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<VerifyRegistrationResponse>>}
    */
   resendRegistrationVerification(email: string, applicationId: string): Promise<ClientResponse<VerifyRegistrationResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/user/verify-registration')
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
@@ -1529,7 +1862,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<PublicKeyResponse>>}
    */
   retrieveJWTPublicKey(keyId: string): Promise<ClientResponse<PublicKeyResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/public-key')
         .withParameter('kid', keyId)
         .withMethod("GET")
@@ -1543,7 +1876,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<PublicKeyResponse>>}
    */
   retrieveJWTPublicKeyByApplicationId(applicationId: string): Promise<ClientResponse<PublicKeyResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/public-key')
         .withParameter('applicationId', applicationId)
         .withMethod("GET")
@@ -1556,10 +1889,22 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<PublicKeyResponse>>}
    */
   retrieveJWTPublicKeys(): Promise<ClientResponse<PublicKeyResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/public-key')
         .withMethod("GET")
         .go<PublicKeyResponse>();
+  }
+
+  /**
+   * Returns public keys used by FusionAuth to cryptographically verify JWTs using the JSON Web Key format.
+   *
+   * @returns {Promise<ClientResponse<JWKSResponse>>}
+   */
+  retrieveJsonWebKeySet(): Promise<ClientResponse<JWKSResponse>> {
+    return this.startAnonymous()
+        .withUri('/.well-known/jwks.json')
+        .withMethod("GET")
+        .go<JWKSResponse>();
   }
 
   /**
@@ -1682,6 +2027,18 @@ export class FusionAuthClient {
   }
 
   /**
+   * Returns the well known OpenID Configuration JSON document
+   *
+   * @returns {Promise<ClientResponse<OpenIdConfiguration>>}
+   */
+  retrieveOpenIdConfiguration(): Promise<ClientResponse<OpenIdConfiguration>> {
+    return this.startAnonymous()
+        .withUri('/.well-known/openid-configuration')
+        .withMethod("GET")
+        .go<OpenIdConfiguration>();
+  }
+
+  /**
    * Retrieves the password validation rules for a specific tenant. This method requires a tenantId to be provided 
    * through the use of a Tenant scoped API key or an HTTP header X-FusionAuth-TenantId to specify the Tenant Id.
    * 
@@ -1690,7 +2047,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<PasswordValidationRulesResponse>>}
    */
   retrievePasswordValidationRules(): Promise<ClientResponse<PasswordValidationRulesResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/tenant/password-validation-rules')
         .withMethod("GET")
         .go<PasswordValidationRulesResponse>();
@@ -1705,7 +2062,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<PasswordValidationRulesResponse>>}
    */
   retrievePasswordValidationRulesWithTenantId(tenantId: string): Promise<ClientResponse<PasswordValidationRulesResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/tenant/password-validation-rules')
         .withUriSegment(tenantId)
         .withMethod("GET")
@@ -2117,7 +2474,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
   retrieveUserUsingJWT(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/user')
         .withAuthorization('JWT ' + encodedJWT)
         .withMethod("GET")
@@ -2292,7 +2649,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   sendPasswordlessCode(request: PasswordlessSendRequest): Promise<ClientResponse<void>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/passwordless/send')
         .withJSONBody(request)
         .withMethod("POST")
@@ -2320,7 +2677,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   sendTwoFactorCodeForLogin(twoFactorId: string): Promise<ClientResponse<void>> {
-    return this.start()
+    return this.startAnonymous()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/two-factor/send')
         .withUriSegment(twoFactorId)
@@ -2350,7 +2707,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<LoginResponse>>}
    */
   twoFactorLogin(request: TwoFactorLoginRequest): Promise<ClientResponse<LoginResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/two-factor/login')
         .withJSONBody(request)
         .withMethod("POST")
@@ -2645,6 +3002,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Validates the end-user provided user_code from the user-interaction of the Device Authorization Grant.
+   * If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
+   *
+   * @param {string} user_code The end-user verification code.
+   * @param {string} client_id The client id.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  validateDevice(user_code: string, client_id: string): Promise<ClientResponse<void>> {
+    return this.startAnonymous()
+        .withUri('/oauth2/device/validate')
+        .withParameter('user_code', user_code)
+        .withParameter('client_id', client_id)
+        .withMethod("GET")
+        .go<void>();
+  }
+
+  /**
    * Validates the provided JWT (encoded JWT string) to ensure the token is valid. A valid access token is properly
    * signed and not expired.
    * <p>
@@ -2654,7 +3028,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ValidateResponse>>}
    */
   validateJWT(encodedJWT: string): Promise<ClientResponse<ValidateResponse>> {
-    return this.start()
+    return this.startAnonymous()
         .withUri('/api/jwt/validate')
         .withAuthorization('JWT ' + encodedJWT)
         .withMethod("GET")
@@ -2668,7 +3042,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   verifyEmail(verificationId: string): Promise<ClientResponse<void>> {
-    return this.start()
+    return this.startAnonymous()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/verify-email')
         .withUriSegment(verificationId)
@@ -2683,7 +3057,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   verifyRegistration(verificationId: string): Promise<ClientResponse<void>> {
-    return this.start()
+    return this.startAnonymous()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/verify-registration')
         .withUriSegment(verificationId)
@@ -2703,7 +3077,11 @@ export class FusionAuthClient {
    * @private
    */
   private start(): IRESTClient {
-    let client = this.clientBuilder.build(this.host).withAuthorization(this.apiKey);
+    return this.startAnonymous().withAuthorization(this.apiKey);
+  }
+
+  private startAnonymous(): IRESTClient {
+    let client = this.clientBuilder.build(this.host);
 
     if (this.tenantId != null) {
       client.withHeader('X-FusionAuth-TenantId', this.tenantId);
@@ -3848,10 +4226,38 @@ export interface IssueResponse {
 }
 
 /**
+ * A JSON Web Key as defined by <a href="https://tools.ietf.org/html/rfc7517#section-4">RFC 7517 JSON Web Key (JWK)
+ * Section 4</a> and <a href="https://tools.ietf.org/html/rfc7518">RFC 7518 JSON Web Algorithms (JWA)</a>.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JSONWebKey {
+  alg?: Algorithm;
+  crv?: string;
+  d?: string;
+  dp?: string;
+  dq?: string;
+  e?: string;
+  kid?: string;
+  kty?: KeyType;
+  n?: string;
+  [other: string]: any; // Any other fields
+  p?: string;
+  q?: string;
+  qi?: string;
+  use?: string;
+  x?: string;
+  x5c?: Array<string>;
+  x5t?: string;
+  x5t_S256?: string;
+  y?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface JWKSResponse {
-  keys?: Array<any>;
+  keys?: Array<JSONWebKey>;
 }
 
 /**
