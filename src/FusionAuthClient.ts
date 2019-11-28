@@ -2686,6 +2686,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Begins a login request for a 3rd party login that requires user interaction such as HYPR.
+   *
+   * @param {IdentityProviderStartLoginRequest} request The third-party login request that contains information from the third-party login
+   *    providers that FusionAuth uses to reconcile the user's account.
+   * @returns {Promise<ClientResponse<IdentityProviderStartLoginResponse>>}
+   */
+  startIdentityProviderLogin(request: IdentityProviderStartLoginRequest): Promise<ClientResponse<IdentityProviderStartLoginResponse>> {
+    return this.start()
+        .withUri('/api/identity-provider/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go<IdentityProviderStartLoginResponse>();
+  }
+
+  /**
    * Start a passwordless login request by generating a passwordless code. This code can be sent to the User using the Send
    * Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
    *
@@ -3820,6 +3835,7 @@ export interface ExternalIdentifierConfiguration {
   deviceUserCodeIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdTimeToLiveInSeconds?: number;
+  externalAuthenticationIdTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
@@ -4092,6 +4108,27 @@ export enum HTTPMethod {
   OPTIONS
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface HYPRApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  licensingEnabled?: boolean;
+  licensingEnabledOverride?: boolean;
+  licensingURL?: string;
+  relyingPartyApplicationId?: string;
+  relyingPartyURL?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicationConfiguration> {
+  licensingEnabled?: boolean;
+  licensingURL?: string;
+  relyingPartyApplicationId?: string;
+  relyingPartyURL?: string;
+}
+
 export interface IdentityProviderDetails {
   id?: string;
   name?: string;
@@ -4138,13 +4175,30 @@ export interface IdentityProviderResponse {
   identityProviders?: Array<BaseIdentityProvider<any>>;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
+  identityProviderId?: string;
+  loginId?: string;
+  state?: Map<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderStartLoginResponse {
+  code?: string;
+}
+
 export enum IdentityProviderType {
   ExternalJWT,
   OpenIDConnect,
   Facebook,
   Google,
   Twitter,
-  SAMLv2
+  SAMLv2,
+  HYPR
 }
 
 /**
@@ -4816,6 +4870,12 @@ export interface PasswordlessConfiguration extends Enableable {
 }
 
 /**
+ * Interface for all identity providers that are passwordless and do not accept a password.
+ */
+export interface PasswordlessIdentityProvider {
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface PasswordlessLoginRequest extends BaseLoginRequest {
@@ -5206,6 +5266,7 @@ export interface Templates {
   oauth2Passwordless?: string;
   oauth2Register?: string;
   oauth2TwoFactor?: string;
+  oauth2Wait?: string;
   passwordChange?: string;
   passwordComplete?: string;
   passwordForgot?: string;
