@@ -5261,6 +5261,7 @@ export interface Templates {
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
   oauth2Device?: string;
+  oauth2DeviceComplete?: string;
   oauth2Error?: string;
   oauth2Logout?: string;
   oauth2Passwordless?: string;
