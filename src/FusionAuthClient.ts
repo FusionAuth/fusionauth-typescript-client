@@ -472,14 +472,33 @@ export class FusionAuthClient {
    * Deactivates the users with the given ids.
    *
    * @param {Array<string>} userIds The ids of the users to deactivate.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    */
-  deactivateUsers(userIds: Array<string>): Promise<ClientResponse<void>> {
+  deactivateUsers(userIds: Array<string>): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
         .withUri('/api/user/bulk')
         .withParameter('userId', userIds)
+        .withParameter('dryRun', false)
+        .withParameter('hardDelete', false)
         .withMethod("DELETE")
-        .go<void>();
+        .go<UserDeleteResponse>();
+  }
+
+  /**
+   * Deactivates the users found with the given search query string.
+   *
+   * @param {string} queryString The search query string.
+   * @param {boolean} dryRun Whether to preview or deactivate the users found by the queryString
+   * @returns {Promise<ClientResponse<UserDeleteResponse>>}
+   */
+  deactivateUsersByQuery(queryString: string, dryRun: boolean): Promise<ClientResponse<UserDeleteResponse>> {
+    return this.start()
+        .withUri('/api/user/bulk')
+        .withParameter('queryString', queryString)
+        .withParameter('dryRun', dryRun)
+        .withParameter('hardDelete', false)
+        .withMethod("DELETE")
+        .go<UserDeleteResponse>();
   }
 
   /**
@@ -707,17 +726,36 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deletes the users with the given ids.
+   * Deletes the users with the given ids, or users matching the provided queryString.
+   * If you provide both userIds and queryString, the userIds will be honored.  This can be used to deactivate or hard-delete 
+   * a user based on the hardDelete request body parameter.
    *
-   * @param {UserDeleteRequest} request The ids of the users to delete.
-   * @returns {Promise<ClientResponse<void>>}
+   * @param {UserDeleteRequest} request The UserDeleteRequest.
+   * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    */
-  deleteUsers(request: UserDeleteRequest): Promise<ClientResponse<void>> {
+  deleteUsers(request: UserDeleteRequest): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
         .withUri('/api/user/bulk')
         .withJSONBody(request)
         .withMethod("DELETE")
-        .go<void>();
+        .go<UserDeleteResponse>();
+  }
+
+  /**
+   * Delete the users found with the given search query string.
+   *
+   * @param {string} queryString The search query string.
+   * @param {boolean} dryRun Whether to preview or delete the users found by the queryString
+   * @returns {Promise<ClientResponse<UserDeleteResponse>>}
+   */
+  deleteUsersByQuery(queryString: string, dryRun: boolean): Promise<ClientResponse<UserDeleteResponse>> {
+    return this.start()
+        .withUri('/api/user/bulk')
+        .withParameter('queryString', queryString)
+        .withParameter('dryRun', dryRun)
+        .withParameter('hardDelete', true)
+        .withMethod("DELETE")
+        .go<UserDeleteResponse>();
   }
 
   /**
@@ -3190,6 +3228,7 @@ export interface Application {
   oauthConfiguration?: OAuth2Configuration;
   passwordlessConfiguration?: PasswordlessConfiguration;
   registrationConfiguration?: RegistrationConfiguration;
+  registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
   tenantId?: string;
@@ -3203,6 +3242,15 @@ export interface Application {
  * @author Brian Pontarelli
  */
 export interface ApplicationEvent {
+}
+
+/**
+ * A Application-level policy for deleting Users.
+ *
+ * @author Trevor Smith
+ */
+export interface ApplicationRegistrationDeletePolicy {
+  unverified?: TimeBasedDeletePolicy;
 }
 
 /**
@@ -5299,6 +5347,7 @@ export interface Tenant {
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
   themeId?: string;
+  userDeletePolicy?: TenantUserDeletePolicy;
 }
 
 /**
@@ -5320,6 +5369,15 @@ export interface TenantRequest {
 export interface TenantResponse {
   tenant?: Tenant;
   tenants?: Array<Tenant>;
+}
+
+/**
+ * A Tenant-level policy for deleting Users.
+ *
+ * @author Trevor Smith
+ */
+export interface TenantUserDeletePolicy {
+  unverified?: TimeBasedDeletePolicy;
 }
 
 /**
@@ -5362,6 +5420,15 @@ export interface ThemeRequest {
 export interface ThemeResponse {
   theme?: Theme;
   themes?: Array<Theme>;
+}
+
+/**
+ * A policy for deleting Users.
+ *
+ * @author Trevor Smith
+ */
+export interface TimeBasedDeletePolicy extends Enableable {
+  numberOfDaysToRetain?: number;
 }
 
 /**
@@ -5778,7 +5845,22 @@ export interface UserDeleteEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserDeleteRequest {
+  dryRun?: boolean;
   hardDelete?: boolean;
+  query?: string;
+  queryString?: string;
+  userIds?: Array<string>;
+}
+
+/**
+ * User API bulk response object.
+ *
+ * @author Trevor Smith
+ */
+export interface UserDeleteResponse {
+  dryRun?: boolean;
+  hardDelete?: boolean;
+  total?: number;
   userIds?: Array<string>;
 }
 
@@ -5931,6 +6013,7 @@ export interface UserSearchCriteria extends BaseSearchCriteria {
   fullName?: string;
   id?: string;
   ids?: Array<string>;
+  query?: string;
   queryString?: string;
   sortFields?: Array<SortField>;
   username?: string;
