@@ -111,7 +111,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
    */
   changePassword(changePasswordId: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
-    return this.startAnonymous()
+    return this.start()
         .withUri('/api/user/change-password')
         .withUriSegment(changePasswordId)
         .withJSONBody(request)
@@ -903,7 +903,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ForgotPasswordResponse>>}
    */
   forgotPassword(request: ForgotPasswordRequest): Promise<ClientResponse<ForgotPasswordResponse>> {
-    return this.startAnonymous()
+    return this.start()
         .withUri('/api/user/forgot-password')
         .withJSONBody(request)
         .withMethod("POST")
@@ -1535,7 +1535,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<VerifyEmailResponse>>}
    */
   resendEmailVerification(email: string): Promise<ClientResponse<VerifyEmailResponse>> {
-    return this.startAnonymous()
+    return this.start()
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
         .withMethod("PUT")
