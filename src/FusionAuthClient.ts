@@ -1550,7 +1550,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<VerifyRegistrationResponse>>}
    */
   resendRegistrationVerification(email: string, applicationId: string): Promise<ClientResponse<VerifyRegistrationResponse>> {
-    return this.startAnonymous()
+    return this.start()
         .withUri('/api/user/verify-registration')
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
