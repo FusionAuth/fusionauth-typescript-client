@@ -56,12 +56,12 @@ export class FusionAuthClient {
    * "actioner". Both user ids are required. You pass the actionee's user id into the method and the actioner's is put into the
    * request object.
    *
-   * @param {string} actioneeUserId The actionee's user id.
+   * @param {UUID} actioneeUserId The actionee's user id.
    * @param {ActionRequest} request The action request that includes all of the information about the action being taken including
    *    the id of the action, any options and the duration (if applicable).
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  actionUser(actioneeUserId: string, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
+  actionUser(actioneeUserId: UUID, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withUriSegment(actioneeUserId)
@@ -73,11 +73,11 @@ export class FusionAuthClient {
   /**
    * Adds a user to an existing family. The family id must be specified.
    *
-   * @param {string} familyId The id of the family.
+   * @param {UUID} familyId The id of the family.
    * @param {FamilyRequest} request The request object that contains all of the information used to determine which user to add to the family.
    * @returns {Promise<ClientResponse<FamilyResponse>>}
    */
-  addUserToFamily(familyId: string, request: FamilyRequest): Promise<ClientResponse<FamilyResponse>> {
+  addUserToFamily(familyId: UUID, request: FamilyRequest): Promise<ClientResponse<FamilyResponse>> {
     return this.start()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
@@ -89,11 +89,11 @@ export class FusionAuthClient {
   /**
    * Cancels the user action.
    *
-   * @param {string} actionId The action id of the action to cancel.
+   * @param {UUID} actionId The action id of the action to cancel.
    * @param {ActionRequest} request The action request that contains the information about the cancellation.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  cancelAction(actionId: string, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
+  cancelAction(actionId: UUID, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withUriSegment(actionId)
@@ -152,11 +152,11 @@ export class FusionAuthClient {
   /**
    * Creates an application. You can optionally specify an Id for the application, if not provided one will be generated.
    *
-   * @param {string} applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
+   * @param {UUID} applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
    * @param {ApplicationRequest} request The request object that contains all of the information used to create the application.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  createApplication(applicationId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  createApplication(applicationId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -169,12 +169,12 @@ export class FusionAuthClient {
    * Creates a new role for an application. You must specify the id of the application you are creating the role for.
    * You can optionally specify an Id for the role inside the ApplicationRole object itself, if not provided one will be generated.
    *
-   * @param {string} applicationId The Id of the application to create the role on.
-   * @param {string} roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
+   * @param {UUID} applicationId The Id of the application to create the role on.
+   * @param {UUID} roleId (Optional) The Id of the role. If not provided a secure random UUID will be generated.
    * @param {ApplicationRequest} request The request object that contains all of the information used to create the application role.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  createApplicationRole(applicationId: string, roleId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  createApplicationRole(applicationId: UUID, roleId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -204,11 +204,11 @@ export class FusionAuthClient {
   /**
    * Creates a user consent type. You can optionally specify an Id for the consent type, if not provided one will be generated.
    *
-   * @param {string} consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
+   * @param {UUID} consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
    * @param {ConsentRequest} request The request object that contains all of the information used to create the consent.
    * @returns {Promise<ClientResponse<ConsentResponse>>}
    */
-  createConsent(consentId: string, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
+  createConsent(consentId: UUID, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
     return this.start()
         .withUri('/api/consent')
         .withUriSegment(consentId)
@@ -220,11 +220,11 @@ export class FusionAuthClient {
   /**
    * Creates an email template. You can optionally specify an Id for the template, if not provided one will be generated.
    *
-   * @param {string} emailTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+   * @param {UUID} emailTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
    * @param {EmailTemplateRequest} request The request object that contains all of the information used to create the email template.
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
    */
-  createEmailTemplate(emailTemplateId: string, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
+  createEmailTemplate(emailTemplateId: UUID, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
@@ -237,11 +237,11 @@ export class FusionAuthClient {
    * Creates a family with the user id in the request as the owner and sole member of the family. You can optionally specify an id for the
    * family, if not provided one will be generated.
    *
-   * @param {string} familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
+   * @param {UUID} familyId (Optional) The id for the family. If not provided a secure random UUID will be generated.
    * @param {FamilyRequest} request The request object that contains all of the information used to create the family.
    * @returns {Promise<ClientResponse<FamilyResponse>>}
    */
-  createFamily(familyId: string, request: FamilyRequest): Promise<ClientResponse<FamilyResponse>> {
+  createFamily(familyId: UUID, request: FamilyRequest): Promise<ClientResponse<FamilyResponse>> {
     return this.start()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
@@ -253,11 +253,11 @@ export class FusionAuthClient {
   /**
    * Creates a group. You can optionally specify an Id for the group, if not provided one will be generated.
    *
-   * @param {string} groupId (Optional) The Id for the group. If not provided a secure random UUID will be generated.
+   * @param {UUID} groupId (Optional) The Id for the group. If not provided a secure random UUID will be generated.
    * @param {GroupRequest} request The request object that contains all of the information used to create the group.
    * @returns {Promise<ClientResponse<GroupResponse>>}
    */
-  createGroup(groupId: string, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
+  createGroup(groupId: UUID, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
@@ -283,11 +283,11 @@ export class FusionAuthClient {
   /**
    * Creates an identity provider. You can optionally specify an Id for the identity provider, if not provided one will be generated.
    *
-   * @param {string} identityProviderId (Optional) The Id of the identity provider. If not provided a secure random UUID will be generated.
+   * @param {UUID} identityProviderId (Optional) The Id of the identity provider. If not provided a secure random UUID will be generated.
    * @param {IdentityProviderRequest} request The request object that contains all of the information used to create the identity provider.
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
-  createIdentityProvider(identityProviderId: string, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
+  createIdentityProvider(identityProviderId: UUID, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
@@ -299,11 +299,11 @@ export class FusionAuthClient {
   /**
    * Creates a Lambda. You can optionally specify an Id for the lambda, if not provided one will be generated.
    *
-   * @param {string} lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
+   * @param {UUID} lambdaId (Optional) The Id for the lambda. If not provided a secure random UUID will be generated.
    * @param {LambdaRequest} request The request object that contains all of the information used to create the lambda.
    * @returns {Promise<ClientResponse<LambdaResponse>>}
    */
-  createLambda(lambdaId: string, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
+  createLambda(lambdaId: UUID, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
     return this.start()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
@@ -315,11 +315,11 @@ export class FusionAuthClient {
   /**
    * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
    *
-   * @param {string} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
+   * @param {UUID} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
    * @param {TenantRequest} request The request object that contains all of the information used to create the tenant.
    * @returns {Promise<ClientResponse<TenantResponse>>}
    */
-  createTenant(tenantId: string, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
+  createTenant(tenantId: UUID, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
@@ -331,11 +331,11 @@ export class FusionAuthClient {
   /**
    * Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
    *
-   * @param {string} themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
+   * @param {UUID} themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
    * @param {ThemeRequest} request The request object that contains all of the information used to create the theme.
    * @returns {Promise<ClientResponse<ThemeResponse>>}
    */
-  createTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+  createTheme(themeId: UUID, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
     return this.start()
         .withUri('/api/theme')
         .withUriSegment(themeId)
@@ -347,11 +347,11 @@ export class FusionAuthClient {
   /**
    * Creates a user. You can optionally specify an Id for the user, if not provided one will be generated.
    *
-   * @param {string} userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
+   * @param {UUID} userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
    * @param {UserRequest} request The request object that contains all of the information used to create the user.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  createUser(userId: string, request: UserRequest): Promise<ClientResponse<UserResponse>> {
+  createUser(userId: UUID, request: UserRequest): Promise<ClientResponse<UserResponse>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -364,11 +364,11 @@ export class FusionAuthClient {
    * Creates a user action. This action cannot be taken on a user until this call successfully returns. Anytime after
    * that the user action can be applied to any user.
    *
-   * @param {string} userActionId (Optional) The Id for the user action. If not provided a secure random UUID will be generated.
+   * @param {UUID} userActionId (Optional) The Id for the user action. If not provided a secure random UUID will be generated.
    * @param {UserActionRequest} request The request object that contains all of the information used to create the user action.
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
-  createUserAction(userActionId: string, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
+  createUserAction(userActionId: UUID, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -381,11 +381,11 @@ export class FusionAuthClient {
    * Creates a user reason. This user action reason cannot be used when actioning a user until this call completes
    * successfully. Anytime after that the user action reason can be used.
    *
-   * @param {string} userActionReasonId (Optional) The Id for the user action reason. If not provided a secure random UUID will be generated.
+   * @param {UUID} userActionReasonId (Optional) The Id for the user action reason. If not provided a secure random UUID will be generated.
    * @param {UserActionReasonRequest} request The request object that contains all of the information used to create the user action reason.
    * @returns {Promise<ClientResponse<UserActionReasonResponse>>}
    */
-  createUserActionReason(userActionReasonId: string, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
+  createUserActionReason(userActionReasonId: UUID, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
@@ -397,11 +397,11 @@ export class FusionAuthClient {
   /**
    * Creates a single User consent.
    *
-   * @param {string} userConsentId (Optional) The Id for the User consent. If not provided a secure random UUID will be generated.
+   * @param {UUID} userConsentId (Optional) The Id for the User consent. If not provided a secure random UUID will be generated.
    * @param {UserConsentRequest} request The request that contains the user consent information.
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
    */
-  createUserConsent(userConsentId: string, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
+  createUserConsent(userConsentId: UUID, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
     return this.start()
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
@@ -413,11 +413,11 @@ export class FusionAuthClient {
   /**
    * Creates a webhook. You can optionally specify an Id for the webhook, if not provided one will be generated.
    *
-   * @param {string} webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
+   * @param {UUID} webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
    * @param {WebhookRequest} request The request object that contains all of the information used to create the webhook.
    * @returns {Promise<ClientResponse<WebhookResponse>>}
    */
-  createWebhook(webhookId: string, request: WebhookRequest): Promise<ClientResponse<WebhookResponse>> {
+  createWebhook(webhookId: UUID, request: WebhookRequest): Promise<ClientResponse<WebhookResponse>> {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
@@ -429,10 +429,10 @@ export class FusionAuthClient {
   /**
    * Deactivates the application with the given Id.
    *
-   * @param {string} applicationId The Id of the application to deactivate.
+   * @param {UUID} applicationId The Id of the application to deactivate.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deactivateApplication(applicationId: string): Promise<ClientResponse<void>> {
+  deactivateApplication(applicationId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -443,10 +443,10 @@ export class FusionAuthClient {
   /**
    * Deactivates the user with the given Id.
    *
-   * @param {string} userId The Id of the user to deactivate.
+   * @param {UUID} userId The Id of the user to deactivate.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deactivateUser(userId: string): Promise<ClientResponse<void>> {
+  deactivateUser(userId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -457,10 +457,10 @@ export class FusionAuthClient {
   /**
    * Deactivates the user action with the given Id.
    *
-   * @param {string} userActionId The Id of the user action to deactivate.
+   * @param {UUID} userActionId The Id of the user action to deactivate.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deactivateUserAction(userActionId: string): Promise<ClientResponse<void>> {
+  deactivateUserAction(userActionId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -507,10 +507,10 @@ export class FusionAuthClient {
    * roles for the application, and any other data associated with the application. This operation could take a very
    * long time, depending on the amount of data in your database.
    *
-   * @param {string} applicationId The Id of the application to delete.
+   * @param {UUID} applicationId The Id of the application to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteApplication(applicationId: string): Promise<ClientResponse<void>> {
+  deleteApplication(applicationId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -523,11 +523,11 @@ export class FusionAuthClient {
    * Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
    * permanently removes the given role from all users that had it.
    *
-   * @param {string} applicationId The Id of the application to deactivate.
-   * @param {string} roleId The Id of the role to delete.
+   * @param {UUID} applicationId The Id of the application to deactivate.
+   * @param {UUID} roleId The Id of the role to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteApplicationRole(applicationId: string, roleId: string): Promise<ClientResponse<void>> {
+  deleteApplicationRole(applicationId: UUID, roleId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -540,10 +540,10 @@ export class FusionAuthClient {
   /**
    * Deletes the consent for the given Id.
    *
-   * @param {string} consentId The Id of the consent to delete.
+   * @param {UUID} consentId The Id of the consent to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteConsent(consentId: string): Promise<ClientResponse<void>> {
+  deleteConsent(consentId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/consent')
         .withUriSegment(consentId)
@@ -554,10 +554,10 @@ export class FusionAuthClient {
   /**
    * Deletes the email template for the given Id.
    *
-   * @param {string} emailTemplateId The Id of the email template to delete.
+   * @param {UUID} emailTemplateId The Id of the email template to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteEmailTemplate(emailTemplateId: string): Promise<ClientResponse<void>> {
+  deleteEmailTemplate(emailTemplateId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
@@ -568,10 +568,10 @@ export class FusionAuthClient {
   /**
    * Deletes the group for the given Id.
    *
-   * @param {string} groupId The Id of the group to delete.
+   * @param {UUID} groupId The Id of the group to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteGroup(groupId: string): Promise<ClientResponse<void>> {
+  deleteGroup(groupId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
@@ -596,10 +596,10 @@ export class FusionAuthClient {
   /**
    * Deletes the identity provider for the given Id.
    *
-   * @param {string} identityProviderId The Id of the identity provider to delete.
+   * @param {UUID} identityProviderId The Id of the identity provider to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteIdentityProvider(identityProviderId: string): Promise<ClientResponse<void>> {
+  deleteIdentityProvider(identityProviderId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
@@ -610,10 +610,10 @@ export class FusionAuthClient {
   /**
    * Deletes the key for the given Id.
    *
-   * @param {string} keyOd The Id of the key to delete.
+   * @param {UUID} keyOd The Id of the key to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteKey(keyOd: string): Promise<ClientResponse<void>> {
+  deleteKey(keyOd: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/key')
         .withUriSegment(keyOd)
@@ -624,10 +624,10 @@ export class FusionAuthClient {
   /**
    * Deletes the lambda for the given Id.
    *
-   * @param {string} lambdaId The Id of the lambda to delete.
+   * @param {UUID} lambdaId The Id of the lambda to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteLambda(lambdaId: string): Promise<ClientResponse<void>> {
+  deleteLambda(lambdaId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
@@ -638,11 +638,11 @@ export class FusionAuthClient {
   /**
    * Deletes the user registration for the given user and application.
    *
-   * @param {string} userId The Id of the user whose registration is being deleted.
-   * @param {string} applicationId The Id of the application to remove the registration for.
+   * @param {UUID} userId The Id of the user whose registration is being deleted.
+   * @param {UUID} applicationId The Id of the application to remove the registration for.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteRegistration(userId: string, applicationId: string): Promise<ClientResponse<void>> {
+  deleteRegistration(userId: UUID, applicationId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user/registration')
         .withUriSegment(userId)
@@ -654,10 +654,10 @@ export class FusionAuthClient {
   /**
    * Deletes the tenant for the given Id.
    *
-   * @param {string} tenantId The Id of the tenant to delete.
+   * @param {UUID} tenantId The Id of the tenant to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteTenant(tenantId: string): Promise<ClientResponse<void>> {
+  deleteTenant(tenantId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
@@ -668,10 +668,10 @@ export class FusionAuthClient {
   /**
    * Deletes the theme for the given Id.
    *
-   * @param {string} themeId The Id of the theme to delete.
+   * @param {UUID} themeId The Id of the theme to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteTheme(themeId: string): Promise<ClientResponse<void>> {
+  deleteTheme(themeId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/theme')
         .withUriSegment(themeId)
@@ -683,10 +683,10 @@ export class FusionAuthClient {
    * Deletes the user for the given Id. This permanently deletes all information, metrics, reports and data associated
    * with the user.
    *
-   * @param {string} userId The Id of the user to delete.
+   * @param {UUID} userId The Id of the user to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteUser(userId: string): Promise<ClientResponse<void>> {
+  deleteUser(userId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -699,10 +699,10 @@ export class FusionAuthClient {
    * Deletes the user action for the given Id. This permanently deletes the user action and also any history and logs of
    * the action being applied to any users.
    *
-   * @param {string} userActionId The Id of the user action to delete.
+   * @param {UUID} userActionId The Id of the user action to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteUserAction(userActionId: string): Promise<ClientResponse<void>> {
+  deleteUserAction(userActionId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -714,10 +714,10 @@ export class FusionAuthClient {
   /**
    * Deletes the user action reason for the given Id.
    *
-   * @param {string} userActionReasonId The Id of the user action reason to delete.
+   * @param {UUID} userActionReasonId The Id of the user action reason to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteUserActionReason(userActionReasonId: string): Promise<ClientResponse<void>> {
+  deleteUserActionReason(userActionReasonId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
@@ -761,10 +761,10 @@ export class FusionAuthClient {
   /**
    * Deletes the webhook for the given Id.
    *
-   * @param {string} webhookId The Id of the webhook to delete.
+   * @param {UUID} webhookId The Id of the webhook to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteWebhook(webhookId: string): Promise<ClientResponse<void>> {
+  deleteWebhook(webhookId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
@@ -775,11 +775,11 @@ export class FusionAuthClient {
   /**
    * Disable Two Factor authentication for a user.
    *
-   * @param {string} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
    * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
    * @returns {Promise<ClientResponse<void>>}
    */
-  disableTwoFactor(userId: string, code: string): Promise<ClientResponse<void>> {
+  disableTwoFactor(userId: UUID, code: string): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user/two-factor')
         .withParameter('userId', userId)
@@ -791,11 +791,11 @@ export class FusionAuthClient {
   /**
    * Enable Two Factor authentication for a user.
    *
-   * @param {string} userId The Id of the user to enable Two Factor authentication.
+   * @param {UUID} userId The Id of the user to enable Two Factor authentication.
    * @param {TwoFactorRequest} request The two factor enable request information.
    * @returns {Promise<ClientResponse<void>>}
    */
-  enableTwoFactor(userId: string, request: TwoFactorRequest): Promise<ClientResponse<void>> {
+  enableTwoFactor(userId: UUID, request: TwoFactorRequest): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user/two-factor')
         .withUriSegment(userId)
@@ -929,11 +929,11 @@ export class FusionAuthClient {
   /**
    * Generate a new RSA or EC key pair or an HMAC secret.
    *
-   * @param {string} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
+   * @param {UUID} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
    * @param {KeyRequest} request The request object that contains all of the information used to create the key.
    * @returns {Promise<ClientResponse<KeyResponse>>}
    */
-  generateKey(keyId: string, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
+  generateKey(keyId: UUID, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
     return this.start()
         .withUri('/api/key/generate')
         .withUriSegment(keyId)
@@ -947,10 +947,10 @@ export class FusionAuthClient {
    * email to the User. This API may be used to collect the verificationId for use with a third party system.
    *
    * @param {string} email The email address of the user that needs a new verification email.
-   * @param {string} applicationId The Id of the application to be verified.
+   * @param {UUID} applicationId The Id of the application to be verified.
    * @returns {Promise<ClientResponse<VerifyRegistrationResponse>>}
    */
-  generateRegistrationVerificationId(email: string, applicationId: string): Promise<ClientResponse<VerifyRegistrationResponse>> {
+  generateRegistrationVerificationId(email: string, applicationId: UUID): Promise<ClientResponse<VerifyRegistrationResponse>> {
     return this.start()
         .withUri('/api/user/verify-registration')
         .withParameter('email', email)
@@ -1009,11 +1009,11 @@ export class FusionAuthClient {
   /**
    * Import an existing RSA or EC key pair or an HMAC secret.
    *
-   * @param {string} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
+   * @param {UUID} keyId (Optional) The Id for the key. If not provided a secure random UUID will be generated.
    * @param {KeyRequest} request The request object that contains all of the information used to create the key.
    * @returns {Promise<ClientResponse<KeyResponse>>}
    */
-  importKey(keyId: string, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
+  importKey(keyId: UUID, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
     return this.start()
         .withUri('/api/key/import')
         .withUriSegment(keyId)
@@ -1045,11 +1045,11 @@ export class FusionAuthClient {
    * This API may be used in an SSO configuration to issue new tokens for another application after the user has
    * obtained a valid token from authentication.
    *
-   * @param {string} applicationId The Application Id for which you are requesting a new access token be issued.
+   * @param {UUID} applicationId The Application Id for which you are requesting a new access token be issued.
    * @param {string} encodedJWT The encoded JWT (access token).
    * @returns {Promise<ClientResponse<IssueResponse>>}
    */
-  issueJWT(applicationId: string, encodedJWT: string): Promise<ClientResponse<IssueResponse>> {
+  issueJWT(applicationId: UUID, encodedJWT: string): Promise<ClientResponse<IssueResponse>> {
     return this.start()
         .withUri('/api/jwt/issue')
         .withAuthorization('JWT ' + encodedJWT)
@@ -1080,13 +1080,13 @@ export class FusionAuthClient {
    * application where they no longer have a session. This helps correctly track login counts, times and helps with
    * reporting.
    *
-   * @param {string} userId The Id of the user that was logged in.
-   * @param {string} applicationId The Id of the application that they logged into.
+   * @param {UUID} userId The Id of the user that was logged in.
+   * @param {UUID} applicationId The Id of the application that they logged into.
    * @param {string} callerIPAddress (Optional) The IP address of the end-user that is logging in. If a null value is provided
    *    the IP address will be that of the client or last proxy that sent the request.
    * @returns {Promise<ClientResponse<void>>}
    */
-  loginPing(userId: string, applicationId: string, callerIPAddress: string): Promise<ClientResponse<void>> {
+  loginPing(userId: UUID, applicationId: UUID, callerIPAddress: string): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/login')
         .withUriSegment(userId)
@@ -1136,11 +1136,11 @@ export class FusionAuthClient {
    * Modifies a temporal user action by changing the expiration of the action and optionally adding a comment to the
    * action.
    *
-   * @param {string} actionId The Id of the action to modify. This is technically the user action log id.
+   * @param {UUID} actionId The Id of the action to modify. This is technically the user action log id.
    * @param {ActionRequest} request The request that contains all of the information about the modification.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  modifyAction(actionId: string, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
+  modifyAction(actionId: UUID, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withUriSegment(actionId)
@@ -1166,11 +1166,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the application with the given Id.
    *
-   * @param {string} applicationId The Id of the application to update.
+   * @param {UUID} applicationId The Id of the application to update.
    * @param {ApplicationRequest} request The request that contains just the new application information.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  patchApplication(applicationId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  patchApplication(applicationId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -1182,12 +1182,12 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the application role with the given id for the application.
    *
-   * @param {string} applicationId The Id of the application that the role belongs to.
-   * @param {string} roleId The Id of the role to update.
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
+   * @param {UUID} roleId The Id of the role to update.
    * @param {ApplicationRequest} request The request that contains just the new role information.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  patchApplicationRole(applicationId: string, roleId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  patchApplicationRole(applicationId: UUID, roleId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -1201,11 +1201,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the consent with the given Id.
    *
-   * @param {string} consentId The Id of the consent to update.
+   * @param {UUID} consentId The Id of the consent to update.
    * @param {ConsentRequest} request The request that contains just the new consent information.
    * @returns {Promise<ClientResponse<ConsentResponse>>}
    */
-  patchConsent(consentId: string, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
+  patchConsent(consentId: UUID, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
     return this.start()
         .withUri('/api/consent')
         .withUriSegment(consentId)
@@ -1217,11 +1217,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the email template with the given Id.
    *
-   * @param {string} emailTemplateId The Id of the email template to update.
+   * @param {UUID} emailTemplateId The Id of the email template to update.
    * @param {EmailTemplateRequest} request The request that contains just the new email template information.
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
    */
-  patchEmailTemplate(emailTemplateId: string, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
+  patchEmailTemplate(emailTemplateId: UUID, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
@@ -1233,11 +1233,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the group with the given Id.
    *
-   * @param {string} groupId The Id of the group to update.
+   * @param {UUID} groupId The Id of the group to update.
    * @param {GroupRequest} request The request that contains just the new group information.
    * @returns {Promise<ClientResponse<GroupResponse>>}
    */
-  patchGroup(groupId: string, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
+  patchGroup(groupId: UUID, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
@@ -1249,11 +1249,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the identity provider with the given Id.
    *
-   * @param {string} identityProviderId The Id of the identity provider to update.
+   * @param {UUID} identityProviderId The Id of the identity provider to update.
    * @param {IdentityProviderRequest} request The request object that contains just the updated identity provider information.
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
-  patchIdentityProvider(identityProviderId: string, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
+  patchIdentityProvider(identityProviderId: UUID, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
@@ -1279,11 +1279,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the lambda with the given Id.
    *
-   * @param {string} lambdaId The Id of the lambda to update.
+   * @param {UUID} lambdaId The Id of the lambda to update.
    * @param {LambdaRequest} request The request that contains just the new lambda information.
    * @returns {Promise<ClientResponse<LambdaResponse>>}
    */
-  patchLambda(lambdaId: string, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
+  patchLambda(lambdaId: UUID, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
     return this.start()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
@@ -1295,11 +1295,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the registration for the user with the given id and the application defined in the request.
    *
-   * @param {string} userId The Id of the user whose registration is going to be updated.
+   * @param {UUID} userId The Id of the user whose registration is going to be updated.
    * @param {RegistrationRequest} request The request that contains just the new registration information.
    * @returns {Promise<ClientResponse<RegistrationResponse>>}
    */
-  patchRegistration(userId: string, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
+  patchRegistration(userId: UUID, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
     return this.start()
         .withUri('/api/user/registration')
         .withUriSegment(userId)
@@ -1325,11 +1325,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the tenant with the given Id.
    *
-   * @param {string} tenantId The Id of the tenant to update.
+   * @param {UUID} tenantId The Id of the tenant to update.
    * @param {TenantRequest} request The request that contains just the new tenant information.
    * @returns {Promise<ClientResponse<TenantResponse>>}
    */
-  patchTenant(tenantId: string, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
+  patchTenant(tenantId: UUID, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
@@ -1341,11 +1341,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the theme with the given Id.
    *
-   * @param {string} themeId The Id of the theme to update.
+   * @param {UUID} themeId The Id of the theme to update.
    * @param {ThemeRequest} request The request that contains just the new theme information.
    * @returns {Promise<ClientResponse<ThemeResponse>>}
    */
-  patchTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+  patchTheme(themeId: UUID, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
     return this.start()
         .withUri('/api/theme')
         .withUriSegment(themeId)
@@ -1357,11 +1357,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the user with the given Id.
    *
-   * @param {string} userId The Id of the user to update.
+   * @param {UUID} userId The Id of the user to update.
    * @param {UserRequest} request The request that contains just the new user information.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  patchUser(userId: string, request: UserRequest): Promise<ClientResponse<UserResponse>> {
+  patchUser(userId: UUID, request: UserRequest): Promise<ClientResponse<UserResponse>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -1373,11 +1373,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the user action with the given Id.
    *
-   * @param {string} userActionId The Id of the user action to update.
+   * @param {UUID} userActionId The Id of the user action to update.
    * @param {UserActionRequest} request The request that contains just the new user action information.
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
-  patchUserAction(userActionId: string, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
+  patchUserAction(userActionId: UUID, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -1389,11 +1389,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, the user action reason with the given Id.
    *
-   * @param {string} userActionReasonId The Id of the user action reason to update.
+   * @param {UUID} userActionReasonId The Id of the user action reason to update.
    * @param {UserActionReasonRequest} request The request that contains just the new user action reason information.
    * @returns {Promise<ClientResponse<UserActionReasonResponse>>}
    */
-  patchUserActionReason(userActionReasonId: string, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
+  patchUserActionReason(userActionReasonId: UUID, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
@@ -1405,11 +1405,11 @@ export class FusionAuthClient {
   /**
    * Updates, via PATCH, a single User consent by Id.
    *
-   * @param {string} userConsentId The User Consent Id
+   * @param {UUID} userConsentId The User Consent Id
    * @param {UserConsentRequest} request The request that contains just the new user consent information.
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
    */
-  patchUserConsent(userConsentId: string, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
+  patchUserConsent(userConsentId: UUID, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
     return this.start()
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
@@ -1421,10 +1421,10 @@ export class FusionAuthClient {
   /**
    * Reactivates the application with the given Id.
    *
-   * @param {string} applicationId The Id of the application to reactivate.
+   * @param {UUID} applicationId The Id of the application to reactivate.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  reactivateApplication(applicationId: string): Promise<ClientResponse<ApplicationResponse>> {
+  reactivateApplication(applicationId: UUID): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -1436,10 +1436,10 @@ export class FusionAuthClient {
   /**
    * Reactivates the user with the given Id.
    *
-   * @param {string} userId The Id of the user to reactivate.
+   * @param {UUID} userId The Id of the user to reactivate.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  reactivateUser(userId: string): Promise<ClientResponse<UserResponse>> {
+  reactivateUser(userId: UUID): Promise<ClientResponse<UserResponse>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -1451,10 +1451,10 @@ export class FusionAuthClient {
   /**
    * Reactivates the user action with the given Id.
    *
-   * @param {string} userActionId The Id of the user action to reactivate.
+   * @param {UUID} userActionId The Id of the user action to reactivate.
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
-  reactivateUserAction(userActionId: string): Promise<ClientResponse<UserActionResponse>> {
+  reactivateUserAction(userActionId: UUID): Promise<ClientResponse<UserActionResponse>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -1499,11 +1499,11 @@ export class FusionAuthClient {
    * application. The user id can also be provided and it will either be used to look up an existing user or it will be
    * used for the newly created User.
    *
-   * @param {string} userId (Optional) The Id of the user being registered for the application and optionally created.
+   * @param {UUID} userId (Optional) The Id of the user being registered for the application and optionally created.
    * @param {RegistrationRequest} request The request that optionally contains the User and must contain the UserRegistration.
    * @returns {Promise<ClientResponse<RegistrationResponse>>}
    */
-  register(userId: string, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
+  register(userId: UUID, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
     return this.start()
         .withUri('/api/user/registration')
         .withUriSegment(userId)
@@ -1515,11 +1515,11 @@ export class FusionAuthClient {
   /**
    * Removes a user from the family with the given id.
    *
-   * @param {string} familyId The id of the family to remove the user from.
-   * @param {string} userId The id of the user to remove from the family.
+   * @param {UUID} familyId The id of the family to remove the user from.
+   * @param {UUID} userId The id of the user to remove from the family.
    * @returns {Promise<ClientResponse<void>>}
    */
-  removeUserFromFamily(familyId: string, userId: string): Promise<ClientResponse<void>> {
+  removeUserFromFamily(familyId: UUID, userId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
@@ -1546,10 +1546,10 @@ export class FusionAuthClient {
    * Re-sends the application registration verification email to the user.
    *
    * @param {string} email The email address of the user that needs a new verification email.
-   * @param {string} applicationId The Id of the application to be verified.
+   * @param {UUID} applicationId The Id of the application to be verified.
    * @returns {Promise<ClientResponse<VerifyRegistrationResponse>>}
    */
-  resendRegistrationVerification(email: string, applicationId: string): Promise<ClientResponse<VerifyRegistrationResponse>> {
+  resendRegistrationVerification(email: string, applicationId: UUID): Promise<ClientResponse<VerifyRegistrationResponse>> {
     return this.start()
         .withUri('/api/user/verify-registration')
         .withParameter('email', email)
@@ -1561,10 +1561,10 @@ export class FusionAuthClient {
   /**
    * Retrieves a single action log (the log of a user action that was taken on a user previously) for the given Id.
    *
-   * @param {string} actionId The Id of the action to retrieve.
+   * @param {UUID} actionId The Id of the action to retrieve.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  retrieveAction(actionId: string): Promise<ClientResponse<ActionResponse>> {
+  retrieveAction(actionId: UUID): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withUriSegment(actionId)
@@ -1576,10 +1576,10 @@ export class FusionAuthClient {
    * Retrieves all of the actions for the user with the given Id. This will return all time based actions that are active,
    * and inactive as well as non-time based actions.
    *
-   * @param {string} userId The Id of the user to fetch the actions for.
+   * @param {UUID} userId The Id of the user to fetch the actions for.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  retrieveActions(userId: string): Promise<ClientResponse<ActionResponse>> {
+  retrieveActions(userId: UUID): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
@@ -1590,10 +1590,10 @@ export class FusionAuthClient {
   /**
    * Retrieves all of the actions for the user with the given Id that are currently preventing the User from logging in.
    *
-   * @param {string} userId The Id of the user to fetch the actions for.
+   * @param {UUID} userId The Id of the user to fetch the actions for.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  retrieveActionsPreventingLogin(userId: string): Promise<ClientResponse<ActionResponse>> {
+  retrieveActionsPreventingLogin(userId: UUID): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
@@ -1606,10 +1606,10 @@ export class FusionAuthClient {
    * Retrieves all of the actions for the user with the given Id that are currently active.
    * An active action means one that is time based and has not been canceled, and has not ended.
    *
-   * @param {string} userId The Id of the user to fetch the actions for.
+   * @param {UUID} userId The Id of the user to fetch the actions for.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  retrieveActiveActions(userId: string): Promise<ClientResponse<ActionResponse>> {
+  retrieveActiveActions(userId: UUID): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
@@ -1621,10 +1621,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the application for the given id or all of the applications if the id is null.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  retrieveApplication(applicationId: string): Promise<ClientResponse<ApplicationResponse>> {
+  retrieveApplication(applicationId: UUID): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -1661,10 +1661,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the Consent for the given Id.
    *
-   * @param {string} consentId The Id of the consent.
+   * @param {UUID} consentId The Id of the consent.
    * @returns {Promise<ClientResponse<ConsentResponse>>}
    */
-  retrieveConsent(consentId: string): Promise<ClientResponse<ConsentResponse>> {
+  retrieveConsent(consentId: UUID): Promise<ClientResponse<ConsentResponse>> {
     return this.start()
         .withUri('/api/consent')
         .withUriSegment(consentId)
@@ -1688,12 +1688,12 @@ export class FusionAuthClient {
    * Retrieves the daily active user report between the two instants. If you specify an application id, it will only
    * return the daily active counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<DailyActiveUserReportResponse>>}
    */
-  retrieveDailyActiveReport(applicationId: string, start: number, end: number): Promise<ClientResponse<DailyActiveUserReportResponse>> {
+  retrieveDailyActiveReport(applicationId: UUID, start: number, end: number): Promise<ClientResponse<DailyActiveUserReportResponse>> {
     return this.start()
         .withUri('/api/report/daily-active-user')
         .withParameter('applicationId', applicationId)
@@ -1706,10 +1706,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the email template for the given Id. If you don't specify the id, this will return all of the email templates.
    *
-   * @param {string} emailTemplateId (Optional) The Id of the email template.
+   * @param {UUID} emailTemplateId (Optional) The Id of the email template.
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
    */
-  retrieveEmailTemplate(emailTemplateId: string): Promise<ClientResponse<EmailTemplateResponse>> {
+  retrieveEmailTemplate(emailTemplateId: UUID): Promise<ClientResponse<EmailTemplateResponse>> {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
@@ -1762,10 +1762,10 @@ export class FusionAuthClient {
   /**
    * Retrieves all of the families that a user belongs to.
    *
-   * @param {string} userId The User's id
+   * @param {UUID} userId The User's id
    * @returns {Promise<ClientResponse<FamilyResponse>>}
    */
-  retrieveFamilies(userId: string): Promise<ClientResponse<FamilyResponse>> {
+  retrieveFamilies(userId: UUID): Promise<ClientResponse<FamilyResponse>> {
     return this.start()
         .withUri('/api/user/family')
         .withParameter('userId', userId)
@@ -1776,10 +1776,10 @@ export class FusionAuthClient {
   /**
    * Retrieves all of the members of a family by the unique Family Id.
    *
-   * @param {string} familyId The unique Id of the Family.
+   * @param {UUID} familyId The unique Id of the Family.
    * @returns {Promise<ClientResponse<FamilyResponse>>}
    */
-  retrieveFamilyMembersByFamilyId(familyId: string): Promise<ClientResponse<FamilyResponse>> {
+  retrieveFamilyMembersByFamilyId(familyId: UUID): Promise<ClientResponse<FamilyResponse>> {
     return this.start()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
@@ -1790,10 +1790,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the group for the given Id.
    *
-   * @param {string} groupId The Id of the group.
+   * @param {UUID} groupId The Id of the group.
    * @returns {Promise<ClientResponse<GroupResponse>>}
    */
-  retrieveGroup(groupId: string): Promise<ClientResponse<GroupResponse>> {
+  retrieveGroup(groupId: UUID): Promise<ClientResponse<GroupResponse>> {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
@@ -1816,10 +1816,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the identity provider for the given id or all of the identity providers if the id is null.
    *
-   * @param {string} identityProviderId (Optional) The identity provider id.
+   * @param {UUID} identityProviderId (Optional) The identity provider id.
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
-  retrieveIdentityProvider(identityProviderId: string): Promise<ClientResponse<IdentityProviderResponse>> {
+  retrieveIdentityProvider(identityProviderId: UUID): Promise<ClientResponse<IdentityProviderResponse>> {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
@@ -1843,10 +1843,10 @@ export class FusionAuthClient {
    * Retrieves all of the actions for the user with the given Id that are currently inactive.
    * An inactive action means one that is time based and has been canceled or has expired, or is not time based.
    *
-   * @param {string} userId The Id of the user to fetch the actions for.
+   * @param {UUID} userId The Id of the user to fetch the actions for.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  retrieveInactiveActions(userId: string): Promise<ClientResponse<ActionResponse>> {
+  retrieveInactiveActions(userId: UUID): Promise<ClientResponse<ActionResponse>> {
     return this.start()
         .withUri('/api/user/action')
         .withParameter('userId', userId)
@@ -1948,10 +1948,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the key for the given Id.
    *
-   * @param {string} keyId The Id of the key.
+   * @param {UUID} keyId The Id of the key.
    * @returns {Promise<ClientResponse<KeyResponse>>}
    */
-  retrieveKey(keyId: string): Promise<ClientResponse<KeyResponse>> {
+  retrieveKey(keyId: UUID): Promise<ClientResponse<KeyResponse>> {
     return this.start()
         .withUri('/api/key')
         .withUriSegment(keyId)
@@ -1974,10 +1974,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the lambda for the given Id.
    *
-   * @param {string} lambdaId The Id of the lambda.
+   * @param {UUID} lambdaId The Id of the lambda.
    * @returns {Promise<ClientResponse<LambdaResponse>>}
    */
-  retrieveLambda(lambdaId: string): Promise<ClientResponse<LambdaResponse>> {
+  retrieveLambda(lambdaId: UUID): Promise<ClientResponse<LambdaResponse>> {
     return this.start()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
@@ -2015,12 +2015,12 @@ export class FusionAuthClient {
    * Retrieves the login report between the two instants. If you specify an application id, it will only return the
    * login counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveLoginReport(applicationId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveLoginReport(applicationId: UUID, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
     return this.start()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
@@ -2034,12 +2034,12 @@ export class FusionAuthClient {
    * Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
    * return the monthly active counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<MonthlyActiveUserReportResponse>>}
    */
-  retrieveMonthlyActiveReport(applicationId: string, start: number, end: number): Promise<ClientResponse<MonthlyActiveUserReportResponse>> {
+  retrieveMonthlyActiveReport(applicationId: UUID, start: number, end: number): Promise<ClientResponse<MonthlyActiveUserReportResponse>> {
     return this.start()
         .withUri('/api/report/monthly-active-user')
         .withParameter('applicationId', applicationId)
@@ -2052,10 +2052,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the Oauth2 configuration for the application for the given Application Id.
    *
-   * @param {string} applicationId The Id of the Application to retrieve OAuth configuration.
+   * @param {UUID} applicationId The Id of the Application to retrieve OAuth configuration.
    * @returns {Promise<ClientResponse<OAuthConfigurationResponse>>}
    */
-  retrieveOauthConfiguration(applicationId: string): Promise<ClientResponse<OAuthConfigurationResponse>> {
+  retrieveOauthConfiguration(applicationId: UUID): Promise<ClientResponse<OAuthConfigurationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -2096,10 +2096,10 @@ export class FusionAuthClient {
    * 
    * This API does not require an API key.
    *
-   * @param {string} tenantId The Id of the tenant.
+   * @param {UUID} tenantId The Id of the tenant.
    * @returns {Promise<ClientResponse<PasswordValidationRulesResponse>>}
    */
-  retrievePasswordValidationRulesWithTenantId(tenantId: string): Promise<ClientResponse<PasswordValidationRulesResponse>> {
+  retrievePasswordValidationRulesWithTenantId(tenantId: UUID): Promise<ClientResponse<PasswordValidationRulesResponse>> {
     return this.startAnonymous()
         .withUri('/api/tenant/password-validation-rules')
         .withUriSegment(tenantId)
@@ -2140,10 +2140,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the refresh tokens that belong to the user with the given Id.
    *
-   * @param {string} userId The Id of the user.
+   * @param {UUID} userId The Id of the user.
    * @returns {Promise<ClientResponse<RefreshResponse>>}
    */
-  retrieveRefreshTokens(userId: string): Promise<ClientResponse<RefreshResponse>> {
+  retrieveRefreshTokens(userId: UUID): Promise<ClientResponse<RefreshResponse>> {
     return this.start()
         .withUri('/api/jwt/refresh')
         .withParameter('userId', userId)
@@ -2154,11 +2154,11 @@ export class FusionAuthClient {
   /**
    * Retrieves the user registration for the user with the given id and the given application id.
    *
-   * @param {string} userId The Id of the user.
-   * @param {string} applicationId The Id of the application.
+   * @param {UUID} userId The Id of the user.
+   * @param {UUID} applicationId The Id of the application.
    * @returns {Promise<ClientResponse<RegistrationResponse>>}
    */
-  retrieveRegistration(userId: string, applicationId: string): Promise<ClientResponse<RegistrationResponse>> {
+  retrieveRegistration(userId: UUID, applicationId: UUID): Promise<ClientResponse<RegistrationResponse>> {
     return this.start()
         .withUri('/api/user/registration')
         .withUriSegment(userId)
@@ -2171,12 +2171,12 @@ export class FusionAuthClient {
    * Retrieves the registration report between the two instants. If you specify an application id, it will only return
    * the registration counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<RegistrationReportResponse>>}
    */
-  retrieveRegistrationReport(applicationId: string, start: number, end: number): Promise<ClientResponse<RegistrationReportResponse>> {
+  retrieveRegistrationReport(applicationId: UUID, start: number, end: number): Promise<ClientResponse<RegistrationReportResponse>> {
     return this.start()
         .withUri('/api/report/registration')
         .withParameter('applicationId', applicationId)
@@ -2201,10 +2201,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the tenant for the given Id.
    *
-   * @param {string} tenantId The Id of the tenant.
+   * @param {UUID} tenantId The Id of the tenant.
    * @returns {Promise<ClientResponse<TenantResponse>>}
    */
-  retrieveTenant(tenantId: string): Promise<ClientResponse<TenantResponse>> {
+  retrieveTenant(tenantId: UUID): Promise<ClientResponse<TenantResponse>> {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
@@ -2227,10 +2227,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the theme for the given Id.
    *
-   * @param {string} themeId The Id of the theme.
+   * @param {UUID} themeId The Id of the theme.
    * @returns {Promise<ClientResponse<ThemeResponse>>}
    */
-  retrieveTheme(themeId: string): Promise<ClientResponse<ThemeResponse>> {
+  retrieveTheme(themeId: UUID): Promise<ClientResponse<ThemeResponse>> {
     return this.start()
         .withUri('/api/theme')
         .withUriSegment(themeId)
@@ -2266,10 +2266,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the user for the given Id.
    *
-   * @param {string} userId The Id of the user.
+   * @param {UUID} userId The Id of the user.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  retrieveUser(userId: string): Promise<ClientResponse<UserResponse>> {
+  retrieveUser(userId: UUID): Promise<ClientResponse<UserResponse>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -2281,10 +2281,10 @@ export class FusionAuthClient {
    * Retrieves the user action for the given Id. If you pass in null for the id, this will return all of the user
    * actions.
    *
-   * @param {string} userActionId (Optional) The Id of the user action.
+   * @param {UUID} userActionId (Optional) The Id of the user action.
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
-  retrieveUserAction(userActionId: string): Promise<ClientResponse<UserActionResponse>> {
+  retrieveUserAction(userActionId: UUID): Promise<ClientResponse<UserActionResponse>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -2296,10 +2296,10 @@ export class FusionAuthClient {
    * Retrieves the user action reason for the given Id. If you pass in null for the id, this will return all of the user
    * action reasons.
    *
-   * @param {string} userActionReasonId (Optional) The Id of the user action reason.
+   * @param {UUID} userActionReasonId (Optional) The Id of the user action reason.
    * @returns {Promise<ClientResponse<UserActionReasonResponse>>}
    */
-  retrieveUserActionReason(userActionReasonId: string): Promise<ClientResponse<UserActionReasonResponse>> {
+  retrieveUserActionReason(userActionReasonId: UUID): Promise<ClientResponse<UserActionReasonResponse>> {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
@@ -2406,10 +2406,10 @@ export class FusionAuthClient {
   /**
    * Retrieves all of the comments for the user with the given Id.
    *
-   * @param {string} userId The Id of the user.
+   * @param {UUID} userId The Id of the user.
    * @returns {Promise<ClientResponse<UserCommentResponse>>}
    */
-  retrieveUserComments(userId: string): Promise<ClientResponse<UserCommentResponse>> {
+  retrieveUserComments(userId: UUID): Promise<ClientResponse<UserCommentResponse>> {
     return this.start()
         .withUri('/api/user/comment')
         .withUriSegment(userId)
@@ -2420,10 +2420,10 @@ export class FusionAuthClient {
   /**
    * Retrieve a single User consent by Id.
    *
-   * @param {string} userConsentId The User consent Id
+   * @param {UUID} userConsentId The User consent Id
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
    */
-  retrieveUserConsent(userConsentId: string): Promise<ClientResponse<UserConsentResponse>> {
+  retrieveUserConsent(userConsentId: UUID): Promise<ClientResponse<UserConsentResponse>> {
     return this.start()
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
@@ -2434,10 +2434,10 @@ export class FusionAuthClient {
   /**
    * Retrieves all of the consents for a User.
    *
-   * @param {string} userId The User's Id
+   * @param {UUID} userId The User's Id
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
    */
-  retrieveUserConsents(userId: string): Promise<ClientResponse<UserConsentResponse>> {
+  retrieveUserConsents(userId: UUID): Promise<ClientResponse<UserConsentResponse>> {
     return this.start()
         .withUri('/api/user/consent')
         .withParameter('userId', userId)
@@ -2449,13 +2449,13 @@ export class FusionAuthClient {
    * Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
    * login counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
-   * @param {string} userId The userId id.
+   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} userId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveUserLoginReport(applicationId: string, userId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveUserLoginReport(applicationId: UUID, userId: UUID, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
     return this.start()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
@@ -2470,13 +2470,13 @@ export class FusionAuthClient {
    * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
    * login counts for that application.
    *
-   * @param {string} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application id.
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveUserLoginReportByLoginId(applicationId: string, loginId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveUserLoginReportByLoginId(applicationId: UUID, loginId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
     return this.start()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
@@ -2490,12 +2490,12 @@ export class FusionAuthClient {
   /**
    * Retrieves the last number of login records for a user.
    *
-   * @param {string} userId The Id of the user.
+   * @param {UUID} userId The Id of the user.
    * @param {number} offset The initial record. e.g. 0 is the last login, 100 will be the 100th most recent login.
    * @param {number} limit (Optional, defaults to 10) The number of records to retrieve.
    * @returns {Promise<ClientResponse<RecentLoginResponse>>}
    */
-  retrieveUserRecentLogins(userId: string, offset: number, limit: number): Promise<ClientResponse<RecentLoginResponse>> {
+  retrieveUserRecentLogins(userId: UUID, offset: number, limit: number): Promise<ClientResponse<RecentLoginResponse>> {
     return this.start()
         .withUri('/api/user/recent-login')
         .withParameter('userId', userId)
@@ -2522,10 +2522,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
    *
-   * @param {string} webhookId (Optional) The Id of the webhook.
+   * @param {UUID} webhookId (Optional) The Id of the webhook.
    * @returns {Promise<ClientResponse<WebhookResponse>>}
    */
-  retrieveWebhook(webhookId: string): Promise<ClientResponse<WebhookResponse>> {
+  retrieveWebhook(webhookId: UUID): Promise<ClientResponse<WebhookResponse>> {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
@@ -2550,11 +2550,11 @@ export class FusionAuthClient {
    * and an application id, this will delete all the refresh tokens for that user for that application.
    *
    * @param {string} token (Optional) The refresh token to delete.
-   * @param {string} userId (Optional) The user id whose tokens to delete.
-   * @param {string} applicationId (Optional) The application id of the tokens to delete.
+   * @param {UUID} userId (Optional) The user id whose tokens to delete.
+   * @param {UUID} applicationId (Optional) The application id of the tokens to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  revokeRefreshToken(token: string, userId: string, applicationId: string): Promise<ClientResponse<void>> {
+  revokeRefreshToken(token: string, userId: UUID, applicationId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/jwt/refresh')
         .withParameter('token', token)
@@ -2567,10 +2567,10 @@ export class FusionAuthClient {
   /**
    * Revokes a single User consent by Id.
    *
-   * @param {string} userConsentId The User Consent Id
+   * @param {UUID} userConsentId The User Consent Id
    * @returns {Promise<ClientResponse<void>>}
    */
-  revokeUserConsent(userConsentId: string): Promise<ClientResponse<void>> {
+  revokeUserConsent(userConsentId: UUID): Promise<ClientResponse<void>> {
     return this.start()
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
@@ -2653,11 +2653,11 @@ export class FusionAuthClient {
    * Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
    * pairs in the email template.
    *
-   * @param {string} emailTemplateId The id for the template.
+   * @param {UUID} emailTemplateId The id for the template.
    * @param {SendRequest} request The send email request that contains all of the information used to send the email.
    * @returns {Promise<ClientResponse<SendResponse>>}
    */
-  sendEmail(emailTemplateId: string, request: SendRequest): Promise<ClientResponse<SendResponse>> {
+  sendEmail(emailTemplateId: UUID, request: SendRequest): Promise<ClientResponse<SendResponse>> {
     return this.start()
         .withUri('/api/email/send')
         .withUriSegment(emailTemplateId)
@@ -2770,11 +2770,11 @@ export class FusionAuthClient {
   /**
    * Updates the application with the given Id.
    *
-   * @param {string} applicationId The Id of the application to update.
+   * @param {UUID} applicationId The Id of the application to update.
    * @param {ApplicationRequest} request The request that contains all of the new application information.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  updateApplication(applicationId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  updateApplication(applicationId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -2786,12 +2786,12 @@ export class FusionAuthClient {
   /**
    * Updates the application role with the given id for the application.
    *
-   * @param {string} applicationId The Id of the application that the role belongs to.
-   * @param {string} roleId The Id of the role to update.
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
+   * @param {UUID} roleId The Id of the role to update.
    * @param {ApplicationRequest} request The request that contains all of the new role information.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
-  updateApplicationRole(applicationId: string, roleId: string, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
+  updateApplicationRole(applicationId: UUID, roleId: UUID, request: ApplicationRequest): Promise<ClientResponse<ApplicationResponse>> {
     return this.start()
         .withUri('/api/application')
         .withUriSegment(applicationId)
@@ -2805,11 +2805,11 @@ export class FusionAuthClient {
   /**
    * Updates the consent with the given Id.
    *
-   * @param {string} consentId The Id of the consent to update.
+   * @param {UUID} consentId The Id of the consent to update.
    * @param {ConsentRequest} request The request that contains all of the new consent information.
    * @returns {Promise<ClientResponse<ConsentResponse>>}
    */
-  updateConsent(consentId: string, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
+  updateConsent(consentId: UUID, request: ConsentRequest): Promise<ClientResponse<ConsentResponse>> {
     return this.start()
         .withUri('/api/consent')
         .withUriSegment(consentId)
@@ -2821,11 +2821,11 @@ export class FusionAuthClient {
   /**
    * Updates the email template with the given Id.
    *
-   * @param {string} emailTemplateId The Id of the email template to update.
+   * @param {UUID} emailTemplateId The Id of the email template to update.
    * @param {EmailTemplateRequest} request The request that contains all of the new email template information.
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
    */
-  updateEmailTemplate(emailTemplateId: string, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
+  updateEmailTemplate(emailTemplateId: UUID, request: EmailTemplateRequest): Promise<ClientResponse<EmailTemplateResponse>> {
     return this.start()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
@@ -2837,11 +2837,11 @@ export class FusionAuthClient {
   /**
    * Updates the group with the given Id.
    *
-   * @param {string} groupId The Id of the group to update.
+   * @param {UUID} groupId The Id of the group to update.
    * @param {GroupRequest} request The request that contains all of the new group information.
    * @returns {Promise<ClientResponse<GroupResponse>>}
    */
-  updateGroup(groupId: string, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
+  updateGroup(groupId: UUID, request: GroupRequest): Promise<ClientResponse<GroupResponse>> {
     return this.start()
         .withUri('/api/group')
         .withUriSegment(groupId)
@@ -2853,11 +2853,11 @@ export class FusionAuthClient {
   /**
    * Updates the identity provider with the given Id.
    *
-   * @param {string} identityProviderId The Id of the identity provider to update.
+   * @param {UUID} identityProviderId The Id of the identity provider to update.
    * @param {IdentityProviderRequest} request The request object that contains the updated identity provider.
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
-  updateIdentityProvider(identityProviderId: string, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
+  updateIdentityProvider(identityProviderId: UUID, request: IdentityProviderRequest): Promise<ClientResponse<IdentityProviderResponse>> {
     return this.start()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
@@ -2883,11 +2883,11 @@ export class FusionAuthClient {
   /**
    * Updates the key with the given Id.
    *
-   * @param {string} keyId The Id of the key to update.
+   * @param {UUID} keyId The Id of the key to update.
    * @param {KeyRequest} request The request that contains all of the new key information.
    * @returns {Promise<ClientResponse<KeyResponse>>}
    */
-  updateKey(keyId: string, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
+  updateKey(keyId: UUID, request: KeyRequest): Promise<ClientResponse<KeyResponse>> {
     return this.start()
         .withUri('/api/key')
         .withUriSegment(keyId)
@@ -2899,11 +2899,11 @@ export class FusionAuthClient {
   /**
    * Updates the lambda with the given Id.
    *
-   * @param {string} lambdaId The Id of the lambda to update.
+   * @param {UUID} lambdaId The Id of the lambda to update.
    * @param {LambdaRequest} request The request that contains all of the new lambda information.
    * @returns {Promise<ClientResponse<LambdaResponse>>}
    */
-  updateLambda(lambdaId: string, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
+  updateLambda(lambdaId: UUID, request: LambdaRequest): Promise<ClientResponse<LambdaResponse>> {
     return this.start()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
@@ -2915,11 +2915,11 @@ export class FusionAuthClient {
   /**
    * Updates the registration for the user with the given id and the application defined in the request.
    *
-   * @param {string} userId The Id of the user whose registration is going to be updated.
+   * @param {UUID} userId The Id of the user whose registration is going to be updated.
    * @param {RegistrationRequest} request The request that contains all of the new registration information.
    * @returns {Promise<ClientResponse<RegistrationResponse>>}
    */
-  updateRegistration(userId: string, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
+  updateRegistration(userId: UUID, request: RegistrationRequest): Promise<ClientResponse<RegistrationResponse>> {
     return this.start()
         .withUri('/api/user/registration')
         .withUriSegment(userId)
@@ -2945,11 +2945,11 @@ export class FusionAuthClient {
   /**
    * Updates the tenant with the given Id.
    *
-   * @param {string} tenantId The Id of the tenant to update.
+   * @param {UUID} tenantId The Id of the tenant to update.
    * @param {TenantRequest} request The request that contains all of the new tenant information.
    * @returns {Promise<ClientResponse<TenantResponse>>}
    */
-  updateTenant(tenantId: string, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
+  updateTenant(tenantId: UUID, request: TenantRequest): Promise<ClientResponse<TenantResponse>> {
     return this.start()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
@@ -2961,11 +2961,11 @@ export class FusionAuthClient {
   /**
    * Updates the theme with the given Id.
    *
-   * @param {string} themeId The Id of the theme to update.
+   * @param {UUID} themeId The Id of the theme to update.
    * @param {ThemeRequest} request The request that contains all of the new theme information.
    * @returns {Promise<ClientResponse<ThemeResponse>>}
    */
-  updateTheme(themeId: string, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
+  updateTheme(themeId: UUID, request: ThemeRequest): Promise<ClientResponse<ThemeResponse>> {
     return this.start()
         .withUri('/api/theme')
         .withUriSegment(themeId)
@@ -2977,11 +2977,11 @@ export class FusionAuthClient {
   /**
    * Updates the user with the given Id.
    *
-   * @param {string} userId The Id of the user to update.
+   * @param {UUID} userId The Id of the user to update.
    * @param {UserRequest} request The request that contains all of the new user information.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  updateUser(userId: string, request: UserRequest): Promise<ClientResponse<UserResponse>> {
+  updateUser(userId: UUID, request: UserRequest): Promise<ClientResponse<UserResponse>> {
     return this.start()
         .withUri('/api/user')
         .withUriSegment(userId)
@@ -2993,11 +2993,11 @@ export class FusionAuthClient {
   /**
    * Updates the user action with the given Id.
    *
-   * @param {string} userActionId The Id of the user action to update.
+   * @param {UUID} userActionId The Id of the user action to update.
    * @param {UserActionRequest} request The request that contains all of the new user action information.
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
-  updateUserAction(userActionId: string, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
+  updateUserAction(userActionId: UUID, request: UserActionRequest): Promise<ClientResponse<UserActionResponse>> {
     return this.start()
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
@@ -3009,11 +3009,11 @@ export class FusionAuthClient {
   /**
    * Updates the user action reason with the given Id.
    *
-   * @param {string} userActionReasonId The Id of the user action reason to update.
+   * @param {UUID} userActionReasonId The Id of the user action reason to update.
    * @param {UserActionReasonRequest} request The request that contains all of the new user action reason information.
    * @returns {Promise<ClientResponse<UserActionReasonResponse>>}
    */
-  updateUserActionReason(userActionReasonId: string, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
+  updateUserActionReason(userActionReasonId: UUID, request: UserActionReasonRequest): Promise<ClientResponse<UserActionReasonResponse>> {
     return this.start()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
@@ -3025,11 +3025,11 @@ export class FusionAuthClient {
   /**
    * Updates a single User consent by Id.
    *
-   * @param {string} userConsentId The User Consent Id
+   * @param {UUID} userConsentId The User Consent Id
    * @param {UserConsentRequest} request The request that contains the user consent information.
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
    */
-  updateUserConsent(userConsentId: string, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
+  updateUserConsent(userConsentId: UUID, request: UserConsentRequest): Promise<ClientResponse<UserConsentResponse>> {
     return this.start()
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
@@ -3041,11 +3041,11 @@ export class FusionAuthClient {
   /**
    * Updates the webhook with the given Id.
    *
-   * @param {string} webhookId The Id of the webhook to update.
+   * @param {UUID} webhookId The Id of the webhook to update.
    * @param {WebhookRequest} request The request that contains all of the new webhook information.
    * @returns {Promise<ClientResponse<WebhookResponse>>}
    */
-  updateWebhook(webhookId: string, request: WebhookRequest): Promise<ClientResponse<WebhookResponse>> {
+  updateWebhook(webhookId: UUID, request: WebhookRequest): Promise<ClientResponse<WebhookResponse>> {
     return this.start()
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
@@ -3149,6 +3149,11 @@ export class FusionAuthClient {
 }
 
 /**
+ * A 128 bit UUID in string format "8-4-4-4-12", for example "58D5E212-165B-4CA0-909B-C86B9CEE0111".
+ */
+type UUID = string;
+
+/**
  * @author Daniel DeGroff
  */
 export interface AccessToken {
@@ -3158,20 +3163,20 @@ export interface AccessToken {
   refresh_token?: string;
   scope?: string;
   token_type?: TokenType;
-  userId?: string;
+  userId?: UUID;
 }
 
 export interface ActionData {
-  actioneeUserId?: string;
-  actionerUserId?: string;
-  applicationIds?: Array<string>;
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  applicationIds?: Array<UUID>;
   comment?: string;
   emailUser?: boolean;
   expiry?: number;
   notifyUser?: boolean;
   option?: string;
-  reasonId?: string;
-  userActionId?: string;
+  reasonId?: UUID;
+  userActionId?: UUID;
 }
 
 /**
@@ -3220,7 +3225,7 @@ export interface Application {
   authenticationTokenConfiguration?: AuthenticationTokenConfiguration;
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
   data?: Map<string, any>;
-  id?: string;
+  id?: UUID;
   jwtConfiguration?: JWTConfiguration;
   lambdaConfiguration?: LambdaConfiguration;
   loginConfiguration?: LoginConfiguration;
@@ -3231,8 +3236,8 @@ export interface Application {
   registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
-  tenantId?: string;
-  verificationEmailTemplateId?: string;
+  tenantId?: UUID;
+  verificationEmailTemplateId?: UUID;
   verifyRegistration?: boolean;
 }
 
@@ -3261,7 +3266,7 @@ export interface ApplicationRegistrationDeletePolicy {
 export interface ApplicationRequest {
   application?: Application;
   role?: ApplicationRole;
-  webhookIds?: Array<string>;
+  webhookIds?: Array<UUID>;
 }
 
 /**
@@ -3282,7 +3287,7 @@ export interface ApplicationResponse {
  */
 export interface ApplicationRole {
   description?: string;
-  id?: string;
+  id?: UUID;
   isDefault?: boolean;
   isSuperRole?: boolean;
   name?: string;
@@ -3379,8 +3384,8 @@ export interface AuthenticationTokenConfiguration extends Enableable {
  */
 export interface BaseEvent {
   createInstant?: number;
-  id?: string;
-  tenantId?: string;
+  id?: UUID;
+  tenantId?: UUID;
 }
 
 /**
@@ -3393,10 +3398,10 @@ export interface BaseExportRequest {
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
-  applicationConfiguration?: Map<string, D>;
+  applicationConfiguration?: Map<UUID, D>;
   data?: Map<string, any>;
   debug?: boolean;
-  id?: string;
+  id?: UUID;
   name?: string;
   type?: IdentityProviderType;
 }
@@ -3413,7 +3418,7 @@ export interface BaseIdentityProviderApplicationConfiguration extends Enableable
  * @author Daniel DeGroff
  */
 export interface BaseLoginRequest {
-  applicationId?: string;
+  applicationId?: UUID;
   ipAddress?: string;
   metaData?: MetaData;
   noJWT?: boolean;
@@ -3477,7 +3482,7 @@ export interface ChangePasswordResponse {
  */
 export interface CleanSpeakConfiguration extends Enableable {
   apiKey?: string;
-  applicationIds?: Array<string>;
+  applicationIds?: Array<UUID>;
   url?: string;
   usernameModeration?: UsernameModeration;
 }
@@ -3488,12 +3493,12 @@ export interface CleanSpeakConfiguration extends Enableable {
  * @author Daniel DeGroff
  */
 export interface Consent {
-  consentEmailTemplateId?: string;
+  consentEmailTemplateId?: UUID;
   countryMinimumAgeForSelfConsent?: LocalizedIntegers;
   data?: Map<string, any>;
   defaultMinimumAgeForSelfConsent?: number;
   emailPlus?: EmailPlus;
-  id?: string;
+  id?: UUID;
   multipleValuesAllowed?: boolean;
   name?: string;
   values?: Array<string>;
@@ -3652,22 +3657,22 @@ export interface EmailAddress {
  * @author Brian Pontarelli
  */
 export interface EmailConfiguration {
-  forgotPasswordEmailTemplateId?: string;
+  forgotPasswordEmailTemplateId?: UUID;
   host?: string;
   password?: string;
-  passwordlessEmailTemplateId?: string;
+  passwordlessEmailTemplateId?: UUID;
   port?: number;
   properties?: string;
   security?: EmailSecurityType;
-  setPasswordEmailTemplateId?: string;
+  setPasswordEmailTemplateId?: UUID;
   username?: string;
-  verificationEmailTemplateId?: string;
+  verificationEmailTemplateId?: UUID;
   verifyEmail?: boolean;
   verifyEmailWhenChanged?: boolean;
 }
 
 export interface EmailPlus extends Enableable {
-  emailTemplateId?: string;
+  emailTemplateId?: UUID;
   maximumTimeToSendEmailInHours?: number;
   minimumTimeToSendEmailInHours?: number;
 }
@@ -3689,7 +3694,7 @@ export interface EmailTemplate {
   defaultSubject?: string;
   defaultTextTemplate?: string;
   fromEmail?: string;
-  id?: string;
+  id?: UUID;
   localizedFromNames?: LocalizedStrings;
   localizedHtmlTemplates?: LocalizedStrings;
   localizedSubjects?: LocalizedStrings;
@@ -3949,7 +3954,7 @@ export interface FailedAuthenticationConfiguration {
   actionDurationUnit?: ExpiryUnit;
   resetCountInSeconds?: number;
   tooManyAttempts?: number;
-  userActionId?: string;
+  userActionId?: UUID;
 }
 
 /**
@@ -3958,7 +3963,7 @@ export interface FailedAuthenticationConfiguration {
  * @author Brian Pontarelli
  */
 export interface Family {
-  id?: string;
+  id?: UUID;
   members?: Array<FamilyMember>;
 }
 
@@ -3967,14 +3972,14 @@ export interface Family {
  */
 export interface FamilyConfiguration extends Enableable {
   allowChildRegistrations?: boolean;
-  confirmChildEmailTemplateId?: string;
+  confirmChildEmailTemplateId?: UUID;
   deleteOrphanedAccounts?: boolean;
   deleteOrphanedAccountsDays?: number;
-  familyRequestEmailTemplateId?: string;
+  familyRequestEmailTemplateId?: UUID;
   maximumChildAge?: number;
   minimumOwnerAge?: number;
   parentEmailRequired?: boolean;
-  parentRegistrationEmailTemplateId?: string;
+  parentRegistrationEmailTemplateId?: UUID;
 }
 
 /**
@@ -3996,7 +4001,7 @@ export interface FamilyMember {
   insertInstant?: number;
   owner?: boolean;
   role?: FamilyRole;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -4093,10 +4098,10 @@ export enum GrantType {
  */
 export interface Group {
   data?: Map<string, any>;
-  id?: string;
+  id?: UUID;
   name?: string;
-  roles?: Map<string, Array<ApplicationRole>>;
-  tenantId?: string;
+  roles?: Map<UUID, Array<ApplicationRole>>;
+  tenantId?: UUID;
 }
 
 /**
@@ -4106,10 +4111,10 @@ export interface Group {
  */
 export interface GroupMember {
   data?: Map<string, any>;
-  groupId?: string;
-  id?: string;
+  groupId?: UUID;
+  id?: UUID;
   insertInstant?: number;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -4119,7 +4124,7 @@ export interface GroupMember {
  */
 export interface GroupRequest {
   group?: Group;
-  roleIds?: Array<string>;
+  roleIds?: Array<UUID>;
 }
 
 /**
@@ -4133,7 +4138,7 @@ export interface GroupResponse {
 }
 
 export interface HistoryItem {
-  actionerUserId?: string;
+  actionerUserId?: UUID;
   comment?: string;
   createInstant?: number;
   expiry?: number;
@@ -4147,13 +4152,17 @@ export interface HistoryItem {
 export interface HTTPHeaders extends Map<string, string> {
 }
 
+/**
+ * @author Daniel DeGroff
+ */
 export enum HTTPMethod {
   GET,
   POST,
   PUT,
   DELETE,
   HEAD,
-  OPTIONS
+  OPTIONS,
+  PATCH
 }
 
 /**
@@ -4178,7 +4187,7 @@ export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicati
 }
 
 export interface IdentityProviderDetails {
-  id?: string;
+  id?: UUID;
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   type?: IdentityProviderType;
@@ -4192,7 +4201,7 @@ export interface IdentityProviderDetails {
 export interface IdentityProviderLoginRequest extends BaseLoginRequest {
   data?: Map<string, string>;
   encodedJWT?: string;
-  identityProviderId?: string;
+  identityProviderId?: UUID;
 }
 
 /**
@@ -4227,7 +4236,7 @@ export interface IdentityProviderResponse {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
-  identityProviderId?: string;
+  identityProviderId?: UUID;
   loginId?: string;
   state?: Map<string, any>;
 }
@@ -4296,7 +4305,7 @@ export interface Integrations {
  * @author Brian Pontarelli
  */
 export interface IntervalCount {
-  applicationId?: string;
+  applicationId?: UUID;
   count?: number;
   decrementedCount?: number;
   period?: number;
@@ -4308,9 +4317,9 @@ export interface IntervalCount {
  * @author Brian Pontarelli
  */
 export interface IntervalUser {
-  applicationId?: string;
+  applicationId?: UUID;
   period?: number;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -4390,8 +4399,8 @@ export interface JWT {
  * @author Daniel DeGroff
  */
 export interface JWTConfiguration extends Enableable {
-  accessTokenKeyId?: string;
-  idTokenKeyId?: string;
+  accessTokenKeyId?: UUID;
+  idTokenKeyId?: UUID;
   refreshTokenTimeToLiveInMinutes?: number;
   timeToLiveInSeconds?: number;
 }
@@ -4403,7 +4412,7 @@ export interface JWTConfiguration extends Enableable {
  * @author Brian Pontarelli
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
-  applicationIds?: Set<string>;
+  applicationIds?: Set<UUID>;
 }
 
 /**
@@ -4413,10 +4422,10 @@ export interface JWTPublicKeyUpdateEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
-  applicationId?: string;
-  applicationTimeToLiveInSeconds?: Map<string, number>;
+  applicationId?: UUID;
+  applicationTimeToLiveInSeconds?: Map<UUID, number>;
   user?: User;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -4437,7 +4446,7 @@ export interface Key {
   certificate?: string;
   certificateInformation?: CertificateInformation;
   expirationInstant?: number;
-  id?: string;
+  id?: UUID;
   insertInstant?: number;
   issuer?: string;
   kid?: string;
@@ -4495,20 +4504,20 @@ export enum KeyType {
 export interface Lambda extends Enableable {
   body?: string;
   debug?: boolean;
-  id?: string;
+  id?: UUID;
   insertInstant?: number;
   name?: string;
   type?: LambdaType;
 }
 
 export interface LambdaConfiguration {
-  accessTokenPopulateId?: string;
-  idTokenPopulateId?: string;
-  samlv2PopulateId?: string;
+  accessTokenPopulateId?: UUID;
+  idTokenPopulateId?: UUID;
+  samlv2PopulateId?: UUID;
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: string;
+  reconcileId?: UUID;
 }
 
 /**
@@ -4584,8 +4593,8 @@ export enum LoginIdType {
  * @author Daniel DeGroff
  */
 export interface LoginPreventedResponse {
-  actionerUserId?: string;
-  actionId?: string;
+  actionerUserId?: UUID;
+  actionId?: UUID;
   expiry?: number;
   localizedName?: string;
   localizedOption?: string;
@@ -4611,10 +4620,10 @@ export interface LoginRecordExportRequest extends BaseExportRequest {
  * @author Daniel DeGroff
  */
 export interface LoginRecordSearchCriteria extends BaseSearchCriteria {
-  applicationId?: string;
+  applicationId?: UUID;
   end?: number;
   start?: number;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -4699,8 +4708,8 @@ export interface MaximumPasswordAge extends Enableable {
  * @author Daniel DeGroff
  */
 export interface MemberDeleteRequest {
-  memberIds?: Array<string>;
-  members?: Map<string, Array<string>>;
+  memberIds?: Array<UUID>;
+  members?: Map<UUID, Array<UUID>>;
 }
 
 /**
@@ -4709,7 +4718,7 @@ export interface MemberDeleteRequest {
  * @author Daniel DeGroff
  */
 export interface MemberRequest {
-  members?: Map<string, Array<GroupMember>>;
+  members?: Map<UUID, Array<GroupMember>>;
 }
 
 /**
@@ -4718,7 +4727,7 @@ export interface MemberRequest {
  * @author Daniel DeGroff
  */
 export interface MemberResponse {
-  members?: Map<string, Array<GroupMember>>;
+  members?: Map<UUID, Array<GroupMember>>;
 }
 
 export interface MetaData {
@@ -4935,7 +4944,7 @@ export interface PasswordlessLoginRequest extends BaseLoginRequest {
  * @author Daniel DeGroff
  */
 export interface PasswordlessSendRequest {
-  applicationId?: string;
+  applicationId?: UUID;
   code?: string;
   loginId?: string;
   state?: Map<string, any>;
@@ -4945,7 +4954,7 @@ export interface PasswordlessSendRequest {
  * @author Daniel DeGroff
  */
 export interface PasswordlessStartRequest {
-  applicationId?: string;
+  applicationId?: UUID;
   loginId?: string;
   state?: Map<string, any>;
 }
@@ -5015,10 +5024,10 @@ export interface PublicKeyResponse {
  * @author Brian Pontarelli
  */
 export interface RawLogin {
-  applicationId?: string;
+  applicationId?: UUID;
   instant?: number;
   ipAddress?: string;
-  userId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -5051,12 +5060,12 @@ export interface RefreshResponse {
  * @author Daniel DeGroff
  */
 export interface RefreshToken {
-  applicationId?: string;
+  applicationId?: UUID;
   insertInstant?: number;
   metaData?: MetaData;
   startInstant?: number;
   token?: string;
-  userId?: string;
+  userId?: UUID;
 }
 
 export interface RegistrationConfiguration extends Enableable {
@@ -5141,7 +5150,7 @@ export interface SAMLv2Configuration extends Enableable {
   callbackURL?: string;
   debug?: boolean;
   issuer?: string;
-  keyId?: string;
+  keyId?: UUID;
   logoutURL?: string;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
@@ -5158,7 +5167,7 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   emailClaim?: string;
   idpEndpoint?: string;
   issuer?: string;
-  keyId?: string;
+  keyId?: UUID;
   lambdaConfiguration?: LambdaConfiguration;
   useNameIdForEmail?: boolean;
 }
@@ -5224,7 +5233,7 @@ export enum SecureGeneratorType {
 export interface SecureIdentity {
   encryptionScheme?: string;
   factor?: number;
-  id?: string;
+  id?: UUID;
   password?: string;
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
@@ -5239,14 +5248,14 @@ export interface SendRequest {
   bccAddresses?: Array<string>;
   ccAddresses?: Array<string>;
   requestData?: Map<string, any>;
-  userIds?: Array<string>;
+  userIds?: Array<UUID>;
 }
 
 /**
  * @author Daniel DeGroff
  */
 export interface SendResponse {
-  results?: Map<string, EmailTemplateErrors>;
+  results?: Map<UUID, EmailTemplateErrors>;
 }
 
 /**
@@ -5337,7 +5346,7 @@ export interface Tenant {
   failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
   familyConfiguration?: FamilyConfiguration;
   httpSessionMaxInactiveInterval?: number;
-  id?: string;
+  id?: UUID;
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
   logoutURL?: string;
@@ -5346,7 +5355,7 @@ export interface Tenant {
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
-  themeId?: string;
+  themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
 }
 
@@ -5393,7 +5402,7 @@ export interface TestEvent extends BaseEvent {
 export interface Theme {
   data?: Map<string, any>;
   defaultMessages?: string;
-  id?: string;
+  id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
   localizedMessages?: LocalizedStrings;
@@ -5408,7 +5417,7 @@ export interface Theme {
  * @author Trevor Smith
  */
 export interface ThemeRequest {
-  sourceThemeId?: string;
+  sourceThemeId?: UUID;
   theme?: Theme;
 }
 
@@ -5459,7 +5468,7 @@ export interface Totals {
  * @author Brian Pontarelli
  */
 export interface TotalsReportResponse {
-  applicationTotals?: Map<string, Totals>;
+  applicationTotals?: Map<UUID, Totals>;
   globalRegistrations?: number;
   totalGlobalRegistrations?: number;
 }
@@ -5543,7 +5552,7 @@ export interface TwoFactorRequest {
 export interface TwoFactorSendRequest {
   mobilePhone?: string;
   secret?: string;
-  userId?: string;
+  userId?: UUID;
 }
 
 export interface UIConfiguration {
@@ -5561,7 +5570,7 @@ export interface UIConfiguration {
 export interface User extends SecureIdentity {
   active?: boolean;
   birthDate?: string;
-  cleanSpeakId?: string;
+  cleanSpeakId?: UUID;
   data?: Map<string, any>;
   email?: string;
   expiry?: number;
@@ -5577,7 +5586,7 @@ export interface User extends SecureIdentity {
   parentEmail?: string;
   preferredLanguages?: Array<string>;
   registrations?: Array<UserRegistration>;
-  tenantId?: string;
+  tenantId?: UUID;
   timezone?: string;
   twoFactorDelivery?: TwoFactorDelivery;
   twoFactorEnabled?: boolean;
@@ -5593,17 +5602,17 @@ export interface User extends SecureIdentity {
  */
 export interface UserAction {
   active?: boolean;
-  cancelEmailTemplateId?: string;
-  endEmailTemplateId?: string;
-  id?: string;
+  cancelEmailTemplateId?: UUID;
+  endEmailTemplateId?: UUID;
+  id?: UUID;
   includeEmailInEventJSON?: boolean;
   localizedNames?: LocalizedStrings;
-  modifyEmailTemplateId?: string;
+  modifyEmailTemplateId?: UUID;
   name?: string;
   options?: Array<UserActionOption>;
   preventLogin?: boolean;
   sendEndEvent?: boolean;
-  startEmailTemplateId?: string;
+  startEmailTemplateId?: UUID;
   temporal?: boolean;
   transactionType?: TransactionType;
   userEmailingEnabled?: boolean;
@@ -5617,10 +5626,10 @@ export interface UserAction {
  */
 export interface UserActionEvent extends BaseEvent {
   action?: string;
-  actioneeUserId?: string;
-  actionerUserId?: string;
-  actionId?: string;
-  applicationIds?: Array<string>;
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  actionId?: UUID;
+  applicationIds?: Array<UUID>;
   comment?: string;
   email?: Email;
   emailedUser?: boolean;
@@ -5642,16 +5651,16 @@ export interface UserActionEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface UserActionLog {
-  actioneeUserId?: string;
-  actionerUserId?: string;
-  applicationIds?: Array<string>;
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  applicationIds?: Array<UUID>;
   comment?: string;
   createInstant?: number;
   emailUserOnEnd?: boolean;
   endEventSent?: boolean;
   expiry?: number;
   history?: LogHistory;
-  id?: string;
+  id?: UUID;
   localizedName?: string;
   localizedOption?: string;
   localizedReason?: string;
@@ -5660,7 +5669,7 @@ export interface UserActionLog {
   option?: string;
   reason?: string;
   reasonCode?: string;
-  userActionId?: string;
+  userActionId?: UUID;
 }
 
 /**
@@ -5692,7 +5701,7 @@ export enum UserActionPhase {
  */
 export interface UserActionReason {
   code?: string;
-  id?: string;
+  id?: UUID;
   localizedTexts?: LocalizedStrings;
   text?: string;
 }
@@ -5751,10 +5760,10 @@ export interface UserBulkCreateEvent extends BaseEvent {
  */
 export interface UserComment {
   comment?: string;
-  commenterId?: string;
+  commenterId?: UUID;
   createInstant?: number;
-  id?: string;
-  userId?: string;
+  id?: UUID;
+  userId?: UUID;
 }
 
 /**
@@ -5781,14 +5790,14 @@ export interface UserCommentResponse {
  */
 export interface UserConsent {
   consent?: Consent;
-  consentId?: string;
+  consentId?: UUID;
   data?: Map<string, any>;
-  giverUserId?: string;
-  id?: string;
+  giverUserId?: UUID;
+  id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
   status?: ConsentStatus;
-  userId?: string;
+  userId?: UUID;
   values?: Array<string>;
 }
 
@@ -5849,7 +5858,7 @@ export interface UserDeleteRequest {
   hardDelete?: boolean;
   query?: string;
   queryString?: string;
-  userIds?: Array<string>;
+  userIds?: Array<UUID>;
 }
 
 /**
@@ -5885,7 +5894,7 @@ export interface UserinfoResponse extends Map<string, any> {
  * @author Daniel DeGroff
  */
 export interface UserLoginFailedEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   authenticationType?: string;
   user?: User;
 }
@@ -5896,15 +5905,15 @@ export interface UserLoginFailedEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserLoginSuccessEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   authenticationType?: string;
-  identityProviderId?: string;
+  identityProviderId?: UUID;
   identityProviderName?: string;
   user?: User;
 }
 
 export interface UsernameModeration extends Enableable {
-  applicationId?: string;
+  applicationId?: UUID;
 }
 
 /**
@@ -5922,11 +5931,11 @@ export interface UserReactivateEvent extends BaseEvent {
  * @author Brian Pontarelli
  */
 export interface UserRegistration {
-  applicationId?: string;
+  applicationId?: UUID;
   authenticationToken?: string;
-  cleanSpeakId?: string;
+  cleanSpeakId?: UUID;
   data?: Map<string, any>;
-  id?: string;
+  id?: UUID;
   insertInstant?: number;
   lastLoginInstant?: number;
   preferredLanguages?: Array<string>;
@@ -5944,7 +5953,7 @@ export interface UserRegistration {
  * @author Daniel DeGroff
  */
 export interface UserRegistrationCreateEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   registration?: UserRegistration;
   user?: User;
 }
@@ -5955,7 +5964,7 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserRegistrationDeleteEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   registration?: UserRegistration;
   user?: User;
 }
@@ -5966,7 +5975,7 @@ export interface UserRegistrationDeleteEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserRegistrationUpdateEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   original?: UserRegistration;
   registration?: UserRegistration;
   user?: User;
@@ -5978,7 +5987,7 @@ export interface UserRegistrationUpdateEvent extends BaseEvent {
  * @author Trevor Smith
  */
 export interface UserRegistrationVerifiedEvent extends BaseEvent {
-  applicationId?: string;
+  applicationId?: UUID;
   registration?: UserRegistration;
   user?: User;
 }
@@ -6011,8 +6020,8 @@ export interface UserResponse {
 export interface UserSearchCriteria extends BaseSearchCriteria {
   email?: string;
   fullName?: string;
-  id?: string;
-  ids?: Array<string>;
+  id?: UUID;
+  ids?: Array<UUID>;
   query?: string;
   queryString?: string;
   sortFields?: Array<SortField>;
@@ -6064,7 +6073,7 @@ export interface VerifyRegistrationResponse {
  * @author Brian Pontarelli
  */
 export interface Webhook {
-  applicationIds?: Array<string>;
+  applicationIds?: Array<UUID>;
   connectTimeout?: number;
   data?: WebhookData;
   description?: string;
@@ -6072,7 +6081,7 @@ export interface Webhook {
   headers?: HTTPHeaders;
   httpAuthenticationPassword?: string;
   httpAuthenticationUsername?: string;
-  id?: string;
+  id?: UUID;
   readTimeout?: number;
   sslCertificate?: string;
   url?: string;
