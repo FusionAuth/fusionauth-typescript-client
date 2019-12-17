@@ -2743,14 +2743,14 @@ export class FusionAuthClient {
    * Passwordless Code API or using a mechanism outside of FusionAuth. The passwordless login is completed by using the Passwordless Login API with this code.
    *
    * @param {PasswordlessStartRequest} request The passwordless start request that contains all of the information used to begin the passwordless login request.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<PasswordlessStartResponse>>}
    */
-  startPasswordlessLogin(request: PasswordlessStartRequest): Promise<ClientResponse<void>> {
+  startPasswordlessLogin(request: PasswordlessStartRequest): Promise<ClientResponse<PasswordlessStartResponse>> {
     return this.start()
         .withUri('/api/passwordless/start')
         .withJSONBody(request)
         .withMethod("POST")
-        .go<void>();
+        .go<PasswordlessStartResponse>();
   }
 
   /**
