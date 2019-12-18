@@ -473,6 +473,8 @@ export class FusionAuthClient {
    *
    * @param {Array<string>} userIds The ids of the users to deactivate.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
+   *
+   * @deprecated This method has been renamed to deactivateUsersByIds, use this method instead.
    */
   deactivateUsers(userIds: Array<string>): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
@@ -485,17 +487,16 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deactivates the users found with the given search query string.
+   * Deactivates the users with the given ids.
    *
-   * @param {string} queryString The search query string.
-   * @param {boolean} dryRun Whether to preview or deactivate the users found by the queryString
+   * @param {Array<string>} userIds The ids of the users to deactivate.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    */
-  deactivateUsersByQuery(queryString: string, dryRun: boolean): Promise<ClientResponse<UserDeleteResponse>> {
+  deactivateUsersByIds(userIds: Array<string>): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
         .withUri('/api/user/bulk')
-        .withParameter('queryString', queryString)
-        .withParameter('dryRun', dryRun)
+        .withParameter('userId', userIds)
+        .withParameter('dryRun', false)
         .withParameter('hardDelete', false)
         .withMethod("DELETE")
         .go<UserDeleteResponse>();
@@ -726,12 +727,16 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deletes the users with the given ids, or users matching the provided queryString.
-   * If you provide both userIds and queryString, the userIds will be honored.  This can be used to deactivate or hard-delete 
-   * a user based on the hardDelete request body parameter.
+   * Deletes the users with the given ids, or users matching the provided JSON query or queryString.
+   * The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+   * 
+   * This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
+   * Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
    *
    * @param {UserDeleteRequest} request The UserDeleteRequest.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
+   *
+   * @deprecated This method has been renamed to deleteUsersByQuery, use this method instead.
    */
   deleteUsers(request: UserDeleteRequest): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
@@ -742,18 +747,19 @@ export class FusionAuthClient {
   }
 
   /**
-   * Delete the users found with the given search query string.
+   * Deletes the users with the given ids, or users matching the provided JSON query or queryString.
+   * The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+   * 
+   * This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
+   * Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
    *
-   * @param {string} queryString The search query string.
-   * @param {boolean} dryRun Whether to preview or delete the users found by the queryString
+   * @param {UserDeleteRequest} request The UserDeleteRequest.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    */
-  deleteUsersByQuery(queryString: string, dryRun: boolean): Promise<ClientResponse<UserDeleteResponse>> {
+  deleteUsersByQuery(request: UserDeleteRequest): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
         .withUri('/api/user/bulk')
-        .withParameter('queryString', queryString)
-        .withParameter('dryRun', dryRun)
-        .withParameter('hardDelete', true)
+        .withJSONBody(request)
         .withMethod("DELETE")
         .go<UserDeleteResponse>();
   }
@@ -2625,6 +2631,8 @@ export class FusionAuthClient {
    *
    * @param {Array<string>} ids The user ids to search for.
    * @returns {Promise<ClientResponse<SearchResponse>>}
+   *
+   * @deprecated This method has been renamed to searchUsersByIds, use this method instead.
    */
   searchUsers(ids: Array<string>): Promise<ClientResponse<SearchResponse>> {
     return this.start()
@@ -2635,11 +2643,42 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the users for the given ids. If any id is invalid, it is ignored.
+   *
+   * @param {Array<string>} ids The user ids to search for.
+   * @returns {Promise<ClientResponse<SearchResponse>>}
+   */
+  searchUsersByIds(ids: Array<string>): Promise<ClientResponse<SearchResponse>> {
+    return this.start()
+        .withUri('/api/user/search')
+        .withParameter('ids', ids)
+        .withMethod("GET")
+        .go<SearchResponse>();
+  }
+
+  /**
    * Retrieves the users for the given search criteria and pagination.
    *
-   * @param {SearchRequest} request The search criteria and pagination constraints. Fields used: queryString, numberOfResults, startRow,
-   *    and sort fields.
+   * @param {SearchRequest} request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
+   *    and sortFields.
    * @returns {Promise<ClientResponse<SearchResponse>>}
+   */
+  searchUsersByQuery(request: SearchRequest): Promise<ClientResponse<SearchResponse>> {
+    return this.start()
+        .withUri('/api/user/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go<SearchResponse>();
+  }
+
+  /**
+   * Retrieves the users for the given search criteria and pagination.
+   *
+   * @param {SearchRequest} request The search criteria and pagination constraints. Fields used: ids, query, queryString, numberOfResults, orderBy, startRow,
+   *    and sortFields.
+   * @returns {Promise<ClientResponse<SearchResponse>>}
+   *
+   * @deprecated This method has been renamed to searchUsersByQuery, use this method instead.
    */
   searchUsersByQueryString(request: SearchRequest): Promise<ClientResponse<SearchResponse>> {
     return this.start()
@@ -6018,14 +6057,10 @@ export interface UserResponse {
  * @author Brian Pontarelli
  */
 export interface UserSearchCriteria extends BaseSearchCriteria {
-  email?: string;
-  fullName?: string;
-  id?: UUID;
   ids?: Array<UUID>;
   query?: string;
   queryString?: string;
   sortFields?: Array<SortField>;
-  username?: string;
 }
 
 /**
