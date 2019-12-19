@@ -474,7 +474,7 @@ export class FusionAuthClient {
    * @param {Array<string>} userIds The ids of the users to deactivate.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    *
-   * @deprecated This method has been renamed to deactivateUsersByIds, use this method instead.
+   * @deprecated This method has been renamed to deactivateUsersByIds, use that method instead.
    */
   deactivateUsers(userIds: Array<string>): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
@@ -736,7 +736,7 @@ export class FusionAuthClient {
    * @param {UserDeleteRequest} request The UserDeleteRequest.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
    *
-   * @deprecated This method has been renamed to deleteUsersByQuery, use this method instead.
+   * @deprecated This method has been renamed to deleteUsersByQuery, use that method instead.
    */
   deleteUsers(request: UserDeleteRequest): Promise<ClientResponse<UserDeleteResponse>> {
     return this.start()
@@ -2632,7 +2632,7 @@ export class FusionAuthClient {
    * @param {Array<string>} ids The user ids to search for.
    * @returns {Promise<ClientResponse<SearchResponse>>}
    *
-   * @deprecated This method has been renamed to searchUsersByIds, use this method instead.
+   * @deprecated This method has been renamed to searchUsersByIds, use that method instead.
    */
   searchUsers(ids: Array<string>): Promise<ClientResponse<SearchResponse>> {
     return this.start()
@@ -2678,7 +2678,7 @@ export class FusionAuthClient {
    *    and sortFields.
    * @returns {Promise<ClientResponse<SearchResponse>>}
    *
-   * @deprecated This method has been renamed to searchUsersByQuery, use this method instead.
+   * @deprecated This method has been renamed to searchUsersByQuery, use that method instead.
    */
   searchUsersByQueryString(request: SearchRequest): Promise<ClientResponse<SearchResponse>> {
     return this.start()
