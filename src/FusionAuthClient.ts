@@ -5408,6 +5408,7 @@ export interface Tenantable {
  * @author Daniel DeGroff
  */
 export interface TenantRequest {
+  sourceTenantId?: UUID;
   tenant?: Tenant;
 }
 
