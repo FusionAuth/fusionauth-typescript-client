@@ -14,9 +14,8 @@
  * language governing permissions and limitations under the License.
  */
 
-import IRESTClient from "./IRESTClient";
+import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-
 import fetch from 'cross-fetch'
 
 /**
@@ -24,13 +23,15 @@ import fetch from 'cross-fetch'
  * @author Tyler Scott
  * @author TJ Peden
  */
-export default class DefaultRESTClient implements IRESTClient {
+export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> {
   public body: unknown;
   public headers: Record<string, string> = {};
   public method: string;
   public parameters: Record<string, string> = {};
   public uri: string;
   public credentials: RequestCredentials;
+  public responseHandler: ResponseHandler<RT> = DefaultRESTClient.emptyResponseHandler;
+  public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.emptyResponseHandler;
 
   constructor(public host: string) {
   }
@@ -41,7 +42,7 @@ export default class DefaultRESTClient implements IRESTClient {
    * @param {string} key The value of the authorization header.
    * @returns {DefaultRESTClient}
    */
-  withAuthorization(key: string): DefaultRESTClient {
+  withAuthorization(key: string): DefaultRESTClient<RT, ERT> {
     if (key === null || typeof key === 'undefined') {
       return this;
     }
@@ -53,7 +54,7 @@ export default class DefaultRESTClient implements IRESTClient {
   /**
    * Adds a segment to the request uri
    */
-  withUriSegment(segment: string | number): DefaultRESTClient {
+  withUriSegment(segment: string | number): DefaultRESTClient<RT, ERT> {
     if (segment === null || segment === undefined) {
       return this;
     }
@@ -79,7 +80,7 @@ export default class DefaultRESTClient implements IRESTClient {
    *
    * @param body The object to be written to the request body as form data.
    */
-  withFormData(body: object): DefaultRESTClient {
+  withFormData(body: object): DefaultRESTClient<RT, ERT> {
     this.body = body;
     this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
     return this;
@@ -91,7 +92,7 @@ export default class DefaultRESTClient implements IRESTClient {
    * @param key The name of the header.
    * @param value The value of the header.
    */
-  withHeader(key: string, value: string): DefaultRESTClient {
+  withHeader(key: string, value: string): DefaultRESTClient<RT, ERT> {
     this.headers[key] = value;
     return this;
   }
@@ -101,7 +102,7 @@ export default class DefaultRESTClient implements IRESTClient {
    *
    * @param body The object to be written to the request body as JSON.
    */
-  withJSONBody(body: object): DefaultRESTClient {
+  withJSONBody(body: object): DefaultRESTClient<RT, ERT> {
     this.body = JSON.stringify(body);
     this.withHeader('Content-Type', 'application/json');
     // Omit the Content-Length, this is set auto-magically by the request library
@@ -111,7 +112,7 @@ export default class DefaultRESTClient implements IRESTClient {
   /**
    * Sets the http method for the request
    */
-  withMethod(method: string): DefaultRESTClient {
+  withMethod(method: string): DefaultRESTClient<RT, ERT> {
     this.method = method;
     return this;
   }
@@ -119,7 +120,7 @@ export default class DefaultRESTClient implements IRESTClient {
   /**
    * Sets the uri of the request
    */
-  withUri(uri: string): DefaultRESTClient {
+  withUri(uri: string): DefaultRESTClient<RT, ERT> {
     this.uri = uri;
     return this;
   }
@@ -130,18 +131,28 @@ export default class DefaultRESTClient implements IRESTClient {
    * @param name The name of the parameter.
    * @param value The value of the parameter, may be a string, object or number.
    */
-  withParameter(name: string, value: any): DefaultRESTClient {
+  withParameter(name: string, value: any): DefaultRESTClient<RT, ERT> {
     this.parameters[name] = value;
     return this;
   }
 
   /**
    * Sets request's credentials.
-   * 
+   *
    * @param value A string indicating whether credentials will be sent with the request always, never, or only when sent to a same-origin URL.
    */
-  withCredentials(value: RequestCredentials): DefaultRESTClient {
+  withCredentials(value: RequestCredentials): DefaultRESTClient<RT, ERT> {
     this.credentials = value;
+    return this;
+  }
+
+  withResponseHandler(handler: ResponseHandler<RT>): DefaultRESTClient<RT, ERT> {
+    this.responseHandler = handler;
+    return this;
+  }
+
+  withErrorResponseHandler(handler: ErrorResponseHandler<ERT>): DefaultRESTClient<RT, ERT> {
+    this.errorResponseHandler = handler;
     return this;
   }
 
@@ -149,33 +160,38 @@ export default class DefaultRESTClient implements IRESTClient {
    * Run the request and return a promise. This promise will resolve if the request is successful
    * and reject otherwise.
    */
-  async go<T>(): Promise<ClientResponse<T>> {
-    const clientResponse = new ClientResponse<T>();
-    
+  async go(): Promise<ClientResponse<RT>> {
+    const clientResponse = new ClientResponse<RT>();
+
+    let response: Response;
     try {
-      const response = await fetch(
-        this.getFullUrl(),
-        {
-          method: this.method,
-          headers: this.headers,
-          body: this.body as BodyInit,
-          credentials: this.credentials,
-        },
+      response = await fetch(
+          this.getFullUrl(),
+          {
+            method: this.method,
+            headers: this.headers,
+            body: this.body as BodyInit,
+            credentials: this.credentials,
+          },
       );
-  
-      clientResponse.statusCode = response.status;
-      if (response.body) {
-        clientResponse.response = await response.json();
+
+      if (response.ok) {
+        return await this.responseHandler(response);
+      } else {
+        throw await this.errorResponseHandler(response);
       }
     } catch (error) {
+      if (error instanceof ClientResponse) {
+        throw error; // Don't catch a ClientResponse (we want this to trigger the catch of the promise
+      }
+
+      if (response) { // Try to recover the response status
+        clientResponse.statusCode = response.status;
+      }
       clientResponse.exception = error;
-    }
-    
-    if (!clientResponse.wasSuccessful()) {
+
       throw clientResponse;
     }
-
-    return clientResponse;
   }
 
   private getQueryString() {
@@ -185,5 +201,13 @@ export default class DefaultRESTClient implements IRESTClient {
       queryString += key + '=' + encodeURIComponent(this.parameters[key]);
     }
     return queryString;
+  }
+
+  private static async emptyResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
+    let clientResponse = new ClientResponse<RT>();
+
+    clientResponse.statusCode = response.status;
+
+    return clientResponse;
   }
 }

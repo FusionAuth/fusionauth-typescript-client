@@ -19,7 +19,7 @@ import DefaultRESTClient from "./DefaultRESTClient";
 import IRESTClientBuilder from "./IRESTClientBuilder";
 
 export default class DefaultRESTClientBuilder implements IRESTClientBuilder {
-  build(host: string): IRESTClient {
-    return new DefaultRESTClient(host);
+  build<RT, ERT>(host: string): IRESTClient<RT, ERT> {
+    return new DefaultRESTClient<RT, ERT>(host);
   }
 }

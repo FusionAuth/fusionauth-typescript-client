@@ -18,7 +18,7 @@
 
 import {ApplicationRequest, FusionAuthClient} from '../index';
 import * as chai from 'chai'
-import './nodejs-tls-fix'
+import ClientResponse from "../src/ClientResponse";
 // import 'mocha'
 
 let client;
@@ -26,7 +26,7 @@ let client;
 describe('#FusionAuthClient()', function () {
 
   beforeEach(async () => {
-    client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'http://localhost:9011');
+    client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'https://local.fusionauth.io');
 
     try {
       await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
@@ -36,11 +36,21 @@ describe('#FusionAuthClient()', function () {
     try {
       const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
       let response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+      chai.assert.isUndefined(response.exception);
       chai.assert.strictEqual(response.statusCode, 200);
       chai.assert.isNotNull(response.response);
-    } catch (response) {
-      console.error(JSON.stringify(response.response, null, 2));
-      throw new Error("Failed to setup FusionAuth Client for testing");
+    } catch (error) {
+      console.error("Failed to setup FusionAuth Client for testing.", error)
+      throw error;
+    }
+
+    // Cleanup the user (just in case a test partially failed)
+    try {
+      let response = await client.retrieveUserByEmail("nodejs@fusionauth.io")
+      if (response.wasSuccessful()) {
+        await client.deleteUser(response.response.user.id)
+      }
+    } catch (ignore) {
     }
   });
 
@@ -54,6 +64,7 @@ describe('#FusionAuthClient()', function () {
       skipVerification: true,
       sendSetPasswordEmail: false
     });
+    chai.assert.isUndefined(clientResponse.exception);
     chai.assert.strictEqual(clientResponse.statusCode, 200);
     chai.assert.isNotNull(clientResponse.response);
     chai.expect(clientResponse.response).to.have.property('user');
@@ -77,8 +88,42 @@ describe('#FusionAuthClient()', function () {
   });
 
   it('Patch Application', async () => {
-    const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client patch', verifyRegistration: true}};
+    const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client patch', loginConfiguration: { allowTokenRefresh: true }}};
     let response = await client.patchApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+    chai.assert.isUndefined(response.exception);
     chai.assert.strictEqual(response.statusCode, 200);
+    chai.expect(response.response.application.loginConfiguration.allowTokenRefresh).to.be.true;
+  });
+
+  /**
+   * Tests a connection failure path for fetch exceptions
+   */
+  it('Failed response', async () => {
+    client = new FusionAuthClient('doesntmatter', 'https://local.fusionauth.example.com'); // Doesn't exist
+
+    return client.retrieveTenants()
+        .then((_) => {
+          chai.assert.fail("This should not have succeeded");
+        })
+        .catch((response) => {
+          chai.assert.instanceOf(response, ClientResponse);
+          chai.assert.isNotNull(response.exception);
+          chai.assert.isUndefined(response.statusCode);
+        });
+  });
+
+  /**
+   *
+   */
+  it('Error response', async () => {
+    return client.createApplication(null, {application: {name: 'Bad Application', verifyRegistration: true}})
+        .then((_) => {
+          chai.assert.fail("This should not have succeeded");
+        })
+        .catch((response) => {
+          chai.assert.instanceOf(response, ClientResponse);
+          chai.assert.isDefined(response.statusCode);
+          chai.expect(response.statusCode).to.be.above(399).and.below(500);
+        });
   });
 });

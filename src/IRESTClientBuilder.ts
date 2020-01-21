@@ -16,5 +16,5 @@
 import IRESTClient from "./IRESTClient";
 
 export default interface IRESTClientBuilder {
-  build(host: string): IRESTClient;
+  build<RT, ERT>(host: string): IRESTClient<RT, ERT>;
 }
