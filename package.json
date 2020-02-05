@@ -54,7 +54,9 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "cross-fetch": "^3.0.4"
+    "@types/query-string": "^6.3.0",
+    "cross-fetch": "^3.0.4",
+    "query-string": "^6.10.1"
   },
   "browser": {
     "chai": ""

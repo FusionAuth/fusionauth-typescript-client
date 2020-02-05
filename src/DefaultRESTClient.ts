@@ -17,24 +17,27 @@
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
 import fetch from 'cross-fetch'
+import * as queryString from 'query-string';
 
 /**
  * @author Brett P
  * @author Tyler Scott
  * @author TJ Peden
  */
-export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> {
+export default class DefaultRESTClient<RT, ERT>
+  implements IRESTClient<RT, ERT> {
   public body: unknown;
   public headers: Record<string, string> = {};
   public method: string;
   public parameters: Record<string, string> = {};
   public uri: string;
   public credentials: RequestCredentials;
-  public responseHandler: ResponseHandler<RT> = DefaultRESTClient.emptyResponseHandler;
-  public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.emptyResponseHandler;
+  public responseHandler: ResponseHandler<RT> =
+    DefaultRESTClient.emptyResponseHandler;
+  public errorResponseHandler: ErrorResponseHandler<ERT> =
+    DefaultRESTClient.emptyResponseHandler;
 
-  constructor(public host: string) {
-  }
+  constructor(public host: string) {}
 
   /**
    * Sets the authorization header using a key
@@ -195,15 +198,13 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   }
 
   private getQueryString() {
-    var queryString = '';
-    for (let key in this.parameters) {
-      queryString += (queryString.length === 0) ? '?' : '&';
-      queryString += key + '=' + encodeURIComponent(this.parameters[key]);
-    }
-    return queryString;
+    const generatedQueryString = queryString.stringify(this.parameters);
+    return `?${generatedQueryString}`;
   }
 
-  private static async emptyResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
+  private static async emptyResponseHandler<RT>(
+    response: Response
+  ): Promise<ClientResponse<RT>> {
     let clientResponse = new ClientResponse<RT>();
 
     clientResponse.statusCode = response.status;
