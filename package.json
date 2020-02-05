@@ -51,10 +51,10 @@
     "mocha": "^7.0.0",
     "mocha-typescript": "^1.1.17",
     "tsify": "^4.0.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "@types/query-string": "^6.3.0"
   },
   "dependencies": {
-    "@types/query-string": "^6.3.0",
     "cross-fetch": "^3.0.4",
     "query-string": "^6.10.1"
   },
