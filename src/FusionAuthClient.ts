@@ -3672,6 +3672,30 @@ export interface BaseSearchCriteria {
   startRow?: number;
 }
 
+export enum BreachAction {
+  Off,
+  RecordOnly,
+  NotifyUser,
+  RequireChange
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum BreachedPasswordStatus {
+  None,
+  ExactMatch,
+  SubAddressMatch,
+  PasswordOnly,
+  CommonPassword
+}
+
+export enum BreachMatchMode {
+  Low,
+  Medium,
+  High
+}
+
 export enum CanonicalizationMethod {
   exclusive,
   exclusive_with_comments,
@@ -3690,6 +3714,16 @@ export interface CertificateInformation {
   subject?: string;
   validFrom?: number;
   validTo?: number;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export enum ChangePasswordReason {
+  Administrative,
+  Breached,
+  Expired,
+  Validation
 }
 
 /**
@@ -4101,6 +4135,7 @@ export enum EventType {
   UserRegistrationDelete = "user.registration.delete",
   UserRegistrationVerified = "user.registration.verified",
   UserEmailVerified = "user.email.verified",
+  UserPasswordBreach = "user.password.breach",
   Test = "test"
 }
 
@@ -4911,6 +4946,7 @@ export interface LoginRequest extends BaseLoginRequest {
 export interface LoginResponse {
   actions?: Array<LoginPreventedResponse>;
   changePasswordId?: string;
+  changePasswordReason?: ChangePasswordReason;
   refreshToken?: string;
   state?: Map<string, any>;
   token?: string;
@@ -5079,6 +5115,10 @@ export enum OAuthErrorReason {
   invalid_client_authentication_scheme,
   invalid_client_authentication,
   client_id_mismatch,
+  change_password_administrative,
+  change_password_breached,
+  change_password_expired,
+  change_password_validation,
   unknown
 }
 
@@ -5152,6 +5192,15 @@ export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<Open
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface PasswordBreachDetection extends Enableable {
+  matchMode?: BreachMatchMode;
+  notifyUserEmailTemplateId?: UUID;
+  onLogin?: BreachAction;
+}
+
+/**
  * Password Encryption Scheme Configuration
  *
  * @author Daniel DeGroff
@@ -5209,12 +5258,14 @@ export interface PasswordlessStartResponse {
  * @author Derek Klatt
  */
 export interface PasswordValidationRules {
+  breachDetection?: PasswordBreachDetection;
   maxLength?: number;
   minLength?: number;
   rememberPreviousPasswords?: RememberPreviousPasswords;
   requireMixedCase?: boolean;
   requireNonAlpha?: boolean;
   requireNumber?: boolean;
+  validateOnLogin?: boolean;
 }
 
 /**
@@ -5470,10 +5521,13 @@ export enum SecureGeneratorType {
  * @author Daniel DeGroff
  */
 export interface SecureIdentity {
+  breachedPasswordLastCheckedInstant?: number;
+  breachedPasswordStatus?: BreachedPasswordStatus;
   encryptionScheme?: string;
   factor?: number;
   id?: UUID;
   password?: string;
+  passwordChangeReason?: ChangePasswordReason;
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
   salt?: string;
@@ -6157,6 +6211,15 @@ export interface UsernameModeration extends Enableable {
 }
 
 /**
+ * Models the User Password Breach Event.
+ *
+ * @author Matthew Altman
+ */
+export interface UserPasswordBreachEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
  * Models the User Reactivate Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -6311,8 +6374,9 @@ export interface VerifyRegistrationResponse {
 export interface Webhook {
   applicationIds?: Array<UUID>;
   connectTimeout?: number;
-  data?: WebhookData;
+  data?: Map<string, any>;
   description?: string;
+  eventsEnabled?: Map<EventType, boolean>;
   global?: boolean;
   headers?: HTTPHeaders;
   httpAuthenticationPassword?: string;
@@ -6321,10 +6385,6 @@ export interface Webhook {
   readTimeout?: number;
   sslCertificate?: string;
   url?: string;
-}
-
-export interface WebhookData {
-  eventsEnabled?: Map<EventType, boolean>;
 }
 
 /**
