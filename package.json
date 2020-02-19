@@ -1,6 +1,6 @@
 {
   "name": "@fusionauth/typescript-client",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "description": "A typescript implementation of the FusionAuth client.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
