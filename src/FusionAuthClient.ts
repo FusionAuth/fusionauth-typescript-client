@@ -53,18 +53,15 @@ export class FusionAuthClient {
 
   /**
    * Takes an action on a user. The user being actioned is called the "actionee" and the user taking the action is called the
-   * "actioner". Both user ids are required. You pass the actionee's user id into the method and the actioner's is put into the
-   * request object.
+   * "actioner". Both user ids are required in the request object.
    *
-   * @param {UUID} actioneeUserId The actionee's user id.
    * @param {ActionRequest} request The action request that includes all of the information about the action being taken including
    *    the id of the action, any options and the duration (if applicable).
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
-  actionUser(actioneeUserId: UUID, request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
+  actionUser(request: ActionRequest): Promise<ClientResponse<ActionResponse>> {
     return this.start<ActionResponse, Errors>()
         .withUri('/api/user/action')
-        .withUriSegment(actioneeUserId)
         .withJSONBody(request)
         .withMethod("POST")
         .withResponseHandler(JSONResponseHandler)
