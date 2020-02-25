@@ -3757,6 +3757,10 @@ export interface CleanSpeakConfiguration extends Enableable {
   usernameModeration?: UsernameModeration;
 }
 
+export interface ClientAuthenticationMethod {
+  clientSecretPost?: boolean;
+}
+
 /**
  * Models a consent.
  *
@@ -4482,6 +4486,7 @@ export interface IdentityProviderOauth2Configuration {
   authorization_endpoint?: string;
   client_id?: string;
   client_secret?: string;
+  clientAuthenticationMethod?: ClientAuthenticationMethod;
   issuer?: string;
   scope?: string;
   token_endpoint?: string;
