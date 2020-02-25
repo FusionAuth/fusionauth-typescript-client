@@ -3758,7 +3758,7 @@ export interface CleanSpeakConfiguration extends Enableable {
 }
 
 export interface ClientAuthenticationMethod {
-  clientSecretPost?: boolean;
+  client_secret_post?: boolean;
 }
 
 /**
