@@ -1087,13 +1087,17 @@ export class FusionAuthClient {
    *
    * @param {UUID} applicationId The Application Id for which you are requesting a new access token be issued.
    * @param {string} encodedJWT The encoded JWT (access token).
+   * @param {string} refreshToken (Optional) An existing refresh token used to request a refresh token in addition to a JWT in the response.
+   *    <p>The target application represented by the applicationid request parameter must have refresh 
+   *    tokens enabled in order to receive a refresh token in the response.</p>
    * @returns {Promise<ClientResponse<IssueResponse>>}
    */
-  issueJWT(applicationId: UUID, encodedJWT: string): Promise<ClientResponse<IssueResponse>> {
+  issueJWT(applicationId: UUID, encodedJWT: string, refreshToken: string): Promise<ClientResponse<IssueResponse>> {
     return this.start<IssueResponse, Errors>()
         .withUri('/api/jwt/issue')
         .withAuthorization('JWT ' + encodedJWT)
         .withParameter('applicationId', applicationId)
+        .withParameter('refreshToken', refreshToken)
         .withMethod("GET")
         .withResponseHandler(JSONResponseHandler)
         .go();
