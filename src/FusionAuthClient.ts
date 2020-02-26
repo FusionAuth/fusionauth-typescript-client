@@ -3757,8 +3757,9 @@ export interface CleanSpeakConfiguration extends Enableable {
   usernameModeration?: UsernameModeration;
 }
 
-export interface ClientAuthenticationMethod {
-  client_secret_post?: boolean;
+export enum ClientAuthenticationMethod {
+  client_secret_basic,
+  client_secret_post
 }
 
 /**
