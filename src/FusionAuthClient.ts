@@ -3762,9 +3762,9 @@ export interface CleanSpeakConfiguration extends Enableable {
 }
 
 export enum ClientAuthenticationMethod {
-  none,
-  client_secret_basic,
-  client_secret_post
+  none = "None (none)",
+  client_secret_basic = "HTTP Basic authentication (client_secret_basic)",
+  client_secret_post = "Client credentials in the request body (client_secret_post)"
 }
 
 /**
@@ -4197,7 +4197,6 @@ export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<Extern
   defaultKeyId?: UUID;
   domains?: Set<string>;
   headerKeyParameter?: string;
-  keyIds?: Set<UUID>;
   oauth2?: IdentityProviderOauth2Configuration;
   uniqueIdentityClaim?: string;
 }
