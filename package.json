@@ -19,7 +19,7 @@
   "scripts": {
     "test": "karma start && mocha build/test/FusionAuthClientTest.js",
     "build-browser": "npx browserify index.ts --debug -p tsify -o dist/fusionauth-typescript-client.js",
-    "pretest": "npx browserify test/FusionAuthClientTest.ts --debug -p tsify -o dist/fusionauth-typescript-client-test.js && tsc",
+    "pretest": "npx browserify test/FusionAuthClientTest.ts -t envify --debug -p tsify -o dist/fusionauth-typescript-client-test.js && tsc",
     "prepare": "tsc"
   },
   "repository": {
@@ -43,6 +43,7 @@
     "@types/request": "^2.48.4",
     "browserify": "^16.5.0",
     "chai": "^4.2.0",
+    "envify": "^4.1.0",
     "karma": "^4.4.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",

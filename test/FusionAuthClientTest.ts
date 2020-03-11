@@ -17,25 +17,27 @@
 'use strict';
 
 import {ApplicationRequest, FusionAuthClient} from '../index';
-import * as chai from 'chai'
+import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
-// import 'mocha'
 
 let client;
+const fusionauthUrl = process.env.FUSIONAUTH_URL || "https://local.fusionauth.io";
+const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
+const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
 
 describe('#FusionAuthClient()', function () {
 
   beforeEach(async () => {
-    client = new FusionAuthClient('bf69486b-4733-4470-a592-f1bfce7af580', 'https://local.fusionauth.io');
+    client = new FusionAuthClient(fusionauthApiKey, fusionauthUrl);
 
     try {
-      await client.deleteApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0');
+      await client.deleteApplication(applicationId);
     } catch (ignore) {
     }
 
     try {
       const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
-      let response = await client.createApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+      let response = await client.createApplication(applicationId, applicationRequest);
       chai.assert.isUndefined(response.exception);
       chai.assert.strictEqual(response.statusCode, 200);
       chai.assert.isNotNull(response.response);
@@ -54,7 +56,7 @@ describe('#FusionAuthClient()', function () {
     }
   });
 
-  it('Create and Delete a User', async () => {
+  it('Create, Patch and Delete a User', async () => {
     let clientResponse = await client.createUser(null, {
       user: {
         email: 'nodejs@fusionauth.io',
@@ -69,6 +71,18 @@ describe('#FusionAuthClient()', function () {
     chai.assert.isNotNull(clientResponse.response);
     chai.expect(clientResponse.response).to.have.property('user');
     chai.expect(clientResponse.response.user).to.have.property('id');
+
+    // Patch the user
+    clientResponse = await client.patchUser(clientResponse.response.user.id, {
+      user: {
+        firstName: "Jan"
+      }
+    });
+    chai.assert.isUndefined(clientResponse.exception);
+    chai.assert.strictEqual(clientResponse.statusCode, 200);
+    chai.assert.isNotNull(clientResponse.response);
+    chai.expect(clientResponse.response).to.have.property('user');
+    chai.expect(clientResponse.response.user.firstName).to.equal("Jan");
 
     clientResponse = await client.deleteUser(clientResponse.response.user.id);
     chai.assert.strictEqual(clientResponse.statusCode, 200);
@@ -87,9 +101,16 @@ describe('#FusionAuthClient()', function () {
     }
   });
 
+  // Ensure that FusionAuth CORS is configured to support PATCH
   it('Patch Application', async () => {
-    const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client patch', loginConfiguration: { allowTokenRefresh: true }}};
-    let response = await client.patchApplication('e5e2b0b3-c329-4b08-896c-d4f9f612b5c0', applicationRequest);
+    const applicationRequest: ApplicationRequest = {
+      application: {
+        name: 'Node.js FusionAuth Client patch',
+        loginConfiguration: {allowTokenRefresh: true}
+      }
+    };
+
+    let response = await client.patchApplication(applicationId, applicationRequest);
     chai.assert.isUndefined(response.exception);
     chai.assert.strictEqual(response.statusCode, 200);
     chai.expect(response.response.application.loginConfiguration.allowTokenRefresh).to.be.true;
