@@ -19,6 +19,11 @@ import DefaultRESTClientBuilder from "./DefaultRESTClientBuilder";
 import IRESTClientBuilder from "./IRESTClientBuilder";
 import ClientResponse from "./ClientResponse";
 
+export interface ObjectMap<K extends string | number, T> {
+  // @ts-ignore
+  [key: K]: T
+}
+
 export class FusionAuthClient {
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
   public credentials: RequestCredentials;
@@ -3330,7 +3335,7 @@ export class FusionAuthClient {
   /**
    * creates a rest client
    *
-   * @returns {IRestClient} The RESTClient that will be used to call.
+   * @returns The RESTClient that will be used to call.
    * @private
    */
   private start<RT, ERT>(): IRESTClient<RT, ERT> {
@@ -3464,7 +3469,7 @@ export interface Application {
   active?: boolean;
   authenticationTokenConfiguration?: AuthenticationTokenConfiguration;
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   id?: UUID;
   jwtConfiguration?: JWTConfiguration;
   lambdaConfiguration?: LambdaConfiguration;
@@ -3550,7 +3555,7 @@ export interface Attachment {
  * @author Brian Pontarelli
  */
 export interface AuditLog {
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   id?: number;
   insertInstant?: number;
   insertUser?: string;
@@ -3638,8 +3643,8 @@ export interface BaseExportRequest {
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
-  applicationConfiguration?: Map<UUID, D>;
-  data?: Map<string, any>;
+  applicationConfiguration?: ObjectMap<UUID, D>;
+  data?: ObjectMap<string, any>;
   debug?: boolean;
   id?: UUID;
   name?: string;
@@ -3651,7 +3656,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
  */
 export interface BaseIdentityProviderApplicationConfiguration extends Enableable {
   createRegistration?: boolean;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
 }
 
 /**
@@ -3746,7 +3751,7 @@ export interface ChangePasswordRequest {
  */
 export interface ChangePasswordResponse {
   oneTimePassword?: string;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
 }
 
 /**
@@ -3775,7 +3780,7 @@ export enum ClientAuthenticationMethod {
 export interface Consent {
   consentEmailTemplateId?: UUID;
   countryMinimumAgeForSelfConsent?: LocalizedIntegers;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   defaultMinimumAgeForSelfConsent?: number;
   emailPlus?: EmailPlus;
   id?: UUID;
@@ -3983,8 +3988,8 @@ export interface EmailTemplate {
 }
 
 export interface EmailTemplateErrors {
-  parseErrors?: Map<string, string>;
-  renderErrors?: Map<string, string>;
+  parseErrors?: ObjectMap<string, string>;
+  renderErrors?: ObjectMap<string, string>;
 }
 
 /**
@@ -4031,7 +4036,7 @@ export interface Error {
  * @author Brian Pontarelli
  */
 export interface Errors {
-  fieldErrors?: Map<string, Array<Error>>;
+  fieldErrors?: ObjectMap<string, Array<Error>>;
   generalErrors?: Array<Error>;
 }
 
@@ -4039,7 +4044,7 @@ export interface Errors {
  * @author Brian Pontarelli
  */
 export interface EventConfiguration {
-  events?: Map<EventType, EventConfigurationData>;
+  events?: ObjectMap<EventType, EventConfigurationData>;
 }
 
 export interface EventConfigurationData extends Enableable {
@@ -4193,7 +4198,7 @@ export interface ExternalJWTApplicationConfiguration extends BaseIdentityProvide
  * @author Daniel DeGroff and Brian Pontarelli
  */
 export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<ExternalJWTApplicationConfiguration> {
-  claimMap?: Map<string, string>;
+  claimMap?: ObjectMap<string, string>;
   defaultKeyId?: UUID;
   domains?: Set<string>;
   headerKeyParameter?: string;
@@ -4278,7 +4283,7 @@ export interface FamilyEmailRequest {
  * @author Brian Pontarelli
  */
 export interface FamilyMember {
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   insertInstant?: number;
   owner?: boolean;
   role?: FamilyRole;
@@ -4320,7 +4325,7 @@ export interface ForgotPasswordRequest {
   email?: string;
   loginId?: string;
   sendForgotPasswordEmail?: boolean;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
   username?: string;
 }
 
@@ -4378,10 +4383,10 @@ export enum GrantType {
  * @author Tyler Scott
  */
 export interface Group {
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   id?: UUID;
   name?: string;
-  roles?: Map<UUID, Array<ApplicationRole>>;
+  roles?: ObjectMap<UUID, Array<ApplicationRole>>;
   tenantId?: UUID;
 }
 
@@ -4391,7 +4396,7 @@ export interface Group {
  * @author Daniel DeGroff
  */
 export interface GroupMember {
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   groupId?: UUID;
   id?: UUID;
   insertInstant?: number;
@@ -4430,7 +4435,7 @@ export interface HistoryItem {
  *
  * @author Brian Pontarelli
  */
-export interface HTTPHeaders extends Map<string, string> {
+export interface HTTPHeaders extends ObjectMap<string, string> {
 }
 
 /**
@@ -4480,7 +4485,7 @@ export interface IdentityProviderDetails {
  * @author Brian Pontarelli
  */
 export interface IdentityProviderLoginRequest extends BaseLoginRequest {
-  data?: Map<string, string>;
+  data?: ObjectMap<string, string>;
   encodedJWT?: string;
   identityProviderId?: UUID;
 }
@@ -4520,7 +4525,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
   identityProviderId?: UUID;
   loginId?: string;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
 }
 
 /**
@@ -4607,7 +4612,7 @@ export interface IntervalUser {
 /**
  * @author Daniel DeGroff
  */
-export interface IntrospectResponse extends Map<string, any> {
+export interface IntrospectResponse extends ObjectMap<string, any> {
 }
 
 /**
@@ -4705,7 +4710,7 @@ export interface JWTPublicKeyUpdateEvent extends BaseEvent {
  */
 export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
   applicationId?: UUID;
-  applicationTimeToLiveInSeconds?: Map<UUID, number>;
+  applicationTimeToLiveInSeconds?: ObjectMap<UUID, number>;
   user?: User;
   userId?: UUID;
 }
@@ -4715,7 +4720,7 @@ export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
  */
 export interface KafkaConfiguration extends Enableable {
   defaultTopic?: string;
-  producer?: Map<string, string>;
+  producer?: ObjectMap<string, string>;
 }
 
 /**
@@ -4838,7 +4843,7 @@ export enum LambdaType {
  *
  * @author Daniel DeGroff
  */
-export interface LocalizedIntegers extends Map<string, number> {
+export interface LocalizedIntegers extends ObjectMap<string, number> {
 }
 
 /**
@@ -4846,7 +4851,7 @@ export interface LocalizedIntegers extends Map<string, number> {
  *
  * @author Brian Pontarelli
  */
-export interface LocalizedStrings extends Map<string, string> {
+export interface LocalizedStrings extends ObjectMap<string, string> {
 }
 
 /**
@@ -4956,7 +4961,7 @@ export interface LoginResponse {
   changePasswordId?: string;
   changePasswordReason?: ChangePasswordReason;
   refreshToken?: string;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
   token?: string;
   twoFactorId?: string;
   twoFactorTrustId?: string;
@@ -4992,7 +4997,7 @@ export interface MaximumPasswordAge extends Enableable {
  */
 export interface MemberDeleteRequest {
   memberIds?: Array<UUID>;
-  members?: Map<UUID, Array<UUID>>;
+  members?: ObjectMap<UUID, Array<UUID>>;
 }
 
 /**
@@ -5001,7 +5006,7 @@ export interface MemberDeleteRequest {
  * @author Daniel DeGroff
  */
 export interface MemberRequest {
-  members?: Map<UUID, Array<GroupMember>>;
+  members?: ObjectMap<UUID, Array<GroupMember>>;
 }
 
 /**
@@ -5010,7 +5015,7 @@ export interface MemberRequest {
  * @author Daniel DeGroff
  */
 export interface MemberResponse {
-  members?: Map<UUID, Array<GroupMember>>;
+  members?: ObjectMap<UUID, Array<GroupMember>>;
 }
 
 export interface MetaData {
@@ -5243,7 +5248,7 @@ export interface PasswordlessSendRequest {
   applicationId?: UUID;
   code?: string;
   loginId?: string;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
 }
 
 /**
@@ -5252,7 +5257,7 @@ export interface PasswordlessSendRequest {
 export interface PasswordlessStartRequest {
   applicationId?: UUID;
   loginId?: string;
-  state?: Map<string, any>;
+  state?: ObjectMap<string, any>;
 }
 
 /**
@@ -5313,7 +5318,7 @@ export interface PreviewResponse {
  */
 export interface PublicKeyResponse {
   publicKey?: string;
-  publicKeys?: Map<string, string>;
+  publicKeys?: ObjectMap<string, string>;
 }
 
 /**
@@ -5548,7 +5553,7 @@ export interface SecureIdentity {
 export interface SendRequest {
   bccAddresses?: Array<string>;
   ccAddresses?: Array<string>;
-  requestData?: Map<string, any>;
+  requestData?: ObjectMap<string, any>;
   userIds?: Array<UUID>;
 }
 
@@ -5556,7 +5561,7 @@ export interface SendRequest {
  * @author Daniel DeGroff
  */
 export interface SendResponse {
-  results?: Map<UUID, EmailTemplateErrors>;
+  results?: ObjectMap<UUID, EmailTemplateErrors>;
 }
 
 /**
@@ -5584,7 +5589,7 @@ export interface SystemConfiguration {
   cookieEncryptionIV?: string;
   cookieEncryptionKey?: string;
   corsConfiguration?: CORSConfiguration;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   eventLogConfiguration?: EventLogConfiguration;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
@@ -5640,7 +5645,7 @@ export interface Templates {
  */
 export interface Tenant {
   configured?: boolean;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   emailConfiguration?: EmailConfiguration;
   eventConfiguration?: EventConfiguration;
   externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
@@ -5702,7 +5707,7 @@ export interface TestEvent extends BaseEvent {
  * @author Trevor Smith
  */
 export interface Theme {
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   defaultMessages?: string;
   id?: UUID;
   insertInstant?: number;
@@ -5770,7 +5775,7 @@ export interface Totals {
  * @author Brian Pontarelli
  */
 export interface TotalsReportResponse {
-  applicationTotals?: Map<UUID, Totals>;
+  applicationTotals?: ObjectMap<UUID, Totals>;
   globalRegistrations?: number;
   totalGlobalRegistrations?: number;
 }
@@ -5873,7 +5878,7 @@ export interface User extends SecureIdentity {
   active?: boolean;
   birthDate?: string;
   cleanSpeakId?: UUID;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   email?: string;
   expiry?: number;
   firstName?: string;
@@ -6093,7 +6098,7 @@ export interface UserCommentResponse {
 export interface UserConsent {
   consent?: Consent;
   consentId?: UUID;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   giverUserId?: UUID;
   id?: UUID;
   insertInstant?: number;
@@ -6187,7 +6192,7 @@ export interface UserEmailVerifiedEvent extends BaseEvent {
 /**
  * @author Daniel DeGroff
  */
-export interface UserinfoResponse extends Map<string, any> {
+export interface UserinfoResponse extends ObjectMap<string, any> {
 }
 
 /**
@@ -6245,14 +6250,14 @@ export interface UserRegistration {
   applicationId?: UUID;
   authenticationToken?: string;
   cleanSpeakId?: UUID;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   id?: UUID;
   insertInstant?: number;
   lastLoginInstant?: number;
   preferredLanguages?: Array<string>;
   roles?: Set<string>;
   timezone?: string;
-  tokens?: Map<string, string>;
+  tokens?: ObjectMap<string, string>;
   username?: string;
   usernameStatus?: ContentStatus;
   verified?: boolean;
@@ -6382,9 +6387,9 @@ export interface VerifyRegistrationResponse {
 export interface Webhook {
   applicationIds?: Array<UUID>;
   connectTimeout?: number;
-  data?: Map<string, any>;
+  data?: ObjectMap<string, any>;
   description?: string;
-  eventsEnabled?: Map<EventType, boolean>;
+  eventsEnabled?: ObjectMap<EventType, boolean>;
   global?: boolean;
   headers?: HTTPHeaders;
   httpAuthenticationPassword?: string;
