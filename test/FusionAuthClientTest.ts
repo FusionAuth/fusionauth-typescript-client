@@ -54,6 +54,21 @@ describe('#FusionAuthClient()', function () {
       }
     } catch (ignore) {
     }
+
+    // Ensure that CORS allows patch
+    try {
+      let response = await client.retrieveSystemConfiguration();
+
+      if (!response.response.systemConfiguration.corsConfiguration.allowedMethods.some(method => method === 'PATCH')) {
+        response.response.systemConfiguration.corsConfiguration.allowedMethods.push('PATCH');
+
+        await client.updateSystemConfiguration({
+          systemConfiguration: response.response.systemConfiguration
+        });
+      }
+    } catch (e) {
+      console.error("Failed to add patch to the CORS configuration. Your tests may fail!");
+    }
   });
 
   it('Create, Patch and Delete a User', async () => {
