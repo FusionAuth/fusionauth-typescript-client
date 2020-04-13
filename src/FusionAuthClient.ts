@@ -4200,7 +4200,7 @@ export interface ExternalJWTApplicationConfiguration extends BaseIdentityProvide
 export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<ExternalJWTApplicationConfiguration> {
   claimMap?: ObjectMap<string, string>;
   defaultKeyId?: UUID;
-  domains?: Set<string>;
+  domains?: Array<string>;
   headerKeyParameter?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   uniqueIdentityClaim?: string;
@@ -4699,7 +4699,7 @@ export interface JWTConfiguration extends Enableable {
  * @author Brian Pontarelli
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
-  applicationIds?: Set<UUID>;
+  applicationIds?: Array<UUID>;
 }
 
 /**
@@ -5020,7 +5020,7 @@ export interface MemberResponse {
 
 export interface MetaData {
   device?: DeviceInfo;
-  scopes?: Set<string>;
+  scopes?: Array<string>;
 }
 
 /**
@@ -5057,7 +5057,7 @@ export interface OAuth2Configuration {
   clientId?: string;
   clientSecret?: string;
   deviceVerificationURL?: string;
-  enabledGrants?: Set<GrantType>;
+  enabledGrants?: Array<GrantType>;
   generateRefreshTokens?: boolean;
   logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
@@ -5199,7 +5199,7 @@ export interface OpenIdConnectApplicationConfiguration extends BaseIdentityProvi
 export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<OpenIdConnectApplicationConfiguration> {
   buttonImageURL?: string;
   buttonText?: string;
-  domains?: Set<string>;
+  domains?: Array<string>;
   lambdaConfiguration?: LambdaConfiguration;
   oauth2?: IdentityProviderOauth2Configuration;
 }
@@ -5466,7 +5466,7 @@ export interface SAMLv2Configuration extends Enableable {
 export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2ApplicationConfiguration> {
   buttonImageURL?: string;
   buttonText?: string;
-  domains?: Set<string>;
+  domains?: Array<string>;
   emailClaim?: string;
   idpEndpoint?: string;
   issuer?: string;
@@ -6255,7 +6255,7 @@ export interface UserRegistration {
   insertInstant?: number;
   lastLoginInstant?: number;
   preferredLanguages?: Array<string>;
-  roles?: Set<string>;
+  roles?: Array<string>;
   timezone?: string;
   tokens?: ObjectMap<string, string>;
   username?: string;
