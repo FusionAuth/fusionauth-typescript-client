@@ -14,12 +14,14 @@
     "build/src/*.d.ts",
     "build/*.js",
     "build/*.js.map",
-    "build/*.d.ts"
+    "build/*.d.ts",
+    "dist/fusionauth-typescript-client.*"
   ],
   "scripts": {
     "test": "karma start && mocha build/test/FusionAuthClientTest.js",
-    "build-browser": "npx browserify index.ts --debug -p tsify -o dist/fusionauth-typescript-client.js",
-    "pretest": "npx browserify test/FusionAuthClientTest.ts -t envify --debug -p tsify -o dist/fusionauth-typescript-client-test.js && npx tsc",
+    "build-browser": "npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -o dist/fusionauth-typescript-client.js",
+    "build-browser-min": "npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client.min.js",
+    "pretest": "npx browserify test/FusionAuthClientTest.ts --debug -t envify -p [ tsify --target=es5 ] -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js && npx tsc",
     "prepare": "npx tsc"
   },
   "repository": {
@@ -52,12 +54,12 @@
     "mocha": "^7.0.0",
     "mocha-typescript": "^1.1.17",
     "tsify": "^4.0.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "uglify-js": "^3.8.1",
+    "uglifyify": "^5.0.2"
   },
   "dependencies": {
     "cross-fetch": "^3.0.4"
   },
-  "browser": {
-    "chai": ""
-  }
+  "browser": "dist/fusionauth-typescript-client.min.js"
 }

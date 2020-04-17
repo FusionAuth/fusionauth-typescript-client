@@ -44,9 +44,26 @@ target(name: "clean", description: "Cleans build directory") {
 }
 
 target(name: "build", description: "Builds the js files") {
-  def proc = 'npm install'.execute()
+  def proc = 'npm ci'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
+  if (proc.exitValue() != 0) {
+    fail("Failed to get deps or compile typescript")
+  }
+
+  proc = 'npm run build-browser'.execute()
+  proc.consumeProcessOutput(System.out, System.err)
+  proc.waitFor()
+  if (proc.exitValue() != 0) {
+    fail("Failed to build browser version of client")
+  }
+
+  proc = 'npm run build-browser-min'.execute()
+  proc.consumeProcessOutput(System.out, System.err)
+  proc.waitFor()
+  if (proc.exitValue() != 0) {
+    fail("Failed to build minified browser version of client")
+  }
 }
 
 target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["build"]) {
@@ -55,7 +72,11 @@ target(name: "int", description: "Releases a local integration build of the proj
   }
 
   file.zip(file: "build/fusionauth-typescript-client.zip") {
-    fileSet(dir: "build/src", includePatterns: [])
+    fileSet(dir: "build", includePatterns: [
+        ~/index.*(js|ts)/,
+        ~/src\/+/
+    ])
+    fileSet(dir: "dist", includePatterns: [~/fusionauth-typescript-client\..*js/])
   }
 }
 

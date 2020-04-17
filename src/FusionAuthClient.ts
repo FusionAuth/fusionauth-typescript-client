@@ -3362,6 +3362,8 @@ export class FusionAuthClient {
   }
 }
 
+export default FusionAuthClient;
+
 /**
 * A function that returns the JSON form of the response text.
 *
@@ -3395,7 +3397,7 @@ async function ErrorJSONResponseHandler<ERT>(response: Response): Promise<Client
 /**
  * A 128 bit UUID in string format "8-4-4-4-12", for example "58D5E212-165B-4CA0-909B-C86B9CEE0111".
  */
-type UUID = string;
+export type UUID = string;
 
 
 /**

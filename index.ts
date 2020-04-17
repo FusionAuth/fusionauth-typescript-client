@@ -14,6 +14,9 @@
  * language governing permissions and limitations under the License.
  */
 
+import FusionAuthClient from './src/FusionAuthClient'
+export default FusionAuthClient;
+
 export * from './src/FusionAuthClient';
 export * from './src/IRESTClient';
 export * from './src/DefaultRESTClientBuilder';
