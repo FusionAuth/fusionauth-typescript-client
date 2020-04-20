@@ -3942,6 +3942,8 @@ export interface EmailAddress {
  * @author Brian Pontarelli
  */
 export interface EmailConfiguration {
+  defaultFromEmail?: string;
+  defaultFromName?: string;
   forgotPasswordEmailTemplateId?: UUID;
   host?: string;
   password?: string;
@@ -4139,6 +4141,7 @@ export enum EventType {
   UserReactivate = "user.reactivate",
   UserAction = "user.action",
   JWTRefreshTokenRevoke = "jwt.refresh-token.revoke",
+  JWTRefresh = "jwt.refresh",
   JWTPublicKeyUpdate = "jwt.public-key.update",
   UserLoginSuccess = "user.login.success",
   UserLoginFailed = "user.login.failed",
@@ -4700,6 +4703,19 @@ export interface JWTConfiguration extends Enableable {
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
   applicationIds?: Array<UUID>;
+}
+
+/**
+ * Models the JWT Refresh Event. This event will be fired when a JWT is "refreshed" (generated) using a Refresh Token.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWTRefreshEvent extends BaseEvent {
+  applicationId?: UUID;
+  original?: string;
+  refreshToken?: string;
+  token?: string;
+  userId?: UUID;
 }
 
 /**
@@ -5347,6 +5363,7 @@ export interface RecentLoginResponse {
  */
 export interface RefreshRequest {
   refreshToken?: string;
+  token?: string;
 }
 
 /**
@@ -5413,6 +5430,7 @@ export interface RegistrationRequest {
  */
 export interface RegistrationResponse {
   registration?: UserRegistration;
+  token?: string;
   user?: User;
 }
 
@@ -5612,6 +5630,13 @@ export interface SystemConfigurationRequest {
  */
 export interface SystemConfigurationResponse {
   systemConfiguration?: SystemConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SystemLogsExportRequest extends BaseExportRequest {
+  lastNBytes?: number;
 }
 
 export interface Templates {
@@ -6325,6 +6350,7 @@ export interface UserRequest {
  * @author Brian Pontarelli
  */
 export interface UserResponse {
+  token?: string;
   user?: User;
 }
 
