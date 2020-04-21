@@ -1,5 +1,5 @@
 ## FusionAuth TypeScript Client 
-![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) ![npm](https://img.shields.io/npm/v/@fusionauth/typescript-client?style=flat-square)
+![semver 2.0.0 compliant](http://img.shields.io/badge/semver-2.0.0-brightgreen.svg?style=flat-square) [![npm](https://img.shields.io/npm/v/@fusionauth/typescript-client?style=flat-square)](https://www.npmjs.com/package/@fusionauth/typescript-client)
 
 If you're integrating FusionAuth with a Typescript application, this library will speed up your development time.
 
