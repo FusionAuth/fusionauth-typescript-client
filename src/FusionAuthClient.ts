@@ -4460,9 +4460,6 @@ export enum HTTPMethod {
  * @author Daniel DeGroff
  */
 export interface HYPRApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  licensingEnabled?: boolean;
-  licensingEnabledOverride?: boolean;
-  licensingURL?: string;
   relyingPartyApplicationId?: string;
   relyingPartyURL?: string;
 }
@@ -4471,8 +4468,6 @@ export interface HYPRApplicationConfiguration extends BaseIdentityProviderApplic
  * @author Daniel DeGroff
  */
 export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicationConfiguration> {
-  licensingEnabled?: boolean;
-  licensingURL?: string;
   relyingPartyApplicationId?: string;
   relyingPartyURL?: string;
 }
