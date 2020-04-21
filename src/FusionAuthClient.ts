@@ -64,7 +64,6 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -81,7 +80,6 @@ export class FusionAuthClient {
         .withUriSegment(familyId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -98,7 +96,6 @@ export class FusionAuthClient {
         .withUriSegment(actionId)
         .withJSONBody(request)
         .withMethod("DELETE")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -116,7 +113,6 @@ export class FusionAuthClient {
         .withUriSegment(changePasswordId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -163,7 +159,6 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -184,7 +179,6 @@ export class FusionAuthClient {
         .withUriSegment(roleId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -201,7 +195,6 @@ export class FusionAuthClient {
         .withUri('/api/system/audit-log')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -218,7 +211,6 @@ export class FusionAuthClient {
         .withUriSegment(consentId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -235,7 +227,6 @@ export class FusionAuthClient {
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -253,7 +244,6 @@ export class FusionAuthClient {
         .withUriSegment(familyId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -270,7 +260,6 @@ export class FusionAuthClient {
         .withUriSegment(groupId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -285,7 +274,6 @@ export class FusionAuthClient {
         .withUri('/api/group/member')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -302,7 +290,6 @@ export class FusionAuthClient {
         .withUriSegment(identityProviderId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -319,7 +306,6 @@ export class FusionAuthClient {
         .withUriSegment(lambdaId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -336,7 +322,6 @@ export class FusionAuthClient {
         .withUriSegment(tenantId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -353,7 +338,6 @@ export class FusionAuthClient {
         .withUriSegment(themeId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -370,7 +354,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -388,7 +371,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -406,7 +388,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionReasonId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -423,7 +404,6 @@ export class FusionAuthClient {
         .withUriSegment(userConsentId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -440,7 +420,6 @@ export class FusionAuthClient {
         .withUriSegment(webhookId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -501,7 +480,6 @@ export class FusionAuthClient {
         .withParameter('dryRun', false)
         .withParameter('hardDelete', false)
         .withMethod("DELETE")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -518,7 +496,6 @@ export class FusionAuthClient {
         .withParameter('dryRun', false)
         .withParameter('hardDelete', false)
         .withMethod("DELETE")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -763,7 +740,6 @@ export class FusionAuthClient {
         .withUri('/api/user/bulk')
         .withJSONBody(request)
         .withMethod("DELETE")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -782,7 +758,6 @@ export class FusionAuthClient {
         .withUri('/api/user/bulk')
         .withJSONBody(request)
         .withMethod("DELETE")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -853,7 +828,6 @@ export class FusionAuthClient {
         .withUri('/oauth2/token')
         .withFormData(body)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -880,7 +854,6 @@ export class FusionAuthClient {
         .withUri('/oauth2/token')
         .withFormData(body)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -895,7 +868,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/refresh')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -924,7 +896,6 @@ export class FusionAuthClient {
         .withUri('/oauth2/token')
         .withFormData(body)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -939,7 +910,6 @@ export class FusionAuthClient {
         .withUri('/api/user/forgot-password')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -956,7 +926,6 @@ export class FusionAuthClient {
         .withParameter('email', email)
         .withParameter('sendVerifyEmail', false)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -973,7 +942,6 @@ export class FusionAuthClient {
         .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -992,7 +960,6 @@ export class FusionAuthClient {
         .withParameter('sendVerifyPasswordEmail', false)
         .withParameter('applicationId', applicationId)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1007,7 +974,6 @@ export class FusionAuthClient {
     return this.start<SecretResponse, void>()
         .withUri('/api/two-factor/secret')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1024,7 +990,6 @@ export class FusionAuthClient {
         .withUri('/api/two-factor/secret')
         .withAuthorization('JWT ' + encodedJWT)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1041,7 +1006,6 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider/login')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1058,7 +1022,6 @@ export class FusionAuthClient {
         .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1099,7 +1062,6 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('refreshToken', refreshToken)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1116,7 +1078,6 @@ export class FusionAuthClient {
         .withUri('/api/login')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1175,7 +1136,6 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider/lookup')
         .withParameter('domain', domain)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1193,7 +1153,6 @@ export class FusionAuthClient {
         .withUriSegment(actionId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1208,7 +1167,6 @@ export class FusionAuthClient {
         .withUri('/api/passwordless/login')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1225,7 +1183,6 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1245,7 +1202,6 @@ export class FusionAuthClient {
         .withUriSegment(roleId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1262,7 +1218,6 @@ export class FusionAuthClient {
         .withUriSegment(consentId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1279,7 +1234,6 @@ export class FusionAuthClient {
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1296,7 +1250,6 @@ export class FusionAuthClient {
         .withUriSegment(groupId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1313,7 +1266,6 @@ export class FusionAuthClient {
         .withUriSegment(identityProviderId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1328,7 +1280,6 @@ export class FusionAuthClient {
         .withUri('/api/integration')
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1345,7 +1296,6 @@ export class FusionAuthClient {
         .withUriSegment(lambdaId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1362,7 +1312,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1377,7 +1326,6 @@ export class FusionAuthClient {
         .withUri('/api/system-configuration')
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1394,7 +1342,6 @@ export class FusionAuthClient {
         .withUriSegment(tenantId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1411,7 +1358,6 @@ export class FusionAuthClient {
         .withUriSegment(themeId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1428,7 +1374,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1445,7 +1390,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1462,7 +1406,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionReasonId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1479,7 +1422,6 @@ export class FusionAuthClient {
         .withUriSegment(userConsentId)
         .withJSONBody(request)
         .withMethod("PATCH")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1495,7 +1437,6 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withParameter('reactivate', true)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1511,7 +1452,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withParameter('reactivate', true)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1527,7 +1467,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionId)
         .withParameter('reactivate', true)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1542,7 +1481,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/reconcile')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1578,7 +1516,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1609,7 +1546,6 @@ export class FusionAuthClient {
         .withUri('/api/user/verify-email')
         .withParameter('email', email)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1626,7 +1562,6 @@ export class FusionAuthClient {
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1641,7 +1576,6 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withUriSegment(actionId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1657,7 +1591,6 @@ export class FusionAuthClient {
         .withUri('/api/user/action')
         .withParameter('userId', userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1673,7 +1606,6 @@ export class FusionAuthClient {
         .withParameter('userId', userId)
         .withParameter('preventingLogin', true)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1690,7 +1622,6 @@ export class FusionAuthClient {
         .withParameter('userId', userId)
         .withParameter('active', true)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1705,7 +1636,6 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withUriSegment(applicationId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1718,7 +1648,6 @@ export class FusionAuthClient {
     return this.start<ApplicationResponse, void>()
         .withUri('/api/application')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1733,7 +1662,6 @@ export class FusionAuthClient {
         .withUri('/api/system/audit-log')
         .withUriSegment(auditLogId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1748,7 +1676,6 @@ export class FusionAuthClient {
         .withUri('/api/consent')
         .withUriSegment(consentId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1761,7 +1688,6 @@ export class FusionAuthClient {
     return this.start<ConsentResponse, void>()
         .withUri('/api/consent')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1781,7 +1707,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1796,7 +1721,6 @@ export class FusionAuthClient {
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1813,7 +1737,6 @@ export class FusionAuthClient {
         .withUri('/api/email/template/preview')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1826,7 +1749,6 @@ export class FusionAuthClient {
     return this.start<EmailTemplateResponse, void>()
         .withUri('/api/email/template')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1841,7 +1763,6 @@ export class FusionAuthClient {
         .withUri('/api/system/event-log')
         .withUriSegment(eventLogId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1856,7 +1777,6 @@ export class FusionAuthClient {
         .withUri('/api/user/family')
         .withParameter('userId', userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1871,7 +1791,6 @@ export class FusionAuthClient {
         .withUri('/api/user/family')
         .withUriSegment(familyId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1886,7 +1805,6 @@ export class FusionAuthClient {
         .withUri('/api/group')
         .withUriSegment(groupId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1899,7 +1817,6 @@ export class FusionAuthClient {
     return this.start<GroupResponse, void>()
         .withUri('/api/group')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1914,7 +1831,6 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1927,7 +1843,6 @@ export class FusionAuthClient {
     return this.start<IdentityProviderResponse, void>()
         .withUri('/api/identity-provider')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1944,7 +1859,6 @@ export class FusionAuthClient {
         .withParameter('userId', userId)
         .withParameter('active', false)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1958,7 +1872,6 @@ export class FusionAuthClient {
         .withUri('/api/application')
         .withParameter('inactive', true)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1972,7 +1885,6 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withParameter('inactive', true)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -1985,7 +1897,6 @@ export class FusionAuthClient {
     return this.start<IntegrationResponse, void>()
         .withUri('/api/integration')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2000,7 +1911,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/public-key')
         .withParameter('kid', keyId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2015,7 +1925,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/public-key')
         .withParameter('applicationId', applicationId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2028,7 +1937,6 @@ export class FusionAuthClient {
     return this.startAnonymous<PublicKeyResponse, void>()
         .withUri('/api/jwt/public-key')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2041,7 +1949,6 @@ export class FusionAuthClient {
     return this.startAnonymous<JWKSResponse, void>()
         .withUri('/.well-known/jwks.json')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2056,7 +1963,6 @@ export class FusionAuthClient {
         .withUri('/api/key')
         .withUriSegment(keyId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2069,7 +1975,6 @@ export class FusionAuthClient {
     return this.start<KeyResponse, void>()
         .withUri('/api/key')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2084,7 +1989,6 @@ export class FusionAuthClient {
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2097,7 +2001,6 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, void>()
         .withUri('/api/lambda')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2112,7 +2015,6 @@ export class FusionAuthClient {
         .withUri('/api/lambda')
         .withParameter('type', type)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2132,7 +2034,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2152,7 +2053,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2168,7 +2068,6 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withUriSegment("oauth-configuration")
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2181,7 +2080,6 @@ export class FusionAuthClient {
     return this.startAnonymous<OpenIdConfiguration, void>()
         .withUri('/.well-known/openid-configuration')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2197,7 +2095,6 @@ export class FusionAuthClient {
     return this.startAnonymous<PasswordValidationRulesResponse, void>()
         .withUri('/api/tenant/password-validation-rules')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2214,7 +2111,6 @@ export class FusionAuthClient {
         .withUri('/api/tenant/password-validation-rules')
         .withUriSegment(tenantId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2229,7 +2125,6 @@ export class FusionAuthClient {
         .withUri('/api/user/family/pending')
         .withParameter('parentEmail', parentEmail)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2246,7 +2141,6 @@ export class FusionAuthClient {
         .withParameter('offset', offset)
         .withParameter('limit', limit)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2261,7 +2155,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/refresh')
         .withParameter('userId', userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2278,7 +2171,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withUriSegment(applicationId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2298,7 +2190,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2311,7 +2202,6 @@ export class FusionAuthClient {
     return this.start<SystemConfigurationResponse, void>()
         .withUri('/api/system-configuration')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2326,7 +2216,6 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2339,7 +2228,6 @@ export class FusionAuthClient {
     return this.start<TenantResponse, void>()
         .withUri('/api/tenant')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2354,7 +2242,6 @@ export class FusionAuthClient {
         .withUri('/api/theme')
         .withUriSegment(themeId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2367,7 +2254,6 @@ export class FusionAuthClient {
     return this.start<ThemeResponse, void>()
         .withUri('/api/theme')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2381,7 +2267,6 @@ export class FusionAuthClient {
     return this.start<TotalsReportResponse, void>()
         .withUri('/api/report/totals')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2396,7 +2281,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withUriSegment(userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2412,7 +2296,6 @@ export class FusionAuthClient {
         .withUri('/api/user-action')
         .withUriSegment(userActionId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2428,7 +2311,6 @@ export class FusionAuthClient {
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2441,7 +2323,6 @@ export class FusionAuthClient {
     return this.start<UserActionReasonResponse, void>()
         .withUri('/api/user-action-reason')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2454,7 +2335,6 @@ export class FusionAuthClient {
     return this.start<UserActionResponse, void>()
         .withUri('/api/user-action')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2470,7 +2350,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withParameter('changePasswordId', changePasswordId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2485,7 +2364,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withParameter('email', email)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2500,7 +2378,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withParameter('loginId', loginId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2515,7 +2392,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withParameter('username', username)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2531,7 +2407,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withParameter('verificationId', verificationId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2546,7 +2421,6 @@ export class FusionAuthClient {
         .withUri('/api/user/comment')
         .withUriSegment(userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2561,7 +2435,6 @@ export class FusionAuthClient {
         .withUri('/api/user/consent')
         .withUriSegment(userConsentId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2576,7 +2449,6 @@ export class FusionAuthClient {
         .withUri('/api/user/consent')
         .withParameter('userId', userId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2598,7 +2470,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2620,7 +2491,6 @@ export class FusionAuthClient {
         .withParameter('start', start)
         .withParameter('end', end)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2639,7 +2509,6 @@ export class FusionAuthClient {
         .withParameter('offset', offset)
         .withParameter('limit', limit)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2654,7 +2523,6 @@ export class FusionAuthClient {
         .withUri('/api/user')
         .withAuthorization('JWT ' + encodedJWT)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2669,7 +2537,6 @@ export class FusionAuthClient {
         .withUri('/api/webhook')
         .withUriSegment(webhookId)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2682,7 +2549,6 @@ export class FusionAuthClient {
     return this.start<WebhookResponse, void>()
         .withUri('/api/webhook')
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2730,7 +2596,6 @@ export class FusionAuthClient {
         .withUri('/api/system/audit-log/search')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2745,7 +2610,6 @@ export class FusionAuthClient {
         .withUri('/api/system/event-log/search')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2760,7 +2624,6 @@ export class FusionAuthClient {
         .withUri('/api/system/login-record/search')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2777,7 +2640,6 @@ export class FusionAuthClient {
         .withUri('/api/user/search')
         .withParameter('ids', ids)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2792,7 +2654,6 @@ export class FusionAuthClient {
         .withUri('/api/user/search')
         .withParameter('ids', ids)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2808,7 +2669,6 @@ export class FusionAuthClient {
         .withUri('/api/user/search')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2826,7 +2686,6 @@ export class FusionAuthClient {
         .withUri('/api/user/search')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2844,7 +2703,6 @@ export class FusionAuthClient {
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2917,7 +2775,6 @@ export class FusionAuthClient {
         .withUri('/api/identity-provider/start')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2933,7 +2790,6 @@ export class FusionAuthClient {
         .withUri('/api/passwordless/start')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2948,7 +2804,6 @@ export class FusionAuthClient {
         .withUri('/api/two-factor/login')
         .withJSONBody(request)
         .withMethod("POST")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2965,7 +2820,6 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -2985,7 +2839,6 @@ export class FusionAuthClient {
         .withUriSegment(roleId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3002,7 +2855,6 @@ export class FusionAuthClient {
         .withUriSegment(consentId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3019,7 +2871,6 @@ export class FusionAuthClient {
         .withUriSegment(emailTemplateId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3036,7 +2887,6 @@ export class FusionAuthClient {
         .withUriSegment(groupId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3053,7 +2903,6 @@ export class FusionAuthClient {
         .withUriSegment(identityProviderId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3068,7 +2917,6 @@ export class FusionAuthClient {
         .withUri('/api/integration')
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3085,7 +2933,6 @@ export class FusionAuthClient {
         .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3102,7 +2949,6 @@ export class FusionAuthClient {
         .withUriSegment(lambdaId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3119,7 +2965,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3134,7 +2979,6 @@ export class FusionAuthClient {
         .withUri('/api/system-configuration')
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3151,7 +2995,6 @@ export class FusionAuthClient {
         .withUriSegment(tenantId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3168,7 +3011,6 @@ export class FusionAuthClient {
         .withUriSegment(themeId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3185,7 +3027,6 @@ export class FusionAuthClient {
         .withUriSegment(userId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3202,7 +3043,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3219,7 +3059,6 @@ export class FusionAuthClient {
         .withUriSegment(userActionReasonId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3236,7 +3075,6 @@ export class FusionAuthClient {
         .withUriSegment(userConsentId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3253,7 +3091,6 @@ export class FusionAuthClient {
         .withUriSegment(webhookId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3288,7 +3125,6 @@ export class FusionAuthClient {
         .withUri('/api/jwt/validate')
         .withAuthorization('JWT ' + encodedJWT)
         .withMethod("GET")
-        .withResponseHandler(JSONResponseHandler)
         .go();
   }
 
@@ -3341,10 +3177,6 @@ export class FusionAuthClient {
   private startAnonymous<RT, ERT>(): IRESTClient<RT, ERT> {
     let client = this.clientBuilder.build<RT, ERT>(this.host);
 
-    // Due to the lack of reflection this is declared per api
-    // client.withResponseHandler(JSONResponseHandler);
-    client.withErrorResponseHandler(ErrorJSONResponseHandler);
-
     if (this.tenantId != null) {
       client.withHeader('X-FusionAuth-TenantId', this.tenantId);
     }
@@ -3358,36 +3190,6 @@ export class FusionAuthClient {
 }
 
 export default FusionAuthClient;
-
-/**
-* A function that returns the JSON form of the response text.
-*
-* @param response
-* @constructor
-*/
-async function JSONResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
-  let clientResponse = new ClientResponse<RT>();
-
-  clientResponse.statusCode = response.status;
-  clientResponse.response = await response.json();
-
-  return clientResponse;
-}
-
-/**
-* A function that returns the JSON form of the response text.
-*
-* @param response
-* @constructor
-*/
-async function ErrorJSONResponseHandler<ERT>(response: Response): Promise<ClientResponse<ERT>> {
-  let clientResponse = new ClientResponse<ERT>();
-
-  clientResponse.statusCode = response.status;
-  clientResponse.exception = await response.json();
-
-  return clientResponse;
-}
 
 /**
  * A 128 bit UUID in string format "8-4-4-4-12", for example "58D5E212-165B-4CA0-909B-C86B9CEE0111".

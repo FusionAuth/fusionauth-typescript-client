@@ -16,7 +16,7 @@
 
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import fetch from 'cross-fetch'
+import {fetch, Response} from 'cross-fetch'
 
 /**
  * @author Brett P
@@ -30,8 +30,8 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   public parameters: Record<string, string> = {};
   public uri: string;
   public credentials: RequestCredentials;
-  public responseHandler: ResponseHandler<RT> = DefaultRESTClient.emptyResponseHandler;
-  public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.emptyResponseHandler;
+  public responseHandler: ResponseHandler<RT> = DefaultRESTClient.JSONResponseHandler;
+  public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.ErrorJSONResponseHandler;
 
   constructor(public host: string) {
   }
@@ -203,10 +203,38 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
     return queryString;
   }
 
-  private static async emptyResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
+  /**
+   * A function that returns the JSON form of the response text.
+   *
+   * @param response
+   * @constructor
+   */
+  static async JSONResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
     let clientResponse = new ClientResponse<RT>();
 
     clientResponse.statusCode = response.status;
+    let type = response.headers.get("content-type");
+    if (type && type.startsWith("application/json")) {
+      clientResponse.response = await response.json();
+    }
+
+    return clientResponse;
+  }
+
+  /**
+   * A function that returns the JSON form of the response text.
+   *
+   * @param response
+   * @constructor
+   */
+  static async ErrorJSONResponseHandler<ERT>(response: Response): Promise<ClientResponse<ERT>> {
+    let clientResponse = new ClientResponse<ERT>();
+
+    clientResponse.statusCode = response.status;
+    let type = response.headers.get("content-type");
+    if (type && type.startsWith("application/json")) {
+      clientResponse.exception = await response.json();
+    }
 
     return clientResponse;
   }

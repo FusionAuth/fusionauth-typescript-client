@@ -24,11 +24,30 @@ let client;
 const fusionauthUrl = process.env.FUSIONAUTH_URL || "https://local.fusionauth.io";
 const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
 const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
+const tenantId = '65323339-6137-6531-3135-316238623265';
 
 describe('#FusionAuthClient()', function () {
 
   beforeEach(async () => {
     client = new FusionAuthClient(fusionauthApiKey, fusionauthUrl);
+
+    let response = await client.retrieveTenants();
+    let desiredTenant = response.response.tenants.find((tenant) => {
+      return tenant.id === tenantId
+    });
+
+    if (!desiredTenant) {
+      let defaultTenant = response.response.tenants.find((tenant) => {
+        return tenant.name === "Default"
+      });
+      defaultTenant.id = null;
+      defaultTenant.name = "Typescript Tenant";
+      response = await client.createTenant(tenantId, {tenant: defaultTenant});
+      chai.assert.isTrue(response.wasSuccessful(), "Failed to create the tenant");
+    }
+
+    // All future requests will use this now
+    client.setTenantId(tenantId);
 
     try {
       await client.deleteApplication(applicationId);
@@ -37,18 +56,20 @@ describe('#FusionAuthClient()', function () {
 
     try {
       const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
-      let response = await client.createApplication(applicationId, applicationRequest);
-      chai.assert.isUndefined(response.exception);
-      chai.assert.strictEqual(response.statusCode, 200);
-      chai.assert.isNotNull(response.response);
+      response = await client.createApplication(applicationId, applicationRequest);
     } catch (error) {
       console.error("Failed to setup FusionAuth Client for testing.", error)
-      throw error;
+      throw new Error(error);
     }
+
+    chai.assert.isUndefined(response.exception);
+    chai.assert.strictEqual(response.statusCode, 200);
+    chai.assert.isNotNull(response.response);
+
 
     // Cleanup the user (just in case a test partially failed)
     try {
-      let response = await client.retrieveUserByEmail("nodejs@fusionauth.io")
+      response = await client.retrieveUserByEmail("nodejs@fusionauth.io")
       if (response.wasSuccessful()) {
         await client.deleteUser(response.response.user.id)
       }
@@ -57,7 +78,7 @@ describe('#FusionAuthClient()', function () {
 
     // Ensure that CORS allows patch
     try {
-      let response = await client.retrieveSystemConfiguration();
+      response = await client.retrieveSystemConfiguration();
 
       if (!response.response.systemConfiguration.corsConfiguration.allowedMethods.some(method => method === 'PATCH')) {
         response.response.systemConfiguration.corsConfiguration.allowedMethods.push('PATCH');
@@ -148,9 +169,6 @@ describe('#FusionAuthClient()', function () {
         });
   });
 
-  /**
-   *
-   */
   it('Error response', async () => {
     return client.createApplication(null, {application: {name: 'Bad Application', verifyRegistration: true}})
         .then((_) => {
@@ -161,5 +179,18 @@ describe('#FusionAuthClient()', function () {
           chai.assert.isDefined(response.statusCode);
           chai.expect(response.statusCode).to.be.above(399).and.below(500);
         });
+  });
+
+  it('Login non existant user', async () => {
+    try {
+      client.login({
+        loginId: "doesntexist",
+        password: "pass"
+      });
+    } catch(e) {
+      chai.assert.deepStrictEqual(e, {
+        statusCode: 404
+      }, "Unexpected error");
+    }
   });
 });
