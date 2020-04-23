@@ -16,7 +16,7 @@
 
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import {fetch, Response} from 'cross-fetch'
+import {fetch, Response} from 'cross-fetch';
 
 /**
  * @author Brett P

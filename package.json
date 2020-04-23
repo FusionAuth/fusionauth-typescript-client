@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/request": "^2.48.4",
+    "@types/node": "^13.13.2",
     "browserify": "^16.5.1",
     "chai": "^4.2.0",
     "envify": "^4.1.0",

@@ -19,7 +19,7 @@ import ClientResponse from "./ClientResponse";
 export type ResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;
 export type ErrorResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;
 
-export default interface IRESTClient<RT, ERT> {
+export interface IRESTClient<RT, ERT> {
   /**
    * Sets the authorization header using a key
    *
@@ -101,3 +101,5 @@ export default interface IRESTClient<RT, ERT> {
    */
   go(): Promise<ClientResponse<RT>>;
 }
+
+export default IRESTClient;
