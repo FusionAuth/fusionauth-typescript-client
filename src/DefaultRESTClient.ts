@@ -17,7 +17,7 @@
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
 import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
-import FormData = require("form-data");
+import * as FormData from "form-data";
 
 /**
  * @author Brett P
