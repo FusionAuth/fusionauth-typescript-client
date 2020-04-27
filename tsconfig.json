@@ -7,11 +7,16 @@
     "lib": [
       "es2015"
     ],
-    "outDir": "build"
+    "outDir": "build",
+    "types": [
+      "node",
+      "node-fetch"
+    ]
   },
   "exclude": [
     "node_modules",
     "build",
-    "dist"
+    "dist",
+    "test"
   ]
 }

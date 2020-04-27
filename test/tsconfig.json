@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "files": [
+    "FusionAuthClientTest.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "node",
+      "node-fetch",
+      "mocha",
+      "chai"
+    ]
+  }
+}

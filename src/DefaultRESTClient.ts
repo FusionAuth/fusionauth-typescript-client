@@ -16,7 +16,8 @@
 
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import {fetch, Response} from 'cross-fetch';
+import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
+import FormData = require("form-data");
 
 /**
  * @author Brett P
@@ -24,7 +25,7 @@ import {fetch, Response} from 'cross-fetch';
  * @author TJ Peden
  */
 export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> {
-  public body: unknown;
+  public body: BodyInit;
   public headers: Record<string, string> = {};
   public method: string;
   public parameters: Record<string, string> = {};
@@ -80,7 +81,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    *
    * @param body The object to be written to the request body as form data.
    */
-  withFormData(body: object): DefaultRESTClient<RT, ERT> {
+  withFormData(body: FormData): DefaultRESTClient<RT, ERT> {
     this.body = body;
     this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
     return this;
@@ -171,6 +172,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
             method: this.method,
             headers: this.headers,
             body: this.body as BodyInit,
+            // @ts-ignore (Credentials are not supported on NodeJS)
             credentials: this.credentials,
           },
       );
