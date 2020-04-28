@@ -15,6 +15,8 @@
  */
 
 import ClientResponse from "./ClientResponse";
+import {RequestCredentials, Response} from "node-fetch";
+import FormData = require("form-data");
 
 export type ResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;
 export type ErrorResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;

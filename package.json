@@ -18,10 +18,10 @@
     "dist/fusionauth-typescript-client.*"
   ],
   "scripts": {
-    "test": "mocha build/test/FusionAuthClientTest.js && karma start",
-    "build-browser": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -o dist/fusionauth-typescript-client.js",
-    "build-browser-min": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client.min.js",
-    "pretest": "npx tsc && mkdir -p dist && npx browserify test/FusionAuthClientTest.ts --debug -t envify -p [ tsify --target=es5 ] -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js",
+    "test": "npx mocha build/test/FusionAuthClientTest.js && npx karma start",
+    "build-browser": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -o dist/fusionauth-typescript-client.js",
+    "build-browser-min": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client.min.js",
+    "pretest": "npx tsc && npx tsc -p test && mkdir -p dist && npx browserify test/FusionAuthClientTest.ts --debug -t envify -p [ tsify --target=es5 -p test ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js",
     "prepare": "npx tsc"
   },
   "repository": {
@@ -42,24 +42,32 @@
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.13.2",
+    "@types/node": "^13.13.4",
+    "@types/node-fetch": "^2.5.7",
     "browserify": "^16.5.1",
+    "browserify-shim": "^3.8.14",
     "chai": "^4.2.0",
+    "cross-fetch": "^3.0.4",
     "envify": "^4.1.0",
     "karma": "^5.0.2",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^2.0.0",
     "karma-mocha-reporter": "^2.2.5",
-    "mocha": "^7.1.1",
+    "mocha": "^7.1.2",
     "mocha-typescript": "^1.1.17",
     "tsify": "^4.0.1",
     "typescript": "^3.8.3",
     "uglify-js": "^3.9.1",
     "uglifyify": "^5.0.2"
   },
+  "browserify-shim": {
+    "node-fetch": "cross-fetch",
+    "form-data": "global:FormData"
+  },
   "dependencies": {
-    "cross-fetch": "^3.0.4"
+    "form-data": "^3.0.0",
+    "node-fetch": "^2.6.0"
   },
   "browser": "dist/fusionauth-typescript-client.min.js"
 }
