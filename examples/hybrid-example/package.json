@@ -1,0 +1,26 @@
+{
+  "name": "hybrid-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-browser": "npx browserify example.ts --debug -p tsify -t browserify-shim -o dist/example-browser.js"
+  },
+  "keywords": [],
+  "author": "Tyler Scott",
+  "license": "Apache2.0",
+  "browserify-shim": {
+    "@fusionauth/typescript-client": "global:FusionAuth"
+  },
+  "dependencies": {
+    "@fusionauth/typescript-client": "^1.16.0-RC.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.1",
+    "browserify-shim": "^3.8.14",
+    "tsify": "^4.0.1",
+    "typescript": "^3.8.3"
+  }
+}

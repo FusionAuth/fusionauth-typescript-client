@@ -1,0 +1,1 @@
+../../dist/fusionauth-typescript-client.js

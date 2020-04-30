@@ -1,0 +1,16 @@
+{
+  "name": "node-example",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tyler Scott",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@fusionauth/typescript-client": "^1.16.0-RC.1"
+  }
+}
