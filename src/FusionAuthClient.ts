@@ -4272,7 +4272,9 @@ export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicati
 }
 
 export interface IdentityProviderDetails {
+  applicationIds?: Array<UUID>;
   id?: UUID;
+  idpEndpoint?: string;
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   type?: IdentityProviderType;
