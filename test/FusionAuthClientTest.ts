@@ -21,7 +21,7 @@ import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
 
 let client;
-const fusionauthUrl = process.env.FUSIONAUTH_URL || "http://localhost:8080";
+const fusionauthUrl = process.env.FUSIONAUTH_URL || "https://local.fusionauth.io";
 const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
 const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
 const tenantId = '65323339-6137-6531-3135-316238623265';
