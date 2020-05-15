@@ -16,7 +16,7 @@
 
 import ClientResponse from "./ClientResponse";
 import {RequestCredentials, Response} from "node-fetch";
-import FormData = require("form-data");
+import {URLSearchParams} from "url";
 
 export type ResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;
 export type ErrorResponseHandler<T> = (response: Response) => Promise<ClientResponse<T>>;
@@ -40,7 +40,7 @@ export interface IRESTClient<RT, ERT> {
    *
    * @param body The object to be written to the request body as form data.
    */
-  withFormData(body: FormData): IRESTClient<RT, ERT>;
+  withFormData(body: URLSearchParams): IRESTClient<RT, ERT>;
 
   /**
    * Adds a header to the request.

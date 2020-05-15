@@ -19,7 +19,7 @@ import DefaultRESTClientBuilder from "./DefaultRESTClientBuilder";
 import IRESTClientBuilder from "./IRESTClientBuilder";
 import ClientResponse from "./ClientResponse";
 import {RequestCredentials} from "node-fetch";
-import * as FormData from "form-data";
+import {URLSearchParams} from "url";
 
 export class FusionAuthClient {
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
@@ -820,7 +820,8 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string): Promise<ClientResponse<AccessToken>> {
-    let body = new FormData();
+    let body = new URLSearchParams();
+
     body.append('code', code);
     body.append('client_id', client_id);
     body.append('client_secret', client_secret);
@@ -845,7 +846,8 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeRefreshTokenForAccessToken(refresh_token: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
-    let body = new FormData();
+    let body = new URLSearchParams();
+
     body.append('refresh_token', refresh_token);
     body.append('client_id', client_id);
     body.append('client_secret', client_secret);
@@ -886,7 +888,8 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeUserCredentialsForAccessToken(username: string, password: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
-    let body = new FormData();
+    let body = new URLSearchParams();
+
     body.append('username', username);
     body.append('password', password);
     body.append('client_id', client_id);

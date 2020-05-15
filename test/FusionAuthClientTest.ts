@@ -16,15 +16,16 @@
 
 'use strict';
 
-import {ApplicationRequest, FusionAuthClient} from '../index';
+import {ApplicationRequest, FusionAuthClient, GrantType} from '../index';
 import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
 
 let client;
-const fusionauthUrl = process.env.FUSIONAUTH_URL || "https://local.fusionauth.io";
+const fusionauthUrl = process.env.FUSIONAUTH_URL || "http://localhost:8080";
 const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
 const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
 const tenantId = '65323339-6137-6531-3135-316238623265';
+const userId = 'b164fdfc-db57-4da9-b241-8543671c6bb8';
 
 describe('#FusionAuthClient()', function () {
 
@@ -55,7 +56,17 @@ describe('#FusionAuthClient()', function () {
     }
 
     try {
-      const applicationRequest: ApplicationRequest = {application: {name: 'Node.js FusionAuth Client'}};
+      const applicationRequest: ApplicationRequest = {application:
+            {
+              name: 'TypeScript FusionAuth Client',
+              oauthConfiguration: {
+                enabledGrants: [
+                    GrantType.password,
+                    GrantType.authorization_code
+                ],
+                authorizedRedirectURLs: ["http://localhost"]
+              }
+            }};
       response = await client.createApplication(applicationId, applicationRequest);
     } catch (error) {
       console.error("Failed to setup FusionAuth Client for testing.", error)
@@ -69,11 +80,22 @@ describe('#FusionAuthClient()', function () {
 
     // Cleanup the user (just in case a test partially failed)
     try {
-      response = await client.retrieveUserByEmail("nodejs@fusionauth.io")
+      response = await client.retrieveUserByEmail("typescript@fusionauth.io")
       if (response.wasSuccessful()) {
         await client.deleteUser(response.response.user.id)
       }
     } catch (ignore) {
+    }
+
+    // Create the user that is expected to exist
+    try {
+      response = await client.retrieveUser(userId);
+    } catch (failed) {
+      try {
+        await client.createUser(userId, {user: {email: "exampleUser@fusionauth.io", password: "password"}});
+      } catch (e) {
+        console.error("Failed to create the example user! Some tests may fail.", e);
+      }
     }
 
     // Ensure that CORS allows patch
@@ -88,7 +110,7 @@ describe('#FusionAuthClient()', function () {
         });
       }
     } catch (e) {
-      console.error("Failed to add patch to the CORS configuration. Your tests may fail!");
+      console.error("Failed to add patch to the CORS configuration. Your tests may fail!", e);
     }
   });
 
@@ -183,14 +205,37 @@ describe('#FusionAuthClient()', function () {
 
   it('Login non existant user', async () => {
     try {
-      client.login({
+      await client.login({
         loginId: "doesntexist",
         password: "pass"
       });
-    } catch(e) {
-      chai.assert.deepStrictEqual(e, {
-        statusCode: 404
-      }, "Unexpected error");
+      chai.assert.fail('This should not be reached');
+    } catch (e) {
+      chai.assert.equal(e.statusCode, 404);
+      // chai.assert.deepStrictEqual(e, {
+      //   statusCode: 404
+      // }, "Unexpected error");
+    }
+  });
+
+  it('OAuth login', async () => {
+    try {
+      let application = await client.retrieveApplication(applicationId);
+      const clientId = application.response.application.oauthConfiguration.clientId;
+      const clientSecret = application.response.application.oauthConfiguration.clientSecret;
+
+      const accessTokenResponse = await client.exchangeUserCredentialsForAccessToken("exampleUser@fusionauth.io", "password", clientId, clientSecret, "email openid", null);
+
+      // TODO Test the rest of the workflow somehow
+
+      // const authCodeResponse = await client.exchangeOAuthCodeForAccessToken(accessTokenResponse.response.access_token, clientId, clientSecret, "http://localhost");
+
+      // const userResponse = await client.retrieveUserUsingJWT(authCodeResponse.successResponse.access_token);
+
+      // console.log("User:", userResponse.response.user);
+    } catch (e) {
+      console.error(e);
+      chai.assert.fail("Failed to perform an OAuth login");
     }
   });
 });

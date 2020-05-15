@@ -17,7 +17,7 @@
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
 import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
-import * as FormData from "form-data";
+import {URLSearchParams} from "url";
 
 /**
  * @author Brett P
@@ -81,7 +81,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    *
    * @param body The object to be written to the request body as form data.
    */
-  withFormData(body: FormData): DefaultRESTClient<RT, ERT> {
+  withFormData(body: URLSearchParams): DefaultRESTClient<RT, ERT> {
     this.body = body;
     this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
     return this;
