@@ -3267,6 +3267,28 @@ export enum Algorithm {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface AppleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  keyId?: UUID;
+  scope?: string;
+  servicesId?: string;
+  teamId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface AppleIdentityProvider extends BaseIdentityProvider<AppleApplicationConfiguration> {
+  buttonText?: string;
+  keyId?: UUID;
+  scope?: string;
+  servicesId?: string;
+  teamId?: string;
+}
+
+/**
  * @author Seth Musselman
  */
 export interface Application {
@@ -3451,6 +3473,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   data?: Record<string, any>;
   debug?: boolean;
   id?: UUID;
+  lambdaConfiguration?: LambdaConfiguration;
   name?: string;
   type?: IdentityProviderType;
 }
@@ -3633,6 +3656,9 @@ export enum ContentStatus {
   REJECTED
 }
 
+/**
+ * @author Trevor Smith
+ */
 export interface CORSConfiguration extends Enableable {
   allowCredentials?: boolean;
   allowedHeaders?: Array<string>;
@@ -4346,7 +4372,8 @@ export enum IdentityProviderType {
   Google,
   Twitter,
   SAMLv2,
-  HYPR
+  HYPR,
+  Apple
 }
 
 /**
@@ -4456,6 +4483,12 @@ export interface JSONWebKey {
 }
 
 /**
+ * Interface for any object that can provide JSON Web key Information.
+ */
+export interface JSONWebKeyInfoProvider {
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface JWKSResponse {
@@ -4492,7 +4525,10 @@ export interface JWT {
 export interface JWTConfiguration extends Enableable {
   accessTokenKeyId?: UUID;
   idTokenKeyId?: UUID;
+  refreshTokenExpirationPolicy?: RefreshTokenExpirationPolicy;
+  refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
   refreshTokenTimeToLiveInMinutes?: number;
+  refreshTokenUsagePolicy?: RefreshTokenUsagePolicy;
   timeToLiveInSeconds?: number;
 }
 
@@ -4550,13 +4586,13 @@ export interface Key {
   certificate?: string;
   certificateInformation?: CertificateInformation;
   expirationInstant?: number;
+  hasPrivateKey?: boolean;
   id?: UUID;
   insertInstant?: number;
   issuer?: string;
   kid?: string;
   length?: number;
   name?: string;
-  pair?: boolean;
   privateKey?: string;
   publicKey?: string;
   secret?: string;
@@ -4652,7 +4688,8 @@ export enum LambdaType {
   JWTPopulate,
   OpenIDReconcile,
   SAMLv2Reconcile,
-  SAMLv2Populate
+  SAMLv2Populate,
+  GenericIdpReconcile
 }
 
 /**
@@ -5017,7 +5054,6 @@ export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<Open
   buttonImageURL?: string;
   buttonText?: string;
   domains?: Array<string>;
-  lambdaConfiguration?: LambdaConfiguration;
   oauth2?: IdentityProviderOauth2Configuration;
 }
 
@@ -5171,6 +5207,7 @@ export interface RefreshRequest {
  * @author Daniel DeGroff
  */
 export interface RefreshResponse {
+  refreshToken?: string;
   refreshTokens?: Array<RefreshToken>;
   token?: string;
 }
@@ -5187,6 +5224,30 @@ export interface RefreshToken {
   startInstant?: number;
   token?: string;
   userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RefreshTokenExpirationPolicy {
+  Fixed,
+  SlidingWindow
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RefreshTokenRevocationPolicy {
+  onLoginPrevented?: boolean;
+  onPasswordChanged?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RefreshTokenUsagePolicy {
+  Reusable,
+  OneTimeUse
 }
 
 export interface RegistrationConfiguration extends Enableable {
@@ -5230,6 +5291,7 @@ export interface RegistrationRequest {
  * @author Brian Pontarelli
  */
 export interface RegistrationResponse {
+  refreshToken?: string;
   registration?: UserRegistration;
   token?: string;
   user?: User;
@@ -5257,6 +5319,14 @@ export interface RememberPreviousPasswords extends Enableable {
  */
 export interface Requirable extends Enableable {
   required?: boolean;
+}
+
+/**
+ * Interface describing the need for CORS configuration.
+ *
+ * @author Daniel DeGroff
+ */
+export interface RequiresCORSConfiguration {
 }
 
 /**
@@ -5290,7 +5360,6 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   idpEndpoint?: string;
   issuer?: string;
   keyId?: UUID;
-  lambdaConfiguration?: LambdaConfiguration;
   useNameIdForEmail?: boolean;
 }
 
