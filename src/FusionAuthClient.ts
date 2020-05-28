@@ -4689,7 +4689,12 @@ export enum LambdaType {
   OpenIDReconcile,
   SAMLv2Reconcile,
   SAMLv2Populate,
-  GenericIdpReconcile
+  AppleReconcile,
+  ExternalJWTReconcile,
+  FacebookReconcile,
+  GoogleReconcile,
+  HYPRReconcile,
+  TwitterReconcile
 }
 
 /**
