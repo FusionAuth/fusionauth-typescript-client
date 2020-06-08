@@ -610,13 +610,13 @@ export class FusionAuthClient {
   /**
    * Deletes the key for the given Id.
    *
-   * @param {UUID} keyOd The Id of the key to delete.
+   * @param {UUID} keyId The Id of the key to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
-  deleteKey(keyOd: UUID): Promise<ClientResponse<void>> {
+  deleteKey(keyId: UUID): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/key')
-        .withUriSegment(keyOd)
+        .withUriSegment(keyId)
         .withMethod("DELETE")
         .go();
   }
