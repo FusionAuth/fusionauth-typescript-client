@@ -3506,34 +3506,34 @@ export interface BaseSearchCriteria {
 }
 
 export enum BreachAction {
-  Off,
-  RecordOnly,
-  NotifyUser,
-  RequireChange
+  Off = "Off",
+  RecordOnly = "RecordOnly",
+  NotifyUser = "NotifyUser",
+  RequireChange = "RequireChange"
 }
 
 /**
  * @author Daniel DeGroff
  */
 export enum BreachedPasswordStatus {
-  None,
-  ExactMatch,
-  SubAddressMatch,
-  PasswordOnly,
-  CommonPassword
+  None = "None",
+  ExactMatch = "ExactMatch",
+  SubAddressMatch = "SubAddressMatch",
+  PasswordOnly = "PasswordOnly",
+  CommonPassword = "CommonPassword"
 }
 
 export enum BreachMatchMode {
-  Low,
-  Medium,
-  High
+  Low = "Low",
+  Medium = "Medium",
+  High = "High"
 }
 
 export enum CanonicalizationMethod {
-  exclusive,
-  exclusive_with_comments,
-  inclusive,
-  inclusive_with_comments
+  exclusive = "exclusive",
+  exclusive_with_comments = "exclusive_with_comments",
+  inclusive = "inclusive",
+  inclusive_with_comments = "inclusive_with_comments"
 }
 
 export interface CertificateInformation {
@@ -3553,10 +3553,10 @@ export interface CertificateInformation {
  * @author Trevor Smith
  */
 export enum ChangePasswordReason {
-  Administrative,
-  Breached,
-  Expired,
-  Validation
+  Administrative = "Administrative",
+  Breached = "Breached",
+  Expired = "Expired",
+  Validation = "Validation"
 }
 
 /**
@@ -3594,9 +3594,9 @@ export interface CleanSpeakConfiguration extends Enableable {
 }
 
 export enum ClientAuthenticationMethod {
-  none,
-  client_secret_basic,
-  client_secret_post
+  none = "none",
+  client_secret_basic = "client_secret_basic",
+  client_secret_post = "client_secret_post"
 }
 
 /**
@@ -3641,8 +3641,8 @@ export interface ConsentResponse {
  * @author Daniel DeGroff
  */
 export enum ConsentStatus {
-  Active,
-  Revoked
+  Active = "Active",
+  Revoked = "Revoked"
 }
 
 /**
@@ -3651,9 +3651,9 @@ export enum ConsentStatus {
  * @author Brian Pontarelli
  */
 export enum ContentStatus {
-  ACTIVE,
-  PENDING,
-  REJECTED
+  ACTIVE = "ACTIVE",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED"
 }
 
 /**
@@ -3714,15 +3714,15 @@ export interface DeviceResponse {
 }
 
 export enum DeviceType {
-  BROWSER,
-  DESKTOP,
-  LAPTOP,
-  MOBILE,
-  OTHER,
-  SERVER,
-  TABLET,
-  TV,
-  UNKNOWN
+  BROWSER = "BROWSER",
+  DESKTOP = "DESKTOP",
+  LAPTOP = "LAPTOP",
+  MOBILE = "MOBILE",
+  OTHER = "OTHER",
+  SERVER = "SERVER",
+  TABLET = "TABLET",
+  TV = "TV",
+  UNKNOWN = "UNKNOWN"
 }
 
 /**
@@ -3795,9 +3795,9 @@ export interface EmailPlus extends Enableable {
 }
 
 export enum EmailSecurityType {
-  NONE,
-  SSL,
-  TLS
+  NONE = "NONE",
+  SSL = "SSL",
+  TLS = "TLS"
 }
 
 /**
@@ -3943,9 +3943,9 @@ export interface EventLogSearchResponse {
  * @author Daniel DeGroff
  */
 export enum EventLogType {
-  Information,
-  Debug,
-  Error
+  Information = "Information",
+  Debug = "Debug",
+  Error = "Error"
 }
 
 /**
@@ -3988,12 +3988,12 @@ export enum EventType {
  * @author Brian Pontarelli
  */
 export enum ExpiryUnit {
-  MINUTES,
-  HOURS,
-  DAYS,
-  WEEKS,
-  MONTHS,
-  YEARS
+  MINUTES = "MINUTES",
+  HOURS = "HOURS",
+  DAYS = "DAYS",
+  WEEKS = "WEEKS",
+  MONTHS = "MONTHS",
+  YEARS = "YEARS"
 }
 
 /**
@@ -4143,9 +4143,9 @@ export interface FamilyResponse {
 }
 
 export enum FamilyRole {
-  Child,
-  Teen,
-  Adult
+  Child = "Child",
+  Teen = "Teen",
+  Adult = "Adult"
 }
 
 /**
@@ -4275,13 +4275,13 @@ export interface HTTPHeaders extends Record<string, string> {
  * @author Daniel DeGroff
  */
 export enum HTTPMethod {
-  GET,
-  POST,
-  PUT,
-  DELETE,
-  HEAD,
-  OPTIONS,
-  PATCH
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  HEAD = "HEAD",
+  OPTIONS = "OPTIONS",
+  PATCH = "PATCH"
 }
 
 /**
@@ -4328,6 +4328,7 @@ export interface IdentityProviderOauth2Configuration {
   client_id?: string;
   client_secret?: string;
   clientAuthenticationMethod?: ClientAuthenticationMethod;
+  emailClaim?: string;
   issuer?: string;
   scope?: string;
   token_endpoint?: string;
@@ -4366,14 +4367,14 @@ export interface IdentityProviderStartLoginResponse {
 }
 
 export enum IdentityProviderType {
-  ExternalJWT,
-  OpenIDConnect,
-  Facebook,
-  Google,
-  Twitter,
-  SAMLv2,
-  HYPR,
-  Apple
+  ExternalJWT = "ExternalJWT",
+  OpenIDConnect = "OpenIDConnect",
+  Facebook = "Facebook",
+  Google = "Google",
+  Twitter = "Twitter",
+  SAMLv2 = "SAMLv2",
+  HYPR = "HYPR",
+  Apple = "Apple"
 }
 
 /**
@@ -4631,9 +4632,9 @@ export interface KeyResponse {
 }
 
 export enum KeyType {
-  EC,
-  RSA,
-  HMAC
+  EC = "EC",
+  RSA = "RSA",
+  HMAC = "HMAC"
 }
 
 /**
@@ -4685,16 +4686,16 @@ export interface LambdaResponse {
  * @author Brian Pontarelli
  */
 export enum LambdaType {
-  JWTPopulate,
-  OpenIDReconcile,
-  SAMLv2Reconcile,
-  SAMLv2Populate,
-  AppleReconcile,
-  ExternalJWTReconcile,
-  FacebookReconcile,
-  GoogleReconcile,
-  HYPRReconcile,
-  TwitterReconcile
+  JWTPopulate = "JWTPopulate",
+  OpenIDReconcile = "OpenIDReconcile",
+  SAMLv2Reconcile = "SAMLv2Reconcile",
+  SAMLv2Populate = "SAMLv2Populate",
+  AppleReconcile = "AppleReconcile",
+  ExternalJWTReconcile = "ExternalJWTReconcile",
+  FacebookReconcile = "FacebookReconcile",
+  GoogleReconcile = "GoogleReconcile",
+  HYPRReconcile = "HYPRReconcile",
+  TwitterReconcile = "TwitterReconcile"
 }
 
 /**
@@ -4729,8 +4730,8 @@ export interface LoginConfiguration {
 }
 
 export enum LoginIdType {
-  email,
-  username
+  email = "email",
+  username = "username"
 }
 
 /**
@@ -4831,8 +4832,8 @@ export interface LoginResponse {
  * @author Matthew Altman
  */
 export enum LogoutBehavior {
-  RedirectOnly,
-  AllApplications
+  RedirectOnly = "RedirectOnly",
+  AllApplications = "AllApplications"
 }
 
 /**
@@ -4945,69 +4946,69 @@ export interface OAuthError {
 }
 
 export enum OAuthErrorReason {
-  auth_code_not_found,
-  access_token_malformed,
-  access_token_expired,
-  access_token_unavailable_for_processing,
-  access_token_failed_processing,
-  refresh_token_not_found,
-  invalid_client_id,
-  invalid_user_credentials,
-  invalid_grant_type,
-  invalid_origin,
-  invalid_origin_opaque,
-  invalid_pkce_code_verifier,
-  invalid_pkce_code_challenge,
-  invalid_pkce_code_challenge_method,
-  invalid_redirect_uri,
-  invalid_response_mode,
-  invalid_response_type,
-  invalid_id_token_hint,
-  invalid_post_logout_redirect_uri,
-  invalid_device_code,
-  invalid_user_code,
-  invalid_additional_client_id,
-  grant_type_disabled,
-  missing_client_id,
-  missing_code,
-  missing_device_code,
-  missing_grant_type,
-  missing_redirect_uri,
-  missing_refresh_token,
-  missing_response_type,
-  missing_token,
-  missing_user_code,
-  missing_verification_uri,
-  login_prevented,
-  user_code_expired,
-  user_expired,
-  user_locked,
-  user_not_found,
-  client_authentication_missing,
-  invalid_client_authentication_scheme,
-  invalid_client_authentication,
-  client_id_mismatch,
-  change_password_administrative,
-  change_password_breached,
-  change_password_expired,
-  change_password_validation,
-  unknown
+  auth_code_not_found = "auth_code_not_found",
+  access_token_malformed = "access_token_malformed",
+  access_token_expired = "access_token_expired",
+  access_token_unavailable_for_processing = "access_token_unavailable_for_processing",
+  access_token_failed_processing = "access_token_failed_processing",
+  refresh_token_not_found = "refresh_token_not_found",
+  invalid_client_id = "invalid_client_id",
+  invalid_user_credentials = "invalid_user_credentials",
+  invalid_grant_type = "invalid_grant_type",
+  invalid_origin = "invalid_origin",
+  invalid_origin_opaque = "invalid_origin_opaque",
+  invalid_pkce_code_verifier = "invalid_pkce_code_verifier",
+  invalid_pkce_code_challenge = "invalid_pkce_code_challenge",
+  invalid_pkce_code_challenge_method = "invalid_pkce_code_challenge_method",
+  invalid_redirect_uri = "invalid_redirect_uri",
+  invalid_response_mode = "invalid_response_mode",
+  invalid_response_type = "invalid_response_type",
+  invalid_id_token_hint = "invalid_id_token_hint",
+  invalid_post_logout_redirect_uri = "invalid_post_logout_redirect_uri",
+  invalid_device_code = "invalid_device_code",
+  invalid_user_code = "invalid_user_code",
+  invalid_additional_client_id = "invalid_additional_client_id",
+  grant_type_disabled = "grant_type_disabled",
+  missing_client_id = "missing_client_id",
+  missing_code = "missing_code",
+  missing_device_code = "missing_device_code",
+  missing_grant_type = "missing_grant_type",
+  missing_redirect_uri = "missing_redirect_uri",
+  missing_refresh_token = "missing_refresh_token",
+  missing_response_type = "missing_response_type",
+  missing_token = "missing_token",
+  missing_user_code = "missing_user_code",
+  missing_verification_uri = "missing_verification_uri",
+  login_prevented = "login_prevented",
+  user_code_expired = "user_code_expired",
+  user_expired = "user_expired",
+  user_locked = "user_locked",
+  user_not_found = "user_not_found",
+  client_authentication_missing = "client_authentication_missing",
+  invalid_client_authentication_scheme = "invalid_client_authentication_scheme",
+  invalid_client_authentication = "invalid_client_authentication",
+  client_id_mismatch = "client_id_mismatch",
+  change_password_administrative = "change_password_administrative",
+  change_password_breached = "change_password_breached",
+  change_password_expired = "change_password_expired",
+  change_password_validation = "change_password_validation",
+  unknown = "unknown"
 }
 
 export enum OAuthErrorType {
-  invalid_request,
-  invalid_client,
-  invalid_grant,
-  invalid_token,
-  unauthorized_client,
-  invalid_scope,
-  server_error,
-  unsupported_grant_type,
-  unsupported_response_type,
-  change_password_required,
-  two_factor_required,
-  authorization_pending,
-  expired_token
+  invalid_request = "invalid_request",
+  invalid_client = "invalid_client",
+  invalid_grant = "invalid_grant",
+  invalid_token = "invalid_token",
+  unauthorized_client = "unauthorized_client",
+  invalid_scope = "invalid_scope",
+  server_error = "server_error",
+  unsupported_grant_type = "unsupported_grant_type",
+  unsupported_response_type = "unsupported_response_type",
+  change_password_required = "change_password_required",
+  two_factor_required = "two_factor_required",
+  authorization_pending = "authorization_pending",
+  expired_token = "expired_token"
 }
 
 /**
@@ -5235,8 +5236,8 @@ export interface RefreshToken {
  * @author Daniel DeGroff
  */
 export enum RefreshTokenExpirationPolicy {
-  Fixed,
-  SlidingWindow
+  Fixed = "Fixed",
+  SlidingWindow = "SlidingWindow"
 }
 
 /**
@@ -5251,8 +5252,8 @@ export interface RefreshTokenRevocationPolicy {
  * @author Daniel DeGroff
  */
 export enum RefreshTokenUsagePolicy {
-  Reusable,
-  OneTimeUse
+  Reusable = "Reusable",
+  OneTimeUse = "OneTimeUse"
 }
 
 export interface RegistrationConfiguration extends Enableable {
@@ -5417,10 +5418,10 @@ export interface SecureGeneratorConfiguration {
  * @author Daniel DeGroff
  */
 export enum SecureGeneratorType {
-  randomDigits,
-  randomBytes,
-  randomAlpha,
-  randomAlphaNumeric
+  randomDigits = "randomDigits",
+  randomBytes = "randomBytes",
+  randomAlpha = "randomAlpha",
+  randomAlphaNumeric = "randomAlphaNumeric"
 }
 
 /**
@@ -5461,8 +5462,8 @@ export interface SendResponse {
  * @author Daniel DeGroff
  */
 export enum Sort {
-  asc,
-  desc
+  asc = "asc",
+  desc = "desc"
 }
 
 /**
@@ -5659,8 +5660,8 @@ export interface TimeBasedDeletePolicy extends Enableable {
  * @author Daniel DeGroff
  */
 export enum TokenType {
-  Bearer,
-  MAC
+  Bearer = "Bearer",
+  MAC = "MAC"
 }
 
 export interface Totals {
@@ -5686,11 +5687,11 @@ export interface TotalsReportResponse {
  * @author Brian Pontarelli
  */
 export enum TransactionType {
-  None,
-  Any,
-  SimpleMajority,
-  SuperMajority,
-  AbsoluteMajority
+  None = "None",
+  Any = "Any",
+  SimpleMajority = "SimpleMajority",
+  SuperMajority = "SuperMajority",
+  AbsoluteMajority = "AbsoluteMajority"
 }
 
 /**
@@ -5730,8 +5731,8 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
  * @author Daniel DeGroff
  */
 export enum TwoFactorDelivery {
-  None,
-  TextMessage
+  None = "None",
+  TextMessage = "TextMessage"
 }
 
 /**
@@ -5895,10 +5896,10 @@ export interface UserActionOption {
  * @author Brian Pontarelli
  */
 export enum UserActionPhase {
-  start,
-  modify,
-  cancel,
-  end
+  start = "start",
+  modify = "modify",
+  cancel = "cancel",
+  end = "end"
 }
 
 /**
@@ -6245,8 +6246,8 @@ export interface UserSearchCriteria extends BaseSearchCriteria {
  * @author Daniel DeGroff
  */
 export enum UserState {
-  Authenticated,
-  AuthenticatedNotRegistered
+  Authenticated = "Authenticated",
+  AuthenticatedNotRegistered = "AuthenticatedNotRegistered"
 }
 
 /**
