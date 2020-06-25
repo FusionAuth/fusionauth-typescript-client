@@ -19,4 +19,7 @@ Refer to the FusionAuth API documentation to for request and response formats.
 * https://fusionauth.io/docs/v1/tech/apis/
 * https://fusionauth.io/docs/v1/tech/client-libraries/typescript
 
+## Development
 
+* Set up a fusionauth instance. (Not sure exactly how to configure, TBD.)
+* `sb test`
