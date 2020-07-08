@@ -18,10 +18,10 @@
     "dist/fusionauth-typescript-client.*"
   ],
   "scripts": {
-    "test": "npx mocha build/test/FusionAuthClientTest.js && npx karma start",
+    "test": "npx mocha build/test/*.js && npx karma start",
     "build-browser": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -o dist/fusionauth-typescript-client.js",
     "build-browser-min": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client.min.js",
-    "pretest": "npx tsc && npx tsc -p test && mkdir -p dist && npx browserify test/FusionAuthClientTest.ts --debug -t envify -p [ tsify --target=es5 -p test ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js",
+    "pretest": "npx tsc && npx tsc -p test && mkdir -p dist && npx browserify test/*.ts --debug -t envify -p [ tsify --target=es5 -p test ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js",
     "prepare": "npx tsc && npm run build-browser && npm run build-browser-min"
   },
   "repository": {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, FusionAuth, All Rights Reserved
+ * Copyright (c) 2020, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,15 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    * @param body The object to be written to the request body as form data.
    */
   withFormData(body: URLSearchParams): DefaultRESTClient<RT, ERT> {
+    const body2 = new URLSearchParams();
+    if (body) { 
+      body.forEach((value, name, searchParams) => {
+        if (value && value.length > 0 && value != "null" && value != "undefined") {
+          body2.set(name,value);
+        }
+      });
+      body = body2;
+    }
     this.body = body;
     this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
     return this;
