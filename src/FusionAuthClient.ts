@@ -3254,16 +3254,16 @@ export interface ActionResponse {
  * @author Daniel DeGroff
  */
 export enum Algorithm {
-  ES256 = "SHA256withECDSA",
-  ES384 = "SHA384withECDSA",
-  ES512 = "SHA512withECDSA",
-  HS256 = "HmacSHA256",
-  HS384 = "HmacSHA384",
-  HS512 = "HmacSHA512",
-  RS256 = "SHA256withRSA",
-  RS384 = "SHA384withRSA",
-  RS512 = "SHA512withRSA",
-  none = "None"
+  ES256 = "ES256",
+  ES384 = "ES384",
+  ES512 = "ES512",
+  HS256 = "HS256",
+  HS384 = "HS384",
+  HS512 = "HS512",
+  RS256 = "RS256",
+  RS384 = "RS384",
+  RS512 = "RS512",
+  none = "none"
 }
 
 /**
@@ -4601,15 +4601,15 @@ export interface Key {
 }
 
 export enum KeyAlgorithm {
-  ES256 = "SHA256withECDSA",
-  ES384 = "SHA384withECDSA",
-  ES512 = "SHA512withECDSA",
-  HS256 = "HmacSHA256",
-  HS384 = "HmacSHA384",
-  HS512 = "HmacSHA512",
-  RS256 = "SHA256withRSA",
-  RS384 = "SHA384withRSA",
-  RS512 = "SHA512withRSA"
+  ES256 = "ES256",
+  ES384 = "ES384",
+  ES512 = "ES512",
+  HS256 = "HS256",
+  HS384 = "HS384",
+  HS512 = "HS512",
+  RS256 = "RS256",
+  RS384 = "RS384",
+  RS512 = "RS512"
 }
 
 /**
