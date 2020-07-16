@@ -23,3 +23,4 @@ export * from './src/DefaultRESTClientBuilder';
 export * from './src/ClientResponse';
 export * from './src/IRESTClient';
 export * from './src/IRESTClientBuilder';
+export * from './src/JWTManager';
