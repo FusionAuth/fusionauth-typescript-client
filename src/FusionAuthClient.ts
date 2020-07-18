@@ -201,6 +201,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a connector.  You can optionally specify an Id for the connector, if not provided one will be generated.
+   *
+   * @param {UUID} connectorId (Optional) The Id for the connector. If not provided a secure random UUID will be generated.
+   * @param {ConnectorRequest} request The request object that contains all of the information used to create the connector.
+   * @returns {Promise<ClientResponse<ConnectorResponse>>}
+   */
+  createConnector(connectorId: UUID, request: ConnectorRequest): Promise<ClientResponse<ConnectorResponse>> {
+    return this.start<ConnectorResponse, Errors>()
+        .withUri('/api/connector')
+        .withUriSegment(connectorId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a user consent type. You can optionally specify an Id for the consent type, if not provided one will be generated.
    *
    * @param {UUID} consentId (Optional) The Id for the consent. If not provided a secure random UUID will be generated.
@@ -244,6 +260,38 @@ export class FusionAuthClient {
     return this.start<FamilyResponse, Errors>()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a form.  You can optionally specify an Id for the form, if not provided one will be generated.
+   *
+   * @param {UUID} formId (Optional) The Id for the form. If not provided a secure random UUID will be generated.
+   * @param {FormRequest} request The request object that contains all of the information used to create the form.
+   * @returns {Promise<ClientResponse<FormResponse>>}
+   */
+  createForm(formId: UUID, request: FormRequest): Promise<ClientResponse<FormResponse>> {
+    return this.start<FormResponse, Errors>()
+        .withUri('/api/form')
+        .withUriSegment(formId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a form field.  You can optionally specify an Id for the form, if not provided one will be generated.
+   *
+   * @param {UUID} fieldId (Optional) The Id for the form field. If not provided a secure random UUID will be generated.
+   * @param {FormFieldRequest} request The request object that contains all of the information used to create the form field.
+   * @returns {Promise<ClientResponse<FormFieldResponse>>}
+   */
+  createFormField(fieldId: UUID, request: FormFieldRequest): Promise<ClientResponse<FormFieldResponse>> {
+    return this.start<FormFieldResponse, Errors>()
+        .withUri('/api/form/field')
+        .withUriSegment(fieldId)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -538,6 +586,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the connector for the given Id.
+   *
+   * @param {UUID} connectorId The Id of the connector to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteConnector(connectorId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/connector')
+        .withUriSegment(connectorId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the consent for the given Id.
    *
    * @param {UUID} consentId The Id of the consent to delete.
@@ -561,6 +623,34 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the form for the given Id.
+   *
+   * @param {UUID} formId The Id of the form to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteForm(formId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/form')
+        .withUriSegment(formId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the form field for the given Id.
+   *
+   * @param {UUID} fieldId The Id of the form field to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteFormField(fieldId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/form/field')
+        .withUriSegment(fieldId)
         .withMethod("DELETE")
         .go();
   }
@@ -1211,6 +1301,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates, via PATCH, the connector with the given Id.
+   *
+   * @param {UUID} connectorId The Id of the connector to update.
+   * @param {ConnectorRequest} request The request that contains just the new connector information.
+   * @returns {Promise<ClientResponse<ConnectorResponse>>}
+   */
+  patchConnector(connectorId: UUID, request: ConnectorRequest): Promise<ClientResponse<ConnectorResponse>> {
+    return this.start<ConnectorResponse, Errors>()
+        .withUri('/api/connector')
+        .withUriSegment(connectorId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
    * Updates, via PATCH, the consent with the given Id.
    *
    * @param {UUID} consentId The Id of the consent to update.
@@ -1671,6 +1777,32 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the connector with the given Id.
+   *
+   * @param {UUID} connectorId The Id of the connector.
+   * @returns {Promise<ClientResponse<ConnectorResponse>>}
+   */
+  retrieveConnector(connectorId: UUID): Promise<ClientResponse<ConnectorResponse>> {
+    return this.start<ConnectorResponse, void>()
+        .withUri('/api/connector')
+        .withUriSegment(connectorId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the connectors.
+   *
+   * @returns {Promise<ClientResponse<ConnectorResponse>>}
+   */
+  retrieveConnectors(): Promise<ClientResponse<ConnectorResponse>> {
+    return this.start<ConnectorResponse, void>()
+        .withUri('/api/connector')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the Consent for the given Id.
    *
    * @param {UUID} consentId The Id of the consent.
@@ -1795,6 +1927,58 @@ export class FusionAuthClient {
     return this.start<FamilyResponse, void>()
         .withUri('/api/user/family')
         .withUriSegment(familyId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the form with the given Id.
+   *
+   * @param {UUID} formId The Id of the form.
+   * @returns {Promise<ClientResponse<FormResponse>>}
+   */
+  retrieveForm(formId: UUID): Promise<ClientResponse<FormResponse>> {
+    return this.start<FormResponse, void>()
+        .withUri('/api/form')
+        .withUriSegment(formId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the form field with the given Id.
+   *
+   * @param {UUID} fieldId The Id of the form field.
+   * @returns {Promise<ClientResponse<FormFieldResponse>>}
+   */
+  retrieveFormField(fieldId: UUID): Promise<ClientResponse<FormFieldResponse>> {
+    return this.start<FormFieldResponse, void>()
+        .withUri('/api/form/field')
+        .withUriSegment(fieldId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the forms fields
+   *
+   * @returns {Promise<ClientResponse<FormFieldResponse>>}
+   */
+  retrieveFormFields(): Promise<ClientResponse<FormFieldResponse>> {
+    return this.start<FormFieldResponse, void>()
+        .withUri('/api/form/field')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the forms.
+   *
+   * @returns {Promise<ClientResponse<FormResponse>>}
+   */
+  retrieveForms(): Promise<ClientResponse<FormResponse>> {
+    return this.start<FormResponse, void>()
+        .withUri('/api/form')
         .withMethod("GET")
         .go();
   }
@@ -2848,6 +3032,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the connector with the given Id.
+   *
+   * @param {UUID} connectorId The Id of the connector to update.
+   * @param {ConnectorRequest} request The request object that contains all of the new connector information.
+   * @returns {Promise<ClientResponse<ConnectorResponse>>}
+   */
+  updateConnector(connectorId: UUID, request: ConnectorRequest): Promise<ClientResponse<ConnectorResponse>> {
+    return this.start<ConnectorResponse, Errors>()
+        .withUri('/api/connector')
+        .withUriSegment(connectorId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the consent with the given Id.
    *
    * @param {UUID} consentId The Id of the consent to update.
@@ -2874,6 +3074,38 @@ export class FusionAuthClient {
     return this.start<EmailTemplateResponse, Errors>()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the form with the given Id.
+   *
+   * @param {UUID} formId The Id of the form to update.
+   * @param {FormRequest} request The request object that contains all of the new form information.
+   * @returns {Promise<ClientResponse<FormResponse>>}
+   */
+  updateForm(formId: UUID, request: FormRequest): Promise<ClientResponse<FormResponse>> {
+    return this.start<FormResponse, Errors>()
+        .withUri('/api/form')
+        .withUriSegment(formId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the form field with the given Id.
+   *
+   * @param {UUID} fieldId The Id of the form field to update.
+   * @param {FormFieldRequest} request The request object that contains all of the new form field information.
+   * @returns {Promise<ClientResponse<FormFieldResponse>>}
+   */
+  updateFormField(fieldId: UUID, request: FormFieldRequest): Promise<ClientResponse<FormFieldResponse>> {
+    return this.start<FormFieldResponse, Errors>()
+        .withUri('/api/form/field')
+        .withUriSegment(fieldId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -3297,8 +3529,10 @@ export interface Application {
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
   data?: Record<string, any>;
   id?: UUID;
+  insertInstant?: number;
   jwtConfiguration?: JWTConfiguration;
   lambdaConfiguration?: LambdaConfiguration;
+  lastUpdateInstant?: number;
   loginConfiguration?: LoginConfiguration;
   name?: string;
   oauthConfiguration?: OAuth2Configuration;
@@ -3359,8 +3593,10 @@ export interface ApplicationResponse {
 export interface ApplicationRole {
   description?: string;
   id?: UUID;
+  insertInstant?: number;
   isDefault?: boolean;
   isSuperRole?: boolean;
+  lastUpdateInstant?: number;
   name?: string;
 }
 
@@ -3448,6 +3684,17 @@ export interface AuditLogSearchResponse {
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+export interface BaseConnectorConfiguration {
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: ConnectorType;
+}
+
 /**
  * Base-class for all FusionAuth events.
  *
@@ -3473,7 +3720,9 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   data?: Record<string, any>;
   debug?: boolean;
   id?: UUID;
+  insertInstant?: number;
   lambdaConfiguration?: LambdaConfiguration;
+  lastUpdateInstant?: number;
   name?: string;
   type?: IdentityProviderType;
 }
@@ -3600,6 +3849,42 @@ export enum ClientAuthenticationMethod {
 }
 
 /**
+ * @author Trevor Smith
+ */
+export interface ConnectorPolicy {
+  connectorId?: UUID;
+  data?: Record<string, any>;
+  domains?: Array<string>;
+  migrate?: boolean;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface ConnectorRequest {
+  connector?: BaseConnectorConfiguration;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface ConnectorResponse {
+  connector?: BaseConnectorConfiguration;
+  connectors?: Array<BaseConnectorConfiguration>;
+}
+
+/**
+ * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
+ *
+ * @author Trevor Smith
+ */
+export enum ConnectorType {
+  FusionAuth = "FusionAuth",
+  Generic = "Generic",
+  LDAP = "LDAP"
+}
+
+/**
  * Models a consent.
  *
  * @author Daniel DeGroff
@@ -3611,6 +3896,8 @@ export interface Consent {
   defaultMinimumAgeForSelfConsent?: number;
   emailPlus?: EmailPlus;
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   multipleValuesAllowed?: boolean;
   name?: string;
   values?: Array<string>;
@@ -3674,6 +3961,10 @@ export interface CORSConfiguration extends Enableable {
 export interface Count {
   count?: number;
   interval?: number;
+}
+
+export interface CustomRegistration extends Enableable {
+  formId?: UUID;
 }
 
 /**
@@ -3812,6 +4103,8 @@ export interface EmailTemplate {
   defaultTextTemplate?: string;
   fromEmail?: string;
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   localizedFromNames?: LocalizedStrings;
   localizedHtmlTemplates?: LocalizedStrings;
   localizedSubjects?: LocalizedStrings;
@@ -4083,6 +4376,8 @@ export interface FailedAuthenticationConfiguration {
  */
 export interface Family {
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   members?: Array<FamilyMember>;
 }
 
@@ -4118,6 +4413,7 @@ export interface FamilyEmailRequest {
 export interface FamilyMember {
   data?: Record<string, any>;
   insertInstant?: number;
+  lastUpdateInstant?: number;
   owner?: boolean;
   role?: FamilyRole;
   userId?: UUID;
@@ -4174,6 +4470,155 @@ export interface ForgotPasswordResponse {
 /**
  * @author Daniel DeGroff
  */
+export interface Form {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  steps?: Array<FormStep>;
+  type?: FormType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormControl {
+  checkbox = "checkbox",
+  number = "number",
+  password = "password",
+  radio = "radio",
+  select = "select",
+  textarea = "textarea",
+  text = "text"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormDataType {
+  bool = "bool",
+  consent = "consent",
+  date = "date",
+  email = "email",
+  number = "number",
+  string = "string"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FormField {
+  confirm?: boolean;
+  consentId?: UUID;
+  control?: FormControl;
+  data?: Record<string, any>;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  key?: string;
+  lastUpdateInstant?: number;
+  name?: string;
+  options?: Array<string>;
+  required?: boolean;
+  type?: FormDataType;
+  validator?: FormFieldValidator;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormFieldAdminPolicy {
+  Edit = "Edit",
+  View = "View"
+}
+
+/**
+ * The FormField API request object.
+ *
+ * @author Brett Guy
+ */
+export interface FormFieldRequest {
+  field?: FormField;
+  fields?: Array<FormField>;
+}
+
+/**
+ * Form field response.
+ *
+ * @author Brett Guy
+ */
+export interface FormFieldResponse {
+  field?: FormField;
+  fields?: Array<FormField>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FormFieldValidator extends Enableable {
+  expression?: string;
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FormRequest {
+  form?: Form;
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FormResponse {
+  form?: Form;
+  forms?: Array<Form>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FormStep {
+  fields?: Array<UUID>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormType {
+  registration = "registration"
+}
+
+/**
+ * Models the FusionAuth connector.
+ *
+ * @author Trevor Smith
+ */
+export interface FusionAuthConnectorConfiguration extends BaseConnectorConfiguration {
+}
+
+/**
+ * Models a generic connector.
+ *
+ * @author Trevor Smith
+ */
+export interface GenericConnectorConfiguration extends BaseConnectorConfiguration {
+  authenticationURL?: string;
+  connectTimeout?: number;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
+  readTimeout?: number;
+  sslCertificateKeyId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface GoogleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
   buttonText?: string;
   client_id?: string;
@@ -4218,6 +4663,8 @@ export enum GrantType {
 export interface Group {
   data?: Record<string, any>;
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   name?: string;
   roles?: Record<UUID, Array<ApplicationRole>>;
   tenantId?: UUID;
@@ -4592,6 +5039,7 @@ export interface Key {
   insertInstant?: number;
   issuer?: string;
   kid?: string;
+  lastUpdateInstant?: number;
   length?: number;
   name?: string;
   privateKey?: string;
@@ -4647,6 +5095,7 @@ export interface Lambda extends Enableable {
   debug?: boolean;
   id?: UUID;
   insertInstant?: number;
+  lastUpdateInstant?: number;
   name?: string;
   type?: LambdaType;
 }
@@ -4655,6 +5104,10 @@ export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 export interface LambdaConfiguration {
@@ -4695,7 +5148,33 @@ export enum LambdaType {
   FacebookReconcile = "FacebookReconcile",
   GoogleReconcile = "GoogleReconcile",
   HYPRReconcile = "HYPRReconcile",
-  TwitterReconcile = "TwitterReconcile"
+  TwitterReconcile = "TwitterReconcile",
+  LDAPConnectorReconcile = "LDAPConnectorReconcile"
+}
+
+/**
+ * Models an LDAP connector.
+ *
+ * @author Trevor Smith
+ */
+export interface LDAPConnectorConfiguration extends BaseConnectorConfiguration {
+  authenticationURL?: string;
+  baseStructure?: string;
+  connectTimeout?: number;
+  identifyingAttribute?: string;
+  lambdaConfiguration?: LambdaConfiguration;
+  loginIdAttribute?: string;
+  readTimeout?: number;
+  requestedAttributes?: Array<string>;
+  securityMethod?: LDAPSecurityMethod;
+  systemAccountDN?: string;
+  systemAccountPassword?: string;
+}
+
+export enum LDAPSecurityMethod {
+  None = "None",
+  LDAPS = "LDAPS",
+  StartTLS = "StartTLS"
 }
 
 /**
@@ -5260,11 +5739,13 @@ export interface RegistrationConfiguration extends Enableable {
   birthDate?: Requirable;
   confirmPassword?: boolean;
   firstName?: Requirable;
+  formId?: UUID;
   fullName?: Requirable;
   lastName?: Requirable;
   loginIdType?: LoginIdType;
   middleName?: Requirable;
   mobilePhone?: Requirable;
+  type?: RegistrationType;
 }
 
 /**
@@ -5301,6 +5782,11 @@ export interface RegistrationResponse {
   registration?: UserRegistration;
   token?: string;
   user?: User;
+}
+
+export enum RegistrationType {
+  basic = "basic",
+  advanced = "advanced"
 }
 
 /**
@@ -5430,14 +5916,21 @@ export enum SecureGeneratorType {
 export interface SecureIdentity {
   breachedPasswordLastCheckedInstant?: number;
   breachedPasswordStatus?: BreachedPasswordStatus;
+  connectorId?: UUID;
   encryptionScheme?: string;
   factor?: number;
   id?: UUID;
+  lastLoginInstant?: number;
   password?: string;
   passwordChangeReason?: ChangePasswordReason;
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
   salt?: string;
+  twoFactorDelivery?: TwoFactorDelivery;
+  twoFactorEnabled?: boolean;
+  twoFactorSecret?: string;
+  username?: string;
+  usernameStatus?: ContentStatus;
   verified?: boolean;
 }
 
@@ -5485,6 +5978,8 @@ export interface SystemConfiguration {
   corsConfiguration?: CORSConfiguration;
   data?: Record<string, any>;
   eventLogConfiguration?: EventLogConfiguration;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
   uiConfiguration?: UIConfiguration;
@@ -5546,6 +6041,7 @@ export interface Templates {
  */
 export interface Tenant {
   configured?: boolean;
+  connectorPolicies?: Array<ConnectorPolicy>;
   data?: Record<string, any>;
   emailConfiguration?: EmailConfiguration;
   eventConfiguration?: EventConfiguration;
@@ -5554,8 +6050,10 @@ export interface Tenant {
   familyConfiguration?: FamilyConfiguration;
   httpSessionMaxInactiveInterval?: number;
   id?: UUID;
+  insertInstant?: number;
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
+  lastUpdateInstant?: number;
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
   minimumPasswordAge?: MinimumPasswordAge;
@@ -5786,8 +6284,8 @@ export interface User extends SecureIdentity {
   fullName?: string;
   imageUrl?: string;
   insertInstant?: number;
-  lastLoginInstant?: number;
   lastName?: string;
+  lastUpdateInstant?: number;
   memberships?: Array<GroupMember>;
   middleName?: string;
   mobilePhone?: string;
@@ -5796,11 +6294,6 @@ export interface User extends SecureIdentity {
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
   timezone?: string;
-  twoFactorDelivery?: TwoFactorDelivery;
-  twoFactorEnabled?: boolean;
-  twoFactorSecret?: string;
-  username?: string;
-  usernameStatus?: ContentStatus;
 }
 
 /**
@@ -5814,6 +6307,8 @@ export interface UserAction {
   endEmailTemplateId?: UUID;
   id?: UUID;
   includeEmailInEventJSON?: boolean;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   localizedNames?: LocalizedStrings;
   modifyEmailTemplateId?: UUID;
   name?: string;
@@ -5863,12 +6358,12 @@ export interface UserActionLog {
   actionerUserId?: UUID;
   applicationIds?: Array<UUID>;
   comment?: string;
-  createInstant?: number;
   emailUserOnEnd?: boolean;
   endEventSent?: boolean;
   expiry?: number;
   history?: LogHistory;
   id?: UUID;
+  insertInstant?: number;
   localizedName?: string;
   localizedOption?: string;
   localizedReason?: string;
@@ -5910,6 +6405,8 @@ export enum UserActionPhase {
 export interface UserActionReason {
   code?: string;
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   localizedTexts?: LocalizedStrings;
   text?: string;
 }
@@ -5969,8 +6466,8 @@ export interface UserBulkCreateEvent extends BaseEvent {
 export interface UserComment {
   comment?: string;
   commenterId?: UUID;
-  createInstant?: number;
   id?: UUID;
+  insertInstant?: number;
   userId?: UUID;
 }
 
@@ -6115,6 +6612,7 @@ export interface UserLoginFailedEvent extends BaseEvent {
 export interface UserLoginSuccessEvent extends BaseEvent {
   applicationId?: UUID;
   authenticationType?: string;
+  connectorId?: UUID;
   identityProviderId?: UUID;
   identityProviderName?: string;
   user?: User;
@@ -6155,6 +6653,7 @@ export interface UserRegistration {
   id?: UUID;
   insertInstant?: number;
   lastLoginInstant?: number;
+  lastUpdateInstant?: number;
   preferredLanguages?: Array<string>;
   roles?: Array<string>;
   timezone?: string;
@@ -6297,6 +6796,8 @@ export interface Webhook {
   httpAuthenticationPassword?: string;
   httpAuthenticationUsername?: string;
   id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   readTimeout?: number;
   sslCertificate?: string;
   url?: string;

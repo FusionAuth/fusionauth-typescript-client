@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2020, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    */
   withFormData(body: URLSearchParams): DefaultRESTClient<RT, ERT> {
     const body2 = new URLSearchParams();
-    if (body) { 
+    if (body) {
       body.forEach((value, name, searchParams) => {
         if (value && value.length > 0 && value != "null" && value != "undefined") {
           body2.set(name,value);
