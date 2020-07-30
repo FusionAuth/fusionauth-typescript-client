@@ -904,8 +904,8 @@ export class FusionAuthClient {
    * If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
    *
    * @param {string} code The authorization code returned on the /oauth2/authorize response.
-   * @param {string} client_id (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
-   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate.
+   * @param {string} client_secret (Optional) The client secret. This value will be required if client authentication is enabled.
    * @param {string} redirect_uri The URI to redirect to upon a successful request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
