@@ -17,9 +17,10 @@
 import IRESTClient from "./IRESTClient";
 import DefaultRESTClient from "./DefaultRESTClient";
 import IRESTClientBuilder from "./IRESTClientBuilder";
+import { Agent } from "http";
 
 export default class DefaultRESTClientBuilder implements IRESTClientBuilder {
-  build<RT, ERT>(host: string): IRESTClient<RT, ERT> {
-    return new DefaultRESTClient<RT, ERT>(host);
+  build<RT, ERT>(host: string, httpAgent?: Agent): IRESTClient<RT, ERT> {
+    return new DefaultRESTClient<RT, ERT>(host, httpAgent);
   }
 }

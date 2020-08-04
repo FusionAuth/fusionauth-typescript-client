@@ -14,28 +14,34 @@
  * language governing permissions and limitations under the License.
  */
 
-import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
+import IRESTClient, {
+  ErrorResponseHandler,
+  ResponseHandler,
+} from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
-import {URLSearchParams} from "url";
+import fetch, { BodyInit, RequestCredentials, Response } from "node-fetch";
+import { URLSearchParams } from "url";
+import { Agent } from "http";
 
 /**
  * @author Brett P
  * @author Tyler Scott
  * @author TJ Peden
  */
-export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> {
+export default class DefaultRESTClient<RT, ERT>
+  implements IRESTClient<RT, ERT> {
   public body: BodyInit;
   public headers: Record<string, string> = {};
   public method: string;
   public parameters: Record<string, string> = {};
   public uri: string;
   public credentials: RequestCredentials;
-  public responseHandler: ResponseHandler<RT> = DefaultRESTClient.JSONResponseHandler;
-  public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.ErrorJSONResponseHandler;
+  public responseHandler: ResponseHandler<RT> =
+    DefaultRESTClient.JSONResponseHandler;
+  public errorResponseHandler: ErrorResponseHandler<ERT> =
+    DefaultRESTClient.ErrorJSONResponseHandler;
 
-  constructor(public host: string) {
-  }
+  constructor(public host: string, public httpAgent?: Agent) {}
 
   /**
    * Sets the authorization header using a key
@@ -44,11 +50,11 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    * @returns {DefaultRESTClient}
    */
   withAuthorization(key: string): DefaultRESTClient<RT, ERT> {
-    if (key === null || typeof key === 'undefined') {
+    if (key === null || typeof key === "undefined") {
       return this;
     }
 
-    this.withHeader('Authorization', key);
+    this.withHeader("Authorization", key);
     return this;
   }
 
@@ -60,10 +66,10 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
       return this;
     }
     if (this.uri === null) {
-      this.uri = '';
+      this.uri = "";
     }
-    if (this.uri.charAt(this.uri.length - 1) !== '/') {
-      this.uri += '/';
+    if (this.uri.charAt(this.uri.length - 1) !== "/") {
+      this.uri += "/";
     }
     this.uri = this.uri + segment;
     return this;
@@ -92,7 +98,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
       body = body2;
     }
     this.body = body;
-    this.withHeader('Content-Type', 'application/x-www-form-urlencoded');
+    this.withHeader("Content-Type", "application/x-www-form-urlencoded");
     return this;
   }
 
@@ -114,7 +120,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    */
   withJSONBody(body: object): DefaultRESTClient<RT, ERT> {
     this.body = JSON.stringify(body);
-    this.withHeader('Content-Type', 'application/json');
+    this.withHeader("Content-Type", "application/json");
     // Omit the Content-Length, this is set auto-magically by the request library
     return this;
   }
@@ -156,12 +162,16 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
     return this;
   }
 
-  withResponseHandler(handler: ResponseHandler<RT>): DefaultRESTClient<RT, ERT> {
+  withResponseHandler(
+    handler: ResponseHandler<RT>
+  ): DefaultRESTClient<RT, ERT> {
     this.responseHandler = handler;
     return this;
   }
 
-  withErrorResponseHandler(handler: ErrorResponseHandler<ERT>): DefaultRESTClient<RT, ERT> {
+  withErrorResponseHandler(
+    handler: ErrorResponseHandler<ERT>
+  ): DefaultRESTClient<RT, ERT> {
     this.errorResponseHandler = handler;
     return this;
   }
@@ -175,16 +185,14 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
 
     let response: Response;
     try {
-      response = await fetch(
-          this.getFullUrl(),
-          {
-            method: this.method,
-            headers: this.headers,
-            body: this.body as BodyInit,
-            // @ts-ignore (Credentials are not supported on NodeJS)
-            credentials: this.credentials,
-          },
-      );
+      response = await fetch(this.getFullUrl(), {
+        method: this.method,
+        headers: this.headers,
+        body: this.body as BodyInit,
+        agent: this.httpAgent,
+        // @ts-ignore (Credentials are not supported on NodeJS)
+        credentials: this.credentials,
+      });
 
       if (response.ok) {
         return await this.responseHandler(response);
@@ -196,7 +204,8 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
         throw error; // Don't catch a ClientResponse (we want this to trigger the catch of the promise
       }
 
-      if (response) { // Try to recover the response status
+      if (response) {
+        // Try to recover the response status
         clientResponse.statusCode = response.status;
       }
       clientResponse.exception = error;
@@ -206,10 +215,10 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   }
 
   private getQueryString() {
-    var queryString = '';
+    var queryString = "";
     for (let key in this.parameters) {
-      queryString += (queryString.length === 0) ? '?' : '&';
-      queryString += key + '=' + encodeURIComponent(this.parameters[key]);
+      queryString += queryString.length === 0 ? "?" : "&";
+      queryString += key + "=" + encodeURIComponent(this.parameters[key]);
     }
     return queryString;
   }
@@ -220,7 +229,9 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    * @param response
    * @constructor
    */
-  static async JSONResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
+  static async JSONResponseHandler<RT>(
+    response: Response
+  ): Promise<ClientResponse<RT>> {
     let clientResponse = new ClientResponse<RT>();
 
     clientResponse.statusCode = response.status;
@@ -238,7 +249,9 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    * @param response
    * @constructor
    */
-  static async ErrorJSONResponseHandler<ERT>(response: Response): Promise<ClientResponse<ERT>> {
+  static async ErrorJSONResponseHandler<ERT>(
+    response: Response
+  ): Promise<ClientResponse<ERT>> {
     let clientResponse = new ClientResponse<ERT>();
 
     clientResponse.statusCode = response.status;

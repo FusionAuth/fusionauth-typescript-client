@@ -20,6 +20,7 @@ import IRESTClientBuilder from "./IRESTClientBuilder";
 import ClientResponse from "./ClientResponse";
 import {RequestCredentials} from "node-fetch";
 import {URLSearchParams} from "url";
+import { Agent } from "http";
 
 export class FusionAuthClient {
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
@@ -29,6 +30,7 @@ export class FusionAuthClient {
     public apiKey: string,
     public host: string,
     public tenantId?: string,
+    public httpAgent?: Agent
   ) { }
 
   /**
@@ -3412,7 +3414,7 @@ export class FusionAuthClient {
   }
 
   private startAnonymous<RT, ERT>(): IRESTClient<RT, ERT> {
-    let client = this.clientBuilder.build<RT, ERT>(this.host);
+    let client = this.clientBuilder.build<RT, ERT>(this.host, this.httpAgent);
 
     if (this.tenantId != null) {
       client.withHeader('X-FusionAuth-TenantId', this.tenantId);

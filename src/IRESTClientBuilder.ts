@@ -14,7 +14,8 @@
  * language governing permissions and limitations under the License.
  */
 import IRESTClient from "./IRESTClient";
+import { Agent } from "http";
 
 export default interface IRESTClientBuilder {
-  build<RT, ERT>(host: string): IRESTClient<RT, ERT>;
+  build<RT, ERT>(host: string, httpAgent?: Agent): IRESTClient<RT, ERT>;
 }
