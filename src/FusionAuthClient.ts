@@ -5841,6 +5841,7 @@ export interface SAMLv2Configuration extends Enableable {
  * @author Brian Pontarelli
  */
 export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2ApplicationConfiguration> {
+  allowResponseReplay?: boolean;
   buttonImageURL?: string;
   buttonText?: string;
   domains?: Array<string>;
