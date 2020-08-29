@@ -1121,9 +1121,35 @@ export class FusionAuthClient {
   }
 
   /**
-   * Bulk imports multiple users. This does some validation, but then tries to run batch inserts of users. This reduces
-   * latency when inserting lots of users. Therefore, the error response might contain some information about failures,
-   * but it will likely be pretty generic.
+   * Bulk imports refresh tokens. This request performs minimal validation and runs batch inserts of refresh tokens with the
+   * expectation that each token represents a user that already exists and is registered for the corresponding FusionAuth
+   * Application. This is done to increases the insert performance.
+   * 
+   * Therefore, if you encounter an error due to a database key violation, the response will likely offer a generic
+   * explanation. If you encounter an error, you may optionally enable additional validation to receive a JSON response
+   * body with specific validation errors. This will slow the request down but will allow you to identify the cause of
+   * the failure. See the validateDbConstraints request parameter.
+   *
+   * @param {RefreshTokenImportRequest} request The request that contains all of the information about all of the refresh tokens to import.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  importRefreshTokens(request: RefreshTokenImportRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/refresh-token/import')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Bulk imports users. This request performs minimal validation and runs batch inserts of users with the expectation
+   * that each user does not yet exist and each registration corresponds to an existing FusionAuth Application. This is done to
+   * increases the insert performance.
+   * 
+   * Therefore, if you encounter an error due to a database key violation, the response will likely offer
+   * a generic explanation. If you encounter an error, you may optionally enable additional validation to receive a JSON response
+   * body with specific validation errors. This will slow the request down but will allow you to identify the cause of the failure. See
+   * the validateDbConstraints request parameter.
    *
    * @param {ImportRequest} request The request that contains all of the information about all of the users to import.
    * @returns {Promise<ClientResponse<void>>}
@@ -1146,7 +1172,7 @@ export class FusionAuthClient {
    * @param {UUID} applicationId The Application Id for which you are requesting a new access token be issued.
    * @param {string} encodedJWT The encoded JWT (access token).
    * @param {string} refreshToken (Optional) An existing refresh token used to request a refresh token in addition to a JWT in the response.
-   *    <p>The target application represented by the applicationid request parameter must have refresh 
+   *    <p>The target application represented by the applicationId request parameter must have refresh
    *    tokens enabled in order to receive a refresh token in the response.</p>
    * @returns {Promise<ClientResponse<IssueResponse>>}
    */
@@ -3528,6 +3554,7 @@ export interface Application {
   authenticationTokenConfiguration?: AuthenticationTokenConfiguration;
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
   data?: Record<string, any>;
+  emailConfiguration?: ApplicationEmailConfiguration;
   id?: UUID;
   insertInstant?: number;
   jwtConfiguration?: JWTConfiguration;
@@ -3544,6 +3571,13 @@ export interface Application {
   tenantId?: UUID;
   verificationEmailTemplateId?: UUID;
   verifyRegistration?: boolean;
+}
+
+export interface ApplicationEmailConfiguration {
+  emailVerificationEmailTemplateId?: UUID;
+  forgotPasswordEmailTemplateId?: UUID;
+  passwordlessEmailTemplateId?: UUID;
+  setPasswordEmailTemplateId?: UUID;
 }
 
 /**
@@ -4446,6 +4480,7 @@ export enum FamilyRole {
  * @author Brian Pontarelli
  */
 export interface ForgotPasswordRequest {
+  applicationId?: UUID;
   changePasswordId?: string;
   email?: string;
   loginId?: string;
@@ -5700,6 +5735,8 @@ export interface RefreshResponse {
  */
 export interface RefreshToken {
   applicationId?: UUID;
+  data?: Record<string, any>;
+  id?: UUID;
   insertInstant?: number;
   metaData?: MetaData;
   startInstant?: number;
@@ -5713,6 +5750,16 @@ export interface RefreshToken {
 export enum RefreshTokenExpirationPolicy {
   Fixed = "Fixed",
   SlidingWindow = "SlidingWindow"
+}
+
+/**
+ * Refresh Token Import request.
+ *
+ * @author Brett Guy
+ */
+export interface RefreshTokenImportRequest {
+  refreshTokens?: Array<RefreshToken>;
+  validateDbConstraints?: boolean;
 }
 
 /**
@@ -5969,7 +6016,6 @@ export interface SortField {
  */
 export interface SystemConfiguration {
   auditLogConfiguration?: AuditLogConfiguration;
-  cookieEncryptionIV?: string;
   cookieEncryptionKey?: string;
   corsConfiguration?: CORSConfiguration;
   data?: Record<string, any>;
