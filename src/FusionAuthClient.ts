@@ -24,12 +24,32 @@ import {URLSearchParams} from "url";
 export class FusionAuthClient {
   public clientBuilder: IRESTClientBuilder = new DefaultRESTClientBuilder();
   public credentials: RequestCredentials;
+  public host: string;
+  public apiKey?: string | null;
+  public tenantId?: string;
 
+  constructor(config: FusionAuthClientConfig);
   constructor(
-    public apiKey: string,
-    public host: string,
-    public tenantId?: string,
-  ) { }
+    apiKey: string,
+    host: string,
+    tenantId?: string,
+  );
+  
+  constructor(
+    apiKeyOrConfig: string | FusionAuthClientConfig,
+    host?: string,
+    tenantId?: string,
+  ) {
+    if (typeof apiKeyOrConfig === 'string') {
+      this.apiKey = apiKeyOrConfig;
+      this.host = host;
+      this.tenantId = tenantId;
+    } else {
+      this.apiKey = apiKeyOrConfig.apiKey;
+      this.host = apiKeyOrConfig.host;
+      this.tenantId = apiKeyOrConfig.tenantId;
+    }
+   }
 
   /**
    * Sets the tenant id, that will be included in the X-FusionAuth-TenantId header.
@@ -37,7 +57,7 @@ export class FusionAuthClient {
    * @param {string | null} tenantId The value of the X-FusionAuth-TenantId header.
    * @returns {FusionAuthClient}
    */
-  setTenantId(tenantId: string | null): FusionAuthClient {
+  setTenantId(tenantId?: string | null): FusionAuthClient {
     this.tenantId = tenantId;
     return this;
   }
@@ -899,6 +919,10 @@ export class FusionAuthClient {
         .go();
   }
 
+  exchangeOAuthCodeForAccessToken(config: ExchangeOAuthCodeForAccessTokenConfig): Promise<ClientResponse<AccessToken>>;
+
+  exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string): Promise<ClientResponse<AccessToken>>;
+
   /**
    * Exchanges an OAuth authorization code for an access token.
    * If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
@@ -909,14 +933,23 @@ export class FusionAuthClient {
    * @param {string} redirect_uri The URI to redirect to upon a successful request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string): Promise<ClientResponse<AccessToken>> {
+  exchangeOAuthCodeForAccessToken(codeOrConfig?: string | ExchangeOAuthCodeForAccessTokenConfig, client_id?: string, client_secret?: string, redirect_uri?: string): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
-    body.append('code', code);
-    body.append('client_id', client_id);
-    body.append('client_secret', client_secret);
-    body.append('grant_type', 'authorization_code');
-    body.append('redirect_uri', redirect_uri);
+    if (typeof codeOrConfig === 'string') {
+      body.append('code', codeOrConfig);
+      body.append('client_id', client_id);
+      body.append('client_secret', client_secret);
+      body.append('grant_type', 'authorization_code');
+      body.append('redirect_uri', redirect_uri);
+    } else {
+      body.append('code', codeOrConfig.code);
+      body.append('client_id', codeOrConfig.client_id);
+      body.append('client_secret', codeOrConfig.client_secret);
+      body.append('grant_type', 'authorization_code');
+      body.append('redirect_uri', codeOrConfig.redirect_uri);
+    }
+
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -3459,6 +3492,11 @@ export default FusionAuthClient;
  */
 export type UUID = string;
 
+export interface FusionAuthClientConfig {
+  host: string;
+  apiKey?: string;
+  tenantId?: string;
+}
 
 /**
  * @author Daniel DeGroff
@@ -4305,6 +4343,13 @@ export enum EventType {
   UserEmailVerified = "user.email.verified",
   UserPasswordBreach = "user.password.breach",
   Test = "test"
+}
+
+export interface ExchangeOAuthCodeForAccessTokenConfig {
+  code: string;
+  client_id?: string;
+  client_secret?: string;
+  redirect_uri: string;
 }
 
 /**
