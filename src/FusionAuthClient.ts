@@ -1687,6 +1687,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Re-sends the verification email to the user. If the Application has configured a specific email template this will be used
+   * instead of the tenant configuration.
+   *
+   * @param {UUID} applicationId The unique Application Id to used to resolve an application specific email template.
+   * @param {string} email The email address of the user that needs a new verification email.
+   * @returns {Promise<ClientResponse<VerifyEmailResponse>>}
+   */
+  resendEmailVerificationWithApplicationTemplate(applicationId: UUID, email: string): Promise<ClientResponse<VerifyEmailResponse>> {
+    return this.start<VerifyEmailResponse, Errors>()
+        .withUri('/api/user/verify-email')
+        .withParameter('applicationId', applicationId)
+        .withParameter('email', email)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Re-sends the application registration verification email to the user.
    *
    * @param {string} email The email address of the user that needs a new verification email.
@@ -4336,6 +4353,7 @@ export interface ExternalIdentifierConfiguration {
   passwordlessLoginTimeToLiveInSeconds?: number;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
+  samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
@@ -4832,6 +4850,7 @@ export interface IdentityProviderResponse {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
+  data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
   state?: Record<string, any>;
