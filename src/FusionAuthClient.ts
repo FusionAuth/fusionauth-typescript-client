@@ -6035,7 +6035,6 @@ export interface SortField {
  */
 export interface SystemConfiguration {
   auditLogConfiguration?: AuditLogConfiguration;
-  cookieEncryptionKey?: string;
   corsConfiguration?: CORSConfiguration;
   data?: Record<string, any>;
   eventLogConfiguration?: EventLogConfiguration;
