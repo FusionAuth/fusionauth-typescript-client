@@ -1163,6 +1163,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Inspect an access token issued by FusionAuth.
+   *
+   * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application for which this token was generated.
+   * @param {string} token The access token returned by this OAuth provider as the result of a successful authentication.
+   * @returns {Promise<ClientResponse<IntrospectResponse>>}
+   */
+  introspectAccessToken(client_id: string, token: string): Promise<ClientResponse<IntrospectResponse>> {
+    let body = new URLSearchParams();
+
+    body.append('client_id', client_id);
+    body.append('token', token);
+    return this.startAnonymous<IntrospectResponse, OAuthError>()
+        .withUri('/oauth2/introspect')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Issue a new access token (JWT) for the requested Application after ensuring the provided JWT is valid. A valid
    * access token is properly signed and not expired.
    * <p>
@@ -1274,25 +1293,6 @@ export class FusionAuthClient {
         .withUriSegment(actionId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .go();
-  }
-
-  /**
-   * Inspect an access token issued by FusionAuth.
-   *
-   * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application for which this token was generated.
-   * @param {string} token The access token returned by this OAuth provider as the result of a successful authentication.
-   * @returns {Promise<ClientResponse<IntrospectResponse>>}
-   */
-  oauth2Introspect(client_id: string, token: string): Promise<ClientResponse<IntrospectResponse>> {
-    let body = new URLSearchParams();
-
-    body.append('client_id', client_id);
-    body.append('token', token);
-    return this.startAnonymous<IntrospectResponse, OAuthError>()
-        .withUri('/oauth2/introspect')
-        .withFormData(body)
-        .withMethod("POST")
         .go();
   }
 
