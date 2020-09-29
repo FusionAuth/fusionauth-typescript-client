@@ -2704,6 +2704,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
+   *
+   * @param {string} encodedJWT The encoded JWT (access token).
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  retrieveUserInfoFromAccessToken(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
+    return this.startAnonymous<UserResponse, OAuthError>()
+        .withUri('/oauth2/userinfo')
+        .withAuthorization('Bearer ' + encodedJWT)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
    * login counts for that application.
    *
@@ -3390,21 +3404,6 @@ export class FusionAuthClient {
         .withUriSegment(webhookId)
         .withJSONBody(request)
         .withMethod("PUT")
-        .go();
-  }
-
-  /**
-   * Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
-   *
-   * @param {string} encodedJWT The encoded JWT (access token).
-   * @returns {Promise<ClientResponse<UserResponse>>}
-   */
-  userInfo(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
-    return this.startAnonymous<UserResponse, OAuthError>()
-        .withHeader('Content-Type', 'text/plain')
-        .withUri('/oauth2/userinfo')
-        .withAuthorization('Bearer ' + encodedJWT)
-        .withMethod("POST")
         .go();
   }
 
