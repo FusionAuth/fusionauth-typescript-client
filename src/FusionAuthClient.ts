@@ -1081,9 +1081,9 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<SecretResponse>>}
    */
   generateTwoFactorSecretUsingJWT(encodedJWT: string): Promise<ClientResponse<SecretResponse>> {
-    return this.start<SecretResponse, void>()
+    return this.startAnonymous<SecretResponse, void>()
         .withUri('/api/two-factor/secret')
-        .withAuthorization('JWT ' + encodedJWT)
+        .withAuthorization('Bearer ' + encodedJWT)
         .withMethod("GET")
         .go();
   }
@@ -1196,9 +1196,9 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<IssueResponse>>}
    */
   issueJWT(applicationId: UUID, encodedJWT: string, refreshToken: string): Promise<ClientResponse<IssueResponse>> {
-    return this.start<IssueResponse, Errors>()
+    return this.startAnonymous<IssueResponse, Errors>()
         .withUri('/api/jwt/issue')
-        .withAuthorization('JWT ' + encodedJWT)
+        .withAuthorization('Bearer ' + encodedJWT)
         .withParameter('applicationId', applicationId)
         .withParameter('refreshToken', refreshToken)
         .withMethod("GET")
@@ -2772,7 +2772,7 @@ export class FusionAuthClient {
   retrieveUserUsingJWT(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
     return this.startAnonymous<UserResponse, Errors>()
         .withUri('/api/user')
-        .withAuthorization('JWT ' + encodedJWT)
+        .withAuthorization('Bearer ' + encodedJWT)
         .withMethod("GET")
         .go();
   }
@@ -3394,6 +3394,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
+   *
+   * @param {string} encodedJWT The encoded JWT (access token).
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  userInfo(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
+    return this.startAnonymous<UserResponse, OAuthError>()
+        .withHeader('Content-Type', 'text/plain')
+        .withUri('/oauth2/userinfo')
+        .withAuthorization('Bearer ' + encodedJWT)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Validates the end-user provided user_code from the user-interaction of the Device Authorization Grant.
    * If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
    *
@@ -3422,7 +3437,7 @@ export class FusionAuthClient {
   validateJWT(encodedJWT: string): Promise<ClientResponse<ValidateResponse>> {
     return this.startAnonymous<ValidateResponse, void>()
         .withUri('/api/jwt/validate')
-        .withAuthorization('JWT ' + encodedJWT)
+        .withAuthorization('Bearer ' + encodedJWT)
         .withMethod("GET")
         .go();
   }
