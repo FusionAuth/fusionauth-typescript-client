@@ -3862,6 +3862,11 @@ export enum BreachMatchMode {
   High = "High"
 }
 
+/**
+ * XML canonicalization method enumeration. This is used for the IdP and SP side of FusionAuth SAML.
+ *
+ * @author Brian Pontarelli
+ */
 export enum CanonicalizationMethod {
   exclusive = "exclusive",
   exclusive_with_comments = "exclusive_with_comments",
@@ -5623,6 +5628,7 @@ export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<Open
   buttonText?: string;
   domains?: Array<string>;
   oauth2?: IdentityProviderOauth2Configuration;
+  postRequest?: boolean;
 }
 
 /**
@@ -5926,11 +5932,14 @@ export interface SAMLv2ApplicationConfiguration extends BaseIdentityProviderAppl
 
 export interface SAMLv2Configuration extends Enableable {
   audience?: string;
+  authorizedRedirectURLs?: Array<string>;
   callbackURL?: string;
   debug?: boolean;
+  defaultVerificationKeyId?: UUID;
   issuer?: string;
   keyId?: UUID;
   logoutURL?: string;
+  requireSignedRequests?: boolean;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
@@ -5947,7 +5956,11 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   idpEndpoint?: string;
   issuer?: string;
   keyId?: UUID;
+  postRequest?: boolean;
+  requestSigningKeyId?: UUID;
+  signRequest?: boolean;
   useNameIdForEmail?: boolean;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
 /**
@@ -6061,6 +6074,14 @@ export interface SortField {
   missing?: string;
   name?: string;
   order?: Sort;
+}
+
+/**
+ * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SupportsPostBindings {
 }
 
 /**
