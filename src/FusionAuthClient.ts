@@ -5174,6 +5174,17 @@ export enum KeyType {
 }
 
 /**
+ * The use type of a key.
+ *
+ * @author Daniel DeGroff
+ */
+export enum KeyUse {
+  SignOnly = "SignOnly",
+  SignAndVerify = "SignAndVerify",
+  VerifyOnly = "VerifyOnly"
+}
+
+/**
  * A JavaScript lambda function that is executed during certain events inside FusionAuth.
  *
  * @author Brian Pontarelli
