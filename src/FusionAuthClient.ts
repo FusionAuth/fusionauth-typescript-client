@@ -3605,6 +3605,7 @@ export interface Application {
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
   data?: Record<string, any>;
   emailConfiguration?: ApplicationEmailConfiguration;
+  formConfiguration?: ApplicationFormConfiguration;
   id?: UUID;
   insertInstant?: number;
   jwtConfiguration?: JWTConfiguration;
@@ -3636,6 +3637,13 @@ export interface ApplicationEmailConfiguration {
  * @author Brian Pontarelli
  */
 export interface ApplicationEvent {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationFormConfiguration {
+  adminRegistrationFormId?: UUID;
 }
 
 /**
@@ -4677,7 +4685,9 @@ export interface FormStep {
  * @author Daniel DeGroff
  */
 export enum FormType {
-  registration = "registration"
+  registration = "registration",
+  adminRegistration = "adminRegistration",
+  adminUser = "adminUser"
 }
 
 /**
@@ -6173,6 +6183,7 @@ export interface Tenant {
   externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
   failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
   familyConfiguration?: FamilyConfiguration;
+  formConfiguration?: TenantFormConfiguration;
   httpSessionMaxInactiveInterval?: number;
   id?: UUID;
   insertInstant?: number;
@@ -6193,6 +6204,13 @@ export interface Tenant {
  * @author Brian Pontarelli
  */
 export interface Tenantable {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantFormConfiguration {
+  adminUserFormId?: UUID;
 }
 
 /**
