@@ -36,14 +36,23 @@ file = loadPlugin(id: "org.savantbuild.plugin:file:${savantVersion}")
 idea = loadPlugin(id: "org.savantbuild.plugin:idea:1.0.1")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
-target(name: "clean", description: "Cleans build directory") {
+target(name: "init", description: "Initializes the project") {
+  def proc = 'npm install'.execute()
+  proc.consumeProcessOutput(System.out, System.err)
+  proc.waitFor()
+  if (proc.exitValue() != 0) {
+    fail("Failed to run npm install")
+  }
+}
+
+target(name: "clean", description: "Cleans build directory", dependsOn: ["init"]) {
   file.prune(dir: "build")
   file.delete {
     fileSet(dir: ".", includePatterns: [~/.+\.zip/])
   }
 }
 
-target(name: "build", description: "Builds the js files") {
+target(name: "compile", description: "Builds the js files", dependsOn: ["init"]) {
   def proc = 'npm ci'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
@@ -66,7 +75,7 @@ target(name: "build", description: "Builds the js files") {
   }
 }
 
-target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["build"]) {
+target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
   file.delete {
     fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
   }
@@ -84,7 +93,7 @@ target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
   idea.iml()
 }
 
-target(name: "test", description: "Runs the tests", dependsOn: ["build"]) {
+target(name: "test", description: "Runs the tests", dependsOn: ["compile"]) {
   if (new ProcessBuilder('npm', 'test').inheritIO().start().waitFor() != 0) {
     fail("Tests failed")
   }
