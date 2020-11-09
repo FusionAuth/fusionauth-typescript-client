@@ -901,7 +901,7 @@ export class FusionAuthClient {
 
   /**
    * Exchanges an OAuth authorization code for an access token.
-   * If you will be using the Authorization Code grant, you will make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
+   * Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
    *
    * @param {string} code The authorization code returned on the /oauth2/authorize response.
    * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate.
@@ -917,6 +917,33 @@ export class FusionAuthClient {
     body.append('client_secret', client_secret);
     body.append('grant_type', 'authorization_code');
     body.append('redirect_uri', redirect_uri);
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Exchanges an OAuth authorization code and code_verifier for an access token.
+   * Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a code_verifier for an access token.
+   *
+   * @param {string} code The authorization code returned on the /oauth2/authorize response.
+   * @param {string} client_id (Optional) The unique client identifier. The client Id is the Id of the FusionAuth Application in which you you are attempting to authenticate. This parameter is optional when the Authorization header is provided.
+   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} redirect_uri The URI to redirect to upon a successful request.
+   * @param {string} code_verifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeOAuthCodeForAccessTokenUsingPKCE(code: string, client_id: string, client_secret: string, redirect_uri: string, code_verifier: string): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    body.append('code', code);
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('grant_type', 'authorization_code');
+    body.append('redirect_uri', redirect_uri);
+    body.append('code_verifier', code_verifier);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -3568,6 +3595,9 @@ export enum Algorithm {
   HS256 = "HS256",
   HS384 = "HS384",
   HS512 = "HS512",
+  PS256 = "PS256",
+  PS384 = "PS384",
+  PS512 = "PS512",
   RS256 = "RS256",
   RS384 = "RS384",
   RS512 = "RS512",
@@ -5962,6 +5992,7 @@ export interface SAMLv2Configuration extends Enableable {
   logoutURL?: string;
   requireSignedRequests?: boolean;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
+  xmlSignatureLocation?: XMLSignatureLocation;
 }
 
 /**
@@ -6963,5 +6994,10 @@ export interface WebhookRequest {
 export interface WebhookResponse {
   webhook?: Webhook;
   webhooks?: Array<Webhook>;
+}
+
+export enum XMLSignatureLocation {
+  Assertion = "Assertion",
+  Response = "Response"
 }
 
