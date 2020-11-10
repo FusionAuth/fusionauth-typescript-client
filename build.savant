@@ -37,7 +37,7 @@ idea = loadPlugin(id: "org.savantbuild.plugin:idea:1.0.1")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
 target(name: "init", description: "Initializes the project") {
-  def proc = 'npm install'.execute()
+  def proc = 'npm ci'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
   if (proc.exitValue() != 0) {
