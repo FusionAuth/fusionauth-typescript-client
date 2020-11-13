@@ -5493,6 +5493,34 @@ export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
+/**
+ * Stores an message template used to distribute messages;
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplate {
+  defaultTemplate?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  localizedTemplates?: LocalizedStrings;
+  name?: string;
+}
+
+/**
+ * A Message Template Request to the API
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateRequest {
+  messageTemplate?: MessageTemplate;
+}
+
+export interface MessageTemplateResponse {
+  messageTemplate?: MessageTemplate;
+  messageTemplates?: Array<MessageTemplate>;
+}
+
 export interface MetaData {
   device?: DeviceInfo;
   scopes?: Array<string>;
