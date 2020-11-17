@@ -360,6 +360,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+   * @param {MessageTemplateRequest} request The request object that contains all of the information used to create the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  createMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
    *
    * @param {UUID} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -721,6 +737,20 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the message template for the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
         .withMethod("DELETE")
         .go();
   }
@@ -1477,6 +1507,22 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains just the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  patchMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
         .withJSONBody(request)
         .withMethod("PATCH")
         .go();
@@ -2311,6 +2357,32 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the message template for the given Id. If you don't specify the id, this will return all of the message templates.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id of the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the message templates.
+   *
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplates(): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
         .withMethod("GET")
         .go();
   }
@@ -3287,6 +3359,22 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains all of the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  updateMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -5237,13 +5325,13 @@ export interface Lambda extends Enableable {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 export interface LambdaConfiguration {
