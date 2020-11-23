@@ -2376,6 +2376,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a preview of the message template provided in the request, normalized to a given locale.
+   *
+   * @param {PreviewMessageTemplateRequest} request The request that contains the email template and optionally a locale to render it in.
+   * @returns {Promise<ClientResponse<PreviewMessageTemplateResponse>>}
+   */
+  retrieveMessageTemplatePreview(request: PreviewMessageTemplateRequest): Promise<ClientResponse<PreviewMessageTemplateResponse>> {
+    return this.start<PreviewMessageTemplateResponse, Errors>()
+        .withUri('/api/message/template/preview')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Retrieves all of the message templates.
    *
    * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
@@ -5582,6 +5596,15 @@ export interface MemberResponse {
 }
 
 /**
+ * An incredible simplified view of a message
+ *
+ * @author Michael Sleevi
+ */
+export interface Message {
+  text?: string;
+}
+
+/**
  * Stores an message template used to distribute messages;
  *
  * @author Michael Sleevi
@@ -5884,6 +5907,19 @@ export interface PasswordValidationRulesResponse {
  */
 export interface PendingResponse {
   users?: Array<User>;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateRequest {
+  locale?: string;
+  messageTemplate?: MessageTemplate;
+}
+
+export interface PreviewMessageTemplateResponse {
+  errors?: Errors;
+  message?: Message;
 }
 
 /**
