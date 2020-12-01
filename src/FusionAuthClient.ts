@@ -3662,6 +3662,7 @@ export interface Application {
   registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
+  state?: ObjectState;
   tenantId?: UUID;
   verificationEmailTemplateId?: UUID;
   verifyRegistration?: boolean;
