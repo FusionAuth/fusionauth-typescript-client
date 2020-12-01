@@ -756,6 +756,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the tenant for the given Id asynchronously.
+   * This method is helpful if you do not want to wait for the delete operation to complete.
+   *
+   * @param {UUID} tenantId The Id of the tenant to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteTenantAsync(tenantId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/tenant')
+        .withUriSegment(tenantId)
+        .withParameter('async', true)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the theme for the given Id.
    *
    * @param {UUID} themeId The Id of the theme to delete.
@@ -5633,6 +5649,15 @@ export interface OAuthResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export enum ObjectState {
+  Active = "Active",
+  Inactive = "Inactive",
+  PendingDelete = "PendingDelete"
+}
+
+/**
  * OpenID Connect Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
  * Provider Metadata</a>.
  *
@@ -6224,6 +6249,7 @@ export interface Tenant {
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
+  state?: ObjectState;
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
 }
