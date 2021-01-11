@@ -4963,7 +4963,8 @@ export enum IdentityProviderType {
   Twitter = "Twitter",
   SAMLv2 = "SAMLv2",
   HYPR = "HYPR",
-  Apple = "Apple"
+  Apple = "Apple",
+  LinkedIn = "LinkedIn"
 }
 
 /**
@@ -5302,7 +5303,8 @@ export enum LambdaType {
   GoogleReconcile = "GoogleReconcile",
   HYPRReconcile = "HYPRReconcile",
   TwitterReconcile = "TwitterReconcile",
-  LDAPConnectorReconcile = "LDAPConnectorReconcile"
+  LDAPConnectorReconcile = "LDAPConnectorReconcile",
+  LinkedInReconcile = "LinkedInReconcile"
 }
 
 /**
@@ -5328,6 +5330,26 @@ export enum LDAPSecurityMethod {
   None = "None",
   LDAPS = "LDAPS",
   StartTLS = "StartTLS"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LinkedInApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LinkedInIdentityProvider extends BaseIdentityProvider<LinkedInApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
 }
 
 /**
