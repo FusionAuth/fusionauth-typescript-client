@@ -5606,6 +5606,7 @@ export enum OAuthErrorReason {
   access_token_unavailable_for_processing = "access_token_unavailable_for_processing",
   access_token_failed_processing = "access_token_failed_processing",
   refresh_token_not_found = "refresh_token_not_found",
+  refresh_token_type_not_supported = "refresh_token_type_not_supported",
   invalid_client_id = "invalid_client_id",
   invalid_user_credentials = "invalid_user_credentials",
   invalid_grant_type = "invalid_grant_type",
@@ -5662,7 +5663,8 @@ export enum OAuthErrorType {
   change_password_required = "change_password_required",
   two_factor_required = "two_factor_required",
   authorization_pending = "authorization_pending",
-  expired_token = "expired_token"
+  expired_token = "expired_token",
+  unsupported_token_type = "unsupported_token_type"
 }
 
 /**
@@ -6087,6 +6089,7 @@ export interface SearchResponse {
 export interface SearchResults<T> {
   results?: Array<T>;
   total?: number;
+  totalEqualToActual?: boolean;
 }
 
 /**
@@ -6955,6 +6958,7 @@ export interface UserResponse {
  * @author Brian Pontarelli
  */
 export interface UserSearchCriteria extends BaseSearchCriteria {
+  accurateTotal?: boolean;
   ids?: Array<UUID>;
   query?: string;
   queryString?: string;
