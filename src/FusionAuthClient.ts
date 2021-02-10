@@ -2861,8 +2861,30 @@ export class FusionAuthClient {
   }
 
   /**
-   * Revokes a single refresh token, all tokens for a user or all tokens for an application. If you provide a user id
-   * and an application id, this will delete all the refresh tokens for that user for that application.
+   * Revokes refresh tokens.
+   * 
+   * Usage examples:
+   *   - Delete a single refresh token, pass in only the token.
+   *       revokeRefreshToken(token)
+   * 
+   *   - Delete all refresh tokens for a user, pass in only the userId.
+   *       revokeRefreshToken(null, userId)
+   * 
+   *   - Delete all refresh tokens for a user for a specific application, pass in both the userId and the applicationId.
+   *       revokeRefreshToken(null, userId, applicationId)
+   * 
+   *   - Delete all refresh tokens for an application
+   *       revokeRefreshToken(null, null, applicationId)
+   * 
+   * Note: <code>null</code> may be handled differently depending upon the programming language.
+   * 
+   * See also: (method names may vary by language... but you'll figure it out)
+   * 
+   *  - revokeRefreshTokenById
+   *  - revokeRefreshTokenByToken
+   *  - revokeRefreshTokensByUserId
+   *  - revokeRefreshTokensByApplicationId
+   *  - revokeRefreshTokensByUserIdForApplication
    *
    * @param {string} token (Optional) The refresh token to delete.
    * @param {UUID} userId (Optional) The user id whose tokens to delete.
@@ -2873,6 +2895,78 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/jwt/refresh')
         .withParameter('token', token)
+        .withParameter('userId', userId)
+        .withParameter('applicationId', applicationId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Revokes a single refresh token by the unique Id. The unique Id is not sensitive as it cannot be used to obtain another JWT.
+   *
+   * @param {UUID} tokenId The unique Id of the token to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokenById(tokenId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withUriSegment(tokenId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Revokes a single refresh token by using the actual refresh token value. This refresh token value is sensitive, so  be careful with this API request.
+   *
+   * @param {string} token The refresh token to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokenByToken(token: string): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withParameter('token', token)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Revoke all refresh tokens that belong to an application by applicationId.
+   *
+   * @param {UUID} applicationId The unique Id of the application that you want to delete all refresh tokens for.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokensByApplicationId(applicationId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withParameter('applicationId', applicationId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Revoke all refresh tokens that belong to a user by user Id.
+   *
+   * @param {UUID} userId The unique Id of the user that you want to delete all refresh tokens for.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokensByUserId(userId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withParameter('userId', userId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Revoke all refresh tokens that belong to a user by user Id for a specific application by applicationId.
+   *
+   * @param {UUID} userId The unique Id of the user that you want to delete all refresh tokens for.
+   * @param {UUID} applicationId The unique Id of the application that you want to delete refresh tokens for.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokensByUserIdForApplication(userId: UUID, applicationId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
         .withParameter('userId', userId)
         .withParameter('applicationId', applicationId)
         .withMethod("DELETE")
