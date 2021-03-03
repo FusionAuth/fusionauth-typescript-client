@@ -2117,13 +2117,29 @@ export class FusionAuthClient {
   /**
    * Retrieves the identity provider for the given id or all of the identity providers if the id is null.
    *
-   * @param {UUID} identityProviderId (Optional) The identity provider id.
+   * @param {UUID} identityProviderId The identity provider Id.
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
   retrieveIdentityProvider(identityProviderId: UUID): Promise<ClientResponse<IdentityProviderResponse>> {
-    return this.start<IdentityProviderResponse, void>()
+    return this.start<IdentityProviderResponse, Errors>()
         .withUri('/api/identity-provider')
         .withUriSegment(identityProviderId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves one or more identity provider for the given type. For types such as Google, Facebook, Twitter and LinkedIn, only a single 
+   * identity provider can exist. For types such as OpenID Connect and SAMLv2 more than one identity provider can be configured so this request 
+   * may return multiple identity providers.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
+   */
+  retrieveIdentityProviderByType(type: IdentityProviderType): Promise<ClientResponse<IdentityProviderResponse>> {
+    return this.start<IdentityProviderResponse, Errors>()
+        .withUri('/api/identity-provider')
+        .withParameter('type', type)
         .withMethod("GET")
         .go();
   }
@@ -5690,6 +5706,7 @@ export interface OAuth2Configuration {
   authorizedRedirectURLs?: Array<string>;
   clientId?: string;
   clientSecret?: string;
+  debug?: boolean;
   deviceVerificationURL?: string;
   enabledGrants?: Array<GrantType>;
   generateRefreshTokens?: boolean;
