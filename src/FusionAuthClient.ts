@@ -4888,6 +4888,7 @@ export interface GoogleApplicationConfiguration extends BaseIdentityProviderAppl
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  login_method?: LoginMethod;
   scope?: string;
 }
 
@@ -4900,6 +4901,7 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  login_method?: LoginMethod;
   scope?: string;
 }
 
@@ -5522,6 +5524,14 @@ export interface LoginConfiguration {
 export enum LoginIdType {
   email = "email",
   username = "username"
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum LoginMethod {
+  UsePopup = "UsePopup",
+  UseRedirect = "UseRedirect"
 }
 
 /**
