@@ -4216,6 +4216,7 @@ export interface CORSConfiguration extends Enableable {
   allowedHeaders?: Array<string>;
   allowedMethods?: Array<HTTPMethod>;
   allowedOrigins?: Array<string>;
+  debug?: boolean;
   exposedHeaders?: Array<string>;
   preflightMaxAgeInSeconds?: number;
 }
@@ -6174,6 +6175,11 @@ export interface Requirable extends Enableable {
 export interface RequiresCORSConfiguration {
 }
 
+export enum SAMLLogoutBehavior {
+  AllParticipants = "AllParticipants",
+  OnlyOriginator = "OnlyOriginator"
+}
+
 /**
  * @author Brian Pontarelli
  */
@@ -6190,6 +6196,7 @@ export interface SAMLv2Configuration extends Enableable {
   defaultVerificationKeyId?: UUID;
   issuer?: string;
   keyId?: UUID;
+  logout?: SAMLv2Logout;
   logoutURL?: string;
   requireSignedRequests?: boolean;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
@@ -6213,6 +6220,21 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   requestSigningKeyId?: UUID;
   signRequest?: boolean;
   useNameIdForEmail?: boolean;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+export interface SAMLv2Logout {
+  behavior?: SAMLLogoutBehavior;
+  defaultVerificationKeyId?: UUID;
+  keyId?: UUID;
+  requireSignedRequests?: boolean;
+  singleLogout?: SAMLv2SingleLogout;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+export interface SAMLv2SingleLogout extends Enableable {
+  keyId?: UUID;
+  url?: string;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
@@ -6402,6 +6424,7 @@ export interface Templates {
   registrationComplete?: string;
   registrationSend?: string;
   registrationVerify?: string;
+  samlv2Logout?: string;
 }
 
 /**
