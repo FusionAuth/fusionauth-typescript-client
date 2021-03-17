@@ -4603,6 +4603,7 @@ export interface FacebookApplicationConfiguration extends BaseIdentityProviderAp
   buttonText?: string;
   client_secret?: string;
   fields?: string;
+  loginMethod?: LoginMethod;
   permissions?: string;
 }
 
@@ -4616,6 +4617,7 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
   buttonText?: string;
   client_secret?: string;
   fields?: string;
+  loginMethod?: LoginMethod;
   permissions?: string;
 }
 
