@@ -1834,7 +1834,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   refreshEntitySearchIndex(): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+    return this.start<void, void>()
         .withUri('/api/entity/search')
         .withMethod("PUT")
         .go();
@@ -1849,7 +1849,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   refreshUserSearchIndex(): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+    return this.start<void, void>()
         .withUri('/api/user/search')
         .withMethod("PUT")
         .go();
@@ -3259,7 +3259,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<EntitySearchResponse>>}
    */
   searchEntities(request: EntitySearchRequest): Promise<ClientResponse<EntitySearchResponse>> {
-    return this.start<EntitySearchResponse, void>()
+    return this.start<EntitySearchResponse, Errors>()
         .withUri('/api/entity/search')
         .withJSONBody(request)
         .withMethod("POST")
@@ -4828,7 +4828,6 @@ export interface EntityResponse {
  * @author Brian Pontarelli
  */
 export interface EntitySearchCriteria extends BaseElasticSearchCriteria {
-  tenantId?: UUID;
 }
 
 /**
