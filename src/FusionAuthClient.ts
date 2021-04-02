@@ -70,6 +70,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
+   *
+   * @param {string} licenseId The license id
+   * @param {ReactorRequest} request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  activateReactor(licenseId: string, request: ReactorRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/reactor')
+        .withUriSegment(licenseId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Adds a user to an existing family. The family id must be specified.
    *
    * @param {UUID} familyId The id of the family.
@@ -243,6 +259,58 @@ export class FusionAuthClient {
     return this.start<EmailTemplateResponse, Errors>()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates an Entity. You can optionally specify an Id for the Entity. If not provided one will be generated.
+   *
+   * @param {UUID} entityId (Optional) The Id for the Entity. If not provided a secure random UUID will be generated.
+   * @param {EntityRequest} request The request object that contains all of the information used to create the Entity.
+   * @returns {Promise<ClientResponse<EntityResponse>>}
+   */
+  createEntity(entityId: UUID, request: EntityRequest): Promise<ClientResponse<EntityResponse>> {
+    return this.start<EntityResponse, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a Entity Type. You can optionally specify an Id for the Entity Type, if not provided one will be generated.
+   *
+   * @param {UUID} entityTypeId (Optional) The Id for the Entity Type. If not provided a secure random UUID will be generated.
+   * @param {EntityTypeRequest} request The request object that contains all of the information used to create the Entity Type.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  createEntityType(entityTypeId: UUID, request: EntityTypeRequest): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a new permission for an entity type. You must specify the id of the entity type you are creating the permission for.
+   * You can optionally specify an Id for the permission inside the EntityTypePermission object itself, if not provided one will be generated.
+   *
+   * @param {UUID} entityTypeId The Id of the entity type to create the permission on.
+   * @param {UUID} permissionId (Optional) The Id of the permission. If not provided a secure random UUID will be generated.
+   * @param {EntityTypeRequest} request The request object that contains all of the information used to create the permission.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  createEntityTypePermission(entityTypeId: UUID, permissionId: UUID, request: EntityTypeRequest): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withUriSegment("permission")
+        .withUriSegment(permissionId)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -488,6 +556,18 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deactivates the FusionAuth Reactor.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deactivateReactor(): Promise<ClientResponse<void>> {
+    return this.start<void, void>()
+        .withUri('/api/reactor')
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deactivates the user with the given Id.
    *
    * @param {UUID} userId The Id of the user to deactivate.
@@ -623,6 +703,52 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the Entity for the given Id.
+   *
+   * @param {UUID} entityId The Id of the Entity to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteEntity(entityId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the Entity Type for the given Id.
+   *
+   * @param {UUID} entityTypeId The Id of the Entity Type to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteEntityType(entityTypeId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Hard deletes a permission. This is a dangerous operation and should not be used in most circumstances. This
+   * permanently removes the given permission from all grants that had it.
+   *
+   * @param {UUID} entityTypeId The Id of the entityType the the permission belongs to.
+   * @param {UUID} permissionId The Id of the permission to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteEntityTypePermission(entityTypeId: UUID, permissionId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withUriSegment("permission")
+        .withUriSegment(permissionId)
         .withMethod("DELETE")
         .go();
   }
@@ -1437,6 +1563,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates, via PATCH, the Entity Type with the given Id.
+   *
+   * @param {UUID} entityTypeId The Id of the Entity Type to update.
+   * @param {EntityTypeRequest} request The request that contains just the new Entity Type information.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  patchEntityType(entityTypeId: UUID, request: EntityTypeRequest): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
    * Updates, via PATCH, the group with the given Id.
    *
    * @param {UUID} groupId The Id of the group to update.
@@ -1684,6 +1826,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Request a refresh of the Entity search index. This API is not generally necessary and the search index will become consistent in a
+   * reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be 
+   * if you are using the Search API or Delete Tenant API immediately following a Entity Create etc, you may wish to request a refresh to
+   *  ensure the index immediately current before making a query request to the search index.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  refreshEntitySearchIndex(): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity/search')
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Request a refresh of the User search index. This API is not generally necessary and the search index will become consistent in a
    * reasonable amount of time. There may be scenarios where you may wish to manually request an index refresh. One example may be 
    * if you are using the Search API or Delete Tenant API immediately following a User Create etc, you may wish to request a refresh to
@@ -1694,6 +1851,18 @@ export class FusionAuthClient {
   refreshUserSearchIndex(): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/search')
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Regenerates any keys that are used by the FusionAuth Reactor.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  regenerateReactorKeys(): Promise<ClientResponse<void>> {
+    return this.start<void, void>()
+        .withUri('/api/reactor')
         .withMethod("PUT")
         .go();
   }
@@ -1990,6 +2159,46 @@ export class FusionAuthClient {
   retrieveEmailTemplates(): Promise<ClientResponse<EmailTemplateResponse>> {
     return this.start<EmailTemplateResponse, void>()
         .withUri('/api/email/template')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the Entity for the given Id.
+   *
+   * @param {UUID} entityId The Id of the Entity.
+   * @returns {Promise<ClientResponse<EntityResponse>>}
+   */
+  retrieveEntity(entityId: UUID): Promise<ClientResponse<EntityResponse>> {
+    return this.start<EntityResponse, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the Entity Type for the given Id.
+   *
+   * @param {UUID} entityTypeId The Id of the Entity Type.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  retrieveEntityType(entityTypeId: UUID): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the Entity Types.
+   *
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  retrieveEntityTypes(): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
         .withMethod("GET")
         .go();
   }
@@ -2434,6 +2643,18 @@ export class FusionAuthClient {
     return this.start<PendingResponse, Errors>()
         .withUri('/api/user/family/pending')
         .withParameter('parentEmail', parentEmail)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the FusionAuth Reactor status.
+   *
+   * @returns {Promise<ClientResponse<ReactorStatus>>}
+   */
+  retrieveReactorStatus(): Promise<ClientResponse<ReactorStatus>> {
+    return this.start<ReactorStatus, void>()
+        .withUri('/api/reactor')
         .withMethod("GET")
         .go();
   }
@@ -3032,6 +3253,48 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches entities with the specified criteria and pagination.
+   *
+   * @param {EntitySearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<EntitySearchResponse>>}
+   */
+  searchEntities(request: EntitySearchRequest): Promise<ClientResponse<EntitySearchResponse>> {
+    return this.start<EntitySearchResponse, void>()
+        .withUri('/api/entity/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Retrieves the entities for the given ids. If any id is invalid, it is ignored.
+   *
+   * @param {Array<string>} ids The entity ids to search for.
+   * @returns {Promise<ClientResponse<EntitySearchResponse>>}
+   */
+  searchEntitiesByIds(ids: Array<string>): Promise<ClientResponse<EntitySearchResponse>> {
+    return this.start<EntitySearchResponse, Errors>()
+        .withUri('/api/entity/search')
+        .withParameter('ids', ids)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Searches the entity types with the specified criteria and pagination.
+   *
+   * @param {EntityTypeSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<EntityTypeSearchResponse>>}
+   */
+  searchEntityTypes(request: EntityTypeSearchRequest): Promise<ClientResponse<EntityTypeSearchResponse>> {
+    return this.start<EntityTypeSearchResponse, void>()
+        .withUri('/api/entity/type/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the event logs with the specified criteria and pagination.
    *
    * @param {EventLogSearchRequest} request The search criteria and pagination information.
@@ -3317,6 +3580,57 @@ export class FusionAuthClient {
     return this.start<EmailTemplateResponse, Errors>()
         .withUri('/api/email/template')
         .withUriSegment(emailTemplateId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the Entity with the given Id.
+   *
+   * @param {UUID} entityId The Id of the Entity to update.
+   * @param {EntityRequest} request The request that contains all of the new Entity information.
+   * @returns {Promise<ClientResponse<EntityResponse>>}
+   */
+  updateEntity(entityId: UUID, request: EntityRequest): Promise<ClientResponse<EntityResponse>> {
+    return this.start<EntityResponse, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the Entity Type with the given Id.
+   *
+   * @param {UUID} entityTypeId The Id of the Entity Type to update.
+   * @param {EntityTypeRequest} request The request that contains all of the new Entity Type information.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  updateEntityType(entityTypeId: UUID, request: EntityTypeRequest): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the permission with the given id for the entity type.
+   *
+   * @param {UUID} entityTypeId The Id of the entityType that the permission belongs to.
+   * @param {UUID} permissionId The Id of the permission to update.
+   * @param {EntityTypeRequest} request The request that contains all of the new permission information.
+   * @returns {Promise<ClientResponse<EntityTypeResponse>>}
+   */
+  updateEntityTypePermission(entityTypeId: UUID, permissionId: UUID, request: EntityTypeRequest): Promise<ClientResponse<EntityTypeResponse>> {
+    return this.start<EntityTypeResponse, Errors>()
+        .withUri('/api/entity/type')
+        .withUriSegment(entityTypeId)
+        .withUriSegment("permission")
+        .withUriSegment(permissionId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -3956,6 +4270,17 @@ export interface BaseConnectorConfiguration {
 }
 
 /**
+ * @author Brian Pontarelli
+ */
+export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
+  accurateTotal?: boolean;
+  ids?: Array<UUID>;
+  query?: string;
+  queryString?: string;
+  sortFields?: Array<SortField>;
+}
+
+/**
  * Base-class for all FusionAuth events.
  *
  * @author Brian Pontarelli
@@ -4030,6 +4355,18 @@ export enum BreachedPasswordStatus {
   SubAddressMatch = "SubAddressMatch",
   PasswordOnly = "PasswordOnly",
   CommonPassword = "CommonPassword"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface BreachedPasswordTenantMetric {
+  actionRequired?: number;
+  matchedCommonPasswordCount?: number;
+  matchedExactCount?: number;
+  matchedPasswordCount?: number;
+  matchedSubAddressCount?: number;
+  passwordsCheckedCount?: number;
 }
 
 export enum BreachMatchMode {
@@ -4405,6 +4742,183 @@ export interface EmailTemplateResponse {
  */
 export interface Enableable {
   enabled?: boolean;
+}
+
+/**
+ * Models an entity that a user can be granted permissions to. Or an entity that can be granted permissions to another entity.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Entity {
+  clientId?: string;
+  clientSecret?: string;
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  parentId?: UUID;
+  tenantId?: UUID;
+  type?: EntityType;
+}
+
+/**
+ * A grant for an entity to a user or another entity.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrant {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  permissions?: Array<string>;
+  recipientEntityId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * Entity grant API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantRequest {
+  grant?: EntityGrant;
+}
+
+/**
+ * Entity grant API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantResponse {
+  grant?: EntityGrant;
+  grants?: Array<EntityGrant>;
+}
+
+/**
+ * Entity API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityRequest {
+  entity?: Entity;
+}
+
+/**
+ * Entity API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityResponse {
+  entity?: Entity;
+}
+
+/**
+ * This class is the entity query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntitySearchCriteria extends BaseElasticSearchCriteria {
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+export interface EntitySearchRequest {
+  search?: EntitySearchCriteria;
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+export interface EntitySearchResponse {
+  entities?: Array<Entity>;
+  total?: number;
+}
+
+/**
+ * Models an entity type that has a specific set of permissions. These are global objects and can be used across tenants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityType {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  jwtConfiguration?: JWTConfiguration;
+  lastUpdateInstant?: number;
+  name?: string;
+  permissions?: Array<EntityTypePermission>;
+}
+
+/**
+ * Models a specific entity type permission. This permission can be granted to users or other entities.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypePermission {
+  data?: Record<string, any>;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  isDefault?: boolean;
+  lastUpdateInstant?: number;
+  name?: string;
+}
+
+/**
+ * Entity Type API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeRequest {
+  entityType?: EntityType;
+  permission?: EntityTypePermission;
+}
+
+/**
+ * Entity Type API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeResponse {
+  entityType?: EntityType;
+  entityTypes?: Array<EntityType>;
+  permission?: EntityTypePermission;
+}
+
+/**
+ * Search criteria for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchRequest {
+  search?: EntityTypeSearchCriteria;
+}
+
+/**
+ * Search request for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchResponse {
+  entityTypes?: Array<EntityType>;
+  total?: number;
 }
 
 /**
@@ -5089,7 +5603,8 @@ export enum IdentityProviderType {
   SAMLv2 = "SAMLv2",
   HYPR = "HYPR",
   Apple = "Apple",
-  LinkedIn = "LinkedIn"
+  LinkedIn = "LinkedIn",
+  SAMLv2IdPInitiated = "SAMLv2IdPInitiated"
 }
 
 /**
@@ -5245,6 +5760,14 @@ export interface JWTConfiguration extends Enableable {
   refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
   refreshTokenTimeToLiveInMinutes?: number;
   refreshTokenUsagePolicy?: RefreshTokenUsagePolicy;
+  timeToLiveInSeconds?: number;
+}
+
+/**
+ * JWT Configuration for entities.
+ */
+export interface JWTConfiguration extends Enableable {
+  accessTokenKeyId?: UUID;
   timeToLiveInSeconds?: number;
 }
 
@@ -5761,8 +6284,11 @@ export enum OAuthErrorReason {
   invalid_device_code = "invalid_device_code",
   invalid_user_code = "invalid_user_code",
   invalid_additional_client_id = "invalid_additional_client_id",
+  invalid_target_entity_scope = "invalid_target_entity_scope",
+  invalid_entity_permission_scope = "invalid_entity_permission_scope",
   grant_type_disabled = "grant_type_disabled",
   missing_client_id = "missing_client_id",
+  missing_client_secret = "missing_client_secret",
   missing_code = "missing_code",
   missing_device_code = "missing_device_code",
   missing_grant_type = "missing_grant_type",
@@ -5773,6 +6299,7 @@ export enum OAuthErrorReason {
   missing_user_code = "missing_user_code",
   missing_verification_uri = "missing_verification_uri",
   login_prevented = "login_prevented",
+  not_licensed = "not_licensed",
   user_code_expired = "user_code_expired",
   user_expired = "user_expired",
   user_locked = "user_locked",
@@ -5799,6 +6326,7 @@ export enum OAuthErrorType {
   unsupported_grant_type = "unsupported_grant_type",
   unsupported_response_type = "unsupported_response_type",
   change_password_required = "change_password_required",
+  not_licensed = "not_licensed",
   two_factor_required = "two_factor_required",
   authorization_pending = "authorization_pending",
   expired_token = "expired_token",
@@ -5994,6 +6522,35 @@ export interface RawLogin {
   instant?: number;
   ipAddress?: string;
   userId?: UUID;
+}
+
+export enum ReactorFeatureStatus {
+  ACTIVE = "ACTIVE",
+  DISCONNECTED = "DISCONNECTED",
+  PENDING = "PENDING",
+  UNKNOWN = "UNKNOWN"
+}
+
+/**
+ * Request for managing FusionAuth Reactor and licenses.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ReactorRequest {
+  license?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReactorStatus {
+  advancedRegistrationForms?: ReactorFeatureStatus;
+  breachedPasswordDetection?: ReactorFeatureStatus;
+  breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
+  connectors?: ReactorFeatureStatus;
+  entityManagement?: ReactorFeatureStatus;
+  licensed?: boolean;
+  multiFactorAuthentication?: ReactorFeatureStatus;
 }
 
 /**
@@ -6211,6 +6768,24 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   signRequest?: boolean;
   useNameIdForEmail?: boolean;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+}
+
+/**
+ * SAML v2 IdP Initiated identity provider configuration.
+ *
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedIdentityProvider extends BaseIdentityProvider<SAMLv2IdPInitiatedApplicationConfiguration> {
+  emailClaim?: string;
+  issuer?: string;
+  keyId?: UUID;
+  useNameIdForEmail?: boolean;
 }
 
 export interface SAMLv2Logout {
@@ -7124,12 +7699,7 @@ export interface UserResponse {
  *
  * @author Brian Pontarelli
  */
-export interface UserSearchCriteria extends BaseSearchCriteria {
-  accurateTotal?: boolean;
-  ids?: Array<UUID>;
-  query?: string;
-  queryString?: string;
-  sortFields?: Array<SortField>;
+export interface UserSearchCriteria extends BaseElasticSearchCriteria {
 }
 
 /**
