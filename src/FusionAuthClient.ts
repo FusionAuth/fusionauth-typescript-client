@@ -4797,6 +4797,14 @@ export interface EntityGrantResponse {
 }
 
 /**
+ * JWT Configuration for entities.
+ */
+export interface EntityJWTConfiguration extends Enableable {
+  accessTokenKeyId?: UUID;
+  timeToLiveInSeconds?: number;
+}
+
+/**
  * Entity API request object.
  *
  * @author Brian Pontarelli
@@ -4851,7 +4859,7 @@ export interface EntityType {
   data?: Record<string, any>;
   id?: UUID;
   insertInstant?: number;
-  jwtConfiguration?: JWTConfiguration;
+  jwtConfiguration?: EntityJWTConfiguration;
   lastUpdateInstant?: number;
   name?: string;
   permissions?: Array<EntityTypePermission>;
@@ -5760,14 +5768,6 @@ export interface JWTConfiguration extends Enableable {
   refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
   refreshTokenTimeToLiveInMinutes?: number;
   refreshTokenUsagePolicy?: RefreshTokenUsagePolicy;
-  timeToLiveInSeconds?: number;
-}
-
-/**
- * JWT Configuration for entities.
- */
-export interface JWTConfiguration extends Enableable {
-  accessTokenKeyId?: UUID;
   timeToLiveInSeconds?: number;
 }
 
