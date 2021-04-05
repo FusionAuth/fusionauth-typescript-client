@@ -6543,6 +6543,7 @@ export interface ReactorRequest {
  * @author Daniel DeGroff
  */
 export interface ReactorStatus {
+  advancedIdentityProviders?: ReactorFeatureStatus;
   advancedRegistrationForms?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
   breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
