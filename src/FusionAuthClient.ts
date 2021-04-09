@@ -6236,6 +6236,7 @@ export interface OAuth2Configuration {
   logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
   requireClientAuthentication?: boolean;
+  requireRegistration?: boolean;
 }
 
 /**
