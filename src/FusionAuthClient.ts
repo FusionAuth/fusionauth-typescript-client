@@ -4769,6 +4769,7 @@ export interface Entity {
  */
 export interface EntityGrant {
   data?: Record<string, any>;
+  entity?: Entity;
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
@@ -4794,6 +4795,36 @@ export interface EntityGrantRequest {
 export interface EntityGrantResponse {
   grant?: EntityGrant;
   grants?: Array<EntityGrant>;
+}
+
+/**
+ * Search criteria for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchCriteria extends BaseSearchCriteria {
+  entityId?: UUID;
+  name?: string;
+  userId?: UUID;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchRequest {
+  search?: EntityGrantSearchCriteria;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchResponse {
+  grants?: Array<EntityGrant>;
+  total?: number;
 }
 
 /**
@@ -6971,6 +7002,7 @@ export interface Templates {
   emailSend?: string;
   emailVerify?: string;
   helpers?: string;
+  oath2AuthorizedNotRegistered?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
