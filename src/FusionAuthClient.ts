@@ -4401,7 +4401,7 @@ export interface ApplicationEvent {
  */
 export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
-  selfServiceUserFormId?: UUID;
+  selfServiceFormId?: UUID;
 }
 
 /**
