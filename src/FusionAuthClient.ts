@@ -754,6 +754,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes an Entity Grant for the given User or Entity.
+   *
+   * @param {UUID} entityId The Id of the Entity that the Entity Grant is being deleted for.
+   * @param {UUID} recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+   * @param {UUID} userId (Optional) The Id of the User that the Entity Grant is for.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteEntityGrant(entityId: UUID, recipientEntityId: UUID, userId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withUriSegment("grant")
+        .withParameter('recipientEntityId', recipientEntityId)
+        .withParameter('userId', userId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the Entity Type for the given Id.
    *
    * @param {UUID} entityTypeId The Id of the Entity Type to delete.
@@ -2287,6 +2306,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves an Entity Grant for the given Entity and User/Entity.
+   *
+   * @param {UUID} entityId The Id of the Entity.
+   * @param {UUID} recipientEntityId (Optional) The Id of the Entity that the Entity Grant is for.
+   * @param {UUID} userId (Optional) The Id of the User that the Entity Grant is for.
+   * @returns {Promise<ClientResponse<EntityGrantResponse>>}
+   */
+  retrieveEntityGrant(entityId: UUID, recipientEntityId: UUID, userId: UUID): Promise<ClientResponse<EntityGrantResponse>> {
+    return this.start<EntityGrantResponse, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withUriSegment("grant")
+        .withParameter('recipientEntityId', recipientEntityId)
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the Entity Type for the given Id.
    *
    * @param {UUID} entityTypeId The Id of the Entity Type.
@@ -3470,6 +3508,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches Entity Grants with the specified criteria and pagination.
+   *
+   * @param {EntityGrantSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<EntityGrantSearchResponse>>}
+   */
+  searchEntityGrants(request: EntityGrantSearchRequest): Promise<ClientResponse<EntityGrantSearchResponse>> {
+    return this.start<EntityGrantSearchResponse, Errors>()
+        .withUri('/api/entity/grant/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the entity types with the specified criteria and pagination.
    *
    * @param {EntityTypeSearchRequest} request The search criteria and pagination information.
@@ -4159,6 +4211,23 @@ export class FusionAuthClient {
         .withUriSegment(webhookId)
         .withJSONBody(request)
         .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Creates or updates an Entity Grant. This is when a User/Entity is granted permissions to an Entity.
+   *
+   * @param {UUID} entityId The Id of the Entity that the User/Entity is being granted access to.
+   * @param {EntityGrantRequest} request The request object that contains all of the information used to create the Entity Grant.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  upsertEntityGrant(entityId: UUID, request: EntityGrantRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/entity')
+        .withUriSegment(entityId)
+        .withUriSegment("grant")
+        .withJSONBody(request)
+        .withMethod("POST")
         .go();
   }
 
