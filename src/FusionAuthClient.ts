@@ -428,6 +428,38 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an message template. You can optionally specify an Id for the template, if not provided one will be generated.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id for the template. If not provided a secure random UUID will be generated.
+   * @param {MessageTemplateRequest} request The request object that contains all of the information used to create the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  createMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a messenger.  You can optionally specify an Id for the messenger, if not provided one will be generated.
+   *
+   * @param {UUID} messengerId (Optional) The Id for the messenger. If not provided a secure random UUID will be generated.
+   * @param {MessengerRequest} request The request object that contains all of the information used to create the messenger.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  createMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
    *
    * @param {UUID} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -852,6 +884,34 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the message template for the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the messenger for the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteMessenger(messengerId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the user registration for the given user and application.
    *
    * @param {UUID} userId The Id of the user whose registration is being deleted.
@@ -1013,13 +1073,15 @@ export class FusionAuthClient {
    * Disable Two Factor authentication for a user.
    *
    * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {string} methodId The two-factor method identifier you wish to disable
    * @param {string} code The Two Factor code used verify the the caller knows the Two Factor secret.
    * @returns {Promise<ClientResponse<void>>}
    */
-  disableTwoFactor(userId: UUID, code: string): Promise<ClientResponse<void>> {
+  disableTwoFactor(userId: UUID, methodId: string, code: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/two-factor')
         .withParameter('userId', userId)
+        .withParameter('methodId', methodId)
         .withParameter('code', code)
         .withMethod("DELETE")
         .go();
@@ -1030,10 +1092,10 @@ export class FusionAuthClient {
    *
    * @param {UUID} userId The Id of the user to enable Two Factor authentication.
    * @param {TwoFactorRequest} request The two factor enable request information.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<TwoFactorResponse>>}
    */
-  enableTwoFactor(userId: UUID, request: TwoFactorRequest): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+  enableTwoFactor(userId: UUID, request: TwoFactorRequest): Promise<ClientResponse<TwoFactorResponse>> {
+    return this.start<TwoFactorResponse, Errors>()
         .withUri('/api/user/two-factor')
         .withUriSegment(userId)
         .withJSONBody(request)
@@ -1224,6 +1286,21 @@ export class FusionAuthClient {
         .withParameter('sendVerifyPasswordEmail', false)
         .withParameter('applicationId', applicationId)
         .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Generate two-factor recovery codes for a user. Generating two-factor recovery codes will invalidate any existing recovery codes. 
+   *
+   * @param {UUID} userId The Id of the user to generate new Two Factor recovery codes.
+   * @returns {Promise<ClientResponse<TwoFactorRecoveryCodeResponse>>}
+   */
+  generateTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<TwoFactorRecoveryCodeResponse>> {
+    return this.start<TwoFactorRecoveryCodeResponse, Errors>()
+        .withHeader('Content-Type', 'text/plain')
+        .withUri('/api/user/two-factor/recovery-code')
+        .withUriSegment(userId)
+        .withMethod("POST")
         .go();
   }
 
@@ -1635,6 +1712,38 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains just the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  patchMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to update.
+   * @param {MessengerRequest} request The request that contains just the new messenger information.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  patchMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
         .withJSONBody(request)
         .withMethod("PATCH")
         .go();
@@ -2557,6 +2666,72 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the message template for the given Id. If you don't specify the id, this will return all of the message templates.
+   *
+   * @param {UUID} messageTemplateId (Optional) The Id of the message template.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplate(messageTemplateId: UUID): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Creates a preview of the message template provided in the request, normalized to a given locale.
+   *
+   * @param {PreviewMessageTemplateRequest} request The request that contains the email template and optionally a locale to render it in.
+   * @returns {Promise<ClientResponse<PreviewMessageTemplateResponse>>}
+   */
+  retrieveMessageTemplatePreview(request: PreviewMessageTemplateRequest): Promise<ClientResponse<PreviewMessageTemplateResponse>> {
+    return this.start<PreviewMessageTemplateResponse, Errors>()
+        .withUri('/api/message/template/preview')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the message templates.
+   *
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  retrieveMessageTemplates(): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, void>()
+        .withUri('/api/message/template')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  retrieveMessenger(messengerId: UUID): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, void>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all of the messengers.
+   *
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  retrieveMessengers(): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, void>()
+        .withUri('/api/messenger')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
    * return the monthly active counts for that application.
    *
@@ -2811,6 +2986,20 @@ export class FusionAuthClient {
   retrieveTotalReport(): Promise<ClientResponse<TotalsReportResponse>> {
     return this.start<TotalsReportResponse, void>()
         .withUri('/api/report/totals')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieve two-factor recovery codes for a user.
+   *
+   * @param {UUID} userId The Id of the user to retrieve Two Factor recovery codes.
+   * @returns {Promise<ClientResponse<TwoFactorRecoveryCodeResponse>>}
+   */
+  retrieveTwoFactorRecoveryCodes(userId: UUID): Promise<ClientResponse<TwoFactorRecoveryCodeResponse>> {
+    return this.start<TwoFactorRecoveryCodeResponse, Errors>()
+        .withUri('/api/user/two-factor/recovery-code')
+        .withUriSegment(userId)
         .withMethod("GET")
         .go();
   }
@@ -3434,8 +3623,24 @@ export class FusionAuthClient {
    *
    * @param {TwoFactorSendRequest} request The request object that contains all of the information used to send the code.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to sendTwoFactorCodeForEnableDisable, use that method instead.
    */
   sendTwoFactorCode(request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/two-factor/send')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Send a Two Factor authentication code to assist in setting up Two Factor authentication or disabling.
+   *
+   * @param {TwoFactorSendRequest} request The request object that contains all of the information used to send the code.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendTwoFactorCodeForEnableDisable(request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/two-factor/send')
         .withJSONBody(request)
@@ -3448,12 +3653,30 @@ export class FusionAuthClient {
    *
    * @param {string} twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to sendTwoFactorCodeForLoginUsingMethod, use that method instead.
    */
   sendTwoFactorCodeForLogin(twoFactorId: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/two-factor/send')
         .withUriSegment(twoFactorId)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Send a Two Factor authentication code to allow the completion of Two Factor authentication.
+   *
+   * @param {string} twoFactorId The Id returned by the Login API necessary to complete Two Factor authentication.
+   * @param {TwoFactorSendRequest} request The Two Factor send request that contains all of the information used to send the Two Factor code to the user.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendTwoFactorCodeForLoginUsingMethod(twoFactorId: string, request: TwoFactorSendRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, Errors>()
+        .withUri('/api/two-factor/send')
+        .withUriSegment(twoFactorId)
+        .withJSONBody(request)
         .withMethod("POST")
         .go();
   }
@@ -3483,6 +3706,25 @@ export class FusionAuthClient {
   startPasswordlessLogin(request: PasswordlessStartRequest): Promise<ClientResponse<PasswordlessStartResponse>> {
     return this.start<PasswordlessStartResponse, Errors>()
         .withUri('/api/passwordless/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start a Two-Factor login request by generating a two-factor identifier. This code can then be sent to the Two Factor Send 
+   * API (/api/two-factor/send)in order to send a one-time use code to a user. You can also use one-time use code returned 
+   * to send the code out-of-band. The Two-Factor login is completed by making a request to the Two-Factor Login 
+   * API (/api/two-factor/login). with the two-factor identifier and the one-time use code.
+   * 
+   * This API is intended to allow you to begin a Two-Factor login outside of a normal login that originated from the Login API (/api/login).
+   *
+   * @param {TwoFactorStartRequest} request The Two-Factor start request that contains all of the information used to begin the Two-Factor login request.
+   * @returns {Promise<ClientResponse<TwoFactorStartResponse>>}
+   */
+  startTwoFactorLogin(request: TwoFactorStartRequest): Promise<ClientResponse<TwoFactorStartResponse>> {
+    return this.start<TwoFactorStartResponse, Errors>()
+        .withUri('/api/two-factor/start')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -3741,6 +3983,38 @@ export class FusionAuthClient {
     return this.start<LambdaResponse, Errors>()
         .withUri('/api/lambda')
         .withUriSegment(lambdaId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the message template with the given Id.
+   *
+   * @param {UUID} messageTemplateId The Id of the message template to update.
+   * @param {MessageTemplateRequest} request The request that contains all of the new message template information.
+   * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
+   */
+  updateMessageTemplate(messageTemplateId: UUID, request: MessageTemplateRequest): Promise<ClientResponse<MessageTemplateResponse>> {
+    return this.start<MessageTemplateResponse, Errors>()
+        .withUri('/api/message/template')
+        .withUriSegment(messageTemplateId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the messenger with the given Id.
+   *
+   * @param {UUID} messengerId The Id of the messenger to update.
+   * @param {MessengerRequest} request The request object that contains all of the new messenger information.
+   * @returns {Promise<ClientResponse<MessengerResponse>>}
+   */
+  updateMessenger(messengerId: UUID, request: MessengerRequest): Promise<ClientResponse<MessengerResponse>> {
+    return this.start<MessengerResponse, Errors>()
+        .withUri('/api/messenger')
+        .withUriSegment(messengerId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -4093,6 +4367,7 @@ export interface Application {
   lambdaConfiguration?: LambdaConfiguration;
   lastUpdateInstant?: number;
   loginConfiguration?: LoginConfiguration;
+  multiFactorConfiguration?: ApplicationMultiFactorConfiguration;
   name?: string;
   oauthConfiguration?: OAuth2Configuration;
   passwordlessConfiguration?: PasswordlessConfiguration;
@@ -4126,6 +4401,15 @@ export interface ApplicationEvent {
  */
 export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
+  selfServiceUserFormId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationMultiFactorConfiguration {
+  email?: MultiFactorEmailTemplate;
+  sms?: MultiFactorSMSTemplate;
 }
 
 /**
@@ -4258,6 +4542,15 @@ export interface AuditLogSearchResponse {
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface AuthenticatorConfiguration {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseConnectorConfiguration {
   data?: Record<string, any>;
@@ -4328,6 +4621,18 @@ export interface BaseLoginRequest {
   ipAddress?: string;
   metaData?: MetaData;
   noJWT?: boolean;
+}
+
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+export interface BaseMessengerConfiguration {
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  transport?: string;
+  type?: MessengerType;
 }
 
 /**
@@ -4769,6 +5074,7 @@ export interface Entity {
  */
 export interface EntityGrant {
   data?: Record<string, any>;
+  entity?: Entity;
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
@@ -4794,6 +5100,36 @@ export interface EntityGrantRequest {
 export interface EntityGrantResponse {
   grant?: EntityGrant;
   grants?: Array<EntityGrant>;
+}
+
+/**
+ * Search criteria for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchCriteria extends BaseSearchCriteria {
+  entityId?: UUID;
+  name?: string;
+  userId?: UUID;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchRequest {
+  search?: EntityGrantSearchCriteria;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchResponse {
+  grants?: Array<EntityGrant>;
+  total?: number;
 }
 
 /**
@@ -5093,6 +5429,8 @@ export interface ExternalIdentifierConfiguration {
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
+  twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
+  twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
 }
 
@@ -5377,7 +5715,8 @@ export interface FormStep {
 export enum FormType {
   registration = "registration",
   adminRegistration = "adminRegistration",
-  adminUser = "adminUser"
+  adminUser = "adminUser",
+  selfServiceUser = "selfServiceUser"
 }
 
 /**
@@ -5401,6 +5740,19 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
   httpAuthenticationUsername?: string;
   readTimeout?: number;
   sslCertificateKeyId?: UUID;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface GenericMessengerConfiguration extends BaseMessengerConfiguration {
+  connectTimeout?: number;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
+  readTimeout?: number;
+  sslCertificate?: string;
+  url?: string;
 }
 
 /**
@@ -5601,6 +5953,9 @@ export interface IdentityProviderStartLoginResponse {
   code?: string;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
 export enum IdentityProviderType {
   ExternalJWT = "ExternalJWT",
   OpenIDConnect = "OpenIDConnect",
@@ -5652,7 +6007,6 @@ export interface IntegrationResponse {
 export interface Integrations {
   cleanspeak?: CleanSpeakConfiguration;
   kafka?: KafkaConfiguration;
-  twilio?: TwilioConfiguration;
 }
 
 /**
@@ -5822,6 +6176,14 @@ export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface KafkaConfiguration extends Enableable {
+  defaultTopic?: string;
+  producer?: Record<string, string>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration {
   defaultTopic?: string;
   producer?: Record<string, string>;
 }
@@ -6133,6 +6495,7 @@ export interface LoginResponse {
   actions?: Array<LoginPreventedResponse>;
   changePasswordId?: string;
   changePasswordReason?: ChangePasswordReason;
+  methods?: Array<TwoFactorMethod>;
   refreshToken?: string;
   state?: Record<string, any>;
   token?: string;
@@ -6191,6 +6554,74 @@ export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
+/**
+ * @author Mikey Sleevi
+ */
+export interface Message {
+}
+
+/**
+ * Stores an message template used to distribute messages;
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplate {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: MessageType;
+}
+
+/**
+ * A Message Template Request to the API
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateRequest {
+  messageTemplate?: MessageTemplate;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateResponse {
+  messageTemplate?: MessageTemplate;
+  messageTemplates?: Array<MessageTemplate>;
+}
+
+/**
+ * @author Mikey Sleevi
+ */
+export enum MessageType {
+  SMS = "SMS"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface MessengerRequest {
+  messenger?: BaseMessengerConfiguration;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface MessengerResponse {
+  messenger?: BaseMessengerConfiguration;
+  messengers?: Array<BaseMessengerConfiguration>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum MessengerType {
+  Generic = "Generic",
+  Kafka = "Kafka",
+  Twilio = "Twilio"
+}
+
 export interface MetaData {
   device?: DeviceInfo;
   scopes?: Array<string>;
@@ -6211,6 +6642,29 @@ export interface MinimumPasswordAge extends Enableable {
 export interface MonthlyActiveUserReportResponse {
   monthlyActiveUsers?: Array<Count>;
   total?: number;
+}
+
+export interface MultiFactorAuthenticatorMethod extends Enableable {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
+export interface MultiFactorEmailMethod extends Enableable {
+  templateId?: UUID;
+}
+
+export interface MultiFactorEmailTemplate {
+  templateId?: UUID;
+}
+
+export interface MultiFactorSMSMethod extends Enableable {
+  messengerId?: UUID;
+  templateId?: UUID;
+}
+
+export interface MultiFactorSMSTemplate {
+  templateId?: UUID;
 }
 
 /**
@@ -6483,6 +6937,22 @@ export interface PasswordValidationRulesResponse {
  */
 export interface PendingResponse {
   users?: Array<User>;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateRequest {
+  locale?: string;
+  messageTemplate?: MessageTemplate;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateResponse {
+  errors?: Errors;
+  message?: SMSMessage;
 }
 
 /**
@@ -6875,9 +7345,6 @@ export interface SecureIdentity {
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
   salt?: string;
-  twoFactorDelivery?: TwoFactorDelivery;
-  twoFactorEnabled?: boolean;
-  twoFactorSecret?: string;
   username?: string;
   usernameStatus?: ContentStatus;
   verified?: boolean;
@@ -6898,6 +7365,22 @@ export interface SendRequest {
  */
 export interface SendResponse {
   results?: Record<UUID, EmailTemplateErrors>;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface SMSMessage {
+  phoneNumber?: string;
+  textMessage?: string;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface SMSMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
 }
 
 /**
@@ -6966,10 +7449,16 @@ export interface SystemLogsExportRequest extends BaseExportRequest {
 }
 
 export interface Templates {
+  accountEdit?: string;
+  accountIndex?: string;
+  accountTwoFactorDisable?: string;
+  accountTwoFactorEnable?: string;
+  accountTwoFactorIndex?: string;
   emailComplete?: string;
   emailSend?: string;
   emailVerify?: string;
   helpers?: string;
+  index?: string;
   oauth2Authorize?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
@@ -6981,6 +7470,7 @@ export interface Templates {
   oauth2Passwordless?: string;
   oauth2Register?: string;
   oauth2TwoFactor?: string;
+  oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
   passwordChange?: string;
   passwordComplete?: string;
@@ -7014,6 +7504,7 @@ export interface Tenant {
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
   minimumPasswordAge?: MinimumPasswordAge;
+  multiFactorConfiguration?: TenantMultiFactorConfiguration;
   name?: string;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
@@ -7033,6 +7524,15 @@ export interface Tenantable {
  */
 export interface TenantFormConfiguration {
   adminUserFormId?: UUID;
+}
+
+/**
+ * @author Mikey Sleevi
+ */
+export interface TenantMultiFactorConfiguration {
+  authenticator?: MultiFactorAuthenticatorMethod;
+  email?: MultiFactorEmailMethod;
+  sms?: MultiFactorSMSMethod;
 }
 
 /**
@@ -7144,6 +7644,12 @@ export interface TotalsReportResponse {
   totalGlobalRegistrations?: number;
 }
 
+export enum TOTPAlgorithm {
+  HmacSHA1 = "HmacSHA1",
+  HmacSHA256 = "HmacSHA256",
+  HmacSHA512 = "HmacSHA512"
+}
+
 /**
  * The transaction types for Webhooks and other event systems within FusionAuth.
  *
@@ -7158,11 +7664,9 @@ export enum TransactionType {
 }
 
 /**
- * Twilio Service Configuration.
- *
- * @author Daniel DeGroff
+ * @author Brett Guy
  */
-export interface TwilioConfiguration extends Enableable {
+export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration {
   accountSID?: string;
   authToken?: string;
   fromPhoneNumber?: string;
@@ -7192,6 +7696,7 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 
 /**
  * @author Daniel DeGroff
+ * @deprecated Use <code>User.twoFactor.methods</code>
  */
 export enum TwoFactorDelivery {
   None = "None",
@@ -7201,18 +7706,52 @@ export enum TwoFactorDelivery {
 /**
  * @author Daniel DeGroff
  */
+export interface TwoFactorEnableDisableSendRequest {
+  email?: string;
+  method?: string;
+  methodId?: string;
+  mobilePhone?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface TwoFactorLoginRequest extends BaseLoginRequest {
   code?: string;
   trustComputer?: boolean;
   twoFactorId?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorMethod {
+  authenticator?: AuthenticatorConfiguration;
+  email?: string;
+  id?: string;
+  lastUsed?: boolean;
+  method?: string;
+  mobilePhone?: string;
+  secret?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorRecoveryCodeResponse {
+  recoveryCodes?: Array<string>;
 }
 
 /**
  * @author Brian Pontarelli
  */
 export interface TwoFactorRequest {
+  authenticatorId?: string;
   code?: string;
-  delivery?: TwoFactorDelivery;
+  email?: string;
+  method?: string;
+  mobilePhone?: string;
   secret?: string;
   secretBase32Encoded?: string;
 }
@@ -7220,10 +7759,38 @@ export interface TwoFactorRequest {
 /**
  * @author Daniel DeGroff
  */
+export interface TwoFactorResponse {
+  recoveryCodes?: Array<string>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface TwoFactorSendRequest {
+  email?: string;
+  method?: string;
+  methodId?: string;
   mobilePhone?: string;
-  secret?: string;
   userId?: UUID;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TwoFactorStartRequest {
+  applicationId?: UUID;
+  code?: string;
+  loginId?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorStartResponse {
+  code?: string;
+  methods?: Array<TwoFactorMethod>;
+  twoFactorId?: string;
 }
 
 export interface UIConfiguration {
@@ -7259,6 +7826,7 @@ export interface User extends SecureIdentity {
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
   timezone?: string;
+  twoFactor?: UserTwoFactorConfiguration;
 }
 
 /**
@@ -7566,6 +8134,7 @@ export interface UserinfoResponse extends Record<string, any> {
 export interface UserLoginFailedEvent extends BaseEvent {
   applicationId?: UUID;
   authenticationType?: string;
+  ipAddress?: string;
   user?: User;
 }
 
@@ -7580,6 +8149,7 @@ export interface UserLoginSuccessEvent extends BaseEvent {
   connectorId?: UUID;
   identityProviderId?: UUID;
   identityProviderName?: string;
+  ipAddress?: string;
   user?: User;
 }
 
@@ -7708,6 +8278,14 @@ export interface UserSearchCriteria extends BaseElasticSearchCriteria {
 export enum UserState {
   Authenticated = "Authenticated",
   AuthenticatedNotRegistered = "AuthenticatedNotRegistered"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorConfiguration {
+  methods?: Array<TwoFactorMethod>;
+  recoveryCodes?: Array<string>;
 }
 
 /**
