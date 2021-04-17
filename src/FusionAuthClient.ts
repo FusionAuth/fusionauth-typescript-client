@@ -7587,6 +7587,7 @@ export interface Tenant {
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
   lastUpdateInstant?: number;
+  loginConfiguration?: TenantLoginConfiguration;
   logoutURL?: string;
   maximumPasswordAge?: MaximumPasswordAge;
   minimumPasswordAge?: MinimumPasswordAge;
@@ -7610,6 +7611,13 @@ export interface Tenantable {
  */
 export interface TenantFormConfiguration {
   adminUserFormId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantLoginConfiguration {
+  requireAuthentication?: boolean;
 }
 
 /**
