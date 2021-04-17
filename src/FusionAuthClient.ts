@@ -2863,10 +2863,10 @@ export class FusionAuthClient {
   /**
    * Retrieves the FusionAuth Reactor status.
    *
-   * @returns {Promise<ClientResponse<ReactorStatus>>}
+   * @returns {Promise<ClientResponse<ReactorResponse>>}
    */
-  retrieveReactorStatus(): Promise<ClientResponse<ReactorStatus>> {
-    return this.start<ReactorStatus, void>()
+  retrieveReactorStatus(): Promise<ClientResponse<ReactorResponse>> {
+    return this.start<ReactorResponse, void>()
         .withUri('/api/reactor')
         .withMethod("GET")
         .go();
@@ -7062,11 +7062,21 @@ export interface RawLogin {
   userId?: UUID;
 }
 
+/**
+ * @author Brian Pontarelli
+ */
 export enum ReactorFeatureStatus {
   ACTIVE = "ACTIVE",
   DISCONNECTED = "DISCONNECTED",
   PENDING = "PENDING",
   UNKNOWN = "UNKNOWN"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReactorMetrics {
+  breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
 }
 
 /**
@@ -7081,15 +7091,22 @@ export interface ReactorRequest {
 /**
  * @author Daniel DeGroff
  */
+export interface ReactorResponse {
+  metrics?: ReactorMetrics;
+  status?: ReactorStatus;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface ReactorStatus {
   advancedIdentityProviders?: ReactorFeatureStatus;
+  advancedMultiFactorAuthentication?: ReactorFeatureStatus;
   advancedRegistrationForms?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
-  breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
   connectors?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   licensed?: boolean;
-  multiFactorAuthentication?: ReactorFeatureStatus;
 }
 
 /**
