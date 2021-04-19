@@ -165,6 +165,26 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an API key. You can optionally specify a unique Id for the key, if not provided one will be generated.
+   * an API key can only be created with equal or lesser authority. An API key cannot create another API key unless it is granted 
+   * to that API key.
+   * 
+   * If an API key is locked to a tenant, it can only create API Keys for that same tenant.
+   *
+   * @param {UUID} keyId (Optional) The unique Id of the API key. If not provided a secure random Id will be generated.
+   * @param {APIKeyRequest} request The request object that contains all of the information needed to create the APIKey.
+   * @returns {Promise<ClientResponse<APIKeyResponse>>}
+   */
+  createAPIKey(keyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
+    return this.start<APIKeyResponse, Errors>()
+        .withUri('/api/api-key')
+        .withUriSegment(keyId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates an application. You can optionally specify an Id for the application, if not provided one will be generated.
    *
    * @param {UUID} applicationId (Optional) The Id to use for the application. If not provided a secure random UUID will be generated.
@@ -657,6 +677,20 @@ export class FusionAuthClient {
         .withParameter('userId', userIds)
         .withParameter('dryRun', false)
         .withParameter('hardDelete', false)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the API key for the given Id.
+   *
+   * @param {UUID} keyId The Id of the authentication API key to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteAPIKey(keyId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/api-key')
+        .withUriSegment(keyId)
         .withMethod("DELETE")
         .go();
   }
@@ -1576,6 +1610,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates an authentication API key by given id
+   *
+   * @param {UUID} keyId The Id of the authentication key. If not provided a secure random api key will be generated.
+   * @param {APIKeyRequest} request The request object that contains all of the information needed to create the APIKey.
+   * @returns {Promise<ClientResponse<APIKeyResponse>>}
+   */
+  patchAPIKey(keyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
+    return this.start<APIKeyResponse, Errors>()
+        .withUri('/api/api-key')
+        .withUriSegment(keyId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Updates, via PATCH, the application with the given Id.
    *
    * @param {UUID} applicationId The Id of the application to update.
@@ -2075,6 +2125,20 @@ export class FusionAuthClient {
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
         .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Retrieves an authentication API key for the given id
+   *
+   * @param {UUID} keyId The Id of the API key to retrieve.
+   * @returns {Promise<ClientResponse<APIKeyResponse>>}
+   */
+  retrieveAPIKey(keyId: UUID): Promise<ClientResponse<APIKeyResponse>> {
+    return this.start<APIKeyResponse, Errors>()
+        .withUri('/api/api-key')
+        .withUriSegment(keyId)
+        .withMethod("GET")
         .go();
   }
 
@@ -3797,6 +3861,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates an API key by given id
+   *
+   * @param {UUID} apiKeyId The Id of the API key to update.
+   * @param {APIKeyRequest} request The request object that contains all of the information used to create the API Key.
+   * @returns {Promise<ClientResponse<APIKeyResponse>>}
+   */
+  updateAPIKey(apiKeyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
+    return this.start<APIKeyResponse, Errors>()
+        .withUri('/api/api-key')
+        .withUriSegment(apiKeyId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the application with the given Id.
    *
    * @param {UUID} applicationId The Id of the application to update.
@@ -4396,6 +4476,49 @@ export enum Algorithm {
   RS384 = "RS384",
   RS512 = "RS512",
   none = "none"
+}
+
+/**
+ * domain POJO to represent AuthenticationKey
+ *
+ * @author sanjay
+ */
+export interface APIKey {
+  id?: UUID;
+  insertInstant?: number;
+  key?: string;
+  keyManager?: boolean;
+  lastUpdateInstant?: number;
+  metaData?: APIKeyMetaData;
+  permissions?: APIKeyPermissions;
+  tenantId?: UUID;
+}
+
+export interface APIKeyMetaData {
+  attributes?: Record<string, string>;
+}
+
+export interface APIKeyPermissions {
+  endpoints?: Record<string, Array<string>>;
+}
+
+/**
+ * Authentication key request object.
+ *
+ * @author Sanjay
+ */
+export interface APIKeyRequest {
+  apiKey?: APIKey;
+  sourceKeyId?: UUID;
+}
+
+/**
+ * Authentication key response object.
+ *
+ * @author Sanjay
+ */
+export interface APIKeyResponse {
+  apiKey?: APIKey;
 }
 
 /**
