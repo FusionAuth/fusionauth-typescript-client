@@ -5654,7 +5654,7 @@ export interface FacebookApplicationConfiguration extends BaseIdentityProviderAp
   buttonText?: string;
   client_secret?: string;
   fields?: string;
-  loginMethod?: LoginMethod;
+  loginMethod?: IdentityProviderLoginMethod;
   permissions?: string;
 }
 
@@ -5668,7 +5668,7 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
   buttonText?: string;
   client_secret?: string;
   fields?: string;
-  loginMethod?: LoginMethod;
+  loginMethod?: IdentityProviderLoginMethod;
   permissions?: string;
 }
 
@@ -5956,7 +5956,7 @@ export interface GoogleApplicationConfiguration extends BaseIdentityProviderAppl
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
-  loginMethod?: LoginMethod;
+  loginMethod?: IdentityProviderLoginMethod;
   scope?: string;
 }
 
@@ -5969,7 +5969,7 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
-  loginMethod?: LoginMethod;
+  loginMethod?: IdentityProviderLoginMethod;
   scope?: string;
 }
 
@@ -6089,6 +6089,14 @@ export interface IdentityProviderDetails {
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   type?: IdentityProviderType;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum IdentityProviderLoginMethod {
+  UsePopup = "UsePopup",
+  UseRedirect = "UseRedirect"
 }
 
 /**
@@ -6603,14 +6611,6 @@ export interface LoginConfiguration {
 export enum LoginIdType {
   email = "email",
   username = "username"
-}
-
-/**
- * @author Brett Pontarelli
- */
-export enum LoginMethod {
-  UsePopup = "UsePopup",
-  UseRedirect = "UseRedirect"
 }
 
 /**
