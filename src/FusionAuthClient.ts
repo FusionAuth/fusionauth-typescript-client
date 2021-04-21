@@ -6882,6 +6882,7 @@ export interface OAuth2Configuration {
   logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
   requireClientAuthentication?: boolean;
+  requireRegistration?: boolean;
 }
 
 /**
@@ -7669,6 +7670,7 @@ export interface Templates {
   helpers?: string;
   index?: string;
   oauth2Authorize?: string;
+  oauth2AuthorizedNotRegistered?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
