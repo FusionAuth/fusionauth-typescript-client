@@ -38,5 +38,5 @@ Bug reports and pull requests are welcome on GitHub.
 
 ## License
 
-The gem is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).
+This code is available as open source under the terms of the [Apache v2.0 License](https://opensource.org/licenses/Apache-2.0).
 
