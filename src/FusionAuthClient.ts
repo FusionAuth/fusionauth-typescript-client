@@ -8022,15 +8022,6 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 
 /**
  * @author Daniel DeGroff
- * @deprecated Use <code>User.twoFactor.methods</code>
- */
-export enum TwoFactorDelivery {
-  None = "None",
-  TextMessage = "TextMessage"
-}
-
-/**
- * @author Daniel DeGroff
  */
 export interface TwoFactorEnableDisableSendRequest {
   email?: string;
