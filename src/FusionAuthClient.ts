@@ -124,7 +124,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
    */
   changePassword(changePasswordId: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
-    return this.start<ChangePasswordResponse, Errors>()
+    return this.startAnonymous<ChangePasswordResponse, Errors>()
         .withUri('/api/user/change-password')
         .withUriSegment(changePasswordId)
         .withJSONBody(request)
