@@ -72,14 +72,12 @@ export class FusionAuthClient {
   /**
    * Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
    *
-   * @param {string} licenseId The license id
    * @param {ReactorRequest} request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
    * @returns {Promise<ClientResponse<void>>}
    */
-  activateReactor(licenseId: string, request: ReactorRequest): Promise<ClientResponse<void>> {
+  activateReactor(request: ReactorRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/reactor')
-        .withUriSegment(licenseId)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -7289,6 +7287,7 @@ export interface ReactorMetrics {
  */
 export interface ReactorRequest {
   license?: string;
+  licenseId?: string;
 }
 
 /**
