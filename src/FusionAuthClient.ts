@@ -72,14 +72,12 @@ export class FusionAuthClient {
   /**
    * Activates the FusionAuth Reactor using a license id and optionally a license text (for air-gapped deployments)
    *
-   * @param {string} licenseId The license id
    * @param {ReactorRequest} request An optional request that contains the license text to activate Reactor (useful for air-gap deployments of FusionAuth).
    * @returns {Promise<ClientResponse<void>>}
    */
-  activateReactor(licenseId: string, request: ReactorRequest): Promise<ClientResponse<void>> {
+  activateReactor(request: ReactorRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/reactor')
-        .withUriSegment(licenseId)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -1530,10 +1528,10 @@ export class FusionAuthClient {
    * @param {UUID} applicationId The Id of the application that they logged into.
    * @param {string} callerIPAddress (Optional) The IP address of the end-user that is logging in. If a null value is provided
    *    the IP address will be that of the client or last proxy that sent the request.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<LoginResponse>>}
    */
-  loginPing(userId: UUID, applicationId: UUID, callerIPAddress: string): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+  loginPing(userId: UUID, applicationId: UUID, callerIPAddress: string): Promise<ClientResponse<LoginResponse>> {
+    return this.start<LoginResponse, Errors>()
         .withUri('/api/login')
         .withUriSegment(userId)
         .withUriSegment(applicationId)
@@ -3377,6 +3375,18 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the FusionAuth version string.
+   *
+   * @returns {Promise<ClientResponse<VersionResponse>>}
+   */
+  retrieveVersion(): Promise<ClientResponse<VersionResponse>> {
+    return this.start<VersionResponse, Errors>()
+        .withUri('/api/system/version')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
    *
    * @param {UUID} webhookId (Optional) The Id of the webhook.
@@ -4350,6 +4360,8 @@ export class FusionAuthClient {
    *
    * @param {string} verificationId The email verification id sent to the user.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to verifyEmailAddress and changed to take a JSON request body, use that method instead.
    */
   verifyEmail(verificationId: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
@@ -4361,16 +4373,56 @@ export class FusionAuthClient {
   }
 
   /**
+   * Confirms a user's email address. 
+   * 
+   * The request body will contain the verificationId. You may also be required to send a one-time use code based upon your configuration. When 
+   * the tenant is configured to gate a user until their email address is verified, this procedures requires two values instead of one. 
+   * The verificationId is a high entropy value and the one-time use code is a low entropy value that is easily entered in a user interactive form. The 
+   * two values together are able to confirm a user's email address and mark the user's email address as verified.
+   *
+   * @param {VerifyEmailRequest} request The request that contains the verificationId and optional one-time use code paired with the verificationId.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  verifyEmailAddress(request: VerifyEmailRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, Errors>()
+        .withUri('/api/user/verify-email')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Confirms an application registration. The Id given is usually from an email sent to the user.
    *
    * @param {string} verificationId The registration verification Id sent to the user.
    * @returns {Promise<ClientResponse<void>>}
+   *
+   * @deprecated This method has been renamed to verifyUserRegistration and changed to take a JSON request body, use that method instead.
    */
   verifyRegistration(verificationId: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
         .withHeader('Content-Type', 'text/plain')
         .withUri('/api/user/verify-registration')
         .withUriSegment(verificationId)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Confirms a user's registration. 
+   * 
+   * The request body will contain the verificationId. You may also be required to send a one-time use code based upon your configuration. When 
+   * the application is configured to gate a user until their registration is verified, this procedures requires two values instead of one. 
+   * The verificationId is a high entropy value and the one-time use code is a low entropy value that is easily entered in a user interactive form. The 
+   * two values together are able to confirm a user's registration and mark the user's registration as verified.
+   *
+   * @param {VerifyRegistrationRequest} request The request that contains the verificationId and optional one-time use code paired with the verificationId.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  verifyUserRegistration(request: VerifyRegistrationRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, Errors>()
+        .withUri('/api/user/verify-registration')
+        .withJSONBody(request)
         .withMethod("POST")
         .go();
   }
@@ -4569,7 +4621,10 @@ export interface Application {
   samlv2Configuration?: SAMLv2Configuration;
   state?: ObjectState;
   tenantId?: UUID;
+  themeId?: UUID;
+  unverified?: RegistrationUnverifiedOptions;
   verificationEmailTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
   verifyRegistration?: boolean;
 }
 
@@ -4648,6 +4703,15 @@ export interface ApplicationRole {
   isSuperRole?: boolean;
   lastUpdateInstant?: number;
   name?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationUnverifiedConfiguration {
+  registration?: UnverifiedBehavior;
+  verificationStrategy?: VerificationStrategy;
+  whenGated?: RegistrationUnverifiedOptions;
 }
 
 /**
@@ -5169,8 +5233,10 @@ export interface EmailConfiguration {
   properties?: string;
   security?: EmailSecurityType;
   setPasswordEmailTemplateId?: UUID;
+  unverified?: EmailUnverifiedOptions;
   username?: string;
   verificationEmailTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
   verifyEmail?: boolean;
   verifyEmailWhenChanged?: boolean;
 }
@@ -5230,6 +5296,14 @@ export interface EmailTemplateRequest {
 export interface EmailTemplateResponse {
   emailTemplate?: EmailTemplate;
   emailTemplates?: Array<EmailTemplate>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface EmailUnverifiedOptions {
+  allowEmailChangeWhenGated?: boolean;
+  behavior?: UnverifiedBehavior;
 }
 
 /**
@@ -5611,12 +5685,14 @@ export interface ExternalIdentifierConfiguration {
   deviceUserCodeIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdGenerator?: SecureGeneratorConfiguration;
   emailVerificationIdTimeToLiveInSeconds?: number;
+  emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   externalAuthenticationIdTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
+  registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
@@ -6687,8 +6763,10 @@ export interface LoginResponse {
   actions?: Array<LoginPreventedResponse>;
   changePasswordId?: string;
   changePasswordReason?: ChangePasswordReason;
+  emailVerificationId?: string;
   methods?: Array<TwoFactorMethod>;
   refreshToken?: string;
+  registrationVerificationId?: string;
   state?: Record<string, any>;
   token?: string;
   twoFactorId?: string;
@@ -7210,6 +7288,7 @@ export interface ReactorMetrics {
  */
 export interface ReactorRequest {
   license?: string;
+  licenseId?: string;
 }
 
 /**
@@ -7226,7 +7305,8 @@ export interface ReactorResponse {
 export interface ReactorStatus {
   advancedIdentityProviders?: ReactorFeatureStatus;
   advancedMultiFactorAuthentication?: ReactorFeatureStatus;
-  advancedRegistrationForms?: ReactorFeatureStatus;
+  advancedRegistration?: ReactorFeatureStatus;
+  applicationThemes?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
@@ -7361,6 +7441,7 @@ export interface RegistrationRequest {
 export interface RegistrationResponse {
   refreshToken?: string;
   registration?: UserRegistration;
+  registrationVerificationId?: string;
   token?: string;
   user?: User;
 }
@@ -7368,6 +7449,13 @@ export interface RegistrationResponse {
 export enum RegistrationType {
   basic = "basic",
   advanced = "advanced"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RegistrationUnverifiedOptions {
+  behavior?: UnverifiedBehavior;
 }
 
 /**
@@ -7555,6 +7643,7 @@ export interface SecureIdentity {
   passwordChangeRequired?: boolean;
   passwordLastUpdateInstant?: number;
   salt?: string;
+  uniqueUsername?: string;
   username?: string;
   usernameStatus?: ContentStatus;
   verified?: boolean;
@@ -7666,6 +7755,8 @@ export interface Templates {
   accountTwoFactorIndex?: string;
   emailComplete?: string;
   emailSend?: string;
+  emailSent?: string;
+  emailVerificationRequired?: string;
   emailVerify?: string;
   helpers?: string;
   index?: string;
@@ -7689,6 +7780,8 @@ export interface Templates {
   passwordSent?: string;
   registrationComplete?: string;
   registrationSend?: string;
+  registrationSent?: string;
+  registrationVerificationRequired?: string;
   registrationVerify?: string;
   samlv2Logout?: string;
 }
@@ -7723,6 +7816,7 @@ export interface Tenant {
   state?: ObjectState;
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
+  usernameConfiguration?: TenantUsernameConfiguration;
 }
 
 /**
@@ -7771,12 +7865,27 @@ export interface TenantResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface TenantUnverifiedConfiguration {
+  email?: UnverifiedBehavior;
+  whenGated?: RegistrationUnverifiedOptions;
+}
+
+/**
  * A Tenant-level policy for deleting Users.
  *
  * @author Trevor Smith
  */
 export interface TenantUserDeletePolicy {
   unverified?: TimeBasedDeletePolicy;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantUsernameConfiguration {
+  unique?: UniqueUsernameConfiguration;
 }
 
 /**
@@ -7915,15 +8024,6 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 
 /**
  * @author Daniel DeGroff
- * @deprecated Use <code>User.twoFactor.methods</code>
- */
-export enum TwoFactorDelivery {
-  None = "None",
-  TextMessage = "TextMessage"
-}
-
-/**
- * @author Daniel DeGroff
  */
 export interface TwoFactorEnableDisableSendRequest {
   email?: string;
@@ -8016,6 +8116,19 @@ export interface UIConfiguration {
   headerColor?: string;
   logoURL?: string;
   menuFontColor?: string;
+}
+
+export interface UniqueUsernameConfiguration extends Enableable {
+  numberOfDigits?: number;
+  separator?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum UnverifiedBehavior {
+  Allow = "Allow",
+  Gated = "Gated"
 }
 
 /**
@@ -8479,6 +8592,8 @@ export interface UserRequest {
  * @author Brian Pontarelli
  */
 export interface UserResponse {
+  emailVerificationId?: string;
+  registrationVerificationIds?: Record<UUID, string>;
   token?: string;
   user?: User;
 }
@@ -8496,7 +8611,9 @@ export interface UserSearchCriteria extends BaseElasticSearchCriteria {
  */
 export enum UserState {
   Authenticated = "Authenticated",
-  AuthenticatedNotRegistered = "AuthenticatedNotRegistered"
+  AuthenticatedNotRegistered = "AuthenticatedNotRegistered",
+  AuthenticatedNotVerified = "AuthenticatedNotVerified",
+  AuthenticatedRegistrationNotVerified = "AuthenticatedRegistrationNotVerified"
 }
 
 /**
@@ -8527,7 +8644,32 @@ export interface ValidateResponse {
 /**
  * @author Daniel DeGroff
  */
+export enum VerificationStrategy {
+  ClickableLink = "ClickableLink",
+  FormField = "FormField"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyEmailRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface VerifyEmailResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyRegistrationRequest {
+  oneTimeCode?: string;
   verificationId?: string;
 }
 
@@ -8535,7 +8677,15 @@ export interface VerifyEmailResponse {
  * @author Daniel DeGroff
  */
 export interface VerifyRegistrationResponse {
+  oneTimeCode?: string;
   verificationId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VersionResponse {
+  version?: string;
 }
 
 /**
