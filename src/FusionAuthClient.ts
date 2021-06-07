@@ -576,6 +576,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Link an external user from a 3rd party identity provider to a FusionAuth user.
+   *
+   * @param {IdentityProviderLinkRequest} request The request object that contains all of the information used to link the FusionAuth user.
+   * @returns {Promise<ClientResponse<IdentityProviderLinkResponse>>}
+   */
+  createUserLink(request: IdentityProviderLinkRequest): Promise<ClientResponse<IdentityProviderLinkResponse>> {
+    return this.start<IdentityProviderLinkResponse, Errors>()
+        .withUri('/api/identity-provider/link')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a webhook. You can optionally specify an Id for the webhook, if not provided one will be generated.
    *
    * @param {UUID} webhookId (Optional) The Id for the webhook. If not provided a secure random UUID will be generated.
@@ -1064,6 +1078,24 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/user-action-reason')
         .withUriSegment(userActionReasonId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Remove an existing link that has been made from a 3rd party identity provider to a FusionAuth user.
+   *
+   * @param {UUID} identityProviderId The unique Id of the identity provider.
+   * @param {string} identityProviderUserId The unique Id of the user in the 3rd party identity provider to unlink.
+   * @param {UUID} userId The unique Id of the FusionAuth user to unlink.
+   * @returns {Promise<ClientResponse<IdentityProviderLinkResponse>>}
+   */
+  deleteUserLink(identityProviderId: UUID, identityProviderUserId: string, userId: UUID): Promise<ClientResponse<IdentityProviderLinkResponse>> {
+    return this.start<IdentityProviderLinkResponse, Errors>()
+        .withUri('/api/identity-provider/link')
+        .withParameter('identityProviderId', identityProviderId)
+        .withParameter('identityProviderUserId', identityProviderUserId)
+        .withParameter('userId', userId)
         .withMethod("DELETE")
         .go();
   }
@@ -2064,6 +2096,24 @@ export class FusionAuthClient {
   }
 
   /**
+   * Requests Elasticsearch to delete and rebuild the index for FusionAuth users or entities. Be very careful when running this request as it will 
+   * increase the CPU and I/O load on your database until the operation completes. Generally speaking you do not ever need to run this operation unless 
+   * instructed by FusionAuth support, or if you are migrating a database another system and you are not brining along the Elasticsearch index. 
+   * 
+   * You have been warned.
+   *
+   * @param {ReindexRequest} request The request that contains the index name.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  reindex(request: ReindexRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/system/reindex')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Removes a user from the family with the given id.
    *
    * @param {UUID} familyId The id of the family to remove the user from.
@@ -3014,6 +3064,19 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieve the status of a re-index process. A status code of 200 indicates the re-index is in progress, a status code of  
+   * 404 indicates no re-index is in progress.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  retrieveReindexStatus(): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/system/reindex')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the system configuration.
    *
    * @returns {Promise<ClientResponse<SystemConfigurationResponse>>}
@@ -3296,6 +3359,40 @@ export class FusionAuthClient {
     return this.startAnonymous<UserResponse, OAuthError>()
         .withUri('/oauth2/userinfo')
         .withAuthorization('Bearer ' + encodedJWT)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieve a single Identity Provider user (link).
+   *
+   * @param {UUID} identityProviderId The unique Id of the identity provider.
+   * @param {string} identityProviderUserId The unique Id of the user in the 3rd party identity provider.
+   * @param {UUID} userId The unique Id of the FusionAuth user.
+   * @returns {Promise<ClientResponse<IdentityProviderLinkResponse>>}
+   */
+  retrieveUserLink(identityProviderId: UUID, identityProviderUserId: string, userId: UUID): Promise<ClientResponse<IdentityProviderLinkResponse>> {
+    return this.start<IdentityProviderLinkResponse, Errors>()
+        .withUri('/api/identity-provider/link')
+        .withParameter('identityProviderId', identityProviderId)
+        .withParameter('identityProviderUserId', identityProviderUserId)
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieve all Identity Provider users (links) for the user. Specify the optional identityProviderId to retrieve links for a particular IdP.
+   *
+   * @param {UUID} identityProviderId (Optional) The unique Id of the identity provider. Specify this value to reduce the links returned to those for a particular IdP.
+   * @param {UUID} userId The unique Id of the user.
+   * @returns {Promise<ClientResponse<IdentityProviderLinkResponse>>}
+   */
+  retrieveUserLinksByUserId(identityProviderId: UUID, userId: UUID): Promise<ClientResponse<IdentityProviderLinkResponse>> {
+    return this.start<IdentityProviderLinkResponse, Errors>()
+        .withUri('/api/identity-provider/link')
+        .withParameter('identityProviderId', identityProviderId)
+        .withParameter('userId', userId)
         .withMethod("GET")
         .go();
   }
@@ -4857,6 +4954,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   insertInstant?: number;
   lambdaConfiguration?: LambdaConfiguration;
   lastUpdateInstant?: number;
+  linkingStrategy?: IdentityProviderLinkingStrategy;
   name?: string;
   type?: IdentityProviderType;
 }
@@ -5012,6 +5110,15 @@ export enum ClientAuthenticationMethod {
 }
 
 /**
+ * @author Brett Guy
+ */
+export enum ClientAuthenticationPolicy {
+  Required = "Required",
+  NotRequired = "NotRequired",
+  NotRequiredWhenUsingPKCE = "NotRequiredWhenUsingPKCE"
+}
+
+/**
  * @author Trevor Smith
  */
 export interface ConnectorPolicy {
@@ -5135,6 +5242,14 @@ export interface Count {
 export interface DailyActiveUserReportResponse {
   dailyActiveUsers?: Array<Count>;
   total?: number;
+}
+
+/**
+ * Helper for dealing with default values.
+ *
+ * @author Brian Pontarelli
+ */
+export interface DefaultTools {
 }
 
 export interface DeleteConfiguration extends Enableable {
@@ -5531,6 +5646,28 @@ export interface EntityTypeSearchResponse {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+export interface EpicGamesApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Epic gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface EpicGamesIdentityProvider extends BaseIdentityProvider<EpicGamesApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
  * Defines an error.
  *
  * @author Brian Pontarelli
@@ -5690,6 +5827,7 @@ export interface ExternalIdentifierConfiguration {
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
+  pendingAccountLinkTimeToLiveInSeconds?: number;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
   registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
@@ -5730,6 +5868,7 @@ export interface FacebookApplicationConfiguration extends BaseIdentityProviderAp
   buttonText?: string;
   client_secret?: string;
   fields?: string;
+  loginMethod?: IdentityProviderLoginMethod;
   permissions?: string;
 }
 
@@ -5743,6 +5882,7 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
   buttonText?: string;
   client_secret?: string;
   fields?: string;
+  loginMethod?: IdentityProviderLoginMethod;
   permissions?: string;
 }
 
@@ -6030,6 +6170,7 @@ export interface GoogleApplicationConfiguration extends BaseIdentityProviderAppl
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  loginMethod?: IdentityProviderLoginMethod;
   scope?: string;
 }
 
@@ -6042,6 +6183,7 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  loginMethod?: IdentityProviderLoginMethod;
   scope?: string;
 }
 
@@ -6164,6 +6306,62 @@ export interface IdentityProviderDetails {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderLink {
+  data?: Record<string, any>;
+  displayName?: string;
+  identityProviderId?: UUID;
+  identityProviderUserId?: string;
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  tenantId?: UUID;
+  token?: string;
+  userId?: UUID;
+}
+
+/**
+ * The IdP behavior when no user link has been made yet.
+ *
+ * @author Daniel DeGroff
+ */
+export enum IdentityProviderLinkingStrategy {
+  CreatePendingLink = "CreatePendingLink",
+  LinkAnonymously = "LinkAnonymously",
+  LinkByEmail = "LinkByEmail",
+  LinkByEmailForExistingUser = "LinkByEmailForExistingUser",
+  LinkByUsername = "LinkByUsername",
+  LinkByUsernameForExistingUser = "LinkByUsernameForExistingUser",
+  Unsupported = "Unsupported"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderLinkRequest {
+  identityProviderId?: UUID;
+  identityProviderUserId?: string;
+  pendingIdPLinkId?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderLinkResponse {
+  identityProviderLink?: IdentityProviderLink;
+  identityProviderLinks?: Array<IdentityProviderLink>;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum IdentityProviderLoginMethod {
+  UsePopup = "UsePopup",
+  UseRedirect = "UseRedirect"
+}
+
+/**
  * Login API request object used for login to third-party systems (i.e. Login with Facebook).
  *
  * @author Brian Pontarelli
@@ -6186,7 +6384,9 @@ export interface IdentityProviderOauth2Configuration {
   issuer?: string;
   scope?: string;
   token_endpoint?: string;
+  uniqueIdClaim?: string;
   userinfo_endpoint?: string;
+  usernameClaim?: string;
 }
 
 /**
@@ -6225,16 +6425,22 @@ export interface IdentityProviderStartLoginResponse {
  * @author Daniel DeGroff
  */
 export enum IdentityProviderType {
+  Apple = "Apple",
+  EpicGames = "EpicGames",
   ExternalJWT = "ExternalJWT",
-  OpenIDConnect = "OpenIDConnect",
   Facebook = "Facebook",
   Google = "Google",
-  Twitter = "Twitter",
-  SAMLv2 = "SAMLv2",
   HYPR = "HYPR",
-  Apple = "Apple",
   LinkedIn = "LinkedIn",
-  SAMLv2IdPInitiated = "SAMLv2IdPInitiated"
+  Nintendo = "Nintendo",
+  OpenIDConnect = "OpenIDConnect",
+  SAMLv2 = "SAMLv2",
+  SAMLv2IdPInitiated = "SAMLv2IdPInitiated",
+  SonyPSN = "SonyPSN",
+  Steam = "Steam",
+  Twitch = "Twitch",
+  Twitter = "Twitter",
+  Xbox = "Xbox"
 }
 
 /**
@@ -6593,7 +6799,14 @@ export enum LambdaType {
   HYPRReconcile = "HYPRReconcile",
   TwitterReconcile = "TwitterReconcile",
   LDAPConnectorReconcile = "LDAPConnectorReconcile",
-  LinkedInReconcile = "LinkedInReconcile"
+  LinkedInReconcile = "LinkedInReconcile",
+  EpicGamesReconcile = "EpicGamesReconcile",
+  NintendoReconcile = "NintendoReconcile",
+  SonyPSNReconcile = "SonyPSNReconcile",
+  SteamReconcile = "SteamReconcile",
+  TwitchReconcile = "TwitchReconcile",
+  XboxReconcile = "XboxReconcile",
+  ClientCredentialsJWTPopulate = "ClientCredentialsJWTPopulate"
 }
 
 /**
@@ -6765,6 +6978,7 @@ export interface LoginResponse {
   changePasswordReason?: ChangePasswordReason;
   emailVerificationId?: string;
   methods?: Array<TwoFactorMethod>;
+  pendingIdPLinkId?: string;
   refreshToken?: string;
   registrationVerificationId?: string;
   state?: Record<string, any>;
@@ -6787,6 +7001,17 @@ export enum LogoutBehavior {
  */
 export interface LookupResponse {
   identityProvider?: IdentityProviderDetails;
+}
+
+/**
+ * This class contains the managed fields that are also put into the database during FusionAuth setup.
+ * <p>
+ * NOTE TO FUSIONAUTH DEVS: These fields are are also declared in SQL in order to boot strap the system. These need to stay in sync.
+ * - Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
+ *
+ * @author Brian Pontarelli
+ */
+export interface ManagedFields {
 }
 
 /**
@@ -6884,6 +7109,12 @@ export interface MessengerResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface MessengerTransport {
+}
+
+/**
  * @author Brett Guy
  */
 export enum MessengerType {
@@ -6938,6 +7169,28 @@ export interface MultiFactorSMSTemplate {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+export interface NintendoApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Nintendo gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
  * Helper methods for normalizing values.
  *
  * @author Brian Pontarelli
@@ -6951,6 +7204,7 @@ export interface Normalizer {
 export interface OAuth2Configuration {
   authorizedOriginURLs?: Array<string>;
   authorizedRedirectURLs?: Array<string>;
+  clientAuthenticationPolicy?: ClientAuthenticationPolicy;
   clientId?: string;
   clientSecret?: string;
   debug?: boolean;
@@ -6959,7 +7213,9 @@ export interface OAuth2Configuration {
   generateRefreshTokens?: boolean;
   logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
+  proofKeyForCodeExchangePolicy?: ProofKeyForCodeExchangePolicy;
   requireClientAuthentication?: boolean;
+  requireRegistration?: boolean;
 }
 
 /**
@@ -7013,6 +7269,8 @@ export enum OAuthErrorReason {
   missing_client_id = "missing_client_id",
   missing_client_secret = "missing_client_secret",
   missing_code = "missing_code",
+  missing_code_challenge = "missing_code_challenge",
+  missing_code_verifier = "missing_code_verifier",
   missing_device_code = "missing_device_code",
   missing_grant_type = "missing_grant_type",
   missing_redirect_uri = "missing_redirect_uri",
@@ -7203,6 +7461,20 @@ export interface PasswordValidationRulesResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface PendingIdPLink {
+  displayName?: string;
+  email?: string;
+  identityProviderId?: UUID;
+  identityProviderName?: string;
+  identityProviderType?: string;
+  identityProviderUserId?: string;
+  user?: User;
+  username?: string;
+}
+
+/**
  * @author Brian Pontarelli
  */
 export interface PendingResponse {
@@ -7239,6 +7511,15 @@ export interface PreviewRequest {
 export interface PreviewResponse {
   email?: Email;
   errors?: Errors;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum ProofKeyForCodeExchangePolicy {
+  Required = "Required",
+  NotRequired = "NotRequired",
+  NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
 }
 
 /**
@@ -7458,6 +7739,15 @@ export interface RegistrationUnverifiedOptions {
 }
 
 /**
+ * Reindex API request
+ *
+ * @author Daniel DeGroff
+ */
+export interface ReindexRequest {
+  index?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface ReloadRequest {
@@ -7530,10 +7820,13 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   idpEndpoint?: string;
   issuer?: string;
   keyId?: UUID;
+  nameIdFormat?: string;
   postRequest?: boolean;
   requestSigningKeyId?: UUID;
   signRequest?: boolean;
+  uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
+  usernameClaim?: string;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
@@ -7552,7 +7845,9 @@ export interface SAMLv2IdPInitiatedIdentityProvider extends BaseIdentityProvider
   emailClaim?: string;
   issuer?: string;
   keyId?: UUID;
+  uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
+  usernameClaim?: string;
 }
 
 export interface SAMLv2Logout {
@@ -7652,9 +7947,12 @@ export interface SecureIdentity {
  * @author Daniel DeGroff
  */
 export interface SendRequest {
+  applicationId?: UUID;
   bccAddresses?: Array<string>;
   ccAddresses?: Array<string>;
+  preferredLanguages?: Array<string>;
   requestData?: Record<string, any>;
+  toAddresses?: Array<EmailAddress>;
   userIds?: Array<UUID>;
 }
 
@@ -7662,6 +7960,7 @@ export interface SendRequest {
  * @author Daniel DeGroff
  */
 export interface SendResponse {
+  anonymousResults?: Record<string, EmailTemplateErrors>;
   results?: Record<UUID, EmailTemplateErrors>;
 }
 
@@ -7682,6 +7981,28 @@ export interface SMSMessageTemplate extends MessageTemplate {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+export interface SonyPSNApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * SonyPSN gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface SonyPSNIdentityProvider extends BaseIdentityProvider<SonyPSNApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export enum Sort {
@@ -7696,6 +8017,28 @@ export interface SortField {
   missing?: string;
   name?: string;
   order?: Sort;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  scope?: string;
+  webAPIKey?: string;
+}
+
+/**
+ * Steam gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  scope?: string;
+  webAPIKey?: string;
 }
 
 /**
@@ -7760,6 +8103,7 @@ export interface Templates {
   helpers?: string;
   index?: string;
   oauth2Authorize?: string;
+  oauth2AuthorizedNotRegistered?: string;
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
@@ -7769,6 +8113,7 @@ export interface Templates {
   oauth2Logout?: string;
   oauth2Passwordless?: string;
   oauth2Register?: string;
+  oauth2StartIdPLink?: string;
   oauth2TwoFactor?: string;
   oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
@@ -7809,6 +8154,7 @@ export interface Tenant {
   minimumPasswordAge?: MinimumPasswordAge;
   multiFactorConfiguration?: TenantMultiFactorConfiguration;
   name?: string;
+  oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
   state?: ObjectState;
@@ -7844,6 +8190,10 @@ export interface TenantMultiFactorConfiguration {
   authenticator?: MultiFactorAuthenticatorMethod;
   email?: MultiFactorEmailMethod;
   sms?: MultiFactorSMSMethod;
+}
+
+export interface TenantOAuth2Configuration {
+  clientCredentialsAccessTokenPopulateLambdaId?: UUID;
 }
 
 /**
@@ -7998,6 +8348,28 @@ export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration
   fromPhoneNumber?: string;
   messagingServiceSid?: string;
   url?: string;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface TwitchApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Twitch gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface TwitchIdentityProvider extends BaseIdentityProvider<TwitchApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
 }
 
 /**
@@ -8726,6 +9098,28 @@ export interface WebhookRequest {
 export interface WebhookResponse {
   webhook?: Webhook;
   webhooks?: Array<Webhook>;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface XboxApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Xbox gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface XboxIdentityProvider extends BaseIdentityProvider<XboxApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
 }
 
 export enum XMLSignatureLocation {
