@@ -6339,6 +6339,7 @@ export enum IdentityProviderLinkingStrategy {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderLinkRequest {
+  displayName?: string;
   identityProviderId?: UUID;
   identityProviderUserId?: string;
   pendingIdPLinkId?: string;
@@ -7468,7 +7469,7 @@ export interface PendingIdPLink {
   email?: string;
   identityProviderId?: UUID;
   identityProviderName?: string;
-  identityProviderType?: string;
+  identityProviderType?: IdentityProviderType;
   identityProviderUserId?: string;
   user?: User;
   username?: string;
