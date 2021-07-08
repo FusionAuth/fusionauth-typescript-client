@@ -4900,6 +4900,16 @@ export interface AuditLogSearchResponse {
   total?: number;
 }
 
+/**
+ * @author Brett Pontarelli
+ */
+export enum AuthenticationThreats {
+  ImpossibleTravel = "ImpossibleTravel",
+  UnusualTravel = "UnusualTravel",
+  BadCaptcha = "BadCaptcha",
+  NewDeviceLogin = "NewDeviceLogin"
+}
+
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
@@ -7059,6 +7069,7 @@ export interface LoginResponse {
   refreshToken?: string;
   registrationVerificationId?: string;
   state?: Record<string, any>;
+  threatsDetected?: Array<AuthenticationThreats>;
   token?: string;
   twoFactorId?: string;
   twoFactorTrustId?: string;
