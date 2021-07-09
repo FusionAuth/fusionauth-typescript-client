@@ -163,6 +163,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an ACL. You can optionally specify an Id for the ACL. If not provided one will be generated.
+   *
+   * @param {UUID} accessControlListId (Optional) The Id for the ACL. If not provided a secure random UUID will be generated.
+   * @param {IPAccessControlListRequest} request The request object that contains all of the information used to create the IP ACL.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  createACL(accessControlListId: UUID, request: IPAccessControlListRequest): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(accessControlListId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates an API key. You can optionally specify a unique Id for the key, if not provided one will be generated.
    * an API key can only be created with equal or lesser authority. An API key cannot create another API key unless it is granted 
    * to that API key.
@@ -689,6 +705,20 @@ export class FusionAuthClient {
         .withParameter('userId', userIds)
         .withParameter('dryRun', false)
         .withParameter('hardDelete', false)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the ACL for the given Id.
+   *
+   * @param {UUID} ipAccessControlListId The Id of the ACL to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteACL(ipAccessControlListId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(ipAccessControlListId)
         .withMethod("DELETE")
         .go();
   }
@@ -2173,6 +2203,32 @@ export class FusionAuthClient {
         .withParameter('email', email)
         .withParameter('applicationId', applicationId)
         .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Retrieves the ACL with the given Id.
+   *
+   * @param {UUID} formId The Id of the ACL.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  retrieveACL(formId: UUID): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, void>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(formId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all ACLs.
+   *
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  retrieveACLs(): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, void>()
+        .withUri('/api/ip-acl')
+        .withMethod("GET")
         .go();
   }
 
@@ -3968,6 +4024,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the ACL with the given Id.
+   *
+   * @param {UUID} accessControlListId The Id of the ACL to update.
+   * @param {IPAccessControlListRequest} request The request that contains all of the new ACL information.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  updateACL(accessControlListId: UUID, request: IPAccessControlListRequest): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(accessControlListId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates an API key by given id
    *
    * @param {UUID} apiKeyId The Id of the API key to update.
@@ -4607,14 +4679,6 @@ export interface ActionRequest {
 export interface ActionResponse {
   action?: UserActionLog;
   actions?: Array<UserActionLog>;
-}
-
-/**
- * @author Brett Guy
- */
-export enum AddressRangeMode {
-  ALLOW = "ALLOW",
-  BLOCK = "BLOCK"
 }
 
 /**
@@ -6523,17 +6587,47 @@ export interface IntrospectResponse extends Record<string, any> {
 }
 
 /**
- * TODO : ip-allow-block : Fix names so they are all the same. I prefer `IP`.
- *
  * @author Brett Guy
  */
-export interface IpAddressRange {
-  endIpAddress?: string;
+export interface IPAccessControlList {
+  data?: Record<string, any>;
+  defaultAction?: IPAccessControlListMode;
+  exceptions?: Array<IPAccessControlListException>;
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
-  mode?: AddressRangeMode;
-  startIpAddress?: string;
+  name?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListException {
+  endIPAddress?: string;
+  startIPAddress?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum IPAccessControlListMode {
+  Allow = "Allow",
+  Block = "Block"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListRequest {
+  ipAccessControlList?: IPAccessControlList;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListResponse {
+  ipAccessControlList?: IPAccessControlList;
+  ipAccessControlLists?: Array<IPAccessControlList>;
 }
 
 /**
@@ -6544,21 +6638,6 @@ export interface IPAddressRangeNode {
   left?: IPAddressRangeNode;
   right?: IPAddressRangeNode;
   startIpAddress?: number;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAddressRangeRequest {
-  ipAddressRange?: IpAddressRange;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAddressRangeResponse {
-  ipAddressRange?: IpAddressRange;
-  ipAddressRanges?: Array<IpAddressRange>;
 }
 
 /**
