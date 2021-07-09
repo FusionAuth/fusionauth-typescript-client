@@ -5237,25 +5237,6 @@ export enum ConnectorType {
 }
 
 /**
- * Models a consent.
- *
- * @author Daniel DeGroff
- */
-export interface Consent {
-  consentEmailTemplateId?: UUID;
-  countryMinimumAgeForSelfConsent?: LocalizedIntegers;
-  data?: Record<string, any>;
-  defaultMinimumAgeForSelfConsent?: number;
-  emailPlus?: EmailPlus;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  multipleValuesAllowed?: boolean;
-  name?: string;
-  values?: Array<string>;
-}
-
-/**
  * API request for User consent types.
  *
  * @author Daniel DeGroff
@@ -5437,12 +5418,6 @@ export interface EmailConfiguration {
   verificationStrategy?: VerificationStrategy;
   verifyEmail?: boolean;
   verifyEmailWhenChanged?: boolean;
-}
-
-export interface EmailPlus extends Enableable {
-  emailTemplateId?: UUID;
-  maximumTimeToSendEmailInHours?: number;
-  minimumTimeToSendEmailInHours?: number;
 }
 
 export enum EmailSecurityType {
