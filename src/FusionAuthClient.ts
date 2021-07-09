@@ -6371,6 +6371,7 @@ export interface IdentityProviderLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   encodedJWT?: string;
   identityProviderId?: UUID;
+  noLink?: boolean;
 }
 
 /**
@@ -8492,6 +8493,12 @@ export interface UIConfiguration {
 export interface UniqueUsernameConfiguration extends Enableable {
   numberOfDigits?: number;
   separator?: string;
+  strategy?: UniqueUsernameStrategy;
+}
+
+export enum UniqueUsernameStrategy {
+  Always = "Always",
+  OnCollision = "OnCollision"
 }
 
 /**
