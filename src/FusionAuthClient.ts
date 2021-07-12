@@ -4648,6 +4648,13 @@ export interface AccessToken {
   userId?: UUID;
 }
 
+/**
+ * @author Brett Guy
+ */
+export interface ACLConfiguration {
+  aclAction?: IPAccessControlListMode;
+}
+
 export interface ActionData {
   actioneeUserId?: UUID;
   actionerUserId?: UUID;
@@ -6644,21 +6651,15 @@ export interface IPAccessControlListResponse {
  * @author Brett Guy
  */
 export interface IPAddressRangeNode {
-  endIpAddress?: number;
+  endIPAddress?: number;
   left?: IPAddressRangeNode;
   right?: IPAddressRangeNode;
-  startIpAddress?: number;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAddressRangeRule {
+  startIPAddress?: number;
 }
 
 /**
  * An implementation of an Interval Tree used to store IP address ranges.
- *
+ * <p>
  * https://en.wikipedia.org/wiki/Interval_tree
  */
 export interface IPAddressRangeTree {
