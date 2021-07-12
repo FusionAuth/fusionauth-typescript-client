@@ -6429,6 +6429,7 @@ export enum IdentityProviderLinkingStrategy {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderLinkRequest {
+  displayName?: string;
   identityProviderId?: UUID;
   identityProviderUserId?: string;
   pendingIdPLinkId?: string;
@@ -6460,7 +6461,7 @@ export interface IdentityProviderLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   encodedJWT?: string;
   identityProviderId?: UUID;
-  loginOnlyWhenLinked?: boolean;
+  noLink?: boolean;
 }
 
 /**
@@ -6616,9 +6617,7 @@ export interface IPAccessControlList {
   name?: string;
 }
 
-/**
- * @author Brett Guy
- */
+// I think we could omit "Exception" from the name. Really this is just an IP range I think.
 export interface IPAccessControlListException {
   endIPAddress?: string;
   startIPAddress?: string;
@@ -7636,7 +7635,7 @@ export interface PendingIdPLink {
   email?: string;
   identityProviderId?: UUID;
   identityProviderName?: string;
-  identityProviderType?: string;
+  identityProviderType?: IdentityProviderType;
   identityProviderUserId?: string;
   user?: User;
   username?: string;
@@ -8661,6 +8660,12 @@ export interface UIConfiguration {
 export interface UniqueUsernameConfiguration extends Enableable {
   numberOfDigits?: number;
   separator?: string;
+  strategy?: UniqueUsernameStrategy;
+}
+
+export enum UniqueUsernameStrategy {
+  Always = "Always",
+  OnCollision = "OnCollision"
 }
 
 /**
