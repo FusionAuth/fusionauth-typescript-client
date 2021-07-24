@@ -7630,6 +7630,7 @@ export interface RefreshToken {
   insertInstant?: number;
   metaData?: MetaData;
   startInstant?: number;
+  tenantId?: UUID;
   token?: string;
   userId?: UUID;
 }
