@@ -414,6 +414,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates an IP Access Control List. You can optionally specify an Id on this create request, if one is not provided one will be generated.
+   *
+   * @param {UUID} accessControlListId (Optional) The Id for the IP Access Control List. If not provided a secure random UUID will be generated.
+   * @param {IPAccessControlListRequest} request The request object that contains all of the information used to create the IP Access Control List.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  createIPAccessControlList(accessControlListId: UUID, request: IPAccessControlListRequest): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(accessControlListId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates an identity provider. You can optionally specify an Id for the identity provider, if not provided one will be generated.
    *
    * @param {UUID} identityProviderId (Optional) The Id of the identity provider. If not provided a secure random UUID will be generated.
@@ -907,6 +923,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the IP Access Control List for the given Id.
+   *
+   * @param {UUID} ipAccessControlListId The Id of the IP Access Control List to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteIPAccessControlList(ipAccessControlListId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(ipAccessControlListId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the identity provider for the given Id.
    *
    * @param {UUID} identityProviderId The Id of the identity provider to delete.
@@ -993,7 +1023,26 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deletes the tenant for the given Id.
+   * Deletes the user registration for the given user and application along with the given JSON body that contains the event information.
+   *
+   * @param {UUID} userId The Id of the user whose registration is being deleted.
+   * @param {UUID} applicationId The Id of the application to remove the registration for.
+   * @param {RegistrationDeleteRequest} request The request body that contains the event information.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteRegistrationWithRequest(userId: UUID, applicationId: UUID, request: RegistrationDeleteRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/registration')
+        .withUriSegment(userId)
+        .withUriSegment(applicationId)
+        .withJSONBody(request)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the tenant based on the given Id on the URL. This permanently deletes all information, metrics, reports and data associated
+   * with the tenant and everything under the tenant (applications, users, etc).
    *
    * @param {UUID} tenantId The Id of the tenant to delete.
    * @returns {Promise<ClientResponse<void>>}
@@ -1018,6 +1067,23 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withParameter('async', true)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the tenant based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
+   * with the tenant and everything under the tenant (applications, users, etc).
+   *
+   * @param {UUID} tenantId The Id of the tenant to delete.
+   * @param {TenantDeleteRequest} request The request object that contains all of the information used to delete the user.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteTenantWithRequest(tenantId: UUID, request: TenantDeleteRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/tenant')
+        .withUriSegment(tenantId)
+        .withJSONBody(request)
         .withMethod("DELETE")
         .go();
   }
@@ -1101,6 +1167,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the user based on the given request (sent to the API as JSON). This permanently deletes all information, metrics, reports and data associated
+   * with the user.
+   *
+   * @param {UUID} userId The Id of the user to delete (required).
+   * @param {UserDeleteSingleRequest} request The request object that contains all of the information used to delete the user.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteUserWithRequest(userId: UUID, request: UserDeleteSingleRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user')
+        .withUriSegment(userId)
+        .withJSONBody(request)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the users with the given ids, or users matching the provided JSON query or queryString.
    * The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
    * 
@@ -1163,9 +1246,25 @@ export class FusionAuthClient {
   disableTwoFactor(userId: UUID, methodId: string, code: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/two-factor')
-        .withParameter('userId', userId)
+        .withUriSegment(userId)
         .withParameter('methodId', methodId)
         .withParameter('code', code)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Disable Two Factor authentication for a user using a JSON body rather than URL parameters.
+   *
+   * @param {UUID} userId The Id of the User for which you're disabling Two Factor authentication.
+   * @param {TwoFactorDisableRequest} request The request information that contains the code and methodId along with any event information.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  disableTwoFactorWithRequest(userId: UUID, request: TwoFactorDisableRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/two-factor')
+        .withUriSegment(userId)
+        .withJSONBody(request)
         .withMethod("DELETE")
         .go();
   }
@@ -1589,6 +1688,21 @@ export class FusionAuthClient {
         .withUri('/api/logout')
         .withParameter('global', global)
         .withParameter('refreshToken', refreshToken)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * The Logout API is intended to be used to remove the refresh token and access token cookies if they exist on the
+   * client and revoke the refresh token stored. This API takes the refresh token in the JSON body.
+   *
+   * @param {LogoutRequest} request The request object that contains all of the information used to logout the user.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  logoutWithRequest(request: LogoutRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, void>()
+        .withUri('/api/logout')
+        .withJSONBody(request)
         .withMethod("POST")
         .go();
   }
@@ -2578,6 +2692,20 @@ export class FusionAuthClient {
   retrieveGroups(): Promise<ClientResponse<GroupResponse>> {
     return this.start<GroupResponse, void>()
         .withUri('/api/group')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the IP Access Control List with the given Id.
+   *
+   * @param {UUID} ipAccessControlListId The Id of the IP Access Control List.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  retrieveIPAccessControlList(ipAccessControlListId: UUID): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, void>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(ipAccessControlListId)
         .withMethod("GET")
         .go();
   }
@@ -3623,6 +3751,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Revokes refresh tokens using the information in the JSON body. The handling for this method is the same as the revokeRefreshToken method
+   * and is based on the information you provide in the RefreshDeleteRequest object. See that method for additional information.
+   *
+   * @param {RefreshTokenRevokeRequest} request The request information used to revoke the refresh tokens.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  revokeRefreshTokensWithRequest(request: RefreshTokenRevokeRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/jwt/refresh')
+        .withJSONBody(request)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Revokes a single User consent by Id.
    *
    * @param {UUID} userConsentId The User Consent Id
@@ -3715,6 +3858,20 @@ export class FusionAuthClient {
   searchEventLogs(request: EventLogSearchRequest): Promise<ClientResponse<EventLogSearchResponse>> {
     return this.start<EventLogSearchResponse, void>()
         .withUri('/api/system/event-log/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches the IP Access Control Lists with the specified criteria and pagination.
+   *
+   * @param {IPAccessControlListSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<IPAccessControlListSearchResponse>>}
+   */
+  searchIPAccessControlLists(request: IPAccessControlListSearchRequest): Promise<ClientResponse<IPAccessControlListSearchResponse>> {
+    return this.start<IPAccessControlListSearchResponse, void>()
+        .withUri('/api/ip-acl/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -4166,6 +4323,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the IP Access Control List with the given Id.
+   *
+   * @param {UUID} accessControlListId The Id of the IP Access Control List to update.
+   * @param {IPAccessControlListRequest} request The request that contains all of the new IP Access Control List information.
+   * @returns {Promise<ClientResponse<IPAccessControlListResponse>>}
+   */
+  updateIPAccessControlList(accessControlListId: UUID, request: IPAccessControlListRequest): Promise<ClientResponse<IPAccessControlListResponse>> {
+    return this.start<IPAccessControlListResponse, Errors>()
+        .withUri('/api/ip-acl')
+        .withUriSegment(accessControlListId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the identity provider with the given Id.
    *
    * @param {UUID} identityProviderId The Id of the identity provider to update.
@@ -4453,6 +4626,28 @@ export class FusionAuthClient {
   }
 
   /**
+   * It's a JWT vending machine!
+   * 
+   * Issue a new access token (JWT) with the provided claims in the request. This JWT is not scoped to a tenant or user, it is a free form 
+   * token that will contain what claims you provide.
+   * <p>
+   * The iat, exp and jti claims will be added by FusionAuth, all other claims must be provided by the caller.
+   * 
+   * If a TTL is not provided in the request, the TTL will be retrieved from the default Tenant or the Tenant specified on the request either 
+   * by way of the X-FusionAuth-TenantId request header, or a tenant scoped API key.
+   *
+   * @param {JWTVendRequest} request The request that contains all of the claims for this JWT.
+   * @returns {Promise<ClientResponse<JWTVendResponse>>}
+   */
+  vendJWT(request: JWTVendRequest): Promise<ClientResponse<JWTVendResponse>> {
+    return this.start<JWTVendResponse, Errors>()
+        .withUri('/api/jwt/vend')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Confirms a email verification. The Id given is usually from an email sent to the user.
    *
    * @param {string} verificationId The email verification id sent to the user.
@@ -4594,7 +4789,7 @@ export interface ActionData {
  *
  * @author Brian Pontarelli
  */
-export interface ActionRequest {
+export interface ActionRequest extends BaseEventRequest {
   action?: ActionData;
   broadcast?: boolean;
 }
@@ -4635,6 +4830,7 @@ export enum Algorithm {
 export interface APIKey {
   id?: UUID;
   insertInstant?: number;
+  ipAccessControlListId?: UUID;
   key?: string;
   keyManager?: boolean;
   lastUpdateInstant?: number;
@@ -4696,6 +4892,7 @@ export interface AppleIdentityProvider extends BaseIdentityProvider<AppleApplica
  * @author Seth Musselman
  */
 export interface Application {
+  accessControlConfiguration?: ApplicationAccessControlConfiguration;
   active?: boolean;
   authenticationTokenConfiguration?: AuthenticationTokenConfiguration;
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
@@ -4725,10 +4922,22 @@ export interface Application {
   verifyRegistration?: boolean;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationAccessControlConfiguration {
+  uiIPAccessControlListId?: UUID;
+}
+
 export interface ApplicationEmailConfiguration {
+  emailUpdateEmailTemplateId?: UUID;
   emailVerificationEmailTemplateId?: UUID;
+  emailVerifiedEmailTemplateId?: UUID;
   forgotPasswordEmailTemplateId?: UUID;
+  loginNewDeviceEmailTemplateId?: UUID;
+  loginSuspiciousEmailTemplateId?: UUID;
   passwordlessEmailTemplateId?: UUID;
+  passwordResetSuccessEmailTemplateId?: UUID;
   setPasswordEmailTemplateId?: UUID;
 }
 
@@ -4770,7 +4979,7 @@ export interface ApplicationRegistrationDeletePolicy {
  *
  * @author Brian Pontarelli
  */
-export interface ApplicationRequest {
+export interface ApplicationRequest extends BaseEventRequest {
   application?: Application;
   role?: ApplicationRole;
   webhookIds?: Array<UUID>;
@@ -4843,6 +5052,15 @@ export interface AuditLogConfiguration {
 }
 
 /**
+ * Event event to an audit log was created.
+ *
+ * @author Daniel DeGroff
+ */
+export interface AuditLogCreateEvent extends BaseEvent {
+  auditLog?: AuditLog;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface AuditLogExportRequest extends BaseExportRequest {
@@ -4852,7 +5070,7 @@ export interface AuditLogExportRequest extends BaseExportRequest {
 /**
  * @author Brian Pontarelli
  */
-export interface AuditLogRequest {
+export interface AuditLogRequest extends BaseEventRequest {
   auditLog?: AuditLog;
 }
 
@@ -4871,6 +5089,9 @@ export interface AuditLogResponse {
 export interface AuditLogSearchCriteria extends BaseSearchCriteria {
   end?: number;
   message?: string;
+  newValue?: string;
+  oldValue?: string;
+  reason?: string;
   start?: number;
   user?: string;
 }
@@ -4890,6 +5111,13 @@ export interface AuditLogSearchRequest {
 export interface AuditLogSearchResponse {
   auditLogs?: Array<AuditLog>;
   total?: number;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum AuthenticationThreats {
+  ImpossibleTravel = "ImpossibleTravel"
 }
 
 export interface AuthenticationTokenConfiguration extends Enableable {
@@ -4934,7 +5162,19 @@ export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
 export interface BaseEvent {
   createInstant?: number;
   id?: UUID;
+  info?: EventInfo;
   tenantId?: UUID;
+  type?: EventType;
+}
+
+/**
+ * Base class for requests that can contain event information. This event information is used when sending Webhooks or emails
+ * during the transaction. The caller is responsible for ensuring that the event information is correct.
+ *
+ * @author Brian Pontarelli
+ */
+export interface BaseEventRequest {
+  eventInfo?: EventInfo;
 }
 
 /**
@@ -4970,10 +5210,11 @@ export interface BaseIdentityProviderApplicationConfiguration extends Enableable
 /**
  * @author Daniel DeGroff
  */
-export interface BaseLoginRequest {
+export interface BaseLoginRequest extends BaseEventRequest {
   applicationId?: UUID;
   ipAddress?: string;
   metaData?: MetaData;
+  newDevice?: boolean;
   noJWT?: boolean;
 }
 
@@ -5046,6 +5287,16 @@ export enum CanonicalizationMethod {
   inclusive_with_comments = "inclusive_with_comments"
 }
 
+/**
+ * @author Brett Pontarelli
+ */
+export enum CaptchaMethod {
+  GoogleRecaptchaV2 = "GoogleRecaptchaV2",
+  GoogleRecaptchaV3 = "GoogleRecaptchaV3",
+  HCaptcha = "HCaptcha",
+  HCaptchaEnterprise = "HCaptchaEnterprise"
+}
+
 export interface CertificateInformation {
   issuer?: string;
   md5Fingerprint?: string;
@@ -5074,7 +5325,8 @@ export enum ChangePasswordReason {
  *
  * @author Brian Pontarelli
  */
-export interface ChangePasswordRequest {
+export interface ChangePasswordRequest extends BaseEventRequest {
+  applicationId?: UUID;
   currentPassword?: string;
   loginId?: string;
   password?: string;
@@ -5244,14 +5496,6 @@ export interface DailyActiveUserReportResponse {
   total?: number;
 }
 
-/**
- * Helper for dealing with default values.
- *
- * @author Brian Pontarelli
- */
-export interface DefaultTools {
-}
-
 export interface DeleteConfiguration extends Enableable {
   numberOfDaysToRetain?: number;
 }
@@ -5298,6 +5542,7 @@ export enum DeviceType {
  */
 export interface DisplayableRawLogin extends RawLogin {
   applicationName?: string;
+  location?: Location;
   loginId?: string;
 }
 
@@ -5340,14 +5585,24 @@ export interface EmailAddress {
 export interface EmailConfiguration {
   defaultFromEmail?: string;
   defaultFromName?: string;
+  emailUpdateEmailTemplateId?: UUID;
+  emailVerifiedEmailTemplateId?: UUID;
   forgotPasswordEmailTemplateId?: UUID;
   host?: string;
+  loginIdInUseOnCreateEmailTemplateId?: UUID;
+  loginIdInUseOnUpdateEmailTemplateId?: UUID;
+  loginNewDeviceEmailTemplateId?: UUID;
+  loginSuspiciousEmailTemplateId?: UUID;
   password?: string;
   passwordlessEmailTemplateId?: UUID;
+  passwordResetSuccessEmailTemplateId?: UUID;
+  passwordUpdateEmailTemplateId?: UUID;
   port?: number;
   properties?: string;
   security?: EmailSecurityType;
   setPasswordEmailTemplateId?: UUID;
+  twoFactorMethodAddEmailTemplateId?: UUID;
+  twoFactorMethodRemoveEmailTemplateId?: UUID;
   unverified?: EmailUnverifiedOptions;
   username?: string;
   verificationEmailTemplateId?: UUID;
@@ -5699,6 +5954,22 @@ export interface EventConfigurationData extends Enableable {
 }
 
 /**
+ * Information about a user event (login, register, etc) that helps identify the source of the event (location, device type, OS, etc).
+ *
+ * @author Brian Pontarelli
+ */
+export interface EventInfo {
+  data?: Record<string, any>;
+  deviceDescription?: string;
+  deviceName?: string;
+  deviceType?: string;
+  ipAddress?: string;
+  location?: Location;
+  os?: string;
+  userAgent?: string;
+}
+
+/**
  * Event log used internally by FusionAuth to help developers debug hooks, Webhooks, email templates, etc.
  *
  * @author Brian Pontarelli
@@ -5712,6 +5983,15 @@ export interface EventLog {
 
 export interface EventLogConfiguration {
   numberToRetain?: number;
+}
+
+/**
+ * Event event to an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+export interface EventLogCreateEvent extends BaseEvent {
+  eventLog?: EventLog;
 }
 
 /**
@@ -5778,24 +6058,44 @@ export interface EventRequest {
  * @author Brian Pontarelli
  */
 export enum EventType {
-  UserDelete = "user.delete",
-  UserCreate = "user.create",
-  UserUpdate = "user.update",
-  UserDeactivate = "user.deactivate",
-  UserBulkCreate = "user.bulk.create",
-  UserReactivate = "user.reactivate",
-  UserAction = "user.action",
+  JWTPublicKeyUpdate = "jwt.public-key.update",
   JWTRefreshTokenRevoke = "jwt.refresh-token.revoke",
   JWTRefresh = "jwt.refresh",
-  JWTPublicKeyUpdate = "jwt.public-key.update",
-  UserLoginSuccess = "user.login.success",
-  UserLoginFailed = "user.login.failed",
-  UserRegistrationCreate = "user.registration.create",
-  UserRegistrationUpdate = "user.registration.update",
-  UserRegistrationDelete = "user.registration.delete",
-  UserRegistrationVerified = "user.registration.verified",
+  AuditLogCreate = "audit-log.create",
+  EventLogCreate = "event-log.create",
+  KickstartSuccess = "kickstart.success",
+  UserAction = "user.action",
+  UserBulkCreate = "user.bulk.create",
+  UserCreate = "user.create",
+  UserCreateComplete = "user.create.complete",
+  UserDeactivate = "user.deactivate",
+  UserDelete = "user.delete",
+  UserDeleteComplete = "user.delete.complete",
+  UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
+  UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
+  UserEmailUpdate = "user.email.update",
   UserEmailVerified = "user.email.verified",
+  UserLoginFailed = "user.login.failed",
+  UserLoginNewDevice = "user.login.new-device",
+  UserLoginSuccess = "user.login.success",
+  UserLoginSuspicious = "user.login.suspicious",
   UserPasswordBreach = "user.password.breach",
+  UserPasswordResetSend = "user.password.reset.send",
+  UserPasswordResetStart = "user.password.reset.start",
+  UserPasswordResetSuccess = "user.password.reset.success",
+  UserPasswordUpdate = "user.password.update",
+  UserReactivate = "user.reactivate",
+  UserRegistrationCreate = "user.registration.create",
+  UserRegistrationCreateComplete = "user.registration.create.complete",
+  UserRegistrationDelete = "user.registration.delete",
+  UserRegistrationDeleteComplete = "user.registration.delete.complete",
+  UserRegistrationUpdate = "user.registration.update",
+  UserRegistrationUpdateComplete = "user.registration.update.complete",
+  UserRegistrationVerified = "user.registration.verified",
+  UserTwoFactorMethodAdd = "user.two-factor.method.add",
+  UserTwoFactorMethodRemove = "user.two-factor.method.remove",
+  UserUpdate = "user.update",
+  UserUpdateComplete = "user.update.complete",
   Test = "test"
 }
 
@@ -5979,7 +6279,7 @@ export enum FamilyRole {
  *
  * @author Brian Pontarelli
  */
-export interface ForgotPasswordRequest {
+export interface ForgotPasswordRequest extends BaseEventRequest {
   applicationId?: UUID;
   changePasswordId?: string;
   email?: string;
@@ -6450,11 +6750,19 @@ export enum IdentityProviderType {
  *
  * @author Brian Pontarelli
  */
-export interface ImportRequest {
+export interface ImportRequest extends BaseEventRequest {
   encryptionScheme?: string;
   factor?: number;
   users?: Array<User>;
   validateDbConstraints?: boolean;
+}
+
+/**
+ * A marker interface indicating this event is not scoped to a tenant and will be sent to all webhooks.
+ *
+ * @author Daniel DeGroff
+ */
+export interface InstanceEvent extends NonTransactionalEvent {
 }
 
 /**
@@ -6512,6 +6820,74 @@ export interface IntervalUser {
  * @author Daniel DeGroff
  */
 export interface IntrospectResponse extends Record<string, any> {
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlEntry {
+  action?: IPAccessControlEntryAction;
+  endIPAddress?: string;
+  startIPAddress?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum IPAccessControlEntryAction {
+  Allow = "Allow",
+  Block = "Block"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlList {
+  data?: Record<string, any>;
+  entries?: Array<IPAccessControlEntry>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListRequest {
+  ipAccessControlList?: IPAccessControlList;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListResponse {
+  ipAccessControlList?: IPAccessControlList;
+  ipAccessControlLists?: Array<IPAccessControlList>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for IP ACLs .
+ *
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchRequest {
+  search?: IPAccessControlListSearchCriteria;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchResponse {
+  ipAccessControlLists?: Array<IPAccessControlList>;
+  total?: number;
 }
 
 /**
@@ -6651,6 +7027,22 @@ export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
 /**
  * @author Daniel DeGroff
  */
+export interface JWTVendRequest {
+  claims?: Record<string, any>;
+  keyId?: UUID;
+  timeToLiveInSeconds?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface JWTVendResponse {
+  token?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
 export interface KafkaConfiguration extends Enableable {
   defaultTopic?: string;
   producer?: Record<string, string>;
@@ -6737,10 +7129,15 @@ export enum KeyUse {
 }
 
 /**
- * A JavaScript lambda function that is executed during certain events inside FusionAuth.
+ * Event event to indicate kickstart has been successfully completed.
  *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
+export interface KickstartSuccessEvent extends BaseEvent {
+  instanceId?: UUID;
+}
+
+// TODO : Future : This shouldn't be enableable
 export interface Lambda extends Enableable {
   body?: string;
   debug?: boolean;
@@ -6873,6 +7270,21 @@ export interface LocalizedStrings extends Record<string, string> {
 }
 
 /**
+ * Location information. Useful for IP addresses and other displayable data objects.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Location {
+  city?: string;
+  country?: string;
+  displayString?: string;
+  latitude?: number;
+  longitude?: number;
+  region?: string;
+  zipcode?: string;
+}
+
+/**
  * A historical state of a user log event. Since events can be modified, this stores the historical state.
  *
  * @author Brian Pontarelli
@@ -6984,6 +7396,7 @@ export interface LoginResponse {
   refreshToken?: string;
   registrationVerificationId?: string;
   state?: Record<string, any>;
+  threatsDetected?: Array<AuthenticationThreats>;
   token?: string;
   twoFactorId?: string;
   twoFactorTrustId?: string;
@@ -6996,6 +7409,16 @@ export interface LoginResponse {
 export enum LogoutBehavior {
   RedirectOnly = "RedirectOnly",
   AllApplications = "AllApplications"
+}
+
+/**
+ * Request for the Logout API that can be used as an alternative to URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LogoutRequest extends BaseEventRequest {
+  global?: boolean;
+  refreshToken?: string;
 }
 
 /**
@@ -7193,11 +7616,11 @@ export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoA
 }
 
 /**
- * Helper methods for normalizing values.
+ * A marker interface indicating this event cannot be made transactional.
  *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
-export interface Normalizer {
+export interface NonTransactionalEvent {
 }
 
 /**
@@ -7535,6 +7958,26 @@ export interface PublicKeyResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface RateLimitedRequestConfiguration extends Enableable {
+  limit?: number;
+  timePeriodInSeconds?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RateLimitedRequestType {
+  FailedLogin = "FailedLogin",
+  ForgotPassword = "ForgotPassword",
+  SendEmailVerification = "SendEmailVerification",
+  SendPasswordless = "SendPasswordless",
+  SendRegistrationVerification = "SendRegistrationVerification",
+  SendTwoFactor = "SendTwoFactor"
+}
+
+/**
  * Raw login information for each time a user logs into an application.
  *
  * @author Brian Pontarelli
@@ -7553,6 +7996,7 @@ export enum ReactorFeatureStatus {
   ACTIVE = "ACTIVE",
   DISCONNECTED = "DISCONNECTED",
   PENDING = "PENDING",
+  DISABLED = "DISABLED",
   UNKNOWN = "UNKNOWN"
 }
 
@@ -7593,6 +8037,7 @@ export interface ReactorStatus {
   connectors?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   licensed?: boolean;
+  threatDetection?: ReactorFeatureStatus;
 }
 
 /**
@@ -7607,7 +8052,7 @@ export interface RecentLoginResponse {
 /**
  * @author Daniel DeGroff
  */
-export interface RefreshRequest {
+export interface RefreshRequest extends BaseEventRequest {
   refreshToken?: string;
   token?: string;
 }
@@ -7672,6 +8117,17 @@ export interface RefreshTokenRevocationPolicy {
 }
 
 /**
+ * Request for the Refresh Token API to revoke a refresh token rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RefreshTokenRevokeRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  token?: string;
+  userId?: UUID;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export enum RefreshTokenUsagePolicy {
@@ -7693,6 +8149,14 @@ export interface RegistrationConfiguration extends Enableable {
 }
 
 /**
+ * Registration delete API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RegistrationDeleteRequest extends BaseEventRequest {
+}
+
+/**
  * Response for the registration report.
  *
  * @author Brian Pontarelli
@@ -7707,7 +8171,8 @@ export interface RegistrationReportResponse {
  *
  * @author Brian Pontarelli
  */
-export interface RegistrationRequest {
+export interface RegistrationRequest extends BaseEventRequest {
+  disableDomainBlock?: boolean;
   generateAuthenticationToken?: boolean;
   registration?: UserRegistration;
   sendSetPasswordEmail?: boolean;
@@ -8064,6 +8529,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  ssoConfiguration?: SystemSSOConfiguration;
   uiConfiguration?: UIConfiguration;
 }
 
@@ -8090,6 +8556,13 @@ export interface SystemConfigurationResponse {
  */
 export interface SystemLogsExportRequest extends BaseExportRequest {
   lastNBytes?: number;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface SystemSSOConfiguration {
+  deviceTrustTimeToLiveInSeconds?: number;
 }
 
 export interface Templates {
@@ -8130,12 +8603,15 @@ export interface Templates {
   registrationVerificationRequired?: string;
   registrationVerify?: string;
   samlv2Logout?: string;
+  unauthorized?: string;
 }
 
 /**
  * @author Daniel DeGroff
  */
 export interface Tenant {
+  accessControlConfiguration?: TenantAccessControlConfiguration;
+  captchaConfiguration?: TenantCaptchaConfiguration;
   configured?: boolean;
   connectorPolicies?: Array<ConnectorPolicy>;
   data?: Record<string, any>;
@@ -8160,6 +8636,8 @@ export interface Tenant {
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
+  rateLimitConfiguration?: TenantRateLimitConfiguration;
+  registrationConfiguration?: TenantRegistrationConfiguration;
   state?: ObjectState;
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
@@ -8170,6 +8648,32 @@ export interface Tenant {
  * @author Brian Pontarelli
  */
 export interface Tenantable {
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TenantAccessControlConfiguration {
+  uiIPAccessControlListId?: UUID;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface TenantCaptchaConfiguration extends Enableable {
+  captchaMethod?: CaptchaMethod;
+  secretKey?: string;
+  siteKey?: string;
+  threshold?: number;
+}
+
+/**
+ * Request for the Tenant API to delete a tenant rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+export interface TenantDeleteRequest extends BaseEventRequest {
+  async?: boolean;
 }
 
 /**
@@ -8202,7 +8706,26 @@ export interface TenantOAuth2Configuration {
 /**
  * @author Daniel DeGroff
  */
-export interface TenantRequest {
+export interface TenantRateLimitConfiguration {
+  failedLogin?: RateLimitedRequestConfiguration;
+  forgotPassword?: RateLimitedRequestConfiguration;
+  sendEmailVerification?: RateLimitedRequestConfiguration;
+  sendPasswordless?: RateLimitedRequestConfiguration;
+  sendRegistrationVerification?: RateLimitedRequestConfiguration;
+  sendTwoFactor?: RateLimitedRequestConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantRegistrationConfiguration {
+  blockedDomains?: Array<string>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantRequest extends BaseEventRequest {
   sourceTenantId?: UUID;
   tenant?: Tenant;
 }
@@ -8396,6 +8919,14 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 }
 
 /**
+ * @author Brian Pontarelli
+ */
+export interface TwoFactorDisableRequest extends BaseEventRequest {
+  code?: string;
+  methodId?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface TwoFactorEnableDisableSendRequest {
@@ -8438,7 +8969,7 @@ export interface TwoFactorRecoveryCodeResponse {
 /**
  * @author Brian Pontarelli
  */
-export interface TwoFactorRequest {
+export interface TwoFactorRequest extends BaseEventRequest {
   authenticatorId?: string;
   code?: string;
   email?: string;
@@ -8770,6 +9301,17 @@ export interface UserConsentResponse {
 }
 
 /**
+ * Models the User Created Event (and can be converted to JSON).
+ * <p>
+ * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserCreateCompleteEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
  * Models the User Create Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -8790,6 +9332,18 @@ export interface UserDeactivateEvent extends BaseEvent {
 /**
  * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
  * delete).
+ * <p>
+ * This is different than user.delete because it is sent after the tx is committed, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserDeleteCompleteEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
+ * delete).
  *
  * @author Brian Pontarelli
  */
@@ -8802,7 +9356,7 @@ export interface UserDeleteEvent extends BaseEvent {
  *
  * @author Daniel DeGroff
  */
-export interface UserDeleteRequest {
+export interface UserDeleteRequest extends BaseEventRequest {
   dryRun?: boolean;
   hardDelete?: boolean;
   query?: string;
@@ -8820,6 +9374,25 @@ export interface UserDeleteResponse {
   hardDelete?: boolean;
   total?: number;
   userIds?: Array<string>;
+}
+
+/**
+ * User API delete request object for a single user.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserDeleteSingleRequest extends BaseEventRequest {
+  hardDelete?: boolean;
+}
+
+/**
+ * Models an event where a user's email is updated outside of a forgot / change password workflow.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserEmailUpdateEvent extends BaseEvent {
+  previousEmail?: string;
+  user?: User;
 }
 
 /**
@@ -8850,6 +9423,35 @@ export interface UserLoginFailedEvent extends BaseEvent {
 }
 
 /**
+ * Models an event where a user is being created with an "in-use" login Id (email or username).
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
+  applicationId?: UUID;
+  duplicateEmail?: string;
+  duplicateUsername?: string;
+  existing?: User;
+  user?: User;
+}
+
+/**
+ * Models an event where a user is being updated and tries to use an "in-use" login Id (email or username).
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginIdDuplicateOnUpdateEvent extends UserLoginIdDuplicateOnCreateEvent {
+}
+
+/**
+ * Models the User Login event for a new device (un-recognized)
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginNewDeviceEvent extends UserLoginSuccessEvent {
+}
+
+/**
  * Models the User Login Success Event.
  *
  * @author Daniel DeGroff
@@ -8864,6 +9466,14 @@ export interface UserLoginSuccessEvent extends BaseEvent {
   user?: User;
 }
 
+/**
+ * Models the User Login event that is suspicious.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginSuspiciousEvent extends UserLoginSuccessEvent {
+}
+
 export interface UsernameModeration extends Enableable {
   applicationId?: UUID;
 }
@@ -8874,6 +9484,42 @@ export interface UsernameModeration extends Enableable {
  * @author Matthew Altman
  */
 export interface UserPasswordBreachEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Password Reset Send Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordResetSendEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Password Reset Start Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordResetStartEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Password Reset Success Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordResetSuccessEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Password Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordUpdateEvent extends BaseEvent {
   user?: User;
 }
 
@@ -8910,11 +9556,37 @@ export interface UserRegistration {
 }
 
 /**
+ * Models the User Created Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationCreateCompleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
  * Models the User Create Registration Event (and can be converted to JSON).
  *
  * @author Daniel DeGroff
  */
 export interface UserRegistrationCreateEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * Models the User Deleted Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationDeleteCompleteEvent extends BaseEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
   user?: User;
@@ -8927,6 +9599,20 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
  */
 export interface UserRegistrationDeleteEvent extends BaseEvent {
   applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * Models the User Update Registration Event (and can be converted to JSON).
+ * <p>
+ * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationUpdateCompleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  original?: UserRegistration;
   registration?: UserRegistration;
   user?: User;
 }
@@ -8959,7 +9645,9 @@ export interface UserRegistrationVerifiedEvent extends BaseEvent {
  *
  * @author Brian Pontarelli
  */
-export interface UserRequest {
+export interface UserRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  disableDomainBlock?: boolean;
   sendSetPasswordEmail?: boolean;
   skipVerification?: boolean;
   user?: User;
@@ -9004,6 +9692,36 @@ export interface UserTwoFactorConfiguration {
 }
 
 /**
+ * Model a user event when a two-factor method has been removed.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorMethodAddEvent extends BaseEvent {
+  method?: TwoFactorMethod;
+  user?: User;
+}
+
+/**
+ * Model a user event when a two-factor method has been added.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorMethodRemoveEvent extends BaseEvent {
+  method?: TwoFactorMethod;
+  user?: User;
+}
+
+/**
+ * Models the User Update Event once it is completed. This cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserUpdateCompleteEvent extends BaseEvent {
+  original?: User;
+  user?: User;
+}
+
+/**
  * Models the User Update Event (and can be converted to JSON).
  *
  * @author Brian Pontarelli
@@ -9031,7 +9749,7 @@ export enum VerificationStrategy {
 /**
  * @author Daniel DeGroff
  */
-export interface VerifyEmailRequest {
+export interface VerifyEmailRequest extends BaseEventRequest {
   oneTimeCode?: string;
   verificationId?: string;
 }
@@ -9047,7 +9765,7 @@ export interface VerifyEmailResponse {
 /**
  * @author Daniel DeGroff
  */
-export interface VerifyRegistrationRequest {
+export interface VerifyRegistrationRequest extends BaseEventRequest {
   oneTimeCode?: string;
   verificationId?: string;
 }
