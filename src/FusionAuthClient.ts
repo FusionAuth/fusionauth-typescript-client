@@ -4934,11 +4934,16 @@ export interface ApplicationEmailConfiguration {
   emailVerificationEmailTemplateId?: UUID;
   emailVerifiedEmailTemplateId?: UUID;
   forgotPasswordEmailTemplateId?: UUID;
+  loginIdInUseOnCreateEmailTemplateId?: UUID;
+  loginIdInUseOnUpdateEmailTemplateId?: UUID;
   loginNewDeviceEmailTemplateId?: UUID;
   loginSuspiciousEmailTemplateId?: UUID;
   passwordlessEmailTemplateId?: UUID;
   passwordResetSuccessEmailTemplateId?: UUID;
+  passwordUpdateEmailTemplateId?: UUID;
   setPasswordEmailTemplateId?: UUID;
+  twoFactorMethodAddEmailTemplateId?: UUID;
+  twoFactorMethodRemoveEmailTemplateId?: UUID;
 }
 
 /**
@@ -8922,6 +8927,7 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
  * @author Brian Pontarelli
  */
 export interface TwoFactorDisableRequest extends BaseEventRequest {
+  applicationId?: UUID;
   code?: string;
   methodId?: string;
 }
@@ -8970,6 +8976,7 @@ export interface TwoFactorRecoveryCodeResponse {
  * @author Brian Pontarelli
  */
 export interface TwoFactorRequest extends BaseEventRequest {
+  applicationId?: UUID;
   authenticatorId?: string;
   code?: string;
   email?: string;
@@ -9428,7 +9435,6 @@ export interface UserLoginFailedEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
-  applicationId?: UUID;
   duplicateEmail?: string;
   duplicateUsername?: string;
   existing?: User;
