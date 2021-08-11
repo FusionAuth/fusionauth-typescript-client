@@ -9478,6 +9478,7 @@ export interface UserLoginSuccessEvent extends BaseEvent {
  * @author Daniel DeGroff
  */
 export interface UserLoginSuspiciousEvent extends UserLoginSuccessEvent {
+  threatsDetected?: Array<AuthenticationThreats>;
 }
 
 export interface UsernameModeration extends Enableable {
