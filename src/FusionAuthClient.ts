@@ -3101,6 +3101,18 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the FusionAuth Reactor metrics.
+   *
+   * @returns {Promise<ClientResponse<ReactorMetricsResponse>>}
+   */
+  retrieveReactorMetrics(): Promise<ClientResponse<ReactorMetricsResponse>> {
+    return this.start<ReactorMetricsResponse, void>()
+        .withUri('/api/reactor/metrics')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the FusionAuth Reactor status.
    *
    * @returns {Promise<ClientResponse<ReactorResponse>>}
@@ -8013,6 +8025,13 @@ export interface ReactorMetrics {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface ReactorMetricsResponse {
+  metrics?: ReactorMetrics;
+}
+
+/**
  * Request for managing FusionAuth Reactor and licenses.
  *
  * @author Brian Pontarelli
@@ -8026,7 +8045,6 @@ export interface ReactorRequest {
  * @author Daniel DeGroff
  */
 export interface ReactorResponse {
-  metrics?: ReactorMetrics;
   status?: ReactorStatus;
 }
 
