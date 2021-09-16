@@ -6811,29 +6811,6 @@ export interface Integrations {
 }
 
 /**
- * Counts for a period.
- *
- * @author Brian Pontarelli
- */
-export interface IntervalCount {
-  applicationId?: UUID;
-  count?: number;
-  decrementedCount?: number;
-  period?: number;
-}
-
-/**
- * A user over an period (for daily and monthly active user calculations).
- *
- * @author Brian Pontarelli
- */
-export interface IntervalUser {
-  applicationId?: UUID;
-  period?: number;
-  userId?: UUID;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export interface IntrospectResponse extends Record<string, any> {
