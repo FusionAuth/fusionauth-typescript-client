@@ -8529,7 +8529,6 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
-  ssoConfiguration?: SystemSSOConfiguration;
   uiConfiguration?: UIConfiguration;
 }
 
@@ -8556,13 +8555,6 @@ export interface SystemConfigurationResponse {
  */
 export interface SystemLogsExportRequest extends BaseExportRequest {
   lastNBytes?: number;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface SystemSSOConfiguration {
-  deviceTrustTimeToLiveInSeconds?: number;
 }
 
 export interface Templates {
@@ -8638,6 +8630,7 @@ export interface Tenant {
   passwordValidationRules?: PasswordValidationRules;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
+  ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
@@ -8736,6 +8729,13 @@ export interface TenantRequest extends BaseEventRequest {
 export interface TenantResponse {
   tenant?: Tenant;
   tenants?: Array<Tenant>;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface TenantSSOConfiguration {
+  deviceTrustTimeToLiveInSeconds?: number;
 }
 
 /**
