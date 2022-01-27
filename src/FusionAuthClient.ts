@@ -7457,8 +7457,8 @@ export interface LookupResponse {
 /**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
- * NOTE TO FUSIONAUTH DEVS: These fields are also declared in SQL in order to boot strap the system. These need to stay in sync.
- * - Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
+ * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
+ * Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
  *
  * @author Brian Pontarelli
  */
