@@ -7419,6 +7419,7 @@ export interface LoginResponse {
   state?: Record<string, any>;
   threatsDetected?: Array<AuthenticationThreats>;
   token?: string;
+  tokenExpirationInstant?: number;
   twoFactorId?: string;
   twoFactorTrustId?: string;
   user?: User;
@@ -8220,6 +8221,7 @@ export interface RegistrationResponse {
   registration?: UserRegistration;
   registrationVerificationId?: string;
   token?: string;
+  tokenExpirationInstant?: number;
   user?: User;
 }
 
@@ -9693,6 +9695,7 @@ export interface UserResponse {
   emailVerificationId?: string;
   registrationVerificationIds?: Record<UUID, string>;
   token?: string;
+  tokenExpirationInstant?: number;
   user?: User;
 }
 
