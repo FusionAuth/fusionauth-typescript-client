@@ -38,7 +38,7 @@ project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "
 }
 
 // Plugins
-file = loadPlugin(id: "org.savantbuild.plugin:file:${savantVersion}")
+file = loadPlugin(id: "org.savantbuild.plugin:file:1.0.2")
 idea = loadPlugin(id: "org.savantbuild.plugin:idea:1.0.1")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:${savantVersion}")
 
