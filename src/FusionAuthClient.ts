@@ -7219,10 +7219,15 @@ export interface KickstartSuccessEvent extends BaseEvent {
   instanceId?: UUID;
 }
 
-// TODO : Future : This shouldn't be enableable
-export interface Lambda extends Enableable {
+/**
+ * A JavaScript lambda function that is executed during certain events inside FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Lambda {
   body?: string;
   debug?: boolean;
+  engineType?: LambdaEngineType;
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
@@ -7242,6 +7247,14 @@ export interface LambdaConfiguration {
 
 export interface LambdaConfiguration {
   reconcileId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum LambdaEngineType {
+  GraalJS = "GraalJS",
+  Nashorn = "Nashorn"
 }
 
 /**
@@ -8122,6 +8135,7 @@ export interface ReactorResponse {
  */
 export interface ReactorStatus {
   advancedIdentityProviders?: ReactorFeatureStatus;
+  advancedLambdas?: ReactorFeatureStatus;
   advancedMultiFactorAuthentication?: ReactorFeatureStatus;
   advancedRegistration?: ReactorFeatureStatus;
   applicationThemes?: ReactorFeatureStatus;
