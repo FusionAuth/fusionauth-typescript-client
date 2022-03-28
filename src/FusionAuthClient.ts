@@ -7697,8 +7697,10 @@ export interface NintendoApplicationConfiguration extends BaseIdentityProviderAp
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
-  oauth2?: IdentityProviderOauth2Configuration;
+  emailClaim?: string;
   scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
 }
 
 /**
@@ -7710,8 +7712,10 @@ export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoA
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
-  oauth2?: IdentityProviderOauth2Configuration;
+  emailClaim?: string;
   scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
 }
 
 /**
