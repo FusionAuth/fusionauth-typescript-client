@@ -8699,7 +8699,6 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
-  state?: Record<string, string>;
   uiConfiguration?: UIConfiguration;
 }
 
