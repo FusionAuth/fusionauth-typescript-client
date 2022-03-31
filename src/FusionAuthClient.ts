@@ -2376,7 +2376,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the actions for the user with the given Id. This will return all time based actions that are active,
+   * Retrieves all the actions for the user with the given Id. This will return all time based actions that are active,
    * and inactive as well as non-time based actions.
    *
    * @param {UUID} userId The Id of the user to fetch the actions for.
@@ -2391,7 +2391,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the actions for the user with the given Id that are currently preventing the User from logging in.
+   * Retrieves all the actions for the user with the given Id that are currently preventing the User from logging in.
    *
    * @param {UUID} userId The Id of the user to fetch the actions for.
    * @returns {Promise<ClientResponse<ActionResponse>>}
@@ -2406,7 +2406,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the actions for the user with the given Id that are currently active.
+   * Retrieves all the actions for the user with the given Id that are currently active.
    * An active action means one that is time based and has not been canceled, and has not ended.
    *
    * @param {UUID} userId The Id of the user to fetch the actions for.
@@ -2436,7 +2436,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the applications.
+   * Retrieves all the applications.
    *
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
@@ -2476,7 +2476,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the connectors.
+   * Retrieves all the connectors.
    *
    * @returns {Promise<ClientResponse<ConnectorResponse>>}
    */
@@ -2502,7 +2502,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the consent.
+   * Retrieves all the consent.
    *
    * @returns {Promise<ClientResponse<ConsentResponse>>}
    */
@@ -2563,7 +2563,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the email templates.
+   * Retrieves all the email templates.
    *
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
    */
@@ -2622,7 +2622,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the Entity Types.
+   * Retrieves all the Entity Types.
    *
    * @returns {Promise<ClientResponse<EntityTypeResponse>>}
    */
@@ -2648,7 +2648,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the families that a user belongs to.
+   * Retrieves all the families that a user belongs to.
    *
    * @param {UUID} userId The User's id
    * @returns {Promise<ClientResponse<FamilyResponse>>}
@@ -2662,7 +2662,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the members of a family by the unique Family Id.
+   * Retrieves all the members of a family by the unique Family Id.
    *
    * @param {UUID} familyId The unique Id of the Family.
    * @returns {Promise<ClientResponse<FamilyResponse>>}
@@ -2704,7 +2704,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the forms fields
+   * Retrieves all the forms fields
    *
    * @returns {Promise<ClientResponse<FormFieldResponse>>}
    */
@@ -2716,7 +2716,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the forms.
+   * Retrieves all the forms.
    *
    * @returns {Promise<ClientResponse<FormResponse>>}
    */
@@ -2742,7 +2742,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the groups.
+   * Retrieves all the groups.
    *
    * @returns {Promise<ClientResponse<GroupResponse>>}
    */
@@ -2798,7 +2798,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the identity providers.
+   * Retrieves all the identity providers.
    *
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
    */
@@ -2810,7 +2810,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the actions for the user with the given Id that are currently inactive.
+   * Retrieves all the actions for the user with the given Id that are currently inactive.
    * An inactive action means one that is time based and has been canceled or has expired, or is not time based.
    *
    * @param {UUID} userId The Id of the user to fetch the actions for.
@@ -2826,7 +2826,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the applications that are currently inactive.
+   * Retrieves all the applications that are currently inactive.
    *
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
@@ -2839,7 +2839,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the user actions that are currently inactive.
+   * Retrieves all the user actions that are currently inactive.
    *
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
@@ -2930,7 +2930,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the keys.
+   * Retrieves all the keys.
    *
    * @returns {Promise<ClientResponse<KeyResponse>>}
    */
@@ -2956,7 +2956,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the lambdas.
+   * Retrieves all the lambdas.
    *
    * @returns {Promise<ClientResponse<LambdaResponse>>}
    */
@@ -2968,7 +2968,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the lambdas for the provided type.
+   * Retrieves all the lambdas for the provided type.
    *
    * @param {LambdaType} type The type of the lambda to return.
    * @returns {Promise<ClientResponse<LambdaResponse>>}
@@ -3029,7 +3029,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the message templates.
+   * Retrieves all the message templates.
    *
    * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
    */
@@ -3055,7 +3055,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the messengers.
+   * Retrieves all the messengers.
    *
    * @returns {Promise<ClientResponse<MessengerResponse>>}
    */
@@ -3144,7 +3144,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the children for the given parent email address.
+   * Retrieves all the children for the given parent email address.
    *
    * @param {string} parentEmail The email of the parent.
    * @returns {Promise<ClientResponse<PendingResponse>>}
@@ -3300,7 +3300,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the tenants.
+   * Retrieves all the tenants.
    *
    * @returns {Promise<ClientResponse<TenantResponse>>}
    */
@@ -3326,7 +3326,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the themes.
+   * Retrieves all the themes.
    *
    * @returns {Promise<ClientResponse<ThemeResponse>>}
    */
@@ -3421,7 +3421,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the user actions.
+   * Retrieves all the user actions.
    *
    * @returns {Promise<ClientResponse<UserActionResponse>>}
    */
@@ -3505,7 +3505,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the comments for the user with the given Id.
+   * Retrieves all the comments for the user with the given Id.
    *
    * @param {UUID} userId The Id of the user.
    * @returns {Promise<ClientResponse<UserCommentResponse>>}
@@ -3533,7 +3533,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves all of the consents for a User.
+   * Retrieves all the consents for a User.
    *
    * @param {UUID} userId The User's Id
    * @returns {Promise<ClientResponse<UserConsentResponse>>}
@@ -3855,7 +3855,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AuditLogSearchResponse>>}
    */
   searchAuditLogs(request: AuditLogSearchRequest): Promise<ClientResponse<AuditLogSearchResponse>> {
-    return this.start<AuditLogSearchResponse, void>()
+    return this.start<AuditLogSearchResponse, Errors>()
         .withUri('/api/system/audit-log/search')
         .withJSONBody(request)
         .withMethod("POST")
@@ -3911,7 +3911,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<EntityTypeSearchResponse>>}
    */
   searchEntityTypes(request: EntityTypeSearchRequest): Promise<ClientResponse<EntityTypeSearchResponse>> {
-    return this.start<EntityTypeSearchResponse, void>()
+    return this.start<EntityTypeSearchResponse, Errors>()
         .withUri('/api/entity/type/search')
         .withJSONBody(request)
         .withMethod("POST")
@@ -3925,8 +3925,22 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<EventLogSearchResponse>>}
    */
   searchEventLogs(request: EventLogSearchRequest): Promise<ClientResponse<EventLogSearchResponse>> {
-    return this.start<EventLogSearchResponse, void>()
+    return this.start<EventLogSearchResponse, Errors>()
         .withUri('/api/system/event-log/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches group members with the specified criteria and pagination.
+   *
+   * @param {GroupMemberSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<GroupMemberSearchResponse>>}
+   */
+  searchGroupMembers(request: GroupMemberSearchRequest): Promise<ClientResponse<GroupMemberSearchResponse>> {
+    return this.start<GroupMemberSearchResponse, Errors>()
+        .withUri('/api/group/member/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -3939,7 +3953,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<IPAccessControlListSearchResponse>>}
    */
   searchIPAccessControlLists(request: IPAccessControlListSearchRequest): Promise<ClientResponse<IPAccessControlListSearchResponse>> {
-    return this.start<IPAccessControlListSearchResponse, void>()
+    return this.start<IPAccessControlListSearchResponse, Errors>()
         .withUri('/api/ip-acl/search')
         .withJSONBody(request)
         .withMethod("POST")
@@ -3953,7 +3967,7 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<LoginRecordSearchResponse>>}
    */
   searchLoginRecords(request: LoginRecordSearchRequest): Promise<ClientResponse<LoginRecordSearchResponse>> {
-    return this.start<LoginRecordSearchResponse, void>()
+    return this.start<LoginRecordSearchResponse, Errors>()
         .withUri('/api/system/login-record/search')
         .withJSONBody(request)
         .withMethod("POST")
@@ -4386,6 +4400,20 @@ export class FusionAuthClient {
     return this.start<GroupResponse, Errors>()
         .withUri('/api/group')
         .withUriSegment(groupId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Creates a member in a group.
+   *
+   * @param {MemberRequest} request The request object that contains all the information used to create the group member(s).
+   * @returns {Promise<ClientResponse<MemberResponse>>}
+   */
+  updateGroupMembers(request: MemberRequest): Promise<ClientResponse<MemberResponse>> {
+    return this.start<MemberResponse, Errors>()
+        .withUri('/api/group/member')
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -5979,7 +6007,7 @@ export interface EntityTypeSearchRequest {
 }
 
 /**
- * Search request for entity types.
+ * Search response for entity types.
  *
  * @author Brian Pontarelli
  */
@@ -6619,7 +6647,37 @@ export interface GroupMember {
   groupId?: UUID;
   id?: UUID;
   insertInstant?: number;
+  user?: User;
   userId?: UUID;
+}
+
+/**
+ * Search criteria for Group Members
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberSearchCriteria extends BaseSearchCriteria {
+  groupId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * Search request for Group Members.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberSearchRequest {
+  search?: GroupMemberSearchCriteria;
+}
+
+/**
+ * Search response for Group Members
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberSearchResponse {
+  members?: Array<GroupMember>;
+  total?: number;
 }
 
 /**
@@ -7300,7 +7358,11 @@ export enum LambdaType {
   SteamReconcile = "SteamReconcile",
   TwitchReconcile = "TwitchReconcile",
   XboxReconcile = "XboxReconcile",
-  ClientCredentialsJWTPopulate = "ClientCredentialsJWTPopulate"
+  ClientCredentialsJWTPopulate = "ClientCredentialsJWTPopulate",
+  SCIMServerGroupRequestConverter = "SCIMServerGroupRequestConverter",
+  SCIMServerGroupResponseConverter = "SCIMServerGroupResponseConverter",
+  SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
+  SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter"
 }
 
 /**
@@ -8143,6 +8205,7 @@ export interface ReactorStatus {
   connectors?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   licensed?: boolean;
+  scimServer?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
 }
 
@@ -8636,6 +8699,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  state?: Record<string, string>;
   uiConfiguration?: UIConfiguration;
 }
 
@@ -8725,6 +8789,7 @@ export interface Tenant {
   insertInstant?: number;
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
+  lambdaConfiguration?: TenantLambdaConfiguration;
   lastUpdateInstant?: number;
   loginConfiguration?: TenantLoginConfiguration;
   logoutURL?: string;
@@ -8737,6 +8802,7 @@ export interface Tenant {
   passwordValidationRules?: PasswordValidationRules;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
+  scimServerConfiguration?: TenantSCIMServerConfiguration;
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
@@ -8781,6 +8847,18 @@ export interface TenantDeleteRequest extends BaseEventRequest {
  */
 export interface TenantFormConfiguration {
   adminUserFormId?: UUID;
+}
+
+/**
+ * @author Rob Davis
+ */
+export interface TenantLambdaConfiguration {
+  scimEnterpriseUserRequestConverterId?: UUID;
+  scimEnterpriseUserResponseConverterId?: UUID;
+  scimGroupRequestConverterId?: UUID;
+  scimGroupResponseConverterId?: UUID;
+  scimUserRequestConverterId?: UUID;
+  scimUserResponseConverterId?: UUID;
 }
 
 /**
@@ -8836,6 +8914,15 @@ export interface TenantRequest extends BaseEventRequest {
 export interface TenantResponse {
   tenant?: Tenant;
   tenants?: Array<Tenant>;
+}
+
+/**
+ * @author Rob Davis
+ */
+export interface TenantSCIMServerConfiguration extends Enableable {
+  clientEntityTypeId?: UUID;
+  schemas?: Record<string, any>;
+  serverEntityTypeId?: UUID;
 }
 
 /**
