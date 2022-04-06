@@ -6157,11 +6157,11 @@ export enum EventType {
   UserBulkCreate = "user.bulk.create",
   UserCreate = "user.create",
   UserCreateComplete = "user.create.complete",
-  UserIdentityProviderLink = "user.idp.link",
-  UserIdentityProviderUnlink = "user.idp.unlink",
   UserDeactivate = "user.deactivate",
   UserDelete = "user.delete",
   UserDeleteComplete = "user.delete.complete",
+  UserIdentityProviderLink = "user.identity-provider.link",
+  UserIdentityProviderUnlink = "user.identity-provider.unlink",
   UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
   UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
   UserEmailUpdate = "user.email.update",
@@ -9518,12 +9518,12 @@ export interface UserEmailVerifiedEvent extends BaseEvent {
 }
 
 /**
- * Models the User IdP Link Event.
+ * Models the User Identity Provider Link Event.
  *
  * @author Rob Davis
  */
 export interface UserIdentityProviderLinkEvent extends BaseEvent {
-  identityProviderName?: string;
+  identityProviderLink?: IdentityProviderLink;
   user?: User;
 }
 
@@ -9533,7 +9533,7 @@ export interface UserIdentityProviderLinkEvent extends BaseEvent {
  * @author Rob Davis
  */
 export interface UserIdentityProviderUnlinkEvent extends BaseEvent {
-  identityProviderName?: string;
+  identityProviderLink?: IdentityProviderLink;
   user?: User;
 }
 
