@@ -7759,7 +7759,10 @@ export interface NintendoApplicationConfiguration extends BaseIdentityProviderAp
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  emailClaim?: string;
   scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
 }
 
 /**
@@ -7771,7 +7774,10 @@ export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoA
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  emailClaim?: string;
   scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
 }
 
 /**
@@ -7821,6 +7827,7 @@ export interface OAuthError {
   error_reason?: OAuthErrorReason;
   error_uri?: string;
   two_factor_id?: string;
+  two_factor_methods?: Array<TwoFactorMethod>;
 }
 
 export enum OAuthErrorReason {
@@ -8204,6 +8211,7 @@ export interface ReactorStatus {
   breachedPasswordDetection?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
+  expiration?: string;
   licensed?: boolean;
   scimServer?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
