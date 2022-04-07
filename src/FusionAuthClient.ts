@@ -6188,10 +6188,12 @@ export enum EventType {
   UserDeactivate = "user.deactivate",
   UserDelete = "user.delete",
   UserDeleteComplete = "user.delete.complete",
-  UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
-  UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
   UserEmailUpdate = "user.email.update",
   UserEmailVerified = "user.email.verified",
+  UserIdentityProviderLink = "user.identity-provider.link",
+  UserIdentityProviderUnlink = "user.identity-provider.unlink",
+  UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
+  UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
   UserLoginFailed = "user.login.failed",
   UserLoginNewDevice = "user.login.new-device",
   UserLoginSuccess = "user.login.success",
@@ -6793,7 +6795,7 @@ export enum IdentityProviderLinkingStrategy {
 /**
  * @author Daniel DeGroff
  */
-export interface IdentityProviderLinkRequest {
+export interface IdentityProviderLinkRequest extends BaseEventRequest {
   displayName?: string;
   identityProviderId?: UUID;
   identityProviderUserId?: string;
@@ -9606,6 +9608,26 @@ export interface UserEmailUpdateEvent extends BaseEvent {
  * @author Trevor Smith
  */
 export interface UserEmailVerifiedEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Models the User Identity Provider Link Event.
+ *
+ * @author Rob Davis
+ */
+export interface UserIdentityProviderLinkEvent extends BaseEvent {
+  identityProviderLink?: IdentityProviderLink;
+  user?: User;
+}
+
+/**
+ * Models the User Identity Provider Unlink Event.
+ *
+ * @author Rob Davis
+ */
+export interface UserIdentityProviderUnlinkEvent extends BaseEvent {
+  identityProviderLink?: IdentityProviderLink;
   user?: User;
 }
 
