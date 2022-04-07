@@ -6160,12 +6160,12 @@ export enum EventType {
   UserDeactivate = "user.deactivate",
   UserDelete = "user.delete",
   UserDeleteComplete = "user.delete.complete",
+  UserEmailUpdate = "user.email.update",
+  UserEmailVerified = "user.email.verified",
   UserIdentityProviderLink = "user.identity-provider.link",
   UserIdentityProviderUnlink = "user.identity-provider.unlink",
   UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
   UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
-  UserEmailUpdate = "user.email.update",
-  UserEmailVerified = "user.email.verified",
   UserLoginFailed = "user.login.failed",
   UserLoginNewDevice = "user.login.new-device",
   UserLoginSuccess = "user.login.success",
@@ -9528,7 +9528,7 @@ export interface UserIdentityProviderLinkEvent extends BaseEvent {
 }
 
 /**
- * Models the User IdP Unlink Event.
+ * Models the User Identity Provider Unlink Event.
  *
  * @author Rob Davis
  */
