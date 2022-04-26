@@ -6180,6 +6180,8 @@ export enum EventType {
   JWTRefresh = "jwt.refresh",
   AuditLogCreate = "audit-log.create",
   EventLogCreate = "event-log.create",
+  GroupMembershipAdd = "group.membership.add",
+  GroupMembershipRemove = "group.membership.remove",
   KickstartSuccess = "kickstart.success",
   UserAction = "user.action",
   UserBulkCreate = "user.bulk.create",
@@ -6680,6 +6682,26 @@ export interface GroupMemberSearchRequest {
 export interface GroupMemberSearchResponse {
   members?: Array<GroupMember>;
   total?: number;
+}
+
+/**
+ * Model the Group Membership Add event
+ *
+ * @author Spencer Witt
+ */
+export interface GroupMembershipAddEvent extends BaseEvent {
+  group?: Group;
+  groupMembers?: Array<GroupMember>;
+}
+
+/**
+ * Model the Group Membership Remove event
+ *
+ * @author Spencer Witt
+ */
+export interface GroupMembershipRemoveEvent extends BaseEvent {
+  group?: Group;
+  groupMembers?: Array<GroupMember>;
 }
 
 /**
@@ -7622,7 +7644,7 @@ export interface MemberDeleteRequest {
  *
  * @author Daniel DeGroff
  */
-export interface MemberRequest {
+export interface MemberRequest extends BaseEventRequest {
   members?: Record<UUID, Array<GroupMember>>;
 }
 
