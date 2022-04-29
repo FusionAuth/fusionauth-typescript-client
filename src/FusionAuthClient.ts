@@ -4781,6 +4781,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Administratively verify a user's email address. Use this method to bypass email verification for the user.
+   * 
+   * The request body will contain the userId to be verified. An API key is required when sending the userId in the request body.
+   *
+   * @param {VerifyEmailRequest} request The request that contains the userId to verify.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  verifyEmailAddressByUserId(request: VerifyEmailRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/verify-email')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Confirms an application registration. The Id given is usually from an email sent to the user.
    *
    * @param {string} verificationId The registration verification Id sent to the user.
@@ -9979,6 +9995,7 @@ export enum VerificationStrategy {
  */
 export interface VerifyEmailRequest extends BaseEventRequest {
   oneTimeCode?: string;
+  userId?: UUID;
   verificationId?: string;
 }
 
