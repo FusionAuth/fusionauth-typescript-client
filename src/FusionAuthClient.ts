@@ -5706,6 +5706,7 @@ export interface EmailAddress {
  */
 export interface EmailConfiguration {
   additionalHeaders?: Array<EmailHeader>;
+  debug?: boolean;
   defaultFromEmail?: string;
   defaultFromName?: string;
   emailUpdateEmailTemplateId?: UUID;
