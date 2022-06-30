@@ -1307,6 +1307,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the WebAuthn credential for the given Id.
+   *
+   * @param {UUID} id The Id of the WebAuthn credential to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteWebAuthnCredential(id: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/webauthn')
+        .withUriSegment(id)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the webhook for the given Id.
    *
    * @param {UUID} webhookId The Id of the webhook to delete.
