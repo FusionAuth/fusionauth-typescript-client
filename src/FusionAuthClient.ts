@@ -9074,6 +9074,8 @@ export interface Templates {
   oauth2TwoFactor?: string;
   oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
+  oauth2WebAuthN?: string;
+  oauth2WebAuthNComplete?: string;
   passwordChange?: string;
   passwordComplete?: string;
   passwordForgot?: string;
