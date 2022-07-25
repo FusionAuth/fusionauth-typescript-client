@@ -4253,10 +4253,10 @@ export class FusionAuthClient {
    * Start a WebAuthn authentication ceremony by generating a new challenge for the user
    *
    * @param {WebAuthnStartRequest} request An object containing data necessary for starting the authentication ceremony
-   * @returns {Promise<ClientResponse<PublicKeyCredentialRequestOptions>>}
+   * @returns {Promise<ClientResponse<WebAuthnStartResponse>>}
    */
-  startWebAuthnLogin(request: WebAuthnStartRequest): Promise<ClientResponse<PublicKeyCredentialRequestOptions>> {
-    return this.start<PublicKeyCredentialRequestOptions, Errors>()
+  startWebAuthnLogin(request: WebAuthnStartRequest): Promise<ClientResponse<WebAuthnStartResponse>> {
+    return this.start<WebAuthnStartResponse, Errors>()
         .withUri('/api/webauthn/start')
         .withJSONBody(request)
         .withMethod("POST")
@@ -4266,11 +4266,11 @@ export class FusionAuthClient {
   /**
    * Start a WebAuthn registration ceremony by generating a new challenge for the user
    *
-   * @param {WebAuthnStartRequest} request An object containing data necessary for starting the registration ceremony
-   * @returns {Promise<ClientResponse<PublicKeyCredentialCreationOptions>>}
+   * @param {WebAuthnRegisterRequest} request An object containing data necessary for starting the registration ceremony
+   * @returns {Promise<ClientResponse<WebAuthnRegisterResponse>>}
    */
-  startWebAuthnRegistration(request: WebAuthnStartRequest): Promise<ClientResponse<PublicKeyCredentialCreationOptions>> {
-    return this.start<PublicKeyCredentialCreationOptions, Errors>()
+  startWebAuthnRegistration(request: WebAuthnRegisterRequest): Promise<ClientResponse<WebAuthnRegisterResponse>> {
+    return this.start<WebAuthnRegisterResponse, Errors>()
         .withUri('/api/webauthn/register')
         .withJSONBody(request)
         .withMethod("POST")
