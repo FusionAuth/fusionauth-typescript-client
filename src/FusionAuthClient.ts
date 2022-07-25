@@ -3737,6 +3737,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves all WebAuthn credentials for the given user.
+   *
+   * @param {UUID} userId The user's ID.
+   * @returns {Promise<ClientResponse<WebAuthnCredentialResponse>>}
+   */
+  retrieveWebAuthnCredentialsForUser(userId: UUID): Promise<ClientResponse<WebAuthnCredentialResponse>> {
+    return this.start<WebAuthnCredentialResponse, Errors>()
+        .withUri('/api/webauthn')
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
    *
    * @param {UUID} webhookId (Optional) The Id of the webhook.
