@@ -5201,6 +5201,14 @@ export interface ApplicationEmailConfiguration {
 }
 
 /**
+ * Events that are bound to applications.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ApplicationEvent {
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface ApplicationExternalIdentifierConfiguration {
@@ -5312,6 +5320,19 @@ export enum AttestationConveyancePreference {
 }
 
 /**
+ * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
+ *
+ * @author Spencer Witt
+ */
+export enum AttestationType {
+  basic = "basic",
+  self = "self",
+  attestationCa = "attestationCa",
+  anonymizationCa = "anonymizationCa",
+  none = "none"
+}
+
+/**
  * An audit log.
  *
  * @author Brian Pontarelli
@@ -5411,6 +5432,17 @@ export interface AuthenticationTokenConfiguration extends Enableable {
 export enum AuthenticatorAttachment {
   PLATFORM = "PLATFORM",
   CROSS_PLATFORM = "CROSS_PLATFORM"
+}
+
+/**
+ * Describes the authenticator attachment modality preference for a WebAuthn workflow. See {@link AuthenticatorAttachment}
+ *
+ * @author Spencer Witt
+ */
+export enum AuthenticatorAttachmentPreference {
+  PLATFORM = "PLATFORM",
+  CROSS_PLATFORM = "CROSS_PLATFORM",
+  EITHER = "EITHER"
 }
 
 /**
@@ -5870,6 +5902,15 @@ export enum CoseKeyType {
 export interface Count {
   count?: number;
   interval?: number;
+}
+
+/**
+ * Contains the output for the {@code credProps} extension
+ *
+ * @author Spencer Witt
+ */
+export interface CredentialPropertiesOutput {
+  rk?: boolean;
 }
 
 /**
@@ -7580,17 +7621,17 @@ export interface Lambda {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 /**
@@ -8425,7 +8466,7 @@ export enum ProofKeyForCodeExchangePolicy {
  * @author Spencer Witt
  */
 export interface PublicKeyAuthenticationRequest {
-  clientExtensionResults?: Record<string, string>;
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
   id?: string;
   response?: AuthenticatorAuthenticationResponse;
   rpId?: string;
@@ -8442,6 +8483,7 @@ export interface PublicKeyCredentialCreationOptions {
   authenticatorSelection?: AuthenticatorSelectionCriteria;
   challenge?: string;
   excludeCredentials?: Array<PublicKeyCredentialDescriptor>;
+  extensions?: WebAuthnRegistrationExtensionOptions;
   pubKeyCredParams?: Array<PublicKeyCredentialParameters>;
   rp?: PublicKeyCredentialRpEntity;
   timeout?: number;
@@ -8523,7 +8565,7 @@ export interface PublicKeyCredentialUserEntity extends PublicKeyCredentialEntity
  * @author Spencer Witt
  */
 export interface PublicKeyRegistrationRequest {
-  clientExtensionResults?: Record<string, string>;
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
   id?: string;
   response?: AuthenticatorRegistrationResponse;
   rpId?: string;
@@ -9247,6 +9289,7 @@ export interface Tenant {
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
   usernameConfiguration?: TenantUsernameConfiguration;
+  webAuthnConfiguration?: TenantWebAuthnConfiguration;
 }
 
 /**
@@ -9395,6 +9438,15 @@ export interface TenantUserDeletePolicy {
  */
 export interface TenantUsernameConfiguration {
   unique?: UniqueUsernameConfiguration;
+}
+
+/**
+ * Tenant-level configuration for WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface TenantWebAuthnConfiguration extends Enableable {
+  reauthenticationWorkflowConfiguration?: WebAuthnWorkflowConfiguration;
 }
 
 /**
@@ -10478,9 +10530,9 @@ export interface VersionResponse {
  */
 export interface WebAuthnCompleteRequest {
   credential?: PublicKeyRegistrationRequest;
-  loginId?: string;
   origin?: string;
   rpId?: string;
+  userId?: UUID;
 }
 
 /**
@@ -10490,12 +10542,15 @@ export interface WebAuthnCompleteRequest {
  */
 export interface WebAuthnCredential {
   alg?: CoseAlgorithmIdentifier;
+  attestationType?: AttestationType;
+  authenticatorSupportsUserVerification?: boolean;
   credentialId?: string;
-  data?: Record<string, any>;
   id?: UUID;
   insertInstant?: number;
+  isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
   publicKey?: string;
+  rpId?: string;
   signCount?: number;
   tenantId?: UUID;
   transports?: Array<AuthenticatorTransport>;
@@ -10513,6 +10568,15 @@ export interface WebAuthnCredentialResponse {
 }
 
 /**
+ * Contains extension output for requested extensions during a WebAuthn ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnExtensionsClientOutputs {
+  credProps?: CredentialPropertiesOutput;
+}
+
+/**
  * Request to complete the WebAuthn registration ceremony
  *
  * @author Spencer Witt
@@ -10524,12 +10588,72 @@ export interface WebAuthnLoginRequest extends BaseLoginRequest {
 }
 
 /**
+ * API request to start a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterRequest {
+  state?: Record<string, any>;
+  userId?: UUID;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * API response for starting a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterResponse {
+  options?: PublicKeyCredentialCreationOptions;
+}
+
+/**
+ * Options to request extensions during credential registration
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegistrationExtensionOptions {
+  credProps?: boolean;
+}
+
+/**
+ * API request to start a WebAuthn authentication ceremony
+ *
  * @author Spencer Witt
  */
 export interface WebAuthnStartRequest {
   applicationId?: UUID;
   loginId?: string;
   state?: Record<string, any>;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartResponse {
+  options?: PublicKeyCredentialRequestOptions;
+}
+
+/**
+ * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
+ * and request based on the Tenant configuration.
+ *
+ * @author Spencer Witt
+ */
+export enum WebAuthnWorkflow {
+  REAUTH = "REAUTH",
+  BOOTSTRAP = "BOOTSTRAP",
+  TWO_FACTOR = "TWO_FACTOR",
+  GENERAL = "GENERAL"
+}
+
+export interface WebAuthnWorkflowConfiguration extends Enableable {
+  authenticatorAttachment?: AuthenticatorAttachment;
+  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
+  userVerificationRequirement?: UserVerificationRequirement;
 }
 
 /**
