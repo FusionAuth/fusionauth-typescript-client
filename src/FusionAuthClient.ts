@@ -10651,7 +10651,6 @@ export enum WebAuthnWorkflow {
 }
 
 export interface WebAuthnWorkflowConfiguration extends Enableable {
-  authenticatorAttachment?: AuthenticatorAttachment;
   authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
   userVerificationRequirement?: UserVerificationRequirement;
 }
