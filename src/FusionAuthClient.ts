@@ -9447,6 +9447,8 @@ export interface TenantUsernameConfiguration {
  */
 export interface TenantWebAuthnConfiguration extends Enableable {
   reauthenticationWorkflowConfiguration?: WebAuthnWorkflowConfiguration;
+  rpId?: string;
+  rpName?: string;
 }
 
 /**
