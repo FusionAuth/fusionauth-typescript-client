@@ -5330,7 +5330,6 @@ export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
  * @author Brian Pontarelli
  */
 export interface BaseEvent {
-  applicationIds?: Array<UUID>;
   createInstant?: number;
   id?: UUID;
   info?: EventInfo;
@@ -6251,6 +6250,16 @@ export enum EventType {
   AuditLogCreate = "audit-log.create",
   EventLogCreate = "event-log.create",
   KickstartSuccess = "kickstart.success",
+  GroupCreate = "group.create",
+  GroupCreateComplete = "group.create.complete",
+  GroupDelete = "group.delete",
+  GroupDeleteComplete = "group.delete.complete",
+  GroupMemberAdd = "group.member.add",
+  GroupMemberAddComplete = "group.member.add.complete",
+  GroupMemberRemove = "group.member.remove",
+  GroupMemberRemoveComplete = "group.member.remove.complete",
+  GroupUpdate = "group.update",
+  GroupUpdateComplete = "group.update.complete",
   UserAction = "user.action",
   UserBulkCreate = "user.bulk.create",
   UserCreate = "user.create",
@@ -6710,6 +6719,42 @@ export interface Group {
 }
 
 /**
+ * Models the Group Created Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateCompleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupDeleteCompleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupDeleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
  * A User's membership into a Group
  *
  * @author Daniel DeGroff
@@ -6724,12 +6769,53 @@ export interface GroupMember {
 }
 
 /**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
  * Search criteria for Group Members
  *
  * @author Daniel DeGroff
  */
 export interface GroupMemberSearchCriteria extends BaseSearchCriteria {
   groupId?: UUID;
+  tenantId?: UUID;
   userId?: UUID;
 }
 
@@ -6770,6 +6856,26 @@ export interface GroupRequest {
 export interface GroupResponse {
   group?: Group;
   groups?: Array<Group>;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateCompleteEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
+}
+
+/**
+ * Models the Group Create Event (and can be converted to JSON).
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
 }
 
 export interface HistoryItem {
@@ -7196,6 +7302,7 @@ export interface JWTConfiguration extends Enableable {
  * @author Brian Pontarelli
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
+  applicationIds?: Array<UUID>;
 }
 
 /**
@@ -7369,17 +7476,17 @@ export interface Lambda {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 /**
@@ -9423,6 +9530,7 @@ export interface UserActionEvent extends BaseEvent {
   actioneeUserId?: UUID;
   actionerUserId?: UUID;
   actionId?: UUID;
+  applicationIds?: Array<UUID>;
   comment?: string;
   email?: Email;
   emailedUser?: boolean;
