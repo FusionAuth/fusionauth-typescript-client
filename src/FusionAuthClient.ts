@@ -3985,6 +3985,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches groups with the specified criteria and pagination.
+   *
+   * @param {GroupSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<GroupSearchResponse>>}
+   */
+  searchGroups(request: GroupSearchRequest): Promise<ClientResponse<GroupSearchResponse>> {
+    return this.start<GroupSearchResponse, Errors>()
+        .withUri('/api/group/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the IP Access Control Lists with the specified criteria and pagination.
    *
    * @param {IPAccessControlListSearchRequest} request The search criteria and pagination information.
@@ -6881,6 +6895,36 @@ export interface GroupResponse {
 }
 
 /**
+ * Search criteria for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchCriteria extends BaseSearchCriteria {
+  id?: UUID;
+  name?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for Groups.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchRequest {
+  search?: GroupSearchCriteria;
+}
+
+/**
+ * Search response for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchResponse {
+  groups?: Array<Group>;
+  total?: number;
+}
+
+/**
  * Models the Group Update Complete Event.
  *
  * @author Daniel DeGroff
@@ -7498,17 +7542,17 @@ export interface Lambda {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 /**
