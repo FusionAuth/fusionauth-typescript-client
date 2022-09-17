@@ -6900,7 +6900,6 @@ export interface GroupResponse {
  * @author Daniel DeGroff
  */
 export interface GroupSearchCriteria extends BaseSearchCriteria {
-  id?: UUID;
   name?: string;
   tenantId?: UUID;
 }
