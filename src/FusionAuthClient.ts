@@ -5499,7 +5499,8 @@ export enum AuthenticatorTransport {
   usb = "usb",
   nfc = "nfc",
   ble = "ble",
-  internal = "internal"
+  internal = "internal",
+  cable = "cable"
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
@@ -10550,11 +10551,13 @@ export interface WebAuthnCredential {
   insertInstant?: number;
   isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
+  name?: string;
   publicKey?: string;
   rpId?: string;
   signCount?: number;
   tenantId?: UUID;
   transports?: Array<AuthenticatorTransport>;
+  userAgent?: string;
   userId?: UUID;
 }
 
@@ -10594,7 +10597,8 @@ export interface WebAuthnLoginRequest extends BaseLoginRequest {
  * @author Spencer Witt
  */
 export interface WebAuthnRegisterRequest {
-  state?: Record<string, any>;
+  credentialName?: string;
+  userAgent?: string;
   userId?: UUID;
   workflow?: WebAuthnWorkflow;
 }
