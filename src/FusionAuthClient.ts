@@ -5889,6 +5889,11 @@ export enum CoseEllipticCurve {
   Secp256k1 = "Secp256k1"
 }
 
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
 export enum CoseKeyType {
   Reserved = "0",
   OKP = "1",
@@ -10547,11 +10552,11 @@ export interface WebAuthnCredential {
   attestationType?: AttestationType;
   authenticatorSupportsUserVerification?: boolean;
   credentialId?: string;
+  displayName?: string;
   id?: UUID;
   insertInstant?: number;
   isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
-  name?: string;
   publicKey?: string;
   rpId?: string;
   signCount?: number;
