@@ -237,10 +237,10 @@ export class FusionAuthClient {
    * Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
    *
    * @param {WebAuthnCompleteRequest} request An object containing data necessary for completing the registration ceremony
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
    */
-  completeWebAuthnRegistration(request: WebAuthnCompleteRequest): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+  completeWebAuthnRegistration(request: WebAuthnCompleteRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
+    return this.start<WebAuthnCompleteResponse, Errors>()
         .withUri('/api/webauthn/complete')
         .withJSONBody(request)
         .withMethod("POST")
@@ -10554,6 +10554,15 @@ export interface WebAuthnCompleteRequest {
   origin?: string;
   rpId?: string;
   userId?: UUID;
+}
+
+/**
+ * API response for completing WebAuthn credential registration
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCompleteResponse {
+  credentialId?: UUID;
 }
 
 /**
