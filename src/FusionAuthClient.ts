@@ -5444,8 +5444,8 @@ export interface AuthenticationTokenConfiguration extends Enableable {
  * @author Spencer Witt
  */
 export enum AuthenticatorAttachment {
-  PLATFORM = "PLATFORM",
-  CROSS_PLATFORM = "CROSS_PLATFORM"
+  platform = "platform",
+  crossPlatform = "crossPlatform"
 }
 
 /**
@@ -5454,9 +5454,9 @@ export enum AuthenticatorAttachment {
  * @author Spencer Witt
  */
 export enum AuthenticatorAttachmentPreference {
-  PLATFORM = "PLATFORM",
-  CROSS_PLATFORM = "CROSS_PLATFORM",
-  EITHER = "EITHER"
+  platform = "platform",
+  crossPlatform = "crossPlatform",
+  either = "either"
 }
 
 /**
@@ -8566,7 +8566,7 @@ export interface PublicKeyCredentialRpEntity extends PublicKeyCredentialEntity {
  * @author Spencer Witt
  */
 export enum PublicKeyCredentialType {
-  PUBLIC_KEY = "PUBLIC_KEY"
+  publicKey = "publicKey"
 }
 
 /**
@@ -8912,9 +8912,9 @@ export interface RequiresCORSConfiguration {
  * @author Spencer Witt
  */
 export enum ResidentKeyRequirement {
-  Discouraged = "Discouraged",
-  Preferred = "Preferred",
-  Required = "Required"
+  discouraged = "discouraged",
+  preferred = "preferred",
+  required = "required"
 }
 
 export enum SAMLLogoutBehavior {
@@ -10686,10 +10686,10 @@ export interface WebAuthnStartResponse {
  * @author Spencer Witt
  */
 export enum WebAuthnWorkflow {
-  REAUTH = "REAUTH",
-  BOOTSTRAP = "BOOTSTRAP",
-  TWO_FACTOR = "TWO_FACTOR",
-  GENERAL = "GENERAL"
+  reAuthentication = "reAuthentication",
+  bootstrap = "bootstrap",
+  twoFactor = "twoFactor",
+  general = "general"
 }
 
 export interface WebAuthnWorkflowConfiguration extends Enableable {
