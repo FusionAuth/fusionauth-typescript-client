@@ -220,7 +220,21 @@ export class FusionAuthClient {
   }
 
   /**
-   * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge
+   * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
+   *
+   * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
+   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
+   */
+  completeWebAuthnAssertion(request: WebAuthnLoginRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
+    return this.startAnonymous<WebAuthnCompleteResponse, Errors>()
+        .withUri('/api/webauthn/assertion')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge and then login the user in
    *
    * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
    * @returns {Promise<ClientResponse<LoginResponse>>}
@@ -10557,7 +10571,7 @@ export interface WebAuthnCompleteRequest {
 }
 
 /**
- * API response for completing WebAuthn credential registration
+ * API response for completing WebAuthn credential registration or assertion
  *
  * @author Spencer Witt
  */
@@ -10665,8 +10679,10 @@ export interface WebAuthnRegistrationExtensionOptions {
  */
 export interface WebAuthnStartRequest {
   applicationId?: UUID;
+  credentialId?: UUID;
   loginId?: string;
   state?: Record<string, any>;
+  userId?: UUID;
   workflow?: WebAuthnWorkflow;
 }
 
