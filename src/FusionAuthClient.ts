@@ -8502,8 +8502,8 @@ export enum ProofKeyForCodeExchangePolicy {
 export interface PublicKeyAuthenticationRequest {
   clientExtensionResults?: WebAuthnExtensionsClientOutputs;
   id?: string;
+  relyingPartyId?: string;
   response?: AuthenticatorAuthenticationResponse;
-  rpId?: string;
   type?: string;
 }
 
@@ -8519,7 +8519,7 @@ export interface PublicKeyCredentialCreationOptions {
   excludeCredentials?: Array<PublicKeyCredentialDescriptor>;
   extensions?: WebAuthnRegistrationExtensionOptions;
   pubKeyCredParams?: Array<PublicKeyCredentialParameters>;
-  rp?: PublicKeyCredentialRpEntity;
+  rp?: PublicKeyCredentialRelyingPartyEntity;
   timeout?: number;
   user?: PublicKeyCredentialUserEntity;
 }
@@ -8553,6 +8553,15 @@ export interface PublicKeyCredentialParameters {
 }
 
 /**
+ * Supply additional information about the Relying Party when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialRelyingPartyEntity extends PublicKeyCredentialEntity {
+  id?: string;
+}
+
+/**
  * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
  *
  * @author Spencer Witt
@@ -8560,18 +8569,9 @@ export interface PublicKeyCredentialParameters {
 export interface PublicKeyCredentialRequestOptions {
   allowCredentials?: Array<PublicKeyCredentialDescriptor>;
   challenge?: string;
-  rpId?: string;
+  relyingPartyId?: string;
   timeout?: number;
   userVerification?: UserVerificationRequirement;
-}
-
-/**
- * Supply additional information about the Relying Party when creating a new credential
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialRpEntity extends PublicKeyCredentialEntity {
-  id?: string;
 }
 
 /**
@@ -9473,15 +9473,19 @@ export interface TenantUsernameConfiguration {
   unique?: UniqueUsernameConfiguration;
 }
 
+// TODO : WebAuthn : Daniel Review : Do we need this Enableable
+export interface TenantWebAuthnConfiguration extends Enableable {
+  reauthenticationWorkflowConfiguration?: TenantWebAuthnWorkflowConfiguration;
+  relyingPartyId?: string;
+  relyingPartyName?: string;
+}
+
 /**
- * Tenant-level configuration for WebAuthn
- *
  * @author Spencer Witt
  */
-export interface TenantWebAuthnConfiguration extends Enableable {
-  reauthenticationWorkflowConfiguration?: WebAuthnWorkflowConfiguration;
-  rpId?: string;
-  rpName?: string;
+export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
+  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
+  userVerificationRequirement?: UserVerificationRequirement;
 }
 
 /**
@@ -10566,7 +10570,7 @@ export interface VersionResponse {
 export interface WebAuthnCompleteRequest {
   credential?: PublicKeyRegistrationRequest;
   origin?: string;
-  rpId?: string;
+  relyingPartyId?: string;
   userId?: UUID;
 }
 
@@ -10585,7 +10589,7 @@ export interface WebAuthnCompleteResponse {
  * @author Spencer Witt
  */
 export interface WebAuthnCredential {
-  alg?: CoseAlgorithmIdentifier;
+  algorithm?: CoseAlgorithmIdentifier;
   attestationType?: AttestationType;
   authenticatorSupportsUserVerification?: boolean;
   credentialId?: string;
@@ -10595,7 +10599,7 @@ export interface WebAuthnCredential {
   isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
   publicKey?: string;
-  rpId?: string;
+  relyingPartyId?: string;
   signCount?: number;
   tenantId?: UUID;
   transports?: Array<AuthenticatorTransport>;
@@ -10639,7 +10643,7 @@ export interface WebAuthnImportRequest {
 export interface WebAuthnLoginRequest extends BaseLoginRequest {
   credential?: PublicKeyAuthenticationRequest;
   origin?: string;
-  rpId?: string;
+  relyingPartyId?: string;
 }
 
 /**
@@ -10706,11 +10710,6 @@ export enum WebAuthnWorkflow {
   bootstrap = "bootstrap",
   twoFactor = "twoFactor",
   general = "general"
-}
-
-export interface WebAuthnWorkflowConfiguration extends Enableable {
-  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
-  userVerificationRequirement?: UserVerificationRequirement;
 }
 
 /**
