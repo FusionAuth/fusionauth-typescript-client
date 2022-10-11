@@ -4083,6 +4083,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches groups with the specified criteria and pagination.
+   *
+   * @param {GroupSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<GroupSearchResponse>>}
+   */
+  searchGroups(request: GroupSearchRequest): Promise<ClientResponse<GroupSearchResponse>> {
+    return this.start<GroupSearchResponse, Errors>()
+        .withUri('/api/group/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the IP Access Control Lists with the specified criteria and pagination.
    *
    * @param {IPAccessControlListSearchRequest} request The search criteria and pagination information.
@@ -5559,7 +5573,6 @@ export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
  * @author Brian Pontarelli
  */
 export interface BaseEvent {
-  applicationIds?: Array<UUID>;
   createInstant?: number;
   id?: UUID;
   info?: EventInfo;
@@ -6537,6 +6550,18 @@ export enum EventType {
   AuditLogCreate = "audit-log.create",
   EventLogCreate = "event-log.create",
   KickstartSuccess = "kickstart.success",
+  GroupCreate = "group.create",
+  GroupCreateComplete = "group.create.complete",
+  GroupDelete = "group.delete",
+  GroupDeleteComplete = "group.delete.complete",
+  GroupMemberAdd = "group.member.add",
+  GroupMemberAddComplete = "group.member.add.complete",
+  GroupMemberRemove = "group.member.remove",
+  GroupMemberRemoveComplete = "group.member.remove.complete",
+  GroupMemberUpdate = "group.member.update",
+  GroupMemberUpdateComplete = "group.member.update.complete",
+  GroupUpdate = "group.update",
+  GroupUpdateComplete = "group.update.complete",
   UserAction = "user.action",
   UserBulkCreate = "user.bulk.create",
   UserCreate = "user.create",
@@ -6996,6 +7021,42 @@ export interface Group {
 }
 
 /**
+ * Models the Group Created Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateCompleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Create Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Create Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupDeleteCompleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Models the Group Delete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupDeleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
  * A User's membership into a Group
  *
  * @author Daniel DeGroff
@@ -7010,12 +7071,53 @@ export interface GroupMember {
 }
 
 /**
+ * Models the Group Member Add Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Member Add Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Member Remove Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Member Remove Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
  * Search criteria for Group Members
  *
  * @author Daniel DeGroff
  */
 export interface GroupMemberSearchCriteria extends BaseSearchCriteria {
   groupId?: UUID;
+  tenantId?: UUID;
   userId?: UUID;
 }
 
@@ -7039,6 +7141,26 @@ export interface GroupMemberSearchResponse {
 }
 
 /**
+ * Models the Group Member Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberUpdateCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Models the Group Member Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberUpdateEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
  * Group API request object.
  *
  * @author Daniel DeGroff
@@ -7056,6 +7178,55 @@ export interface GroupRequest {
 export interface GroupResponse {
   group?: Group;
   groups?: Array<Group>;
+}
+
+/**
+ * Search criteria for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for Groups.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchRequest {
+  search?: GroupSearchCriteria;
+}
+
+/**
+ * Search response for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchResponse {
+  groups?: Array<Group>;
+  total?: number;
+}
+
+/**
+ * Models the Group Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateCompleteEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
+}
+
+/**
+ * Models the Group Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
 }
 
 export interface HistoryItem {
@@ -7476,12 +7647,13 @@ export interface JWTConfiguration extends Enableable {
 }
 
 /**
- * Models the JWT public key Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single
+ * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
  * token, a user or an entire application.
  *
  * @author Brian Pontarelli
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
+  applicationIds?: Array<UUID>;
 }
 
 /**
@@ -7512,7 +7684,7 @@ export interface JWTRefreshResponse {
 }
 
 /**
- * Models the Refresh Token Revoke Event (and can be converted to JSON). This event might be for a single token, a user
+ * Models the Refresh Token Revoke Event. This event might be for a single token, a user
  * or an entire application.
  *
  * @author Brian Pontarelli
@@ -9842,7 +10014,7 @@ export interface UserAction {
 }
 
 /**
- * Models the user action event (and can be converted to JSON).
+ * Models the user action Event.
  *
  * @author Brian Pontarelli
  */
@@ -9851,6 +10023,7 @@ export interface UserActionEvent extends BaseEvent {
   actioneeUserId?: UUID;
   actionerUserId?: UUID;
   actionId?: UUID;
+  applicationIds?: Array<UUID>;
   comment?: string;
   email?: Email;
   emailedUser?: boolean;
@@ -9968,7 +10141,7 @@ export interface UserActionResponse {
 }
 
 /**
- * Models the User Bulk Create Event (and can be converted to JSON).
+ * Models the User Bulk Create Event.
  *
  * @author Brian Pontarelli
  */
@@ -10044,7 +10217,7 @@ export interface UserConsentResponse {
 }
 
 /**
- * Models the User Created Event (and can be converted to JSON).
+ * Models the User Created Event.
  * <p>
  * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
  *
@@ -10055,7 +10228,7 @@ export interface UserCreateCompleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Create Event (and can be converted to JSON).
+ * Models the User Create Event.
  *
  * @author Brian Pontarelli
  */
@@ -10064,7 +10237,7 @@ export interface UserCreateEvent extends BaseEvent {
 }
 
 /**
- * Models the User Deactivate Event (and can be converted to JSON).
+ * Models the User Deactivate Event.
  *
  * @author Brian Pontarelli
  */
@@ -10139,7 +10312,7 @@ export interface UserEmailUpdateEvent extends BaseEvent {
 }
 
 /**
- * Models the User Email Verify Event (and can be converted to JSON).
+ * Models the User Email Verify Event.
  *
  * @author Trevor Smith
  */
@@ -10287,7 +10460,7 @@ export interface UserPasswordUpdateEvent extends BaseEvent {
 }
 
 /**
- * Models the User Reactivate Event (and can be converted to JSON).
+ * Models the User Reactivate Event.
  *
  * @author Brian Pontarelli
  */
@@ -10319,9 +10492,10 @@ export interface UserRegistration {
 }
 
 /**
- * Models the User Created Registration Event (and can be converted to JSON).
+ * Models the User Created Registration Event.
  * <p>
- * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made
+ * transactional.
  *
  * @author Daniel DeGroff
  */
@@ -10332,7 +10506,7 @@ export interface UserRegistrationCreateCompleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Create Registration Event (and can be converted to JSON).
+ * Models the User Create Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -10343,7 +10517,7 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
 }
 
 /**
- * Models the User Deleted Registration Event (and can be converted to JSON).
+ * Models the User Deleted Registration Event.
  * <p>
  * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
  *
@@ -10356,7 +10530,7 @@ export interface UserRegistrationDeleteCompleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Delete Registration Event (and can be converted to JSON).
+ * Models the User Delete Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -10367,7 +10541,7 @@ export interface UserRegistrationDeleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Update Registration Event (and can be converted to JSON).
+ * Models the User Update Registration Event.
  * <p>
  * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
  *
@@ -10381,7 +10555,7 @@ export interface UserRegistrationUpdateCompleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Update Registration Event (and can be converted to JSON).
+ * Models the User Update Registration Event.
  *
  * @author Daniel DeGroff
  */
@@ -10393,7 +10567,7 @@ export interface UserRegistrationUpdateEvent extends BaseEvent {
 }
 
 /**
- * Models the User Registration Verified Event (and can be converted to JSON).
+ * Models the User Registration Verified Event.
  *
  * @author Trevor Smith
  */
@@ -10486,7 +10660,7 @@ export interface UserUpdateCompleteEvent extends BaseEvent {
 }
 
 /**
- * Models the User Update Event (and can be converted to JSON).
+ * Models the User Update Event.
  *
  * @author Brian Pontarelli
  */
