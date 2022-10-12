@@ -5456,6 +5456,13 @@ export interface AuditLogSearchResponse {
   total?: number;
 }
 
+/**
+ * @author Brett Pontarelli
+ */
+export enum AuthenticationThreats {
+  ImpossibleTravel = "ImpossibleTravel"
+}
+
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
@@ -9301,6 +9308,18 @@ export interface SMSMessageTemplate extends MessageTemplate {
  * @author Brett Pontarelli
  */
 export interface SonyPSNApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * SonyPSN gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface SonyPSNIdentityProvider extends BaseIdentityProvider<SonyPSNApplicationConfiguration> {
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
