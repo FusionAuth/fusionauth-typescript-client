@@ -5456,13 +5456,6 @@ export interface AuditLogSearchResponse {
   total?: number;
 }
 
-/**
- * @author Brett Pontarelli
- */
-export enum AuthenticationThreats {
-  ImpossibleTravel = "ImpossibleTravel"
-}
-
 export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
@@ -8674,8 +8667,8 @@ export enum ProofKeyForCodeExchangePolicy {
 export interface PublicKeyAuthenticationRequest {
   clientExtensionResults?: WebAuthnExtensionsClientOutputs;
   id?: string;
-  relyingPartyId?: string;
   response?: AuthenticatorAuthenticationResponse;
+  rpId?: string;
   type?: string;
 }
 
@@ -9315,18 +9308,6 @@ export interface SonyPSNApplicationConfiguration extends BaseIdentityProviderApp
 }
 
 /**
- * SonyPSN gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface SonyPSNIdentityProvider extends BaseIdentityProvider<SonyPSNApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export enum Sort {
@@ -9419,6 +9400,9 @@ export interface Templates {
   accountTwoFactorDisable?: string;
   accountTwoFactorEnable?: string;
   accountTwoFactorIndex?: string;
+  accountWebAuthnAdd?: string;
+  accountWebAuthnDelete?: string;
+  accountWebAuthnIndex?: string;
   emailComplete?: string;
   emailSend?: string;
   emailSent?: string;
@@ -9441,7 +9425,7 @@ export interface Templates {
   oauth2TwoFactor?: string;
   oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
-  oauth2WebAuthN?: string;
+  oauth2WebAuthn?: string;
   passwordChange?: string;
   passwordComplete?: string;
   passwordForgot?: string;
@@ -9652,9 +9636,7 @@ export interface TenantWebAuthnConfiguration extends Enableable {
   relyingPartyName?: string;
 }
 
-/**
- * @author Spencer Witt
- */
+// TODO : WebAuthn : Daniel Review : If this also ends up living in the Application, we should rename to WebAuthnWorkflowConfiguration
 export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
   authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
   userVerificationRequirement?: UserVerificationRequirement;
@@ -10744,7 +10726,7 @@ export interface VersionResponse {
 export interface WebAuthnCompleteRequest {
   credential?: PublicKeyRegistrationRequest;
   origin?: string;
-  relyingPartyId?: string;
+  rpId?: string;
   userId?: UUID;
 }
 
@@ -10817,7 +10799,7 @@ export interface WebAuthnImportRequest {
 export interface WebAuthnLoginRequest extends BaseLoginRequest {
   credential?: PublicKeyAuthenticationRequest;
   origin?: string;
-  relyingPartyId?: string;
+  rpId?: string;
 }
 
 /**
