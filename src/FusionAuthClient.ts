@@ -5541,7 +5541,7 @@ export enum AuthenticatorTransport {
   usb = "usb",
   nfc = "nfc",
   ble = "ble",
-  internal = "internal",
+  platform = "internal",
   cable = "cable"
 }
 
