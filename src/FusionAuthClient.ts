@@ -8881,6 +8881,9 @@ export interface ReactorStatus {
   licensed?: boolean;
   scimServer?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  webAuthn?: ReactorFeatureStatus;
+  webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
+  webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
 }
 
 /**
