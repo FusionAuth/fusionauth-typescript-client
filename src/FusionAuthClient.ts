@@ -10776,6 +10776,7 @@ export interface WebAuthnCredential {
   insertInstant?: number;
   isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
+  name?: string;
   publicKey?: string;
   relyingPartyId?: string;
   signCount?: number;
@@ -10830,7 +10831,8 @@ export interface WebAuthnLoginRequest extends BaseLoginRequest {
  * @author Spencer Witt
  */
 export interface WebAuthnRegisterRequest {
-  credentialName?: string;
+  displayName?: string;
+  name?: string;
   userAgent?: string;
   userId?: UUID;
   workflow?: WebAuthnWorkflow;
