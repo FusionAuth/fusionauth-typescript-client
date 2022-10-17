@@ -6639,6 +6639,8 @@ export interface ExternalIdentifierConfiguration {
   twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
   twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
+  webAuthnAuthenticationChallenge?: number;
+  webAuthnRegistrationChallenge?: number;
 }
 
 /**
@@ -9448,6 +9450,8 @@ export interface Templates {
   oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
   oauth2WebAuthn?: string;
+  oauth2WebAuthnReauth?: string;
+  oauth2WebAuthnReauthEnable?: string;
   passwordChange?: string;
   passwordComplete?: string;
   passwordForgot?: string;
@@ -9653,7 +9657,8 @@ export interface TenantUsernameConfiguration {
 
 // TODO : WebAuthn : Daniel Review : Do we need this Enableable
 export interface TenantWebAuthnConfiguration extends Enableable {
-  reauthenticationWorkflowConfiguration?: TenantWebAuthnWorkflowConfiguration;
+  bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
   relyingPartyId?: string;
   relyingPartyName?: string;
 }
