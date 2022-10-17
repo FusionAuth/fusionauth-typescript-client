@@ -10763,7 +10763,7 @@ export interface WebAuthnCompleteRequest {
  * @author Spencer Witt
  */
 export interface WebAuthnCompleteResponse {
-  credentialId?: UUID;
+  credential?: WebAuthnCredential;
 }
 
 /**
