@@ -10776,10 +10776,10 @@ export interface WebAuthnCredential {
   attestationType?: AttestationType;
   authenticatorSupportsUserVerification?: boolean;
   credentialId?: string;
+  discoverable?: boolean;
   displayName?: string;
   id?: UUID;
   insertInstant?: number;
-  isDiscoverableCredential?: boolean;
   lastUseInstant?: number;
   name?: string;
   publicKey?: string;
