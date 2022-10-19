@@ -10776,6 +10776,7 @@ export interface WebAuthnCredential {
   attestationType?: AttestationType;
   authenticatorSupportsUserVerification?: boolean;
   credentialId?: string;
+  data?: Record<string, any>;
   discoverable?: boolean;
   displayName?: string;
   id?: UUID;
@@ -10797,8 +10798,8 @@ export interface WebAuthnCredential {
  * @author Spencer Witt
  */
 export interface WebAuthnCredentialResponse {
-  webauthnCredential?: WebAuthnCredential;
-  webauthnCredentials?: Array<WebAuthnCredential>;
+  credential?: WebAuthnCredential;
+  credentials?: Array<WebAuthnCredential>;
 }
 
 /**
@@ -10811,12 +10812,13 @@ export interface WebAuthnExtensionsClientOutputs {
 }
 
 /**
- * API request to import an existing WebAuthn credential
+ * API request to import an existing WebAuthn credential(s)
  *
  * @author Spencer Witt
  */
 export interface WebAuthnImportRequest {
-  credential?: WebAuthnCredential;
+  credentials?: Array<WebAuthnCredential>;
+  validateDbConstraints?: boolean;
 }
 
 /**
