@@ -249,7 +249,7 @@ export class FusionAuthClient {
    */
   completeWebAuthnAssertion(request: WebAuthnLoginRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
     return this.startAnonymous<WebAuthnCompleteResponse, Errors>()
-        .withUri('/api/webauthn/assertion')
+        .withUri('/api/webauthn/assert')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -277,7 +277,7 @@ export class FusionAuthClient {
    */
   completeWebAuthnRegistration(request: WebAuthnCompleteRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
     return this.start<WebAuthnCompleteResponse, Errors>()
-        .withUri('/api/webauthn/complete')
+        .withUri('/api/webauthn/register/complete')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -4387,7 +4387,7 @@ export class FusionAuthClient {
    */
   startWebAuthnRegistration(request: WebAuthnRegisterRequest): Promise<ClientResponse<WebAuthnRegisterResponse>> {
     return this.start<WebAuthnRegisterResponse, Errors>()
-        .withUri('/api/webauthn/register')
+        .withUri('/api/webauthn/register/start')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -6661,8 +6661,8 @@ export interface ExternalIdentifierConfiguration {
   twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
   twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
-  webAuthnAuthenticationChallenge?: number;
-  webAuthnRegistrationChallenge?: number;
+  webAuthnAuthenticationChallengeTimeToLiveInSeconds?: number;
+  webAuthnRegistrationChallengeTimeToLiveInSeconds?: number;
 }
 
 /**
