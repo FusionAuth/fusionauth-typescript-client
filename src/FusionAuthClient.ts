@@ -5935,28 +5935,7 @@ export enum CoseAlgorithmIdentifier {
   PS512 = "SHA-512"
 }
 
-/**
- * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
- *
- * @author Spencer Witt
- */
-export enum CoseEllipticCurve {
-  Reserved = "Reserved",
-  P256 = "P256",
-  P384 = "P384",
-  P521 = "P521",
-  X25519 = "X25519",
-  X448 = "X448",
-  Ed25519 = "Ed25519",
-  Ed448 = "Ed448",
-  Secp256k1 = "Secp256k1"
-}
-
-/**
- * COSE key type
- *
- * @author Spencer Witt
- */
+// TODO : WebAuthn/Domain - this type is only used internally, but it is referenced in CoseAlgorithmIdentifier which is required in public domain
 export enum CoseKeyType {
   Reserved = "0",
   OKP = "1",
