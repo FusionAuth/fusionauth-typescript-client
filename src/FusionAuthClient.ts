@@ -5553,20 +5553,6 @@ export interface AuthenticatorSelectionCriteria {
   userVerification?: UserVerificationRequirement;
 }
 
-/**
- * Describes how the authenticator communicates with a client. This can be used by the client as a hint to locate the
- * appropriate authenticator.
- *
- * @author Spencer Witt
- */
-export enum AuthenticatorTransport {
-  usb = "usb",
-  nfc = "nfc",
-  ble = "ble",
-  platform = "internal",
-  cable = "cable"
-}
-
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseConnectorConfiguration {
   data?: Record<string, any>;
@@ -8723,7 +8709,7 @@ export interface PublicKeyCredentialCreationOptions {
  */
 export interface PublicKeyCredentialDescriptor {
   id?: string;
-  transports?: Array<AuthenticatorTransport>;
+  transports?: Array<string>;
   type?: PublicKeyCredentialType;
 }
 
@@ -8761,7 +8747,7 @@ export interface PublicKeyCredentialRelyingPartyEntity extends PublicKeyCredenti
 export interface PublicKeyCredentialRequestOptions {
   allowCredentials?: Array<PublicKeyCredentialDescriptor>;
   challenge?: string;
-  relyingPartyId?: string;
+  rpId?: string;
   timeout?: number;
   userVerification?: UserVerificationRequirement;
 }
@@ -8795,7 +8781,7 @@ export interface PublicKeyRegistrationRequest {
   id?: string;
   response?: AuthenticatorRegistrationResponse;
   rpId?: string;
-  transports?: Array<AuthenticatorTransport>;
+  transports?: Array<string>;
   type?: string;
 }
 
@@ -10805,7 +10791,7 @@ export interface WebAuthnCredential {
   relyingPartyId?: string;
   signCount?: number;
   tenantId?: UUID;
-  transports?: Array<AuthenticatorTransport>;
+  transports?: Array<string>;
   userAgent?: string;
   userId?: UUID;
 }
