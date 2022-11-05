@@ -5504,9 +5504,9 @@ export enum AuthenticatorAttachment {
  * @author Spencer Witt
  */
 export enum AuthenticatorAttachmentPreference {
+  any = "any",
   platform = "platform",
-  crossPlatform = "crossPlatform",
-  either = "either"
+  crossPlatform = "crossPlatform"
 }
 
 /**
@@ -9659,7 +9659,11 @@ export interface TenantUsernameConfiguration {
   unique?: UniqueUsernameConfiguration;
 }
 
-// TODO : WebAuthn : Daniel Review : Do we need this Enableable
+/**
+ * Tenant-level configuration for WebAuthn
+ *
+ * @author Spencer Witt
+ */
 export interface TenantWebAuthnConfiguration extends Enableable {
   bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
   debug?: boolean;
