@@ -9662,6 +9662,7 @@ export interface TenantUsernameConfiguration {
 // TODO : WebAuthn : Daniel Review : Do we need this Enableable
 export interface TenantWebAuthnConfiguration extends Enableable {
   bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  debug?: boolean;
   reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
   relyingPartyId?: string;
   relyingPartyName?: string;
