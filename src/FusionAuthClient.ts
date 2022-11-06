@@ -5938,7 +5938,11 @@ export enum CoseEllipticCurve {
   Secp256k1 = "Secp256k1"
 }
 
-// TODO : WebAuthn/Domain - this type is only used internally, but it is referenced in CoseAlgorithmIdentifier which is required in public domain
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
 export enum CoseKeyType {
   Reserved = "0",
   OKP = "1",
@@ -9672,7 +9676,9 @@ export interface TenantWebAuthnConfiguration extends Enableable {
   relyingPartyName?: string;
 }
 
-// TODO : WebAuthn : Daniel Review : If this also ends up living in the Application, we should rename to WebAuthnWorkflowConfiguration
+/**
+ * @author Spencer Witt
+ */
 export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
   authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
   userVerificationRequirement?: UserVerificationRequirement;
@@ -10902,10 +10908,9 @@ export interface WebAuthnStartResponse {
  * @author Spencer Witt
  */
 export enum WebAuthnWorkflow {
-  reauthentication = "reauthentication",
   bootstrap = "bootstrap",
-  twoFactor = "twoFactor",
-  general = "general"
+  general = "general",
+  reauthentication = "reauthentication"
 }
 
 /**
