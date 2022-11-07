@@ -5238,6 +5238,7 @@ export interface Application {
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
   verifyRegistration?: boolean;
+  webAuthnConfiguration?: ApplicationWebAuthnConfiguration;
 }
 
 /**
@@ -5358,6 +5359,14 @@ export interface ApplicationUnverifiedConfiguration {
   registration?: UnverifiedBehavior;
   verificationStrategy?: VerificationStrategy;
   whenGated?: RegistrationUnverifiedOptions;
+}
+
+/**
+ * Application-level configuration for WebAuthn
+ *
+ * @author Daniel DeGroff
+ */
+export interface ApplicationWebAuthnConfiguration extends Enableable {
 }
 
 /**
@@ -9135,6 +9144,7 @@ export interface SAMLv2Configuration extends Enableable {
   callbackURL?: string;
   debug?: boolean;
   defaultVerificationKeyId?: UUID;
+  initiatedLogin?: SAMLv2IdPInitiatedLoginConfiguration;
   issuer?: string;
   keyId?: UUID;
   logout?: SAMLv2Logout;
@@ -9185,6 +9195,15 @@ export interface SAMLv2IdPInitiatedIdentityProvider extends BaseIdentityProvider
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+}
+
+/**
+ * IdP Initiated login configuration
+ *
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedLoginConfiguration extends Enableable {
+  nameIdFormat?: string;
 }
 
 export interface SAMLv2Logout {
