@@ -206,6 +206,28 @@ export class FusionAuthClient {
   }
 
   /**
+   * Make a Client Credentials grant request to obtain an access token.
+   *
+   * @param {string} client_id The client identifier. The client Id is the Id of the FusionAuth Entity in which you are attempting to authenticate.
+   * @param {string} client_secret The client secret used to authenticate this request.
+   * @param {string} scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  clientCredentialsGrant(client_id: string, client_secret: string, scope: string): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('grant_type', 'client_credentials');
+    body.append('scope', scope);
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Adds a comment to the user's account.
    *
    * @param {UserCommentRequest} request The request object that contains all the information used to create the user comment.
@@ -214,6 +236,48 @@ export class FusionAuthClient {
   commentOnUser(request: UserCommentRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/comment')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
+   *
+   * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
+   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
+   */
+  completeWebAuthnAssertion(request: WebAuthnLoginRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
+    return this.startAnonymous<WebAuthnCompleteResponse, Errors>()
+        .withUri('/api/webauthn/assert')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge and then login the user in
+   *
+   * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
+   * @returns {Promise<ClientResponse<LoginResponse>>}
+   */
+  completeWebAuthnLogin(request: WebAuthnLoginRequest): Promise<ClientResponse<LoginResponse>> {
+    return this.startAnonymous<LoginResponse, Errors>()
+        .withUri('/api/webauthn/login')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
+   *
+   * @param {WebAuthnCompleteRequest} request An object containing data necessary for completing the registration ceremony
+   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
+   */
+  completeWebAuthnRegistration(request: WebAuthnCompleteRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
+    return this.start<WebAuthnCompleteResponse, Errors>()
+        .withUri('/api/webauthn/register/complete')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -1279,6 +1343,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes the WebAuthn credential for the given Id.
+   *
+   * @param {UUID} id The Id of the WebAuthn credential to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteWebAuthnCredential(id: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/webauthn')
+        .withUriSegment(id)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the webhook for the given Id.
    *
    * @param {UUID} webhookId The Id of the webhook to delete.
@@ -1642,6 +1720,20 @@ export class FusionAuthClient {
   importUsers(request: ImportRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/import')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Import a WebAuthn credential
+   *
+   * @param {WebAuthnImportRequest} request An object containing data necessary for importing the credential
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  importWebAuthnCredential(request: WebAuthnImportRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/webauthn/import')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -3719,6 +3811,34 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the WebAuthn credential for the given Id.
+   *
+   * @param {UUID} id The Id of the WebAuthn credential.
+   * @returns {Promise<ClientResponse<WebAuthnCredentialResponse>>}
+   */
+  retrieveWebAuthnCredential(id: UUID): Promise<ClientResponse<WebAuthnCredentialResponse>> {
+    return this.start<WebAuthnCredentialResponse, Errors>()
+        .withUri('/api/webauthn')
+        .withUriSegment(id)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all WebAuthn credentials for the given user.
+   *
+   * @param {UUID} userId The user's ID.
+   * @returns {Promise<ClientResponse<WebAuthnCredentialResponse>>}
+   */
+  retrieveWebAuthnCredentialsForUser(userId: UUID): Promise<ClientResponse<WebAuthnCredentialResponse>> {
+    return this.start<WebAuthnCredentialResponse, Errors>()
+        .withUri('/api/webauthn')
+        .withParameter('userId', userId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
    *
    * @param {UUID} webhookId (Optional) The Id of the webhook.
@@ -4240,6 +4360,34 @@ export class FusionAuthClient {
   startTwoFactorLogin(request: TwoFactorStartRequest): Promise<ClientResponse<TwoFactorStartResponse>> {
     return this.start<TwoFactorStartResponse, Errors>()
         .withUri('/api/two-factor/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start a WebAuthn authentication ceremony by generating a new challenge for the user
+   *
+   * @param {WebAuthnStartRequest} request An object containing data necessary for starting the authentication ceremony
+   * @returns {Promise<ClientResponse<WebAuthnStartResponse>>}
+   */
+  startWebAuthnLogin(request: WebAuthnStartRequest): Promise<ClientResponse<WebAuthnStartResponse>> {
+    return this.start<WebAuthnStartResponse, Errors>()
+        .withUri('/api/webauthn/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start a WebAuthn registration ceremony by generating a new challenge for the user
+   *
+   * @param {WebAuthnRegisterRequest} request An object containing data necessary for starting the registration ceremony
+   * @returns {Promise<ClientResponse<WebAuthnRegisterResponse>>}
+   */
+  startWebAuthnRegistration(request: WebAuthnRegisterRequest): Promise<ClientResponse<WebAuthnRegisterResponse>> {
+    return this.start<WebAuthnRegisterResponse, Errors>()
+        .withUri('/api/webauthn/register/start')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -5090,6 +5238,7 @@ export interface Application {
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
   verifyRegistration?: boolean;
+  webAuthnConfiguration?: ApplicationWebAuthnConfiguration;
 }
 
 /**
@@ -5114,6 +5263,14 @@ export interface ApplicationEmailConfiguration {
   setPasswordEmailTemplateId?: UUID;
   twoFactorMethodAddEmailTemplateId?: UUID;
   twoFactorMethodRemoveEmailTemplateId?: UUID;
+}
+
+/**
+ * Events that are bound to applications.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ApplicationEvent {
 }
 
 /**
@@ -5205,6 +5362,22 @@ export interface ApplicationUnverifiedConfiguration {
 }
 
 /**
+ * Application-level configuration for WebAuthn
+ *
+ * @author Daniel DeGroff
+ */
+export interface ApplicationWebAuthnConfiguration extends Enableable {
+  bootstrapWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
+  reauthenticationWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationWebAuthnWorkflowConfiguration extends Enableable {
+}
+
+/**
  * This class is a simple attachment with a byte array, name and MIME type.
  *
  * @author Brian Pontarelli
@@ -5213,6 +5386,31 @@ export interface Attachment {
   attachment?: Array<number>;
   mime?: string;
   name?: string;
+}
+
+/**
+ * Used to communicate whether and how authenticator attestation should be delivered to the Relying Party
+ *
+ * @author Spencer Witt
+ */
+export enum AttestationConveyancePreference {
+  none = "none",
+  indirect = "indirect",
+  direct = "direct",
+  enterprise = "enterprise"
+}
+
+/**
+ * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
+ *
+ * @author Spencer Witt
+ */
+export enum AttestationType {
+  basic = "basic",
+  self = "self",
+  attestationCa = "attestationCa",
+  anonymizationCa = "anonymizationCa",
+  none = "none"
 }
 
 /**
@@ -5308,12 +5506,68 @@ export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
 /**
+ * Describes the <a href="https://www.w3.org/TR/webauthn-2/#authenticator-attachment-modality">authenticator attachment modality</a>.
+ *
+ * @author Spencer Witt
+ */
+export enum AuthenticatorAttachment {
+  platform = "platform",
+  crossPlatform = "crossPlatform"
+}
+
+/**
+ * Describes the authenticator attachment modality preference for a WebAuthn workflow. See {@link AuthenticatorAttachment}
+ *
+ * @author Spencer Witt
+ */
+export enum AuthenticatorAttachmentPreference {
+  any = "any",
+  platform = "platform",
+  crossPlatform = "crossPlatform"
+}
+
+/**
+ * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+export interface AuthenticatorAuthenticationResponse {
+  authenticatorData?: string;
+  clientDataJSON?: string;
+  signature?: string;
+  userHandle?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface AuthenticatorConfiguration {
   algorithm?: TOTPAlgorithm;
   codeLength?: number;
   timeStep?: number;
+}
+
+/**
+ * The <i>authenticator's</i> response for the registration ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+export interface AuthenticatorRegistrationResponse {
+  attestationObject?: string;
+  clientDataJSON?: string;
+}
+
+/**
+ * Used by the Relying Party to specify their requirements for authenticator attributes. Fields use the deprecated "resident key" terminology to refer
+ * to client-side discoverable credentials to maintain backwards compatibility with WebAuthn Level 1.
+ *
+ * @author Spencer Witt
+ */
+export interface AuthenticatorSelectionCriteria {
+  authenticatorAttachment?: AuthenticatorAttachment;
+  requireResidentKey?: boolean;
+  residentKey?: ResidentKeyRequirement;
+  userVerification?: UserVerificationRequirement;
 }
 
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
@@ -5667,11 +5921,68 @@ export interface CORSConfiguration extends Enableable {
 }
 
 /**
+ * A number identifying a cryptographic algorithm. Values should be registered with the <a
+ * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
+ *
+ * @author Spencer Witt
+ */
+export enum CoseAlgorithmIdentifier {
+  ES256 = "SHA256withECDSA",
+  ES384 = "SHA384withECDSA",
+  ES512 = "SHA512withECDSA",
+  RS256 = "SHA256withRSA",
+  RS384 = "SHA384withRSA",
+  RS512 = "SHA512withRSA",
+  PS256 = "SHA-256",
+  PS384 = "SHA-384",
+  PS512 = "SHA-512"
+}
+
+/**
+ * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ *
+ * @author Spencer Witt
+ */
+export enum CoseEllipticCurve {
+  Reserved = "Reserved",
+  P256 = "P256",
+  P384 = "P384",
+  P521 = "P521",
+  X25519 = "X25519",
+  X448 = "X448",
+  Ed25519 = "Ed25519",
+  Ed448 = "Ed448",
+  Secp256k1 = "Secp256k1"
+}
+
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
+export enum CoseKeyType {
+  Reserved = "0",
+  OKP = "1",
+  EC2 = "2",
+  RSA = "3",
+  Symmetric = "4"
+}
+
+/**
  * @author Brian Pontarelli
  */
 export interface Count {
   count?: number;
   interval?: number;
+}
+
+/**
+ * Contains the output for the {@code credProps} extension
+ *
+ * @author Spencer Witt
+ */
+export interface CredentialPropertiesOutput {
+  rk?: boolean;
 }
 
 /**
@@ -6353,6 +6664,8 @@ export interface ExternalIdentifierConfiguration {
   twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
   twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
   twoFactorTrustIdTimeToLiveInSeconds?: number;
+  webAuthnAuthenticationChallengeTimeToLiveInSeconds?: number;
+  webAuthnRegistrationChallengeTimeToLiveInSeconds?: number;
 }
 
 /**
@@ -7541,17 +7854,17 @@ export interface Lambda {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 /**
@@ -7965,6 +8278,7 @@ export enum MessengerType {
 }
 
 export interface MetaData {
+  data?: Record<string, any>;
   device?: DeviceInfo;
   scopes?: Array<string>;
 }
@@ -8381,6 +8695,119 @@ export enum ProofKeyForCodeExchangePolicy {
 }
 
 /**
+ * Request to authenticate with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyAuthenticationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: AuthenticatorAuthenticationResponse;
+  rpId?: string;
+  type?: string;
+}
+
+/**
+ * Allows the Relying Party to specify desired attributes of a new credential.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialCreationOptions {
+  attestation?: AttestationConveyancePreference;
+  authenticatorSelection?: AuthenticatorSelectionCriteria;
+  challenge?: string;
+  excludeCredentials?: Array<PublicKeyCredentialDescriptor>;
+  extensions?: WebAuthnRegistrationExtensionOptions;
+  pubKeyCredParams?: Array<PublicKeyCredentialParameters>;
+  rp?: PublicKeyCredentialRelyingPartyEntity;
+  timeout?: number;
+  user?: PublicKeyCredentialUserEntity;
+}
+
+/**
+ * Contains attributes for the Relying Party to refer to an existing public key credential as an input parameter.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialDescriptor {
+  id?: string;
+  transports?: Array<string>;
+  type?: PublicKeyCredentialType;
+}
+
+/**
+ * Describes a user account or WebAuthn Relying Party associated with a public key credential
+ */
+export interface PublicKeyCredentialEntity {
+  name?: string;
+}
+
+/**
+ * Supply information on credential type and algorithm to the <i>authenticator</i>.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialParameters {
+  alg?: CoseAlgorithmIdentifier;
+  type?: PublicKeyCredentialType;
+}
+
+/**
+ * Supply additional information about the Relying Party when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialRelyingPartyEntity extends PublicKeyCredentialEntity {
+  id?: string;
+}
+
+/**
+ * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialRequestOptions {
+  allowCredentials?: Array<PublicKeyCredentialDescriptor>;
+  challenge?: string;
+  rpId?: string;
+  timeout?: number;
+  userVerification?: UserVerificationRequirement;
+}
+
+/**
+ * Defines valid credential types. This is an extension point in the WebAuthn spec. The only defined value at this time is "public-key"
+ *
+ * @author Spencer Witt
+ */
+export enum PublicKeyCredentialType {
+  publicKey = "public-key"
+}
+
+/**
+ * Supply additional information about the user account when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialUserEntity extends PublicKeyCredentialEntity {
+  displayName?: string;
+  id?: string;
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyRegistrationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: AuthenticatorRegistrationResponse;
+  rpId?: string;
+  transports?: Array<string>;
+  type?: string;
+}
+
+/**
  * JWT Public Key Response Object
  *
  * @author Daniel DeGroff
@@ -8482,6 +8909,9 @@ export interface ReactorStatus {
   licensed?: boolean;
   scimServer?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  webAuthn?: ReactorFeatureStatus;
+  webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
+  webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
 }
 
 /**
@@ -8692,6 +9122,18 @@ export interface Requirable extends Enableable {
 export interface RequiresCORSConfiguration {
 }
 
+/**
+ * Describes the Relying Party's requirements for <a href="https://www.w3.org/TR/webauthn-2/#client-side-discoverable-credential">client-side
+ * discoverable credentials</a> (formerly known as "resident keys")
+ *
+ * @author Spencer Witt
+ */
+export enum ResidentKeyRequirement {
+  discouraged = "discouraged",
+  preferred = "preferred",
+  required = "required"
+}
+
 export enum SAMLLogoutBehavior {
   AllParticipants = "AllParticipants",
   OnlyOriginator = "OnlyOriginator"
@@ -8711,6 +9153,7 @@ export interface SAMLv2Configuration extends Enableable {
   callbackURL?: string;
   debug?: boolean;
   defaultVerificationKeyId?: UUID;
+  initiatedLogin?: SAMLv2IdPInitiatedLoginConfiguration;
   issuer?: string;
   keyId?: UUID;
   logout?: SAMLv2Logout;
@@ -8761,6 +9204,15 @@ export interface SAMLv2IdPInitiatedIdentityProvider extends BaseIdentityProvider
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+}
+
+/**
+ * IdP Initiated login configuration
+ *
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedLoginConfiguration extends Enableable {
+  nameIdFormat?: string;
 }
 
 export interface SAMLv2Logout {
@@ -9008,6 +9460,9 @@ export interface Templates {
   accountTwoFactorDisable?: string;
   accountTwoFactorEnable?: string;
   accountTwoFactorIndex?: string;
+  accountWebAuthnAdd?: string;
+  accountWebAuthnDelete?: string;
+  accountWebAuthnIndex?: string;
   emailComplete?: string;
   emailSend?: string;
   emailSent?: string;
@@ -9030,6 +9485,9 @@ export interface Templates {
   oauth2TwoFactor?: string;
   oauth2TwoFactorMethods?: string;
   oauth2Wait?: string;
+  oauth2WebAuthn?: string;
+  oauth2WebAuthnReauth?: string;
+  oauth2WebAuthnReauthEnable?: string;
   passwordChange?: string;
   passwordComplete?: string;
   passwordForgot?: string;
@@ -9082,6 +9540,7 @@ export interface Tenant {
   themeId?: UUID;
   userDeletePolicy?: TenantUserDeletePolicy;
   usernameConfiguration?: TenantUsernameConfiguration;
+  webAuthnConfiguration?: TenantWebAuthnConfiguration;
 }
 
 /**
@@ -9230,6 +9689,27 @@ export interface TenantUserDeletePolicy {
  */
 export interface TenantUsernameConfiguration {
   unique?: UniqueUsernameConfiguration;
+}
+
+/**
+ * Tenant-level configuration for WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface TenantWebAuthnConfiguration extends Enableable {
+  bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  debug?: boolean;
+  reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  relyingPartyId?: string;
+  relyingPartyName?: string;
+}
+
+/**
+ * @author Spencer Witt
+ */
+export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
+  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
+  userVerificationRequirement?: UserVerificationRequirement;
 }
 
 /**
@@ -10242,6 +10722,18 @@ export interface UserUpdateEvent extends BaseEvent {
 }
 
 /**
+ * Used to express whether the Relying Party requires <a href="https://www.w3.org/TR/webauthn-2/#user-verification">user verification</a> for the
+ * current operation.
+ *
+ * @author Spencer Witt
+ */
+export enum UserVerificationRequirement {
+  required = "required",
+  preferred = "preferred",
+  discouraged = "discouraged"
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface ValidateResponse {
@@ -10294,6 +10786,160 @@ export interface VerifyRegistrationResponse {
  */
 export interface VersionResponse {
   version?: string;
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony for a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCompleteRequest {
+  credential?: PublicKeyRegistrationRequest;
+  origin?: string;
+  rpId?: string;
+  userId?: UUID;
+}
+
+/**
+ * API response for completing WebAuthn credential registration or assertion
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCompleteResponse {
+  credential?: WebAuthnCredential;
+}
+
+/**
+ * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredential {
+  algorithm?: CoseAlgorithmIdentifier;
+  attestationType?: AttestationType;
+  authenticatorSupportsUserVerification?: boolean;
+  credentialId?: string;
+  data?: Record<string, any>;
+  discoverable?: boolean;
+  displayName?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUseInstant?: number;
+  name?: string;
+  publicKey?: string;
+  relyingPartyId?: string;
+  signCount?: number;
+  tenantId?: UUID;
+  transports?: Array<string>;
+  userAgent?: string;
+  userId?: UUID;
+}
+
+/**
+ * WebAuthn Credential API response
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredentialResponse {
+  credential?: WebAuthnCredential;
+  credentials?: Array<WebAuthnCredential>;
+}
+
+/**
+ * Contains extension output for requested extensions during a WebAuthn ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnExtensionsClientOutputs {
+  credProps?: CredentialPropertiesOutput;
+}
+
+/**
+ * API request to import an existing WebAuthn credential(s)
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnImportRequest {
+  credentials?: Array<WebAuthnCredential>;
+  validateDbConstraints?: boolean;
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnLoginRequest extends BaseLoginRequest {
+  credential?: PublicKeyAuthenticationRequest;
+  origin?: string;
+  rpId?: string;
+  twoFactorTrustId?: string;
+}
+
+/**
+ * API request to start a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterRequest {
+  displayName?: string;
+  name?: string;
+  userAgent?: string;
+  userId?: UUID;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * API response for starting a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterResponse {
+  options?: PublicKeyCredentialCreationOptions;
+}
+
+/**
+ * Options to request extensions during credential registration
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegistrationExtensionOptions {
+  credProps?: boolean;
+}
+
+/**
+ * API request to start a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartRequest {
+  applicationId?: UUID;
+  credentialId?: UUID;
+  loginId?: string;
+  state?: Record<string, any>;
+  userId?: UUID;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartResponse {
+  options?: PublicKeyCredentialRequestOptions;
+}
+
+/**
+ * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
+ * and request based on the Tenant configuration.
+ *
+ * @author Spencer Witt
+ */
+export enum WebAuthnWorkflow {
+  bootstrap = "bootstrap",
+  general = "general",
+  reauthentication = "reauthentication"
 }
 
 /**
