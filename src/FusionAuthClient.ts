@@ -245,10 +245,10 @@ export class FusionAuthClient {
    * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
    *
    * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
-   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
+   * @returns {Promise<ClientResponse<WebAuthnAssertResponse>>}
    */
-  completeWebAuthnAssertion(request: WebAuthnLoginRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
-    return this.startAnonymous<WebAuthnCompleteResponse, Errors>()
+  completeWebAuthnAssertion(request: WebAuthnLoginRequest): Promise<ClientResponse<WebAuthnAssertResponse>> {
+    return this.startAnonymous<WebAuthnAssertResponse, Errors>()
         .withUri('/api/webauthn/assert')
         .withJSONBody(request)
         .withMethod("POST")
@@ -272,11 +272,11 @@ export class FusionAuthClient {
   /**
    * Complete a WebAuthn registration ceremony by validating the client request and saving the new credential
    *
-   * @param {WebAuthnCompleteRequest} request An object containing data necessary for completing the registration ceremony
-   * @returns {Promise<ClientResponse<WebAuthnCompleteResponse>>}
+   * @param {WebAuthnRegisterCompleteRequest} request An object containing data necessary for completing the registration ceremony
+   * @returns {Promise<ClientResponse<WebAuthnRegisterCompleteResponse>>}
    */
-  completeWebAuthnRegistration(request: WebAuthnCompleteRequest): Promise<ClientResponse<WebAuthnCompleteResponse>> {
-    return this.start<WebAuthnCompleteResponse, Errors>()
+  completeWebAuthnRegistration(request: WebAuthnRegisterCompleteRequest): Promise<ClientResponse<WebAuthnRegisterCompleteResponse>> {
+    return this.start<WebAuthnRegisterCompleteResponse, Errors>()
         .withUri('/api/webauthn/register/complete')
         .withJSONBody(request)
         .withMethod("POST")
@@ -1728,10 +1728,10 @@ export class FusionAuthClient {
   /**
    * Import a WebAuthn credential
    *
-   * @param {WebAuthnImportRequest} request An object containing data necessary for importing the credential
+   * @param {WebAuthnCredentialImportRequest} request An object containing data necessary for importing the credential
    * @returns {Promise<ClientResponse<void>>}
    */
-  importWebAuthnCredential(request: WebAuthnImportRequest): Promise<ClientResponse<void>> {
+  importWebAuthnCredential(request: WebAuthnCredentialImportRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/webauthn/import')
         .withJSONBody(request)
@@ -4382,11 +4382,11 @@ export class FusionAuthClient {
   /**
    * Start a WebAuthn registration ceremony by generating a new challenge for the user
    *
-   * @param {WebAuthnRegisterRequest} request An object containing data necessary for starting the registration ceremony
-   * @returns {Promise<ClientResponse<WebAuthnRegisterResponse>>}
+   * @param {WebAuthnRegisterStartRequest} request An object containing data necessary for starting the registration ceremony
+   * @returns {Promise<ClientResponse<WebAuthnRegisterStartResponse>>}
    */
-  startWebAuthnRegistration(request: WebAuthnRegisterRequest): Promise<ClientResponse<WebAuthnRegisterResponse>> {
-    return this.start<WebAuthnRegisterResponse, Errors>()
+  startWebAuthnRegistration(request: WebAuthnRegisterStartRequest): Promise<ClientResponse<WebAuthnRegisterStartResponse>> {
+    return this.start<WebAuthnRegisterStartResponse, Errors>()
         .withUri('/api/webauthn/register/start')
         .withJSONBody(request)
         .withMethod("POST")
@@ -5527,34 +5527,12 @@ export enum AuthenticatorAttachmentPreference {
 }
 
 /**
- * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
- *
- * @author Spencer Witt
- */
-export interface AuthenticatorAuthenticationResponse {
-  authenticatorData?: string;
-  clientDataJSON?: string;
-  signature?: string;
-  userHandle?: string;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export interface AuthenticatorConfiguration {
   algorithm?: TOTPAlgorithm;
   codeLength?: number;
   timeStep?: number;
-}
-
-/**
- * The <i>authenticator's</i> response for the registration ceremony in its encoded format
- *
- * @author Spencer Witt
- */
-export interface AuthenticatorRegistrationResponse {
-  attestationObject?: string;
-  clientDataJSON?: string;
 }
 
 /**
@@ -8695,19 +8673,6 @@ export enum ProofKeyForCodeExchangePolicy {
 }
 
 /**
- * Request to authenticate with WebAuthn
- *
- * @author Spencer Witt
- */
-export interface PublicKeyAuthenticationRequest {
-  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
-  id?: string;
-  response?: AuthenticatorAuthenticationResponse;
-  rpId?: string;
-  type?: string;
-}
-
-/**
  * Allows the Relying Party to specify desired attributes of a new credential.
  *
  * @author Spencer Witt
@@ -8791,20 +8756,6 @@ export enum PublicKeyCredentialType {
 export interface PublicKeyCredentialUserEntity extends PublicKeyCredentialEntity {
   displayName?: string;
   id?: string;
-}
-
-/**
- * Request to register a new public key with WebAuthn
- *
- * @author Spencer Witt
- */
-export interface PublicKeyRegistrationRequest {
-  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
-  id?: string;
-  response?: AuthenticatorRegistrationResponse;
-  rpId?: string;
-  transports?: Array<string>;
-  type?: string;
 }
 
 /**
@@ -10789,24 +10740,34 @@ export interface VersionResponse {
 }
 
 /**
- * Request to complete the WebAuthn registration ceremony for a new credential
+ * API response for completing WebAuthn assertion
  *
  * @author Spencer Witt
  */
-export interface WebAuthnCompleteRequest {
-  credential?: PublicKeyRegistrationRequest;
-  origin?: string;
-  rpId?: string;
-  userId?: UUID;
+export interface WebAuthnAssertResponse {
+  credential?: WebAuthnCredential;
 }
 
 /**
- * API response for completing WebAuthn credential registration or assertion
+ * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
  *
  * @author Spencer Witt
  */
-export interface WebAuthnCompleteResponse {
-  credential?: WebAuthnCredential;
+export interface WebAuthnAuthenticatorAuthenticationResponse {
+  authenticatorData?: string;
+  clientDataJSON?: string;
+  signature?: string;
+  userHandle?: string;
+}
+
+/**
+ * The <i>authenticator's</i> response for the registration ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnAuthenticatorRegistrationResponse {
+  attestationObject?: string;
+  clientDataJSON?: string;
 }
 
 /**
@@ -10836,6 +10797,16 @@ export interface WebAuthnCredential {
 }
 
 /**
+ * API request to import an existing WebAuthn credential(s)
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredentialImportRequest {
+  credentials?: Array<WebAuthnCredential>;
+  validateDbConstraints?: boolean;
+}
+
+/**
  * WebAuthn Credential API response
  *
  * @author Spencer Witt
@@ -10855,25 +10826,63 @@ export interface WebAuthnExtensionsClientOutputs {
 }
 
 /**
- * API request to import an existing WebAuthn credential(s)
- *
- * @author Spencer Witt
- */
-export interface WebAuthnImportRequest {
-  credentials?: Array<WebAuthnCredential>;
-  validateDbConstraints?: boolean;
-}
-
-/**
  * Request to complete the WebAuthn registration ceremony
  *
  * @author Spencer Witt
  */
 export interface WebAuthnLoginRequest extends BaseLoginRequest {
-  credential?: PublicKeyAuthenticationRequest;
+  credential?: WebAuthnPublicKeyAuthenticationRequest;
   origin?: string;
   rpId?: string;
   twoFactorTrustId?: string;
+}
+
+/**
+ * Request to authenticate with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnPublicKeyAuthenticationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: WebAuthnAuthenticatorAuthenticationResponse;
+  rpId?: string;
+  type?: string;
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnPublicKeyRegistrationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: WebAuthnAuthenticatorRegistrationResponse;
+  rpId?: string;
+  transports?: Array<string>;
+  type?: string;
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony for a new credential,.
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterCompleteRequest {
+  credential?: WebAuthnPublicKeyRegistrationRequest;
+  origin?: string;
+  rpId?: string;
+  userId?: UUID;
+}
+
+/**
+ * API response for completing WebAuthn credential registration or assertion
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterCompleteResponse {
+  credential?: WebAuthnCredential;
 }
 
 /**
@@ -10881,7 +10890,7 @@ export interface WebAuthnLoginRequest extends BaseLoginRequest {
  *
  * @author Spencer Witt
  */
-export interface WebAuthnRegisterRequest {
+export interface WebAuthnRegisterStartRequest {
   displayName?: string;
   name?: string;
   userAgent?: string;
@@ -10894,7 +10903,7 @@ export interface WebAuthnRegisterRequest {
  *
  * @author Spencer Witt
  */
-export interface WebAuthnRegisterResponse {
+export interface WebAuthnRegisterStartResponse {
   options?: PublicKeyCredentialCreationOptions;
 }
 
