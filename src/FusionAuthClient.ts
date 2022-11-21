@@ -6693,13 +6693,22 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface FailedAuthenticationActionCancelPolicy {
+  onPasswordReset?: boolean;
+}
+
+/**
  * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
  *
  * @author Daniel DeGroff
  */
 export interface FailedAuthenticationConfiguration {
+  actionCancelPolicy?: FailedAuthenticationActionCancelPolicy;
   actionDuration?: number;
   actionDurationUnit?: ExpiryUnit;
+  emailUser?: boolean;
   resetCountInSeconds?: number;
   tooManyAttempts?: number;
   userActionId?: UUID;
@@ -7832,17 +7841,17 @@ export interface Lambda {
 }
 
 export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 /**
@@ -8297,7 +8306,8 @@ export interface MultiFactorEmailTemplate {
  */
 export enum MultiFactorLoginPolicy {
   Disabled = "Disabled",
-  Enabled = "Enabled"
+  Enabled = "Enabled",
+  Required = "Required"
 }
 
 export interface MultiFactorSMSMethod extends Enableable {
@@ -8938,6 +8948,7 @@ export interface RefreshTokenResponse {
  */
 export interface RefreshTokenRevocationPolicy {
   onLoginPrevented?: boolean;
+  onMultiFactorEnable?: boolean;
   onPasswordChanged?: boolean;
 }
 
@@ -9434,7 +9445,9 @@ export interface Templates {
   oauth2Register?: string;
   oauth2StartIdPLink?: string;
   oauth2TwoFactor?: string;
+  oauth2TwoFactorEnable?: string;
   oauth2TwoFactorMethods?: string;
+  oauth2TwoFactorRecoveryCodes?: string;
   oauth2Wait?: string;
   oauth2WebAuthn?: string;
   oauth2WebAuthnReauth?: string;
