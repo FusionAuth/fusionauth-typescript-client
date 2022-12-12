@@ -8005,6 +8005,13 @@ export interface LoginConfiguration {
   requireAuthentication?: boolean;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface LoginHintConfiguration extends Enableable {
+  parameterName?: string;
+}
+
 export enum LoginIdType {
   email = "email",
   username = "username"
@@ -9141,6 +9148,7 @@ export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2Appli
   idpEndpoint?: string;
   issuer?: string;
   keyId?: UUID;
+  loginHintConfiguration?: LoginHintConfiguration;
   nameIdFormat?: string;
   postRequest?: boolean;
   requestSigningKeyId?: UUID;
