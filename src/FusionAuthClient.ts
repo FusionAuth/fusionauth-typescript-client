@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2022, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -5187,6 +5187,7 @@ export interface APIKeyResponse {
  * @author Daniel DeGroff
  */
 export interface AppleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  bundleId?: string;
   buttonText?: string;
   keyId?: UUID;
   scope?: string;
@@ -5198,6 +5199,7 @@ export interface AppleApplicationConfiguration extends BaseIdentityProviderAppli
  * @author Daniel DeGroff
  */
 export interface AppleIdentityProvider extends BaseIdentityProvider<AppleApplicationConfiguration> {
+  bundleId?: string;
   buttonText?: string;
   keyId?: UUID;
   scope?: string;
@@ -5324,6 +5326,7 @@ export interface ApplicationRegistrationDeletePolicy {
 export interface ApplicationRequest extends BaseEventRequest {
   application?: Application;
   role?: ApplicationRole;
+  sourceApplicationId?: UUID;
 }
 
 /**
@@ -5645,6 +5648,17 @@ export interface BaseMessengerConfiguration {
   name?: string;
   transport?: string;
   type?: MessengerType;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends BaseIdentityProvider<D> {
+  emailClaim?: string;
+  keyId?: UUID;
+  uniqueIdClaim?: string;
+  useNameIdForEmail?: boolean;
+  usernameClaim?: string;
 }
 
 /**
@@ -7846,6 +7860,7 @@ export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
+  selfServiceRegistrationValidationId?: UUID;
 }
 
 export interface LambdaConfiguration {
@@ -7911,7 +7926,8 @@ export enum LambdaType {
   SCIMServerGroupRequestConverter = "SCIMServerGroupRequestConverter",
   SCIMServerGroupResponseConverter = "SCIMServerGroupResponseConverter",
   SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
-  SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter"
+  SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
+  SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation"
 }
 
 /**
@@ -8366,11 +8382,20 @@ export interface NonTransactionalEvent {
 }
 
 /**
+ * @author Johnathon Wood
+ */
+export enum Oauth2AuthorizedURLValidationPolicy {
+  AllowWildcards = "AllowWildcards",
+  ExactMatch = "ExactMatch"
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface OAuth2Configuration {
   authorizedOriginURLs?: Array<string>;
   authorizedRedirectURLs?: Array<string>;
+  authorizedURLValidationPolicy?: Oauth2AuthorizedURLValidationPolicy;
   clientAuthenticationPolicy?: ClientAuthenticationPolicy;
   clientId?: string;
   clientSecret?: string;
@@ -9119,6 +9144,13 @@ export interface SAMLv2ApplicationConfiguration extends BaseIdentityProviderAppl
   buttonText?: string;
 }
 
+/**
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2AssertionConfiguration {
+  destination?: SAMLv2DestinationAssertionConfiguration;
+}
+
 export interface SAMLv2Configuration extends Enableable {
   audience?: string;
   authorizedRedirectURLs?: Array<string>;
@@ -9136,26 +9168,40 @@ export interface SAMLv2Configuration extends Enableable {
 }
 
 /**
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2DestinationAssertionConfiguration {
+  alternates?: Array<string>;
+  policy?: SAMLv2DestinationAssertionPolicy;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export enum SAMLv2DestinationAssertionPolicy {
+  Enabled = "Enabled",
+  Disabled = "Disabled",
+  AllowAlternates = "AllowAlternates"
+}
+
+/**
  * SAML v2 identity provider configuration.
  *
  * @author Brian Pontarelli
  */
-export interface SAMLv2IdentityProvider extends BaseIdentityProvider<SAMLv2ApplicationConfiguration> {
+export interface SAMLv2IdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2ApplicationConfiguration> {
+  assertionConfiguration?: SAMLv2AssertionConfiguration;
   buttonImageURL?: string;
   buttonText?: string;
   domains?: Array<string>;
-  emailClaim?: string;
   idpEndpoint?: string;
+  idpInitiatedConfiguration?: SAMLv2IdpInitiatedConfiguration;
   issuer?: string;
-  keyId?: UUID;
   loginHintConfiguration?: LoginHintConfiguration;
   nameIdFormat?: string;
   postRequest?: boolean;
   requestSigningKeyId?: UUID;
   signRequest?: boolean;
-  uniqueIdClaim?: string;
-  useNameIdForEmail?: boolean;
-  usernameClaim?: string;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
@@ -9166,17 +9212,21 @@ export interface SAMLv2IdPInitiatedApplicationConfiguration extends BaseIdentity
 }
 
 /**
+ * Config for regular SAML IDP configurations that support IDP-initiated requests
+ *
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2IdpInitiatedConfiguration extends Enableable {
+  issuer?: string;
+}
+
+/**
  * SAML v2 IdP Initiated identity provider configuration.
  *
  * @author Daniel DeGroff
  */
-export interface SAMLv2IdPInitiatedIdentityProvider extends BaseIdentityProvider<SAMLv2IdPInitiatedApplicationConfiguration> {
-  emailClaim?: string;
+export interface SAMLv2IdPInitiatedIdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2IdPInitiatedApplicationConfiguration> {
   issuer?: string;
-  keyId?: UUID;
-  uniqueIdClaim?: string;
-  useNameIdForEmail?: boolean;
-  usernameClaim?: string;
 }
 
 /**
@@ -9424,6 +9474,7 @@ export interface SystemConfigurationResponse {
  * @author Daniel DeGroff
  */
 export interface SystemLogsExportRequest extends BaseExportRequest {
+  includeArchived?: boolean;
   lastNBytes?: number;
 }
 
