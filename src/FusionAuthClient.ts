@@ -7354,11 +7354,8 @@ export enum IdentityProviderLinkingStrategy {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderLinkRequest extends BaseEventRequest {
-  displayName?: string;
-  identityProviderId?: UUID;
-  identityProviderUserId?: string;
+  identityProviderLink?: IdentityProviderLink;
   pendingIdPLinkId?: string;
-  userId?: UUID;
 }
 
 /**
