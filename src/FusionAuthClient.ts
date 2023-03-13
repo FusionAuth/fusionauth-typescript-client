@@ -7002,6 +7002,7 @@ export interface GoogleApplicationConfiguration extends BaseIdentityProviderAppl
   client_id?: string;
   client_secret?: string;
   loginMethod?: IdentityProviderLoginMethod;
+  properties?: GoogleIdentityProviderProperties;
   scope?: string;
 }
 
@@ -7015,7 +7016,18 @@ export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleAppli
   client_id?: string;
   client_secret?: string;
   loginMethod?: IdentityProviderLoginMethod;
+  properties?: GoogleIdentityProviderProperties;
   scope?: string;
+}
+
+/**
+ * Google social login provider parameters.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GoogleIdentityProviderProperties {
+  api?: string;
+  button?: string;
 }
 
 /**
@@ -7371,7 +7383,8 @@ export interface IdentityProviderLinkResponse {
  */
 export enum IdentityProviderLoginMethod {
   UsePopup = "UsePopup",
-  UseRedirect = "UseRedirect"
+  UseRedirect = "UseRedirect",
+  UseVendorJavaScript = "UseVendorJavaScript"
 }
 
 /**
@@ -9405,9 +9418,20 @@ export interface SortField {
 }
 
 /**
+ * Steam API modes.
+ *
+ * @author Daniel DeGroff
+ */
+export enum SteamAPIMode {
+  Public = "Public",
+  Partner = "Partner"
+}
+
+/**
  * @author Brett Pontarelli
  */
 export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  apiMode?: SteamAPIMode;
   buttonText?: string;
   client_id?: string;
   scope?: string;
@@ -9420,6 +9444,7 @@ export interface SteamApplicationConfiguration extends BaseIdentityProviderAppli
  * @author Brett Pontarelli
  */
 export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplicationConfiguration> {
+  apiMode?: SteamAPIMode;
   buttonText?: string;
   client_id?: string;
   scope?: string;
