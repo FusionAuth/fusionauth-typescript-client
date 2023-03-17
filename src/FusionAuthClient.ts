@@ -4007,6 +4007,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches applications with the specified criteria and pagination.
+   *
+   * @param {ApplicationSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<ApplicationSearchResponse>>}
+   */
+  searchApplications(request: ApplicationSearchRequest): Promise<ClientResponse<ApplicationSearchResponse>> {
+    return this.start<ApplicationSearchResponse, Errors>()
+        .withUri('/api/application/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the audit logs with the specified criteria and pagination.
    *
    * @param {AuditLogSearchRequest} request The search criteria and pagination information.
@@ -4015,6 +4029,34 @@ export class FusionAuthClient {
   searchAuditLogs(request: AuditLogSearchRequest): Promise<ClientResponse<AuditLogSearchResponse>> {
     return this.start<AuditLogSearchResponse, Errors>()
         .withUri('/api/system/audit-log/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches consents with the specified criteria and pagination.
+   *
+   * @param {ConsentSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<ConsentSearchResponse>>}
+   */
+  searchConsents(request: ConsentSearchRequest): Promise<ClientResponse<ConsentSearchResponse>> {
+    return this.start<ConsentSearchResponse, Errors>()
+        .withUri('/api/consent/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches email templates with the specified criteria and pagination.
+   *
+   * @param {EmailTemplateSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<EmailTemplateSearchResponse>>}
+   */
+  searchEmailTemplates(request: EmailTemplateSearchRequest): Promise<ClientResponse<EmailTemplateSearchResponse>> {
+    return this.start<EmailTemplateSearchResponse, Errors>()
+        .withUri('/api/email/template/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -4133,6 +4175,48 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches identity providers with the specified criteria and pagination.
+   *
+   * @param {IdentityProviderSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<IdentityProviderSearchResponse>>}
+   */
+  searchIdentityProviders(request: IdentityProviderSearchRequest): Promise<ClientResponse<IdentityProviderSearchResponse>> {
+    return this.start<IdentityProviderSearchResponse, Errors>()
+        .withUri('/api/identity-provider/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches keys with the specified criteria and pagination.
+   *
+   * @param {KeySearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<KeySearchResponse>>}
+   */
+  searchKeys(request: KeySearchRequest): Promise<ClientResponse<KeySearchResponse>> {
+    return this.start<KeySearchResponse, Errors>()
+        .withUri('/api/key/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches lambdas with the specified criteria and pagination.
+   *
+   * @param {LambdaSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<LambdaSearchResponse>>}
+   */
+  searchLambdas(request: LambdaSearchRequest): Promise<ClientResponse<LambdaSearchResponse>> {
+    return this.start<LambdaSearchResponse, Errors>()
+        .withUri('/api/lambda/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches the login records with the specified criteria and pagination.
    *
    * @param {LoginRecordSearchRequest} request The search criteria and pagination information.
@@ -4141,6 +4225,48 @@ export class FusionAuthClient {
   searchLoginRecords(request: LoginRecordSearchRequest): Promise<ClientResponse<LoginRecordSearchResponse>> {
     return this.start<LoginRecordSearchResponse, Errors>()
         .withUri('/api/system/login-record/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches tenants with the specified criteria and pagination.
+   *
+   * @param {TenantSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<TenantSearchResponse>>}
+   */
+  searchTenants(request: TenantSearchRequest): Promise<ClientResponse<TenantSearchResponse>> {
+    return this.start<TenantSearchResponse, Errors>()
+        .withUri('/api/tenant/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches themes with the specified criteria and pagination.
+   *
+   * @param {ThemeSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<ThemeSearchResponse>>}
+   */
+  searchThemes(request: ThemeSearchRequest): Promise<ClientResponse<ThemeSearchResponse>> {
+    return this.start<ThemeSearchResponse, Errors>()
+        .withUri('/api/theme/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches user comments with the specified criteria and pagination.
+   *
+   * @param {UserCommentSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<UserCommentSearchResponse>>}
+   */
+  searchUserComments(request: UserCommentSearchRequest): Promise<ClientResponse<UserCommentSearchResponse>> {
+    return this.start<UserCommentSearchResponse, Errors>()
+        .withUri('/api/user/comment/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -4203,6 +4329,20 @@ export class FusionAuthClient {
   searchUsersByQueryString(request: SearchRequest): Promise<ClientResponse<SearchResponse>> {
     return this.start<SearchResponse, Errors>()
         .withUri('/api/user/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches webhooks with the specified criteria and pagination.
+   *
+   * @param {WebhookSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<WebhookSearchResponse>>}
+   */
+  searchWebhooks(request: WebhookSearchRequest): Promise<ClientResponse<WebhookSearchResponse>> {
+    return this.start<WebhookSearchResponse, Errors>()
+        .withUri('/api/webhook/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -5356,6 +5496,36 @@ export interface ApplicationRole {
 }
 
 /**
+ * Search criteria for Applications
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+  state?: ObjectState;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for Applications
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchRequest {
+  search?: ApplicationSearchCriteria;
+}
+
+/**
+ * Application search response
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchResponse {
+  applications?: Array<Application>;
+  total?: number;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface ApplicationUnverifiedConfiguration {
@@ -5879,6 +6049,34 @@ export interface ConsentResponse {
 }
 
 /**
+ * Search criteria for Consents
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for Consents
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchRequest {
+  search?: ConsentSearchCriteria;
+}
+
+/**
+ * Consent search response
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchResponse {
+  consents?: Array<Consent>;
+  total?: number;
+}
+
+/**
  * Models a consent.
  *
  * @author Daniel DeGroff
@@ -6168,6 +6366,34 @@ export interface EmailTemplateRequest {
 export interface EmailTemplateResponse {
   emailTemplate?: EmailTemplate;
   emailTemplates?: Array<EmailTemplate>;
+}
+
+/**
+ * Search criteria for Email templates
+ *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for email templates
+ *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchRequest {
+  search?: EmailTemplateSearchCriteria;
+}
+
+/**
+ * Email template search response
+ *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchResponse {
+  emailTemplates?: Array<EmailTemplate>;
+  total?: number;
 }
 
 /**
@@ -7432,6 +7658,35 @@ export interface IdentityProviderResponse {
 }
 
 /**
+ * Search criteria for Identity Providers.
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
+  applicationId?: UUID;
+  name?: string;
+}
+
+/**
+ * Search request for Identity Providers
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchRequest {
+  search?: IdentityProviderSearchCriteria;
+}
+
+/**
+ * Identity Provider response.
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchResponse {
+  identityProviders?: Array<BaseIdentityProvider<any>>;
+  total?: number;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
@@ -7824,6 +8079,36 @@ export interface KeyResponse {
   keys?: Array<Key>;
 }
 
+/**
+ * Search criteria for Keys
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchCriteria extends BaseSearchCriteria {
+  algorithm?: KeyAlgorithm;
+  name?: string;
+  type?: KeyType;
+}
+
+/**
+ * Search request for Keys
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchRequest {
+  search?: KeySearchCriteria;
+}
+
+/**
+ * Key search response
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchResponse {
+  keys?: Array<Key>;
+  total?: number;
+}
+
 export enum KeyType {
   EC = "EC",
   RSA = "RSA",
@@ -7906,6 +8191,36 @@ export interface LambdaRequest {
 export interface LambdaResponse {
   lambda?: Lambda;
   lambdas?: Array<Lambda>;
+}
+
+/**
+ * Search criteria for Lambdas
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchCriteria extends BaseSearchCriteria {
+  body?: string;
+  name?: string;
+  type?: LambdaType;
+}
+
+/**
+ * Search request for Lambdas
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchRequest {
+  search?: LambdaSearchCriteria;
+}
+
+/**
+ * Lambda search response
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchResponse {
+  lambdas?: Array<Lambda>;
+  total?: number;
 }
 
 /**
@@ -9709,6 +10024,34 @@ export interface TenantSCIMServerConfiguration extends Enableable {
 }
 
 /**
+ * Search criteria for Tenants
+ *
+ * @author Mark Manes
+ */
+export interface TenantSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for Tenants
+ *
+ * @author Mark Manes
+ */
+export interface TenantSearchRequest {
+  search?: TenantSearchCriteria;
+}
+
+/**
+ * Tenant search response
+ *
+ * @author Mark Manes
+ */
+export interface TenantSearchResponse {
+  tenants?: Array<Tenant>;
+  total?: number;
+}
+
+/**
  * @author Brett Pontarelli
  */
 export interface TenantSSOConfiguration {
@@ -9800,6 +10143,34 @@ export interface ThemeRequest {
 export interface ThemeResponse {
   theme?: Theme;
   themes?: Array<Theme>;
+}
+
+/**
+ * Search criteria for themes
+ *
+ * @author Mark Manes
+ */
+export interface ThemeSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for Themes.
+ *
+ * @author Mark Manes
+ */
+export interface ThemeSearchRequest {
+  search?: ThemeSearchCriteria;
+}
+
+/**
+ * Search response for Themes
+ *
+ * @author Mark Manes
+ */
+export interface ThemeSearchResponse {
+  themes?: Array<Theme>;
+  total?: number;
 }
 
 /**
@@ -10278,6 +10649,37 @@ export interface UserCommentRequest {
  */
 export interface UserCommentResponse {
   userComment?: UserComment;
+  userComments?: Array<UserComment>;
+}
+
+/**
+ * Search criteria for user comments.
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchCriteria extends BaseSearchCriteria {
+  comment?: string;
+  commenterId?: UUID;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * Search request for user comments
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchRequest {
+  search?: UserCommentSearchCriteria;
+}
+
+/**
+ * User comment search response
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchResponse {
+  total?: number;
   userComments?: Array<UserComment>;
 }
 
@@ -11089,6 +11491,35 @@ export interface WebhookRequest {
  */
 export interface WebhookResponse {
   webhook?: Webhook;
+  webhooks?: Array<Webhook>;
+}
+
+/**
+ * Search criteria for webhooks.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchCriteria extends BaseSearchCriteria {
+  description?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for webhooks
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchRequest {
+  search?: WebhookSearchCriteria;
+}
+
+/**
+ * Webhook search response
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchResponse {
+  total?: number;
   webhooks?: Array<Webhook>;
 }
 
