@@ -3680,10 +3680,10 @@ export class FusionAuthClient {
    * Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
    *
    * @param {string} encodedJWT The encoded JWT (access token).
-   * @returns {Promise<ClientResponse<UserResponse>>}
+   * @returns {Promise<ClientResponse<UserinfoResponse>>}
    */
-  retrieveUserInfoFromAccessToken(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
-    return this.startAnonymous<UserResponse, OAuthError>()
+  retrieveUserInfoFromAccessToken(encodedJWT: string): Promise<ClientResponse<UserinfoResponse>> {
+    return this.startAnonymous<UserinfoResponse, OAuthError>()
         .withUri('/oauth2/userinfo')
         .withAuthorization('Bearer ' + encodedJWT)
         .withMethod("GET")
