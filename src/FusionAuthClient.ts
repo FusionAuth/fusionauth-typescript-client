@@ -5427,6 +5427,7 @@ export interface ApplicationExternalIdentifierConfiguration {
  */
 export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
+  selfServiceFormConfiguration?: SelfServiceFormConfiguration;
   selfServiceFormId?: UUID;
 }
 
@@ -9657,6 +9658,13 @@ export interface SecureIdentity {
 }
 
 /**
+ * @author andrewpai
+ */
+export interface SelfServiceFormConfiguration {
+  requireCurrentPasswordOnPasswordChange?: boolean;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface SendRequest {
@@ -11088,6 +11096,7 @@ export interface UserRegistrationVerifiedEvent extends BaseEvent {
  */
 export interface UserRequest extends BaseEventRequest {
   applicationId?: UUID;
+  currentPassword?: string;
   disableDomainBlock?: boolean;
   sendSetPasswordEmail?: boolean;
   skipVerification?: boolean;
