@@ -7666,6 +7666,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
+  type?: string;
 }
 
 /**
@@ -11511,6 +11512,7 @@ export interface WebhookResponse {
 export interface WebhookSearchCriteria extends BaseSearchCriteria {
   description?: string;
   tenantId?: UUID;
+  url?: string;
 }
 
 /**
