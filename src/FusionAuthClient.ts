@@ -7666,7 +7666,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
-  type?: string;
+  type?: IdentityProviderType;
 }
 
 /**
