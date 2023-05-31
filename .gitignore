@@ -4,3 +4,4 @@ npm-debug.log
 *.zip
 dist
 **/.DS_Store
+.savant/cache
