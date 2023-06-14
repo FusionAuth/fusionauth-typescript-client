@@ -1793,7 +1793,7 @@ export class FusionAuthClient {
    * @param {string} token The access token returned by this OAuth provider as the result of a successful client credentials grant.
    * @returns {Promise<ClientResponse<IntrospectResponse>>}
    */
-  introspectAccessToken(token: string): Promise<ClientResponse<IntrospectResponse>> {
+  introspectClientCredentialsAccessToken(token: string): Promise<ClientResponse<IntrospectResponse>> {
     let body = new URLSearchParams();
 
     body.append('token', token);
