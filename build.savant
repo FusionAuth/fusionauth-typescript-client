@@ -51,10 +51,10 @@ target(name: "init", description: "Initializes the project") {
 }
 
 target(name: "clean", description: "Cleans build directory", dependsOn: ["init"]) {
-  file.prune(dir: "build")
-  file.delete {
-    fileSet(dir: ".", includePatterns: [~/.+\.zip/])
-  }
+//  file.prune(dir: "build")
+//  file.delete {
+//    fileSet(dir: ".", includePatterns: [~/.+\.zip/])
+//  }
 }
 
 target(name: "compile", description: "Builds the js files", dependsOn: ["init"]) {
