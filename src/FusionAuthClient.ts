@@ -3729,7 +3729,7 @@ export class FusionAuthClient {
    * @param {string} user_code The end-user verification code.
    * @returns {Promise<ClientResponse<void>>}
    */
-  retrieveUserCode(user_code: string): Promise<ClientResponse<void>> {
+  retrieveUserCodeUsingAPIKey(user_code: string): Promise<ClientResponse<void>> {
     let body = new URLSearchParams();
 
     body.append('user_code', user_code);
