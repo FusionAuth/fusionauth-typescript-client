@@ -80,7 +80,8 @@ target(name: "compile", description: "Builds the js files", dependsOn: ["init"])
   }
 }
 
-target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
+target(name: "int", description: "Releases a local integration build of the project") {
+//target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
   file.delete {
     fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
   }
