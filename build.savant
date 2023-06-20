@@ -81,17 +81,17 @@ target(name: "compile", description: "Builds the js files", dependsOn: ["init"])
 }
 
 target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
-  file.delete {
-    fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
-  }
-
-  file.zip(file: "build/fusionauth-typescript-client.zip") {
-    fileSet(dir: "build", includePatterns: [
-        ~/index.*(js|ts)/,
-        ~/src\/+/
-    ])
-    fileSet(dir: "dist", includePatterns: [~/fusionauth-typescript-client\..*js/])
-  }
+//  file.delete {
+//    fileSet(dir: "build", includePatterns: [~/fusionauth-typescript-client.+\.zip/])
+//  }
+//
+//  file.zip(file: "build/fusionauth-typescript-client.zip") {
+//    fileSet(dir: "build", includePatterns: [
+//        ~/index.*(js|ts)/,
+//        ~/src\/+/
+//    ])
+//    fileSet(dir: "dist", includePatterns: [~/fusionauth-typescript-client\..*js/])
+//  }
 }
 
 target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
