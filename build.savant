@@ -31,7 +31,7 @@ project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "
 
   publications {
     main {
-      publication(name: "fusionauth-typescript-client", type: "zip", file: "build/fusionauth-typescript-client.zip")
+//      publication(name: "fusionauth-typescript-client", type: "zip", file: "build/fusionauth-typescript-client.zip")
     }
   }
 }
