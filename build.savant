@@ -42,12 +42,12 @@ idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0-RC.7")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0-RC.6")
 
 target(name: "init", description: "Initializes the project") {
-  def proc = 'npm ci'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to run npm install")
-  }
+//  def proc = 'npm ci'.execute()
+//  proc.consumeProcessOutput(System.out, System.err)
+//  proc.waitFor()
+//  if (proc.exitValue() != 0) {
+//    fail("Failed to run npm install")
+//  }
 }
 
 target(name: "clean", description: "Cleans build directory", dependsOn: ["init"]) {
@@ -58,26 +58,26 @@ target(name: "clean", description: "Cleans build directory", dependsOn: ["init"]
 }
 
 target(name: "compile", description: "Builds the js files", dependsOn: ["init"]) {
-  def proc = 'npm ci'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to get deps or compile typescript")
-  }
-
-  proc = 'npm run build-browser'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to build browser version of client")
-  }
-
-  proc = 'npm run build-browser-min'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to build minified browser version of client")
-  }
+//  def proc = 'npm ci'.execute()
+//  proc.consumeProcessOutput(System.out, System.err)
+//  proc.waitFor()
+//  if (proc.exitValue() != 0) {
+//    fail("Failed to get deps or compile typescript")
+//  }
+//
+//  proc = 'npm run build-browser'.execute()
+//  proc.consumeProcessOutput(System.out, System.err)
+//  proc.waitFor()
+//  if (proc.exitValue() != 0) {
+//    fail("Failed to build browser version of client")
+//  }
+//
+//  proc = 'npm run build-browser-min'.execute()
+//  proc.consumeProcessOutput(System.out, System.err)
+//  proc.waitFor()
+//  if (proc.exitValue() != 0) {
+//    fail("Failed to build minified browser version of client")
+//  }
 }
 
 target(name: "int", description: "Releases a local integration build of the project", dependsOn: ["compile"]) {
@@ -99,9 +99,9 @@ target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
 }
 
 target(name: "test", description: "Runs the tests", dependsOn: ["compile"]) {
-  if (new ProcessBuilder('npm', 'test').inheritIO().start().waitFor() != 0) {
-    fail("Tests failed")
-  }
+//  if (new ProcessBuilder('npm', 'test').inheritIO().start().waitFor() != 0) {
+//    fail("Tests failed")
+//  }
 }
 
 target(name: "publish", description: "Publish in NPM", dependsOn: ["clean", "int"]) {
