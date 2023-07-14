@@ -5329,6 +5329,15 @@ export interface TenantLambdaConfiguration {
   scimUserResponseConverterId?: UUID;
 }
 
+export interface SAMLv2AssertionEncryptionConfiguration extends Enableable {
+  digestAlgorithm?: string;
+  encryptionAlgorithm?: string;
+  keyLocation?: string;
+  keyTransportAlgorithm?: string;
+  keyTransportEncryptionKeyId?: UUID;
+  maskGenerationFunction?: string;
+}
+
 /**
  * Models action reasons.
  *
@@ -6723,6 +6732,7 @@ export interface ChangePasswordRequest extends BaseEventRequest {
 }
 
 export interface SAMLv2Configuration extends Enableable {
+  assertionEncryptionConfiguration?: SAMLv2AssertionEncryptionConfiguration;
   audience?: string;
   authorizedRedirectURLs?: Array<string>;
   callbackURL?: string;
@@ -7838,6 +7848,7 @@ export interface RegistrationConfiguration extends Enableable {
   loginIdType?: LoginIdType;
   middleName?: Requirable;
   mobilePhone?: Requirable;
+  preferredLanguages?: Requirable;
   type?: RegistrationType;
 }
 
@@ -9506,6 +9517,7 @@ export interface IdentityProviderLink {
   data?: Record<string, any>;
   displayName?: string;
   identityProviderId?: UUID;
+  identityProviderName?: string;
   identityProviderType?: IdentityProviderType;
   identityProviderUserId?: string;
   insertInstant?: number;
@@ -11677,7 +11689,7 @@ export interface TenantDeleteRequest extends BaseEventRequest {
 }
 
 /**
- * Event event to an event log was created.
+ * An Event "event" to indicate an event log was created.
  *
  * @author Daniel DeGroff
  */
