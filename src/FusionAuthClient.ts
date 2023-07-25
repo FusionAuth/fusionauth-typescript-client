@@ -6741,6 +6741,7 @@ export interface SAMLv2Configuration extends Enableable {
   initiatedLogin?: SAMLv2IdPInitiatedLoginConfiguration;
   issuer?: string;
   keyId?: UUID;
+  loginHintConfiguration?: LoginHintConfiguration;
   logout?: SAMLv2Logout;
   logoutURL?: string;
   requireSignedRequests?: boolean;
