@@ -59,7 +59,7 @@
     "tsify": "^4.0.1",
     "typescript": "^3.8.3",
     "uglify-js": "^3.9.1",
-    "uglifyify": "^5.0.2"
+    "uglifyify": "^5.0.0"
   },
   "browserify-shim": {
     "node-fetch": "cross-fetch",
