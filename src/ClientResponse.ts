@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  */
 
-export default class ClientResponse<T> {
+export class ClientResponse<T> {
   public statusCode: number;
   public response: T;
   public exception: Error;

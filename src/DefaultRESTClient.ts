@@ -15,7 +15,7 @@
  */
 
 import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
-import ClientResponse from "./ClientResponse";
+import { ClientResponse } from "./ClientResponse";
 import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
 import {URLSearchParams} from "url";
 

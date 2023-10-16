@@ -15,9 +15,9 @@
 */
 
 import IRESTClient from "./IRESTClient"
-import DefaultRESTClientBuilder from "./DefaultRESTClientBuilder";
-import IRESTClientBuilder from "./IRESTClientBuilder";
-import ClientResponse from "./ClientResponse";
+import { DefaultRESTClientBuilder } from "./DefaultRESTClientBuilder";
+import { IRESTClientBuilder } from "./IRESTClientBuilder";
+import { ClientResponse } from "./ClientResponse";
 import {RequestCredentials} from "node-fetch";
 import {URLSearchParams} from "url";
 

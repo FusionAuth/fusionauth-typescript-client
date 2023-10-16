@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  */
 
-import ClientResponse from "./ClientResponse";
+import { ClientResponse } from "./ClientResponse";
 import {RequestCredentials, Response} from "node-fetch";
 import {URLSearchParams} from "url";
 
