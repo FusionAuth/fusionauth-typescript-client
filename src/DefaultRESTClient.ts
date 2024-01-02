@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -206,10 +206,18 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   }
 
   private getQueryString() {
-    var queryString = '';
-    for (let key in this.parameters) {
+    let queryString = '';
+    const appendParam = (key: string, param: string) => {
       queryString += (queryString.length === 0) ? '?' : '&';
-      queryString += key + '=' + encodeURIComponent(this.parameters[key]);
+      queryString += key + '=' + encodeURIComponent(param);
+    }
+    for (let key in this.parameters) {
+      const value = this.parameters[key];
+      if (Array.isArray(value)) {
+        value.forEach(val => appendParam(key, val))
+      } else {
+        appendParam(key, value);
+      }
     }
     return queryString;
   }
