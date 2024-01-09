@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 'use strict';
 
-import {ApplicationRequest, FusionAuthClient, GrantType} from '../index';
+import { ApplicationRequest, FusionAuthClient, GrantType, SearchResponse } from '../index';
 import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
 
@@ -114,7 +114,7 @@ describe('#FusionAuthClient()', function () {
     }
   });
 
-  it('Create, Patch and Delete a User', async () => {
+  it('Create, Patch, Search, and Delete a User', async () => {
     let clientResponse = await client.createUser(null, {
       user: {
         email: 'nodejs@fusionauth.io',
@@ -130,8 +130,10 @@ describe('#FusionAuthClient()', function () {
     chai.expect(clientResponse.response).to.have.property('user');
     chai.expect(clientResponse.response.user).to.have.property('id');
 
+    const userId = clientResponse.response.user.id;
+
     // Patch the user
-    clientResponse = await client.patchUser(clientResponse.response.user.id, {
+    clientResponse = await client.patchUser(userId, {
       user: {
         firstName: "Jan"
       }
@@ -142,20 +144,46 @@ describe('#FusionAuthClient()', function () {
     chai.expect(clientResponse.response).to.have.property('user');
     chai.expect(clientResponse.response.user.firstName).to.equal("Jan");
 
-    clientResponse = await client.deleteUser(clientResponse.response.user.id);
-    chai.assert.strictEqual(clientResponse.statusCode, 200);
-    // Browser will return empty, node will return null, account for both scenarios
-    if (clientResponse.response === null) {
-      chai.assert.isNull(clientResponse.response);
-    } else {
-      chai.assert.isUndefined(clientResponse.response);
+    // create a second user and search them both
+    clientResponse = await client.createUser(null, {
+      user: {
+        email: 'node2@fusionauth.io',
+        firstName: 'Joan',
+        password: 'password'
+      },
+      skipVerification: true,
+      sendSetPasswordEmail: false
+    });
+
+    const secondUserId = clientResponse.response.user.id;
+    const bothUsers = [userId, secondUserId];
+
+    const searchResp: ClientResponse<SearchResponse> = await client.searchUsersByIds(bothUsers);
+    chai.assert.strictEqual(searchResp.statusCode, 200);
+    chai.assert.strictEqual(searchResp.response.total, 2);
+    // make sure each user was returned
+    bothUsers.forEach(id => chai.assert.isNotNull(searchResp.response.users.find(user => user.id = id)));
+
+    // delete both users
+    for (const id of bothUsers) {
+      clientResponse = await client.deleteUser(id);
+      chai.assert.strictEqual(clientResponse.statusCode, 200);
+      // Browser will return empty, node will return null, account for both scenarios
+      if (clientResponse.response === null) {
+        chai.assert.isNull(clientResponse.response);
+      } else {
+        chai.assert.isUndefined(clientResponse.response);
+      }
     }
 
-    try {
-      await client.retrieveUserByEmail('nodejs@fusionauth.io');
-      chai.expect.fail("The user should have been deleted!");
-    } catch (clientResponse) {
-      chai.assert.strictEqual(clientResponse.statusCode, 404);
+    // check that they are gone
+    for (const email of ['nodejs@fusionauth.io', 'node2@fusionauth.io']) {
+      try {
+        await client.retrieveUserByEmail(email);
+        chai.expect.fail(`The user with ${email} should have been deleted!`);
+      } catch (clientResponse) {
+        chai.assert.strictEqual(clientResponse.statusCode, 404);
+      }
     }
   });
 
