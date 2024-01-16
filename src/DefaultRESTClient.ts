@@ -219,6 +219,8 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
             body: this.body as BodyInit,
             // @ts-ignore (Credentials are not supported on NodeJS)
             credentials: this.credentials,
+            // 60-second timeout expressed in ms
+            timeout: 60000,
           },
       );
 
