@@ -5411,11 +5411,153 @@ export type UUID = string;
 
 
 /**
- * Facebook social login provider.
+ * Change password request object.
  *
  * @author Brian Pontarelli
  */
-export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookApplicationConfiguration> {
+export interface ChangePasswordRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  changePasswordId?: string;
+  currentPassword?: string;
+  loginId?: string;
+  password?: string;
+  refreshToken?: string;
+  trustChallenge?: string;
+  trustToken?: string;
+}
+
+/**
+ * An action that can be executed on a user (discipline or reward potentially).
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserAction {
+  active?: boolean;
+  cancelEmailTemplateId?: UUID;
+  endEmailTemplateId?: UUID;
+  id?: UUID;
+  includeEmailInEventJSON?: boolean;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  localizedNames?: LocalizedStrings;
+  modifyEmailTemplateId?: UUID;
+  name?: string;
+  options?: Array<UserActionOption>;
+  preventLogin?: boolean;
+  sendEndEvent?: boolean;
+  startEmailTemplateId?: UUID;
+  temporal?: boolean;
+  transactionType?: TransactionType;
+  userEmailingEnabled?: boolean;
+  userNotificationsEnabled?: boolean;
+}
+
+export interface PasswordlessConfiguration extends Enableable {
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface SystemConfiguration {
+  auditLogConfiguration?: AuditLogConfiguration;
+  corsConfiguration?: CORSConfiguration;
+  data?: Record<string, any>;
+  eventLogConfiguration?: EventLogConfiguration;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  loginRecordConfiguration?: LoginRecordConfiguration;
+  reportTimezone?: string;
+  trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
+  uiConfiguration?: UIConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RememberPreviousPasswords extends Enableable {
+  count?: number;
+}
+
+export interface ApplicationEmailConfiguration {
+  emailUpdateEmailTemplateId?: UUID;
+  emailVerificationEmailTemplateId?: UUID;
+  emailVerifiedEmailTemplateId?: UUID;
+  forgotPasswordEmailTemplateId?: UUID;
+  loginIdInUseOnCreateEmailTemplateId?: UUID;
+  loginIdInUseOnUpdateEmailTemplateId?: UUID;
+  loginNewDeviceEmailTemplateId?: UUID;
+  loginSuspiciousEmailTemplateId?: UUID;
+  passwordlessEmailTemplateId?: UUID;
+  passwordResetSuccessEmailTemplateId?: UUID;
+  passwordUpdateEmailTemplateId?: UUID;
+  setPasswordEmailTemplateId?: UUID;
+  twoFactorMethodAddEmailTemplateId?: UUID;
+  twoFactorMethodRemoveEmailTemplateId?: UUID;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateResponse {
+  errors?: Errors;
+  message?: SMSMessage;
+}
+
+/**
+ * API response for consent.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ConsentResponse {
+  consent?: Consent;
+  consents?: Array<Consent>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchResponse {
+  ipAccessControlLists?: Array<IPAccessControlList>;
+  total?: number;
+}
+
+/**
+ * User API delete request object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserDeleteRequest extends BaseEventRequest {
+  dryRun?: boolean;
+  hardDelete?: boolean;
+  limit?: number;
+  query?: string;
+  queryString?: string;
+  userIds?: Array<UUID>;
+}
+
+/**
+ * The Application API response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ApplicationResponse {
+  application?: Application;
+  applications?: Array<Application>;
+  role?: ApplicationRole;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicationConfiguration> {
+  relyingPartyApplicationId?: string;
+  relyingPartyURL?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FacebookApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
   appId?: string;
   buttonText?: string;
   client_secret?: string;
@@ -5424,18 +5566,924 @@ export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookA
   permissions?: string;
 }
 
-export interface UniqueUsernameConfiguration extends Enableable {
-  numberOfDigits?: number;
-  separator?: string;
-  strategy?: UniqueUsernameStrategy;
+/**
+ * @author Daniel DeGroff
+ */
+export enum UnverifiedBehavior {
+  Allow = "Allow",
+  Gated = "Gated"
+}
+
+export interface ActionData {
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  applicationIds?: Array<UUID>;
+  comment?: string;
+  emailUser?: boolean;
+  expiry?: number;
+  notifyUser?: boolean;
+  option?: string;
+  reasonId?: UUID;
+  userActionId?: UUID;
 }
 
 /**
- * Models a set of localized Integers that can be stored as JSON.
+ * @author Mikey Sleevi
+ */
+export interface TenantMultiFactorConfiguration {
+  authenticator?: MultiFactorAuthenticatorMethod;
+  email?: MultiFactorEmailMethod;
+  loginPolicy?: MultiFactorLoginPolicy;
+  sms?: MultiFactorSMSMethod;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LoginRecordSearchRequest {
+  retrieveTotal?: boolean;
+  search?: LoginRecordSearchCriteria;
+}
+
+/**
+ * @author Mikey Sleevi
+ */
+export interface Message {
+}
+
+/**
+ * This class is the entity query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntitySearchCriteria extends BaseElasticSearchCriteria {
+}
+
+/**
+ * Search response for Group Members
  *
  * @author Daniel DeGroff
  */
-export interface LocalizedIntegers extends Record<string, number> {
+export interface GroupMemberSearchResponse {
+  members?: Array<GroupMember>;
+  total?: number;
+}
+
+/**
+ * API response for completing WebAuthn assertion
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnAssertResponse {
+  credential?: WebAuthnCredential;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorResponse {
+  code?: string;
+  recoveryCodes?: Array<string>;
+}
+
+/**
+ * SAML v2 identity provider configuration.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SAMLv2IdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2ApplicationConfiguration> {
+  assertionConfiguration?: SAMLv2AssertionConfiguration;
+  buttonImageURL?: string;
+  buttonText?: string;
+  domains?: Array<string>;
+  idpEndpoint?: string;
+  idpInitiatedConfiguration?: SAMLv2IdpInitiatedConfiguration;
+  issuer?: string;
+  loginHintConfiguration?: LoginHintConfiguration;
+  nameIdFormat?: string;
+  postRequest?: boolean;
+  requestSigningKeyId?: UUID;
+  signRequest?: boolean;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyRegistrationRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * A Message Template Request to the API
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateRequest {
+  messageTemplate?: MessageTemplate;
+}
+
+/**
+ * Group Member Delete Request
+ *
+ * @author Daniel DeGroff
+ */
+export interface MemberDeleteRequest {
+  memberIds?: Array<UUID>;
+  members?: Record<UUID, Array<UUID>>;
+}
+
+/**
+ * The use type of a key.
+ *
+ * @author Daniel DeGroff
+ */
+export enum KeyUse {
+  SignOnly = "SignOnly",
+  SignAndVerify = "SignAndVerify",
+  VerifyOnly = "VerifyOnly"
+}
+
+export enum BreachAction {
+  Off = "Off",
+  RecordOnly = "RecordOnly",
+  NotifyUser = "NotifyUser",
+  RequireChange = "RequireChange"
+}
+
+/**
+ * Search request for Keys
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchRequest {
+  search?: KeySearchCriteria;
+}
+
+/**
+ * Interface for all identity providers that are passwordless and do not accept a password.
+ */
+export interface PasswordlessIdentityProvider {
+}
+
+/**
+ * Used to express whether the Relying Party requires <a href="https://www.w3.org/TR/webauthn-2/#user-verification">user verification</a> for the
+ * current operation.
+ *
+ * @author Spencer Witt
+ */
+export enum UserVerificationRequirement {
+  required = "required",
+  preferred = "preferred",
+  discouraged = "discouraged"
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnPublicKeyRegistrationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: WebAuthnAuthenticatorRegistrationResponse;
+  rpId?: string;
+  transports?: Array<string>;
+  type?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface DeviceUserCodeResponse {
+  client_id?: string;
+  deviceInfo?: DeviceInfo;
+  expires_in?: number;
+  pendingIdPLink?: PendingIdPLink;
+  scope?: string;
+  tenantId?: UUID;
+  user_code?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IntrospectResponse extends Record<string, any> {
+}
+
+/**
+ * An email address.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EmailAddress {
+  address?: string;
+  display?: string;
+}
+
+/**
+ * Interface for all identity providers that can be domain based.
+ */
+export interface DomainBasedIdentityProvider {
+}
+
+/**
+ * The user action request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ActionRequest extends BaseEventRequest {
+  action?: ActionData;
+  broadcast?: boolean;
+}
+
+/**
+ * Search request for Tenants
+ *
+ * @author Mark Manes
+ */
+export interface TenantSearchRequest {
+  search?: TenantSearchCriteria;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RefreshTokenExpirationPolicy {
+  Fixed = "Fixed",
+  SlidingWindow = "SlidingWindow",
+  SlidingWindowWithMaximumLifetime = "SlidingWindowWithMaximumLifetime"
+}
+
+/**
+ * Request for the system configuration API.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SystemConfigurationRequest {
+  systemConfiguration?: SystemConfiguration;
+}
+
+/**
+ * Search criteria for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * An expandable API response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ExpandableResponse {
+  expandable?: Array<string>;
+}
+
+/**
+ * Contains extension output for requested extensions during a WebAuthn ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnExtensionsClientOutputs {
+  credProps?: CredentialPropertiesOutput;
+}
+
+/**
+ * Models an entity that a user can be granted permissions to. Or an entity that can be granted permissions to another entity.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Entity {
+  clientId?: string;
+  clientSecret?: string;
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  parentId?: UUID;
+  tenantId?: UUID;
+  type?: EntityType;
+}
+
+/**
+ * Models the User Email Verify Event.
+ *
+ * @author Trevor Smith
+ */
+export interface UserEmailVerifiedEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface MinimumPasswordAge extends Enableable {
+  seconds?: number;
+}
+
+/**
+ * Entity API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityResponse {
+  entity?: Entity;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface OAuthResponse {
+}
+
+/**
+ * Login Ping API request object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface LoginPingRequest extends BaseLoginRequest {
+  userId?: UUID;
+}
+
+export enum LDAPSecurityMethod {
+  None = "None",
+  LDAPS = "LDAPS",
+  StartTLS = "StartTLS"
+}
+
+/**
+ * Search request for Applications
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchRequest extends ExpandableRequest {
+  search?: ApplicationSearchCriteria;
+}
+
+/**
+ * Change password response object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ChangePasswordResponse {
+  oneTimePassword?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * @author Seth Musselman
+ */
+export interface UserCommentRequest {
+  userComment?: UserComment;
+}
+
+/**
+ * Describes the Relying Party's requirements for <a href="https://www.w3.org/TR/webauthn-2/#client-side-discoverable-credential">client-side
+ * discoverable credentials</a> (formerly known as "resident keys")
+ *
+ * @author Spencer Witt
+ */
+export enum ResidentKeyRequirement {
+  discouraged = "discouraged",
+  preferred = "preferred",
+  required = "required"
+}
+
+/**
+ * Something that can be enabled and thus also disabled.
+ *
+ * @author Daniel DeGroff
+ */
+export interface Enableable {
+  enabled?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface AccessToken {
+  access_token?: string;
+  expires_in?: number;
+  id_token?: string;
+  refresh_token?: string;
+  refresh_token_id?: UUID;
+  scope?: string;
+  token_type?: TokenType;
+  userId?: UUID;
+}
+
+/**
+ * @author Johnathon Wood
+ */
+export enum Oauth2AuthorizedURLValidationPolicy {
+  AllowWildcards = "AllowWildcards",
+  ExactMatch = "ExactMatch"
+}
+
+/**
+ * Models the User Login Success Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginSuccessEvent extends BaseEvent {
+  applicationId?: UUID;
+  authenticationType?: string;
+  connectorId?: UUID;
+  identityProviderId?: UUID;
+  identityProviderName?: string;
+  ipAddress?: string;
+  user?: User;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface TwitchApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Google social login provider parameters.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GoogleIdentityProviderProperties {
+  api?: string;
+  button?: string;
+}
+
+/**
+ * SonyPSN gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface SonyPSNIdentityProvider extends BaseIdentityProvider<SonyPSNApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * @author Derek Klatt
+ */
+export interface PasswordValidationRules {
+  breachDetection?: PasswordBreachDetection;
+  maxLength?: number;
+  minLength?: number;
+  rememberPreviousPasswords?: RememberPreviousPasswords;
+  requireMixedCase?: boolean;
+  requireNonAlpha?: boolean;
+  requireNumber?: boolean;
+  validateOnLogin?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface BaseLoginRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  ipAddress?: string;
+  metaData?: MetaData;
+  newDevice?: boolean;
+  noJWT?: boolean;
+}
+
+/**
+ * Event to indicate kickstart has been successfully completed.
+ *
+ * @author Daniel DeGroff
+ */
+export interface KickstartSuccessEvent extends BaseEvent {
+  instanceId?: UUID;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface FamilyConfiguration extends Enableable {
+  allowChildRegistrations?: boolean;
+  confirmChildEmailTemplateId?: UUID;
+  deleteOrphanedAccounts?: boolean;
+  deleteOrphanedAccountsDays?: number;
+  familyRequestEmailTemplateId?: UUID;
+  maximumChildAge?: number;
+  minimumOwnerAge?: number;
+  parentEmailRequired?: boolean;
+  parentRegistrationEmailTemplateId?: UUID;
+}
+
+/**
+ * Authentication key request object.
+ *
+ * @author Sanjay
+ */
+export interface APIKeyRequest {
+  apiKey?: APIKey;
+  sourceKeyId?: UUID;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface PendingResponse {
+  users?: Array<User>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderOauth2Configuration {
+  authorization_endpoint?: string;
+  client_id?: string;
+  client_secret?: string;
+  clientAuthenticationMethod?: ClientAuthenticationMethod;
+  emailClaim?: string;
+  emailVerifiedClaim?: string;
+  issuer?: string;
+  scope?: string;
+  token_endpoint?: string;
+  uniqueIdClaim?: string;
+  userinfo_endpoint?: string;
+  usernameClaim?: string;
+}
+
+/**
+ * API response for User consent.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserConsentRequest {
+  userConsent?: UserConsent;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum CaptchaMethod {
+  GoogleRecaptchaV2 = "GoogleRecaptchaV2",
+  GoogleRecaptchaV3 = "GoogleRecaptchaV3",
+  HCaptcha = "HCaptcha",
+  HCaptchaEnterprise = "HCaptchaEnterprise"
+}
+
+/**
+ * A log for an action that was taken on a User.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionLog {
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  applicationIds?: Array<UUID>;
+  comment?: string;
+  emailUserOnEnd?: boolean;
+  endEventSent?: boolean;
+  expiry?: number;
+  history?: LogHistory;
+  id?: UUID;
+  insertInstant?: number;
+  localizedName?: string;
+  localizedOption?: string;
+  localizedReason?: string;
+  name?: string;
+  notifyUserOnEnd?: boolean;
+  option?: string;
+  reason?: string;
+  reasonCode?: string;
+  userActionId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RateLimitedRequestConfiguration extends Enableable {
+  limit?: number;
+  timePeriodInSeconds?: number;
+}
+
+/**
+ * Models a User consent.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserConsent {
+  consent?: Consent;
+  consentId?: UUID;
+  data?: Record<string, any>;
+  giverUserId?: UUID;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  status?: ConsentStatus;
+  userId?: UUID;
+  values?: Array<string>;
+}
+
+/**
+ * API response for starting a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterStartResponse {
+  options?: PublicKeyCredentialCreationOptions;
+}
+
+export interface LambdaConfiguration {
+  accessTokenPopulateId?: UUID;
+  idTokenPopulateId?: UUID;
+  samlv2PopulateId?: UUID;
+  selfServiceRegistrationValidationId?: UUID;
+  userinfoPopulateId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantResponse {
+  tenant?: Tenant;
+  tenants?: Array<Tenant>;
+}
+
+/**
+ * Contains the output for the {@code credProps} extension
+ *
+ * @author Spencer Witt
+ */
+export interface CredentialPropertiesOutput {
+  rk?: boolean;
+}
+
+/**
+ * Models the JWT Refresh Event. This event will be fired when a JWT is "refreshed" (generated) using a Refresh Token.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWTRefreshEvent extends BaseEvent {
+  applicationId?: UUID;
+  original?: string;
+  refreshToken?: string;
+  token?: string;
+  userId?: UUID;
+}
+
+/**
+ * API request to start a WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterStartRequest {
+  displayName?: string;
+  name?: string;
+  userAgent?: string;
+  userId?: UUID;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserSearchCriteria extends BaseElasticSearchCriteria {
+}
+
+/**
+ * Group Member Response
+ *
+ * @author Daniel DeGroff
+ */
+export interface MemberResponse {
+  members?: Record<UUID, Array<GroupMember>>;
+}
+
+export interface EventLogConfiguration {
+  numberToRetain?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SortField {
+  missing?: string;
+  name?: string;
+  order?: Sort;
+}
+
+/**
+ * Search criteria for themes
+ *
+ * @author Mark Manes
+ */
+export interface ThemeSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Entity grant API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantResponse {
+  grant?: EntityGrant;
+  grants?: Array<EntityGrant>;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export enum SAMLv2DestinationAssertionPolicy {
+  Enabled = "Enabled",
+  Disabled = "Disabled",
+  AllowAlternates = "AllowAlternates"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum VerificationStrategy {
+  ClickableLink = "ClickableLink",
+  FormField = "FormField"
+}
+
+/**
+ * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * preferred languages, global attributes, etc.
+ *
+ * @author Seth Musselman
+ */
+export interface User extends SecureIdentity {
+  active?: boolean;
+  birthDate?: string;
+  cleanSpeakId?: UUID;
+  data?: Record<string, any>;
+  email?: string;
+  expiry?: number;
+  firstName?: string;
+  fullName?: string;
+  imageUrl?: string;
+  insertInstant?: number;
+  lastName?: string;
+  lastUpdateInstant?: number;
+  memberships?: Array<GroupMember>;
+  middleName?: string;
+  mobilePhone?: string;
+  parentEmail?: string;
+  preferredLanguages?: Array<string>;
+  registrations?: Array<UserRegistration>;
+  tenantId?: UUID;
+  timezone?: string;
+  twoFactor?: UserTwoFactorConfiguration;
+}
+
+/**
+ * API response for User consent.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserConsentResponse {
+  userConsent?: UserConsent;
+  userConsents?: Array<UserConsent>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface GenericMessengerConfiguration extends BaseMessengerConfiguration {
+  connectTimeout?: number;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
+  readTimeout?: number;
+  sslCertificate?: string;
+  url?: string;
+}
+
+/**
+ * <ul>
+ * <li>Bearer Token type as defined by <a href="https://tools.ietf.org/html/rfc6750">RFC 6750</a>.</li>
+ * <li>MAC Token type as referenced by <a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a> and
+ * <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">
+ * Draft RFC on OAuth 2.0 Message Authentication Code (MAC) Tokens</a>
+ * </li>
+ * </ul>
+ *
+ * @author Daniel DeGroff
+ */
+export enum TokenType {
+  Bearer = "Bearer",
+  MAC = "MAC"
+}
+
+/**
+ * Controls the policy for whether OAuth workflows will more strictly adhere to the OAuth and OIDC specification
+ * or run in backwards compatibility mode.
+ *
+ * @author David Charles
+ */
+export enum OAuthScopeHandlingPolicy {
+  Compatibility = "Compatibility",
+  Strict = "Strict"
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface AuditLogRequest extends BaseEventRequest {
+  auditLog?: AuditLog;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface OpenIdConnectApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonImageURL?: string;
+  buttonText?: string;
+  oauth2?: IdentityProviderOauth2Configuration;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface Theme {
+  data?: Record<string, any>;
+  defaultMessages?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  localizedMessages?: LocalizedStrings;
+  name?: string;
+  stylesheet?: string;
+  templates?: Templates;
+}
+
+/**
+ * JWT Configuration. A JWT Configuration for an Application may not be active if it is using the global configuration, the configuration
+ * may be <code>enabled = false</code>.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWTConfiguration extends Enableable {
+  accessTokenKeyId?: UUID;
+  idTokenKeyId?: UUID;
+  refreshTokenExpirationPolicy?: RefreshTokenExpirationPolicy;
+  refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
+  refreshTokenSlidingWindowConfiguration?: RefreshTokenSlidingWindowConfiguration;
+  refreshTokenTimeToLiveInMinutes?: number;
+  refreshTokenUsagePolicy?: RefreshTokenUsagePolicy;
+  timeToLiveInSeconds?: number;
+}
+
+/**
+ * An audit log.
+ *
+ * @author Brian Pontarelli
+ */
+export interface AuditLog {
+  data?: Record<string, any>;
+  id?: number;
+  insertInstant?: number;
+  insertUser?: string;
+  message?: string;
+  newValue?: any;
+  oldValue?: any;
+  reason?: string;
+}
+
+/**
+ * Search criteria for Consents
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+export interface EntitySearchResponse {
+  entities?: Array<Entity>;
+  nextResults?: string;
+  total?: number;
+}
+
+export interface LambdaConfiguration {
+  reconcileId?: UUID;
 }
 
 export enum XMLSignatureLocation {
@@ -5444,51 +6492,653 @@ export enum XMLSignatureLocation {
 }
 
 /**
- * @author Brett Pontarelli
+ * @author Daniel DeGroff
  */
-export interface EpicGamesApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+export interface IssueResponse {
+  refreshToken?: string;
+  token?: string;
+}
+
+/**
+ * Request for the Refresh Token API to revoke a refresh token rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RefreshTokenRevokeRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  token?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2DestinationAssertionConfiguration {
+  alternates?: Array<string>;
+  policy?: SAMLv2DestinationAssertionPolicy;
+}
+
+/**
+ * Audit log response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface AuditLogResponse {
+  auditLog?: AuditLog;
+}
+
+/**
+ * Search API response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SearchResponse extends ExpandableResponse {
+  nextResults?: string;
+  total?: number;
+  users?: Array<User>;
+}
+
+/**
+ * Email template response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EmailTemplateResponse {
+  emailTemplate?: EmailTemplate;
+  emailTemplates?: Array<EmailTemplate>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessStartResponse {
+  code?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessSendRequest {
+  applicationId?: UUID;
+  code?: string;
+  loginId?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * Webhook API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface WebhookRequest {
+  webhook?: Webhook;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantRegistrationConfiguration {
+  blockedDomains?: Array<string>;
+}
+
+/**
+ * Models a single family member.
+ *
+ * @author Brian Pontarelli
+ */
+export interface FamilyMember {
+  data?: Record<string, any>;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  owner?: boolean;
+  role?: FamilyRole;
+  userId?: UUID;
+}
+
+/**
+ * Response for the daily active user report.
+ *
+ * @author Brian Pontarelli
+ */
+export interface MonthlyActiveUserReportResponse {
+  monthlyActiveUsers?: Array<Count>;
+  total?: number;
+}
+
+/**
+ * Models the User Identity Provider Unlink Event.
+ *
+ * @author Rob Davis
+ */
+export interface UserIdentityProviderUnlinkEvent extends BaseEvent {
+  identityProviderLink?: IdentityProviderLink;
+  user?: User;
+}
+
+/**
+ * An expandable API request.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ExpandableRequest {
+  expand?: Array<string>;
+}
+
+export interface RegistrationConfiguration extends Enableable {
+  birthDate?: Requirable;
+  confirmPassword?: boolean;
+  firstName?: Requirable;
+  formId?: UUID;
+  fullName?: Requirable;
+  lastName?: Requirable;
+  loginIdType?: LoginIdType;
+  middleName?: Requirable;
+  mobilePhone?: Requirable;
+  preferredLanguages?: Requirable;
+  type?: RegistrationType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordValidationRulesResponse {
+  passwordValidationRules?: PasswordValidationRules;
+}
+
+export interface APIKeyPermissions {
+  endpoints?: Record<string, Array<string>>;
+}
+
+/**
+ * Models an event where a user is being created with an "in-use" login Id (email or username).
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
+  duplicateEmail?: string;
+  duplicateUsername?: string;
+  existing?: User;
+  user?: User;
+}
+
+/**
+ * Defines valid credential types. This is an extension point in the WebAuthn spec. The only defined value at this time is "public-key"
+ *
+ * @author Spencer Witt
+ */
+export enum PublicKeyCredentialType {
+  publicKey = "public-key"
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface TwoFactorDisableRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  code?: string;
+  methodId?: string;
+}
+
+/**
+ * User Action Reason API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionReasonResponse {
+  userActionReason?: UserActionReason;
+  userActionReasons?: Array<UserActionReason>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormControl {
+  checkbox = "checkbox",
+  number = "number",
+  password = "password",
+  radio = "radio",
+  select = "select",
+  textarea = "textarea",
+  text = "text"
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface DeviceResponse {
+  device_code?: string;
+  expires_in?: number;
+  interval?: number;
+  user_code?: string;
+  verification_uri?: string;
+  verification_uri_complete?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListResponse {
+  ipAccessControlList?: IPAccessControlList;
+  ipAccessControlLists?: Array<IPAccessControlList>;
+}
+
+export enum KeyAlgorithm {
+  ES256 = "ES256",
+  ES384 = "ES384",
+  ES512 = "ES512",
+  HS256 = "HS256",
+  HS384 = "HS384",
+  HS512 = "HS512",
+  RS256 = "RS256",
+  RS384 = "RS384",
+  RS512 = "RS512"
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface BaseSearchCriteria {
+  numberOfResults?: number;
+  orderBy?: string;
+  startRow?: number;
+}
+
+/**
+ * Model a user event when a two-factor method has been added.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorMethodRemoveEvent extends BaseEvent {
+  method?: TwoFactorMethod;
+  user?: User;
+}
+
+/**
+ * Consent search response
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchResponse {
+  consents?: Array<Consent>;
+  total?: number;
+}
+
+/**
+ * A displayable raw login that includes application name and user loginId.
+ *
+ * @author Brian Pontarelli
+ */
+export interface DisplayableRawLogin extends RawLogin {
+  applicationName?: string;
+  location?: Location;
+  loginId?: string;
+}
+
+/**
+ * Models the Group Member Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberUpdateCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Twitter social login provider.
+ *
+ * @author Daniel DeGroff
+ */
+export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApplicationConfiguration> {
+  buttonText?: string;
+  consumerKey?: string;
+  consumerSecret?: string;
+}
+
+/**
+ * Google social login provider.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleApplicationConfiguration> {
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
+  loginMethod?: IdentityProviderLoginMethod;
+  properties?: GoogleIdentityProviderProperties;
   scope?: string;
 }
 
 /**
- * API request for sending out family requests to parent's.
+ * Used by the Relying Party to specify their requirements for authenticator attributes. Fields use the deprecated "resident key" terminology to refer
+ * to client-side discoverable credentials to maintain backwards compatibility with WebAuthn Level 1.
  *
- * @author Brian Pontarelli
+ * @author Spencer Witt
  */
-export interface FamilyEmailRequest {
-  parentEmail?: string;
+export interface AuthenticatorSelectionCriteria {
+  authenticatorAttachment?: AuthenticatorAttachment;
+  requireResidentKey?: boolean;
+  residentKey?: ResidentKeyRequirement;
+  userVerification?: UserVerificationRequirement;
 }
 
 /**
- * Login API request object.
- *
- * @author Seth Musselman
+ * @author Daniel DeGroff
  */
-export interface LoginRequest extends BaseLoginRequest {
-  loginId?: string;
-  oneTimePassword?: string;
+export interface SecureIdentity {
+  breachedPasswordLastCheckedInstant?: number;
+  breachedPasswordStatus?: BreachedPasswordStatus;
+  connectorId?: UUID;
+  encryptionScheme?: string;
+  factor?: number;
+  id?: UUID;
+  lastLoginInstant?: number;
   password?: string;
-  twoFactorTrustId?: string;
+  passwordChangeReason?: ChangePasswordReason;
+  passwordChangeRequired?: boolean;
+  passwordLastUpdateInstant?: number;
+  salt?: string;
+  uniqueUsername?: string;
+  username?: string;
+  usernameStatus?: ContentStatus;
+  verified?: boolean;
+  verifiedInstant?: number;
 }
 
 /**
- * Models a JWT Refresh Token.
+ * @author Daniel DeGroff
+ */
+export enum FormFieldAdminPolicy {
+  Edit = "Edit",
+  View = "View"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VersionResponse {
+  version?: string;
+}
+
+/**
+ * Search request for Consents
+ *
+ * @author Spencer Witt
+ */
+export interface ConsentSearchRequest {
+  search?: ConsentSearchCriteria;
+}
+
+export interface SAMLv2SingleLogout extends Enableable {
+  keyId?: UUID;
+  url?: string;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+export enum FamilyRole {
+  Child = "Child",
+  Teen = "Teen",
+  Adult = "Adult"
+}
+
+/**
+ * JSON Web Token (JWT) as defined by RFC 7519.
+ * <pre>
+ * From RFC 7519 Section 1. Introduction:
+ *    The suggested pronunciation of JWT is the same as the English word "jot".
+ * </pre>
+ * The JWT is not Thread-Safe and should not be re-used.
  *
  * @author Daniel DeGroff
  */
-export interface RefreshToken {
-  applicationId?: UUID;
+export interface JWT {
+  aud?: any;
+  exp?: number;
+  iat?: number;
+  iss?: string;
+  jti?: string;
+  nbf?: number;
+  [otherClaims: string]: any; // Any other fields
+  sub?: string;
+}
+
+export interface Templates {
+  accountEdit?: string;
+  accountIndex?: string;
+  accountTwoFactorDisable?: string;
+  accountTwoFactorEnable?: string;
+  accountTwoFactorIndex?: string;
+  accountWebAuthnAdd?: string;
+  accountWebAuthnDelete?: string;
+  accountWebAuthnIndex?: string;
+  confirmationRequired?: string;
+  emailComplete?: string;
+  emailSend?: string;
+  emailSent?: string;
+  emailVerificationRequired?: string;
+  emailVerify?: string;
+  helpers?: string;
+  index?: string;
+  oauth2Authorize?: string;
+  oauth2AuthorizedNotRegistered?: string;
+  oauth2ChildRegistrationNotAllowed?: string;
+  oauth2ChildRegistrationNotAllowedComplete?: string;
+  oauth2CompleteRegistration?: string;
+  oauth2Consent?: string;
+  oauth2Device?: string;
+  oauth2DeviceComplete?: string;
+  oauth2Error?: string;
+  oauth2Logout?: string;
+  oauth2Passwordless?: string;
+  oauth2Register?: string;
+  oauth2StartIdPLink?: string;
+  oauth2TwoFactor?: string;
+  oauth2TwoFactorEnable?: string;
+  oauth2TwoFactorEnableComplete?: string;
+  oauth2TwoFactorMethods?: string;
+  oauth2Wait?: string;
+  oauth2WebAuthn?: string;
+  oauth2WebAuthnReauth?: string;
+  oauth2WebAuthnReauthEnable?: string;
+  passwordChange?: string;
+  passwordComplete?: string;
+  passwordForgot?: string;
+  passwordSent?: string;
+  registrationComplete?: string;
+  registrationSend?: string;
+  registrationSent?: string;
+  registrationVerificationRequired?: string;
+  registrationVerify?: string;
+  samlv2Logout?: string;
+  unauthorized?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum Sort {
+  asc = "asc",
+  desc = "desc"
+}
+
+/**
+ * Models the User Reactivate Event.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserReactivateEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Response for the registration report.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RegistrationReportResponse {
+  hourlyCounts?: Array<Count>;
+  total?: number;
+}
+
+/**
+ * Models the Group Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
+}
+
+/**
+ * A server where events are sent. This includes user action events and any other events sent by FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Webhook {
+  connectTimeout?: number;
   data?: Record<string, any>;
+  description?: string;
+  eventsEnabled?: Record<EventType, boolean>;
+  global?: boolean;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
   id?: UUID;
   insertInstant?: number;
-  metaData?: MetaData;
-  startInstant?: number;
-  tenantId?: UUID;
+  lastUpdateInstant?: number;
+  readTimeout?: number;
+  signatureConfiguration?: WebhookSignatureConfiguration;
+  sslCertificate?: string;
+  sslCertificateKeyId?: UUID;
+  tenantIds?: Array<UUID>;
+  url?: string;
+}
+
+/**
+ * Models a specific entity type permission. This permission can be granted to users or other entities.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypePermission {
+  data?: Record<string, any>;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  isDefault?: boolean;
+  lastUpdateInstant?: number;
+  name?: string;
+}
+
+/**
+ * The Application Scope API response.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScopeResponse {
+  scope?: ApplicationOAuthScope;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum LambdaEngineType {
+  GraalJS = "GraalJS",
+  Nashorn = "Nashorn"
+}
+
+/**
+ * Search criteria for Keys
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchCriteria extends BaseSearchCriteria {
+  algorithm?: KeyAlgorithm;
+  name?: string;
+  type?: KeyType;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface LoginResponse {
+  actions?: Array<LoginPreventedResponse>;
+  changePasswordId?: string;
+  changePasswordReason?: ChangePasswordReason;
+  configurableMethods?: Array<string>;
+  emailVerificationId?: string;
+  methods?: Array<TwoFactorMethod>;
+  pendingIdPLinkId?: string;
+  refreshToken?: string;
+  refreshTokenId?: UUID;
+  registrationVerificationId?: string;
+  state?: Record<string, any>;
+  threatsDetected?: Array<AuthenticationThreats>;
   token?: string;
-  userId?: UUID;
+  tokenExpirationInstant?: number;
+  trustToken?: string;
+  twoFactorId?: string;
+  twoFactorTrustId?: string;
+  user?: User;
+}
+
+/**
+ * Search request for Lambdas
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchRequest {
+  search?: LambdaSearchCriteria;
+}
+
+/**
+ * Registration delete API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RegistrationDeleteRequest extends BaseEventRequest {
+}
+
+/**
+ * A historical state of a user log event. Since events can be modified, this stores the historical state.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LogHistory {
+  historyItems?: Array<HistoryItem>;
+}
+
+/**
+ * Entity grant API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantRequest {
+  grant?: EntityGrant;
+}
+
+export enum LoginIdType {
+  email = "email",
+  username = "username"
+}
+
+/**
+ * Response for the system configuration API.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SystemConfigurationResponse {
+  systemConfiguration?: SystemConfiguration;
+}
+
+/**
+ * Describes the <a href="https://www.w3.org/TR/webauthn-2/#authenticator-attachment-modality">authenticator attachment modality</a>.
+ *
+ * @author Spencer Witt
+ */
+export enum AuthenticatorAttachment {
+  platform = "platform",
+  crossPlatform = "crossPlatform"
 }
 
 /**
@@ -5509,11 +7159,1232 @@ export interface ForgotPasswordRequest extends BaseEventRequest {
 /**
  * @author Daniel DeGroff
  */
-export interface LinkedInApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+export interface TwoFactorLoginRequest extends BaseLoginRequest {
+  code?: string;
+  trustComputer?: boolean;
+  twoFactorId?: string;
+  userId?: UUID;
+}
+
+export interface MultiFactorEmailTemplate {
+  templateId?: UUID;
+}
+
+/**
+ * Models a JWT Refresh Token.
+ *
+ * @author Daniel DeGroff
+ */
+export interface RefreshToken {
+  applicationId?: UUID;
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  metaData?: MetaData;
+  startInstant?: number;
+  tenantId?: UUID;
+  token?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface DeviceApprovalResponse {
+  deviceGrantStatus?: string;
+  deviceInfo?: DeviceInfo;
+  identityProviderLink?: IdentityProviderLink;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * @author Spencer Witt
+ */
+export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
+  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
+  userVerificationRequirement?: UserVerificationRequirement;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SendRequest {
+  applicationId?: UUID;
+  bccAddresses?: Array<string>;
+  ccAddresses?: Array<string>;
+  preferredLanguages?: Array<string>;
+  requestData?: Record<string, any>;
+  toAddresses?: Array<EmailAddress>;
+  userIds?: Array<UUID>;
+}
+
+/**
+ * Search request for Themes.
+ *
+ * @author Mark Manes
+ */
+export interface ThemeSearchRequest {
+  search?: ThemeSearchCriteria;
+}
+
+/**
+ * Models the User Created Event.
+ * <p>
+ * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserCreateCompleteEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * An Event "event" to indicate an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+export interface EventLogCreateEvent extends BaseEvent {
+  eventLog?: EventLog;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
+  accurateTotal?: boolean;
+  ids?: Array<UUID>;
+  nextResults?: string;
+  query?: string;
+  queryString?: string;
+  sortFields?: Array<SortField>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface OAuthConfigurationResponse {
+  httpSessionMaxInactiveInterval?: number;
+  logoutURL?: string;
+  oauthConfiguration?: OAuth2Configuration;
+}
+
+/**
+ * User Action API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionResponse {
+  userAction?: UserAction;
+  userActions?: Array<UserAction>;
+}
+
+export interface Totals {
+  logins?: number;
+  registrations?: number;
+  totalRegistrations?: number;
+}
+
+/**
+ * This class is a simple attachment with a byte array, name and MIME type.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Attachment {
+  attachment?: Array<number>;
+  mime?: string;
+  name?: string;
+}
+
+/**
+ * Models the User Registration Verified Event.
+ *
+ * @author Trevor Smith
+ */
+export interface UserRegistrationVerifiedEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TenantAccessControlConfiguration {
+  uiIPAccessControlListId?: UUID;
+}
+
+/**
+ * User Comment Response
+ *
+ * @author Seth Musselman
+ */
+export interface UserCommentResponse {
+  userComment?: UserComment;
+  userComments?: Array<UserComment>;
+}
+
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+export interface BaseConnectorConfiguration {
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: ConnectorType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum HTTPMethod {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  HEAD = "HEAD",
+  OPTIONS = "OPTIONS",
+  PATCH = "PATCH"
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export enum AuthenticationThreats {
+  ImpossibleTravel = "ImpossibleTravel"
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface EpicGamesApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
   buttonText?: string;
   client_id?: string;
   client_secret?: string;
   scope?: string;
+}
+
+/**
+ * API request for User consent types.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ConsentRequest {
+  consent?: Consent;
+}
+
+/**
+ * Standard error domain object that can also be used as the response from an API call.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Errors {
+  fieldErrors?: Record<string, Array<Error>>;
+  generalErrors?: Array<Error>;
+}
+
+/**
+ * Base-class for all FusionAuth events.
+ *
+ * @author Brian Pontarelli
+ */
+export interface BaseEvent {
+  createInstant?: number;
+  id?: UUID;
+  info?: EventInfo;
+  tenantId?: UUID;
+  type?: EventType;
+}
+
+/**
+ * Import request.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ImportRequest extends BaseEventRequest {
+  encryptionScheme?: string;
+  factor?: number;
+  users?: Array<User>;
+  validateDbConstraints?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantLoginConfiguration {
+  requireAuthentication?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReactorResponse {
+  status?: ReactorStatus;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration {
+  accountSID?: string;
+  authToken?: string;
+  fromPhoneNumber?: string;
+  messagingServiceSid?: string;
+  url?: string;
+}
+
+/**
+ * User Action API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionRequest {
+  userAction?: UserAction;
+}
+
+/**
+ * Models the Group Member Add Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * Stores an email template used to send emails to users.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EmailTemplate {
+  defaultFromName?: string;
+  defaultHtmlTemplate?: string;
+  defaultSubject?: string;
+  defaultTextTemplate?: string;
+  fromEmail?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  localizedFromNames?: LocalizedStrings;
+  localizedHtmlTemplates?: LocalizedStrings;
+  localizedSubjects?: LocalizedStrings;
+  localizedTextTemplates?: LocalizedStrings;
+  name?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface DeviceInfo {
+  description?: string;
+  lastAccessedAddress?: string;
+  lastAccessedInstant?: number;
+  name?: string;
+  type?: string;
+}
+
+/**
+ * Information about a user event (login, register, etc) that helps identify the source of the event (location, device type, OS, etc).
+ *
+ * @author Brian Pontarelli
+ */
+export interface EventInfo {
+  data?: Record<string, any>;
+  deviceDescription?: string;
+  deviceName?: string;
+  deviceType?: string;
+  ipAddress?: string;
+  location?: Location;
+  os?: string;
+  userAgent?: string;
+}
+
+/**
+ * Epic gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface EpicGamesIdentityProvider extends BaseIdentityProvider<EpicGamesApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface SMSMessage {
+  phoneNumber?: string;
+  textMessage?: string;
+}
+
+/**
+ * Group API request object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupRequest {
+  group?: Group;
+  roleIds?: Array<UUID>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface MaximumPasswordAge extends Enableable {
+  days?: number;
+}
+
+/**
+ * A Tenant-level policy for deleting Users.
+ *
+ * @author Trevor Smith
+ */
+export interface TenantUserDeletePolicy {
+  unverified?: TimeBasedDeletePolicy;
+}
+
+/**
+ * Configuration for signing webhooks.
+ *
+ * @author Brent Halsey
+ */
+export interface WebhookSignatureConfiguration extends Enableable {
+  signingKeyId?: UUID;
+}
+
+/**
+ * Event log response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface EventLogResponse {
+  eventLog?: EventLog;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum ApplicationMultiFactorTrustPolicy {
+  Any = "Any",
+  This = "This",
+  None = "None"
+}
+
+/**
+ * Search request for user comments
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchRequest {
+  search?: UserCommentSearchCriteria;
+}
+
+/**
+ * Something that can be required and thus also optional. This currently extends Enableable because anything that is
+ * required/optional is almost always enableable as well.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Requirable extends Enableable {
+  required?: boolean;
+}
+
+/**
+ * Models the User Login event that is suspicious.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginSuspiciousEvent extends UserLoginSuccessEvent {
+  threatsDetected?: Array<AuthenticationThreats>;
+}
+
+/**
+ * Describes the authenticator attachment modality preference for a WebAuthn workflow. See {@link AuthenticatorAttachment}
+ *
+ * @author Spencer Witt
+ */
+export enum AuthenticatorAttachmentPreference {
+  any = "any",
+  platform = "platform",
+  crossPlatform = "crossPlatform"
+}
+
+/**
+ * Models the User Password Reset Success Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordResetSuccessEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessStartRequest {
+  applicationId?: UUID;
+  loginId?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReactorStatus {
+  advancedIdentityProviders?: ReactorFeatureStatus;
+  advancedLambdas?: ReactorFeatureStatus;
+  advancedMultiFactorAuthentication?: ReactorFeatureStatus;
+  advancedOAuthScopes?: ReactorFeatureStatus;
+  advancedOAuthScopesCustomScopes?: ReactorFeatureStatus;
+  advancedOAuthScopesThirdPartyApplications?: ReactorFeatureStatus;
+  advancedRegistration?: ReactorFeatureStatus;
+  applicationMultiFactorAuthentication?: ReactorFeatureStatus;
+  applicationThemes?: ReactorFeatureStatus;
+  breachedPasswordDetection?: ReactorFeatureStatus;
+  connectors?: ReactorFeatureStatus;
+  entityManagement?: ReactorFeatureStatus;
+  expiration?: string;
+  licenseAttributes?: Record<string, string>;
+  licensed?: boolean;
+  scimServer?: ReactorFeatureStatus;
+  threatDetection?: ReactorFeatureStatus;
+  webAuthn?: ReactorFeatureStatus;
+  webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
+  webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
+}
+
+/**
+ * Models a family grouping of users.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Family {
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  members?: Array<FamilyMember>;
+}
+
+export enum UniqueUsernameStrategy {
+  Always = "Always",
+  OnCollision = "OnCollision"
+}
+
+/**
+ * User Action Reason API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionReasonRequest {
+  userActionReason?: UserActionReason;
+}
+
+/**
+ * A JavaScript lambda function that is executed during certain events inside FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Lambda {
+  body?: string;
+  debug?: boolean;
+  engineType?: LambdaEngineType;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: LambdaType;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface PreviewMessageTemplateRequest {
+  locale?: string;
+  messageTemplate?: MessageTemplate;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlEntry {
+  action?: IPAccessControlEntryAction;
+  endIPAddress?: string;
+  startIPAddress?: string;
+}
+
+/**
+ * The Application Scope API request object.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScopeRequest {
+  scope?: ApplicationOAuthScope;
+}
+
+/**
+ * Models the Group Member Remove Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveCompleteEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartResponse {
+  options?: PublicKeyCredentialRequestOptions;
+}
+
+/**
+ * External JWT-only identity provider.
+ *
+ * @author Daniel DeGroff and Brian Pontarelli
+ */
+export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<ExternalJWTApplicationConfiguration> {
+  claimMap?: Record<string, string>;
+  defaultKeyId?: UUID;
+  domains?: Array<string>;
+  headerKeyParameter?: string;
+  oauth2?: IdentityProviderOauth2Configuration;
+  uniqueIdentityClaim?: string;
+}
+
+export interface SAMLv2AssertionEncryptionConfiguration extends Enableable {
+  digestAlgorithm?: string;
+  encryptionAlgorithm?: string;
+  keyLocation?: string;
+  keyTransportAlgorithm?: string;
+  keyTransportEncryptionKeyId?: UUID;
+  maskGenerationFunction?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PasswordlessLoginRequest extends BaseLoginRequest {
+  code?: string;
+  twoFactorTrustId?: string;
+}
+
+/**
+ * Search API request.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SearchRequest extends ExpandableRequest {
+  search?: UserSearchCriteria;
+}
+
+export interface TwoFactorTrust {
+  applicationId?: UUID;
+  expiration?: number;
+  startInstant?: number;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export enum ChangePasswordReason {
+  Administrative = "Administrative",
+  Breached = "Breached",
+  Expired = "Expired",
+  Validation = "Validation"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+}
+
+/**
+ * User comment search response
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchResponse {
+  total?: number;
+  userComments?: Array<UserComment>;
+}
+
+/**
+ * Models a set of localized Integers that can be stored as JSON.
+ *
+ * @author Daniel DeGroff
+ */
+export interface LocalizedIntegers extends Record<string, number> {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantUnverifiedConfiguration {
+  email?: UnverifiedBehavior;
+  whenGated?: RegistrationUnverifiedOptions;
+}
+
+/**
+ * WebAuthn Credential API response
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredentialResponse {
+  credential?: WebAuthnCredential;
+  credentials?: Array<WebAuthnCredential>;
+}
+
+export interface DeleteConfiguration extends Enableable {
+  numberOfDaysToRetain?: number;
+}
+
+export interface EventConfigurationData extends Enableable {
+  transactionType?: TransactionType;
+}
+
+/**
+ * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
+ * delete).
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserDeleteEvent extends BaseEvent {
+  user?: User;
+}
+
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+export interface BaseMessengerConfiguration {
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  transport?: string;
+  type?: MessengerType;
+}
+
+/**
+ * A number identifying a cryptographic algorithm. Values should be registered with the <a
+ * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
+ *
+ * @author Spencer Witt
+ */
+export enum CoseAlgorithmIdentifier {
+  ES256 = "SHA256withECDSA",
+  ES384 = "SHA384withECDSA",
+  ES512 = "SHA512withECDSA",
+  RS256 = "SHA256withRSA",
+  RS384 = "SHA384withRSA",
+  RS512 = "SHA512withRSA",
+  PS256 = "SHA-256",
+  PS384 = "SHA-384",
+  PS512 = "SHA-512"
+}
+
+/**
+ * Response for the login report.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LoginReportResponse {
+  hourlyCounts?: Array<Count>;
+  total?: number;
+}
+
+export enum DeviceType {
+  BROWSER = "BROWSER",
+  DESKTOP = "DESKTOP",
+  LAPTOP = "LAPTOP",
+  MOBILE = "MOBILE",
+  OTHER = "OTHER",
+  SERVER = "SERVER",
+  TABLET = "TABLET",
+  TV = "TV",
+  UNKNOWN = "UNKNOWN"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListRequest {
+  ipAccessControlList?: IPAccessControlList;
+}
+
+/**
+ * Steam API modes.
+ *
+ * @author Daniel DeGroff
+ */
+export enum SteamAPIMode {
+  Public = "Public",
+  Partner = "Partner"
+}
+
+/**
+ * The Application API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ApplicationRequest extends BaseEventRequest {
+  application?: Application;
+  role?: ApplicationRole;
+  sourceApplicationId?: UUID;
+}
+
+/**
+ * Lambda search response
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchResponse {
+  lambdas?: Array<Lambda>;
+  total?: number;
+}
+
+/**
+ * Identity Provider response.
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchResponse {
+  identityProviders?: Array<BaseIdentityProvider<any>>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface Form {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  steps?: Array<FormStep>;
+  type?: FormType;
+}
+
+/**
+ * Models the User Created Registration Event.
+ * <p>
+ * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made
+ * transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationCreateCompleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * Email template request.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EmailTemplateRequest {
+  emailTemplate?: EmailTemplate;
+}
+
+/**
+ * Login API request object.
+ *
+ * @author Seth Musselman
+ */
+export interface LoginRequest extends BaseLoginRequest {
+  loginId?: string;
+  oneTimePassword?: string;
+  password?: string;
+  twoFactorTrustId?: string;
+}
+
+/**
+ * Search request for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchRequest {
+  search?: EntityTypeSearchCriteria;
+}
+
+/**
+ * Model a user event when a two-factor method has been removed.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorMethodAddEvent extends BaseEvent {
+  method?: TwoFactorMethod;
+  user?: User;
+}
+
+/**
+ * Models the User Password Breach Event.
+ *
+ * @author Matthew Altman
+ */
+export interface UserPasswordBreachEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ExternalIdentifierConfiguration {
+  authorizationGrantIdTimeToLiveInSeconds?: number;
+  changePasswordIdGenerator?: SecureGeneratorConfiguration;
+  changePasswordIdTimeToLiveInSeconds?: number;
+  deviceCodeTimeToLiveInSeconds?: number;
+  deviceUserCodeIdGenerator?: SecureGeneratorConfiguration;
+  emailVerificationIdGenerator?: SecureGeneratorConfiguration;
+  emailVerificationIdTimeToLiveInSeconds?: number;
+  emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
+  externalAuthenticationIdTimeToLiveInSeconds?: number;
+  oneTimePasswordTimeToLiveInSeconds?: number;
+  passwordlessLoginGenerator?: SecureGeneratorConfiguration;
+  passwordlessLoginTimeToLiveInSeconds?: number;
+  pendingAccountLinkTimeToLiveInSeconds?: number;
+  registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
+  registrationVerificationIdTimeToLiveInSeconds?: number;
+  registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
+  rememberOAuthScopeConsentChoiceTimeToLiveInSeconds?: number;
+  samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
+  setupPasswordIdGenerator?: SecureGeneratorConfiguration;
+  setupPasswordIdTimeToLiveInSeconds?: number;
+  trustTokenTimeToLiveInSeconds?: number;
+  twoFactorIdTimeToLiveInSeconds?: number;
+  twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
+  twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
+  twoFactorTrustIdTimeToLiveInSeconds?: number;
+  webAuthnAuthenticationChallengeTimeToLiveInSeconds?: number;
+  webAuthnRegistrationChallengeTimeToLiveInSeconds?: number;
+}
+
+/**
+ * Status for content like usernames, profile attributes, etc.
+ *
+ * @author Brian Pontarelli
+ */
+export enum ContentStatus {
+  ACTIVE = "ACTIVE",
+  PENDING = "PENDING",
+  REJECTED = "REJECTED"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReloadRequest {
+  names?: Array<string>;
+}
+
+/**
+ * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SupportsPostBindings {
+}
+
+/**
+ * Interface describing the need for CORS configuration.
+ *
+ * @author Daniel DeGroff
+ */
+export interface RequiresCORSConfiguration {
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface XboxApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Models a generic connector.
+ *
+ * @author Trevor Smith
+ */
+export interface GenericConnectorConfiguration extends BaseConnectorConfiguration {
+  authenticationURL?: string;
+  connectTimeout?: number;
+  headers?: HTTPHeaders;
+  httpAuthenticationPassword?: string;
+  httpAuthenticationUsername?: string;
+  readTimeout?: number;
+  sslCertificateKeyId?: UUID;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export enum ReactorFeatureStatus {
+  ACTIVE = "ACTIVE",
+  DISCONNECTED = "DISCONNECTED",
+  PENDING = "PENDING",
+  DISABLED = "DISABLED",
+  UNKNOWN = "UNKNOWN"
+}
+
+/**
+ * Twitch gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface TwitchIdentityProvider extends BaseIdentityProvider<TwitchApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormDataType {
+  bool = "bool",
+  consent = "consent",
+  date = "date",
+  email = "email",
+  number = "number",
+  string = "string"
+}
+
+/**
+ * Request for managing FusionAuth Reactor and licenses.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ReactorRequest {
+  license?: string;
+  licenseId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorMethod {
+  authenticator?: AuthenticatorConfiguration;
+  email?: string;
+  id?: string;
+  lastUsed?: boolean;
+  method?: string;
+  mobilePhone?: string;
+  secret?: string;
+}
+
+/**
+ * Registration API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RegistrationRequest extends BaseEventRequest {
+  disableDomainBlock?: boolean;
+  generateAuthenticationToken?: boolean;
+  registration?: UserRegistration;
+  sendSetPasswordEmail?: boolean;
+  skipRegistrationVerification?: boolean;
+  skipVerification?: boolean;
+  user?: User;
+}
+
+/**
+ * Supply additional information about the Relying Party when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialRelyingPartyEntity extends PublicKeyCredentialEntity {
+  id?: string;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchResponse {
+  grants?: Array<EntityGrant>;
+  total?: number;
+}
+
+/**
+ * Key search response
+ *
+ * @author Spencer Witt
+ */
+export interface KeySearchResponse {
+  keys?: Array<Key>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ValidateResponse {
+  jwt?: JWT;
+}
+
+/**
+ * API response for managing families and members.
+ *
+ * @author Brian Pontarelli
+ */
+export interface FamilyResponse {
+  families?: Array<Family>;
+  family?: Family;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SystemLogsExportRequest extends BaseExportRequest {
+  includeArchived?: boolean;
+  lastNBytes?: number;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface EventLogSearchRequest {
+  search?: EventLogSearchCriteria;
+}
+
+/**
+ * Models the user action Event.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionEvent extends BaseEvent {
+  action?: string;
+  actioneeUserId?: UUID;
+  actionerUserId?: UUID;
+  actionId?: UUID;
+  applicationIds?: Array<UUID>;
+  comment?: string;
+  email?: Email;
+  emailedUser?: boolean;
+  expiry?: number;
+  localizedAction?: string;
+  localizedDuration?: string;
+  localizedOption?: string;
+  localizedReason?: string;
+  notifyUser?: boolean;
+  option?: string;
+  phase?: UserActionPhase;
+  reason?: string;
+  reasonCode?: string;
+}
+
+/**
+ * Models the User Bulk Create Event.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserBulkCreateEvent extends BaseEvent {
+  users?: Array<User>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderStartLoginResponse {
+  code?: string;
+}
+
+/**
+ * API response for completing WebAuthn credential registration or assertion
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterCompleteResponse {
+  credential?: WebAuthnCredential;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorEnableDisableSendRequest {
+  email?: string;
+  method?: string;
+  methodId?: string;
+  mobilePhone?: string;
+}
+
+/**
+ * User API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserResponse {
+  emailVerificationId?: string;
+  emailVerificationOneTimeCode?: string;
+  registrationVerificationIds?: Record<UUID, string>;
+  registrationVerificationOneTimeCodes?: Record<UUID, string>;
+  token?: string;
+  tokenExpirationInstant?: number;
+  user?: User;
+}
+
+/**
+ * Application search response
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchResponse extends ExpandableResponse {
+  applications?: Array<Application>;
+  total?: number;
+}
+
+export interface UIConfiguration {
+  headerColor?: string;
+  logoURL?: string;
+  menuFontColor?: string;
+}
+
+/**
+ * Type for webhook headers.
+ *
+ * @author Brian Pontarelli
+ */
+export interface HTTPHeaders extends Record<string, string> {
+}
+
+/**
+ * Search criteria for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * A marker interface indicating this event is not scoped to a tenant and will be sent to all webhooks.
+ *
+ * @author Daniel DeGroff
+ */
+export interface InstanceEvent extends NonTransactionalEvent {
 }
 
 /**
@@ -5525,16 +8396,2137 @@ export interface GroupSearchRequest {
   search?: GroupSearchCriteria;
 }
 
-export enum KeyAlgorithm {
+/**
+ * Models the User Create Registration Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationCreateEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * The IdP behavior when no user link has been made yet.
+ *
+ * @author Daniel DeGroff
+ */
+export enum IdentityProviderLinkingStrategy {
+  CreatePendingLink = "CreatePendingLink",
+  Disabled = "Disabled",
+  LinkAnonymously = "LinkAnonymously",
+  LinkByEmail = "LinkByEmail",
+  LinkByEmailForExistingUser = "LinkByEmailForExistingUser",
+  LinkByUsername = "LinkByUsername",
+  LinkByUsernameForExistingUser = "LinkByUsernameForExistingUser",
+  Unsupported = "Unsupported"
+}
+
+/**
+ * The Integration Request
+ *
+ * @author Daniel DeGroff
+ */
+export interface IntegrationRequest {
+  integrations?: Integrations;
+}
+
+/**
+ * A User's membership into a Group
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMember {
+  data?: Record<string, any>;
+  groupId?: UUID;
+  id?: UUID;
+  insertInstant?: number;
+  user?: User;
+  userId?: UUID;
+}
+
+export interface LoginConfiguration {
+  allowTokenRefresh?: boolean;
+  generateRefreshTokens?: boolean;
+  requireAuthentication?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ExternalJWTApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+}
+
+/**
+ * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
+ * for a third-party application.
+ *
+ * @author Spencer Witt
+ */
+export enum OAuthScopeConsentMode {
+  AlwaysPrompt = "AlwaysPrompt",
+  RememberDecision = "RememberDecision",
+  NeverPrompt = "NeverPrompt"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FormField {
+  confirm?: boolean;
+  consentId?: UUID;
+  control?: FormControl;
+  data?: Record<string, any>;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  key?: string;
+  lastUpdateInstant?: number;
+  name?: string;
+  options?: Array<string>;
+  required?: boolean;
+  type?: FormDataType;
+  validator?: FormFieldValidator;
+}
+
+/**
+ * Search criteria for Applications
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+  state?: ObjectState;
+  tenantId?: UUID;
+}
+
+/**
+ * COSE key type
+ *
+ * @author Spencer Witt
+ */
+export enum CoseKeyType {
+  Reserved = "0",
+  OKP = "1",
+  EC2 = "2",
+  RSA = "3",
+  Symmetric = "4"
+}
+
+/**
+ * Models the User Identity Provider Link Event.
+ *
+ * @author Rob Davis
+ */
+export interface UserIdentityProviderLinkEvent extends BaseEvent {
+  identityProviderLink?: IdentityProviderLink;
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RefreshTokenSlidingWindowConfiguration {
+  maximumTimeToLiveInMinutes?: number;
+}
+
+/**
+ * Lambda API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LambdaResponse {
+  lambda?: Lambda;
+  lambdas?: Array<Lambda>;
+}
+
+/**
+ * This class is an abstraction of a simple email message.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Email {
+  attachments?: Array<Attachment>;
+  bcc?: Array<EmailAddress>;
+  cc?: Array<EmailAddress>;
+  from?: EmailAddress;
+  html?: string;
+  replyTo?: EmailAddress;
+  subject?: string;
+  text?: string;
+  to?: Array<EmailAddress>;
+}
+
+/**
+ * Models content user action options.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserActionOption {
+  localizedNames?: LocalizedStrings;
+  name?: string;
+}
+
+/**
+ * Policy for handling unknown OAuth scopes in the request
+ *
+ * @author Spencer Witt
+ */
+export enum UnknownScopePolicy {
+  Allow = "Allow",
+  Remove = "Remove",
+  Reject = "Reject"
+}
+
+/**
+ * User registration information for a single application.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserRegistration {
+  applicationId?: UUID;
+  authenticationToken?: string;
+  cleanSpeakId?: UUID;
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  lastUpdateInstant?: number;
+  preferredLanguages?: Array<string>;
+  roles?: Array<string>;
+  timezone?: string;
+  tokens?: Record<string, string>;
+  username?: string;
+  usernameStatus?: ContentStatus;
+  verified?: boolean;
+  verifiedInstant?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum SecureGeneratorType {
+  randomDigits = "randomDigits",
+  randomBytes = "randomBytes",
+  randomAlpha = "randomAlpha",
+  randomAlphaNumeric = "randomAlphaNumeric"
+}
+
+/**
+ * XML canonicalization method enumeration. This is used for the IdP and SP side of FusionAuth SAML.
+ *
+ * @author Brian Pontarelli
+ */
+export enum CanonicalizationMethod {
+  exclusive = "exclusive",
+  exclusive_with_comments = "exclusive_with_comments",
+  inclusive = "inclusive",
+  inclusive_with_comments = "inclusive_with_comments"
+}
+
+/**
+ * Models a consent.
+ *
+ * @author Daniel DeGroff
+ */
+export interface Consent {
+  consentEmailTemplateId?: UUID;
+  countryMinimumAgeForSelfConsent?: LocalizedIntegers;
+  data?: Record<string, any>;
+  defaultMinimumAgeForSelfConsent?: number;
+  emailPlus?: EmailPlus;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  multipleValuesAllowed?: boolean;
+  name?: string;
+  values?: Array<string>;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum ClientAuthenticationPolicy {
+  Required = "Required",
+  NotRequired = "NotRequired",
+  NotRequiredWhenUsingPKCE = "NotRequiredWhenUsingPKCE"
+}
+
+/**
+ * Models the Group Member Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberUpdateEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * User API delete request object for a single user.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserDeleteSingleRequest extends BaseEventRequest {
+  hardDelete?: boolean;
+}
+
+/**
+ * Entity Type API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeResponse {
+  entityType?: EntityType;
+  entityTypes?: Array<EntityType>;
+  permission?: EntityTypePermission;
+}
+
+/**
+ * @author Trevor Smith
+ */
+export interface CORSConfiguration extends Enableable {
+  allowCredentials?: boolean;
+  allowedHeaders?: Array<string>;
+  allowedMethods?: Array<HTTPMethod>;
+  allowedOrigins?: Array<string>;
+  debug?: boolean;
+  exposedHeaders?: Array<string>;
+  preflightMaxAgeInSeconds?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationWebAuthnWorkflowConfiguration extends Enableable {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface AuditLogExportRequest extends BaseExportRequest {
+  criteria?: AuditLogSearchCriteria;
+}
+
+/**
+ * Search criteria for Email templates
+ *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchCriteria extends BaseSearchCriteria {
+  name?: string;
+}
+
+export enum EmailSecurityType {
+  NONE = "NONE",
+  SSL = "SSL",
+  TLS = "TLS"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface TwoFactorStartRequest {
+  applicationId?: UUID;
+  code?: string;
+  loginId?: string;
+  state?: Record<string, any>;
+  trustChallenge?: string;
+  userId?: UUID;
+}
+
+/**
+ * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredential {
+  algorithm?: CoseAlgorithmIdentifier;
+  attestationType?: AttestationType;
+  authenticatorSupportsUserVerification?: boolean;
+  credentialId?: string;
+  data?: Record<string, any>;
+  discoverable?: boolean;
+  displayName?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUseInstant?: number;
+  name?: string;
+  publicKey?: string;
+  relyingPartyId?: string;
+  signCount?: number;
+  tenantId?: UUID;
+  transports?: Array<string>;
+  userAgent?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantUsernameConfiguration {
+  unique?: UniqueUsernameConfiguration;
+}
+
+/**
+ * SAML v2 IdP Initiated identity provider configuration.
+ *
+ * @author Daniel DeGroff
+ */
+export interface SAMLv2IdPInitiatedIdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2IdPInitiatedApplicationConfiguration> {
+  issuer?: string;
+}
+
+/**
+ * Stores an message template used to distribute messages;
+ *
+ * @author Michael Sleevi
+ */
+export interface MessageTemplate {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  type?: MessageType;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface SAMLv2ApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonImageURL?: string;
+  buttonText?: string;
+}
+
+/**
+ * Models the User Deleted Registration Event.
+ * <p>
+ * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationDeleteCompleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface JWTVendRequest {
+  claims?: Record<string, any>;
+  keyId?: UUID;
+  timeToLiveInSeconds?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SecureGeneratorConfiguration {
+  length?: number;
+  type?: SecureGeneratorType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderResponse {
+  identityProvider?: BaseIdentityProvider<any>;
+  identityProviders?: Array<BaseIdentityProvider<any>>;
+}
+
+export interface SAMLv2Configuration extends Enableable {
+  assertionEncryptionConfiguration?: SAMLv2AssertionEncryptionConfiguration;
+  audience?: string;
+  authorizedRedirectURLs?: Array<string>;
+  callbackURL?: string;
+  debug?: boolean;
+  defaultVerificationKeyId?: UUID;
+  initiatedLogin?: SAMLv2IdPInitiatedLoginConfiguration;
+  issuer?: string;
+  keyId?: UUID;
+  loginHintConfiguration?: LoginHintConfiguration;
+  logout?: SAMLv2Logout;
+  logoutURL?: string;
+  requireSignedRequests?: boolean;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+  xmlSignatureLocation?: XMLSignatureLocation;
+}
+
+/**
+ * Request to authenticate with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnPublicKeyAuthenticationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: WebAuthnAuthenticatorAuthenticationResponse;
+  rpId?: string;
+  type?: string;
+}
+
+/**
+ * Search request for entities
+ *
+ * @author Brett Guy
+ */
+export interface EntitySearchRequest {
+  search?: EntitySearchCriteria;
+}
+
+/**
+ * API request for sending out family requests to parent's.
+ *
+ * @author Brian Pontarelli
+ */
+export interface FamilyEmailRequest {
+  parentEmail?: string;
+}
+
+/**
+ * Nintendo gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  emailClaim?: string;
+  scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
+}
+
+/**
+ * Search request for Group Members.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberSearchRequest {
+  search?: GroupMemberSearchCriteria;
+}
+
+/**
+ * Search criteria for Group Members
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberSearchCriteria extends BaseSearchCriteria {
+  groupId?: UUID;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * The FormField API request object.
+ *
+ * @author Brett Guy
+ */
+export interface FormFieldRequest {
+  field?: FormField;
+  fields?: Array<FormField>;
+}
+
+/**
+ * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
+ * token, a user or an entire application.
+ *
+ * @author Brian Pontarelli
+ */
+export interface JWTPublicKeyUpdateEvent extends BaseEvent {
+  applicationIds?: Array<UUID>;
+}
+
+/**
+ * Models the Refresh Token Revoke Event. This event might be for a single token, a user
+ * or an entire application.
+ *
+ * @author Brian Pontarelli
+ */
+export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
+  applicationId?: UUID;
+  applicationTimeToLiveInSeconds?: Record<UUID, number>;
+  refreshToken?: RefreshToken;
+  user?: User;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface PendingIdPLink {
+  displayName?: string;
+  email?: string;
+  identityProviderId?: UUID;
+  identityProviderLinks?: Array<IdentityProviderLink>;
+  identityProviderName?: string;
+  identityProviderTenantConfiguration?: IdentityProviderTenantConfiguration;
+  identityProviderType?: IdentityProviderType;
+  identityProviderUserId?: string;
+  user?: User;
+  username?: string;
+}
+
+/**
+ * JWT Public Key Response Object
+ *
+ * @author Daniel DeGroff
+ */
+export interface PublicKeyResponse {
+  publicKey?: string;
+  publicKeys?: Record<string, string>;
+}
+
+/**
+ * A marker interface indicating this event cannot be made transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface NonTransactionalEvent {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SendResponse {
+  anonymousResults?: Record<string, EmailTemplateErrors>;
+  results?: Record<UUID, EmailTemplateErrors>;
+}
+
+export interface MultiFactorSMSTemplate {
+  templateId?: UUID;
+}
+
+export interface APIKeyMetaData {
+  attributes?: Record<string, string>;
+}
+
+/**
+ * Models a set of localized Strings that can be stored as JSON.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LocalizedStrings extends Record<string, string> {
+}
+
+/**
+ * Search criteria for Lambdas
+ *
+ * @author Mark Manes
+ */
+export interface LambdaSearchCriteria extends BaseSearchCriteria {
+  body?: string;
+  name?: string;
+  type?: LambdaType;
+}
+
+/**
+ * Search criteria for webhooks.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchCriteria extends BaseSearchCriteria {
+  description?: string;
+  tenantId?: UUID;
+  url?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum ObjectState {
+  Active = "Active",
+  Inactive = "Inactive",
+  PendingDelete = "PendingDelete"
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface IPAccessControlList {
+  data?: Record<string, any>;
+  entries?: Array<IPAccessControlEntry>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+}
+
+/**
+ * Key API request object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface KeyRequest {
+  key?: Key;
+}
+
+/**
+ * Available JSON Web Algorithms (JWA) as described in RFC 7518 available for this JWT implementation.
+ *
+ * @author Daniel DeGroff
+ */
+export enum Algorithm {
   ES256 = "ES256",
   ES384 = "ES384",
   ES512 = "ES512",
   HS256 = "HS256",
   HS384 = "HS384",
   HS512 = "HS512",
+  PS256 = "PS256",
+  PS384 = "PS384",
+  PS512 = "PS512",
   RS256 = "RS256",
   RS384 = "RS384",
-  RS512 = "RS512"
+  RS512 = "RS512",
+  none = "none"
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum MessengerType {
+  Generic = "Generic",
+  Kafka = "Kafka",
+  Twilio = "Twilio"
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface NintendoApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  emailClaim?: string;
+  scope?: string;
+  uniqueIdClaim?: string;
+  usernameClaim?: string;
+}
+
+/**
+ * Forgot password response object.
+ *
+ * @author Daniel DeGroff
+ */
+export interface ForgotPasswordResponse {
+  changePasswordId?: string;
+}
+
+/**
+ * Registration API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RegistrationResponse {
+  refreshToken?: string;
+  registration?: UserRegistration;
+  registrationVerificationId?: string;
+  registrationVerificationOneTimeCode?: string;
+  token?: string;
+  tokenExpirationInstant?: number;
+  user?: User;
+}
+
+/**
+ * Search request for webhooks
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchRequest {
+  search?: WebhookSearchCriteria;
+}
+
+/**
+ * Describes a user account or WebAuthn Relying Party associated with a public key credential
+ */
+export interface PublicKeyCredentialEntity {
+  name?: string;
+}
+
+/**
+ * A JSON Web Key as defined by <a href="https://tools.ietf.org/html/rfc7517#section-4">RFC 7517 JSON Web Key (JWK)
+ * Section 4</a> and <a href="https://tools.ietf.org/html/rfc7518">RFC 7518 JSON Web Algorithms (JWA)</a>.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JSONWebKey {
+  alg?: Algorithm;
+  crv?: string;
+  d?: string;
+  dp?: string;
+  dq?: string;
+  e?: string;
+  kid?: string;
+  kty?: KeyType;
+  n?: string;
+  [other: string]: any; // Any other fields
+  p?: string;
+  q?: string;
+  qi?: string;
+  use?: string;
+  x?: string;
+  x5c?: Array<string>;
+  x5t?: string;
+  x5t_S256?: string;
+  y?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyEmailResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
+ *
+ * @author Spencer Witt
+ */
+export enum AttestationType {
+  basic = "basic",
+  self = "self",
+  attestationCa = "attestationCa",
+  anonymizationCa = "anonymizationCa",
+  none = "none"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationExternalIdentifierConfiguration {
+  twoFactorTrustIdTimeToLiveInSeconds?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorConfiguration {
+  methods?: Array<TwoFactorMethod>;
+  recoveryCodes?: Array<string>;
+}
+
+/**
+ * API request for managing families and members.
+ *
+ * @author Brian Pontarelli
+ */
+export interface FamilyRequest {
+  familyMember?: FamilyMember;
+}
+
+/**
+ * The phases of a time-based user action.
+ *
+ * @author Brian Pontarelli
+ */
+export enum UserActionPhase {
+  start = "start",
+  modify = "modify",
+  cancel = "cancel",
+  end = "end"
+}
+
+/**
+ * Steam gaming login provider.
+ *
+ * @author Brett Pontarelli
+ */
+export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplicationConfiguration> {
+  apiMode?: SteamAPIMode;
+  buttonText?: string;
+  client_id?: string;
+  scope?: string;
+  webAPIKey?: string;
+}
+
+/**
+ * User API bulk response object.
+ *
+ * @author Trevor Smith
+ */
+export interface UserDeleteResponse {
+  dryRun?: boolean;
+  hardDelete?: boolean;
+  total?: number;
+  userIds?: Array<UUID>;
+}
+
+/**
+ * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
+ * delete).
+ * <p>
+ * This is different than user.delete because it is sent after the tx is committed, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserDeleteCompleteEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum FormType {
+  registration = "registration",
+  adminRegistration = "adminRegistration",
+  adminUser = "adminUser",
+  selfServiceUser = "selfServiceUser"
+}
+
+/**
+ * Domain for a public key, key pair or an HMAC secret. This is used by KeyMaster to manage keys for JWTs, SAML, etc.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Key {
+  algorithm?: KeyAlgorithm;
+  certificate?: string;
+  certificateInformation?: CertificateInformation;
+  expirationInstant?: number;
+  hasPrivateKey?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  issuer?: string;
+  kid?: string;
+  lastUpdateInstant?: number;
+  length?: number;
+  name?: string;
+  privateKey?: string;
+  publicKey?: string;
+  secret?: string;
+  type?: KeyType;
+}
+
+/**
+ * API request to import an existing WebAuthn credential(s)
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnCredentialImportRequest {
+  credentials?: Array<WebAuthnCredential>;
+  validateDbConstraints?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface EmailUnverifiedOptions {
+  allowEmailChangeWhenGated?: boolean;
+  behavior?: UnverifiedBehavior;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorRecoveryCodeResponse {
+  recoveryCodes?: Array<string>;
+}
+
+/**
+ * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FailedAuthenticationConfiguration {
+  actionCancelPolicy?: FailedAuthenticationActionCancelPolicy;
+  actionDuration?: number;
+  actionDurationUnit?: ExpiryUnit;
+  emailUser?: boolean;
+  resetCountInSeconds?: number;
+  tooManyAttempts?: number;
+  userActionId?: UUID;
+}
+
+/**
+ * Models an event where a user's email is updated outside of a forgot / change password workflow.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserEmailUpdateEvent extends BaseEvent {
+  previousEmail?: string;
+  user?: User;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface EventConfiguration {
+  events?: Record<EventType, EventConfigurationData>;
+}
+
+/**
+ * Audit log response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface AuditLogSearchResponse {
+  auditLogs?: Array<AuditLog>;
+  total?: number;
+}
+
+export enum KeyType {
+  EC = "EC",
+  RSA = "RSA",
+  HMAC = "HMAC"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyEmailRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  userId?: UUID;
+  verificationId?: string;
+}
+
+/**
+ * Group Member Request
+ *
+ * @author Daniel DeGroff
+ */
+export interface MemberRequest {
+  members?: Record<UUID, Array<GroupMember>>;
+}
+
+export interface TenantOAuth2Configuration {
+  clientCredentialsAccessTokenPopulateLambdaId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserinfoResponse extends Record<string, any> {
+}
+
+/**
+ * Container for the event information. This is the JSON that is sent from FusionAuth to webhooks.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EventRequest {
+  event?: BaseEvent;
+}
+
+/**
+ * The application's relationship to the authorization server. First-party applications will be granted implicit permission for requested scopes.
+ * Third-party applications will use the {@link OAuthScopeConsentMode} policy.
+ *
+ * @author Spencer Witt
+ */
+export enum OAuthApplicationRelationship {
+  FirstParty = "FirstParty",
+  ThirdParty = "ThirdParty"
+}
+
+/**
+ * Form field response.
+ *
+ * @author Brett Guy
+ */
+export interface FormFieldResponse {
+  field?: FormField;
+  fields?: Array<FormField>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum SystemTrustedProxyConfigurationPolicy {
+  All = "All",
+  OnlyConfigured = "OnlyConfigured"
+}
+
+/**
+ * Interface for any object that can provide JSON Web key Information.
+ */
+export interface JSONWebKeyInfoProvider {
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface Count {
+  count?: number;
+  interval?: number;
+}
+
+/**
+ * The <i>authenticator's</i> response for the registration ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnAuthenticatorRegistrationResponse {
+  attestationObject?: string;
+  clientDataJSON?: string;
+}
+
+/**
+ * Search criteria for user comments.
+ *
+ * @author Spencer Witt
+ */
+export interface UserCommentSearchCriteria extends BaseSearchCriteria {
+  comment?: string;
+  commenterId?: UUID;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+/**
+ * Available Integrations
+ *
+ * @author Daniel DeGroff
+ */
+export interface Integrations {
+  cleanspeak?: CleanSpeakConfiguration;
+  kafka?: KafkaConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ReactorMetricsResponse {
+  metrics?: ReactorMetrics;
+}
+
+/**
+ * Search results.
+ *
+ * @author Brian Pontarelli
+ */
+export interface SearchResults<T> {
+  nextResults?: string;
+  results?: Array<T>;
+  total?: number;
+  totalEqualToActual?: boolean;
+}
+
+/**
+ * The user action response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ActionResponse {
+  action?: UserActionLog;
+  actions?: Array<UserActionLog>;
+}
+
+export interface EmailTemplateErrors {
+  parseErrors?: Record<string, string>;
+  renderErrors?: Record<string, string>;
+}
+
+/**
+ * Models the User Create Event.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserCreateEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * Event Log Type
+ *
+ * @author Daniel DeGroff
+ */
+export enum EventLogType {
+  Information = "Information",
+  Debug = "Debug",
+  Error = "Error"
+}
+
+/**
+ * Models the User Delete Registration Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationDeleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateResponse {
+  messageTemplate?: MessageTemplate;
+  messageTemplates?: Array<MessageTemplate>;
+}
+
+export interface SAMLv2Logout {
+  behavior?: SAMLLogoutBehavior;
+  defaultVerificationKeyId?: UUID;
+  keyId?: UUID;
+  requireSignedRequests?: boolean;
+  singleLogout?: SAMLv2SingleLogout;
+  xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface SonyPSNApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface PreviewRequest {
+  emailTemplate?: EmailTemplate;
+  locale?: string;
+}
+
+export interface LoginRecordConfiguration {
+  delete?: DeleteConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorStartResponse {
+  code?: string;
+  methods?: Array<TwoFactorMethod>;
+  twoFactorId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SecretResponse {
+  secret?: string;
+  secretBase32Encoded?: string;
+}
+
+/**
+ * The summary of the action that is preventing login to be returned on the login response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface LoginPreventedResponse {
+  actionerUserId?: UUID;
+  actionId?: UUID;
+  expiry?: number;
+  localizedName?: string;
+  localizedOption?: string;
+  localizedReason?: string;
+  name?: string;
+  option?: string;
+  reason?: string;
+  reasonCode?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderPendingLinkResponse {
+  identityProviderTenantConfiguration?: IdentityProviderTenantConfiguration;
+  linkCount?: number;
+  pendingIdPLink?: PendingIdPLink;
+}
+
+/**
+ * Login API request object used for login to third-party systems (i.e. Login with Facebook).
+ *
+ * @author Brian Pontarelli
+ */
+export interface IdentityProviderLoginRequest extends BaseLoginRequest {
+  data?: Record<string, string>;
+  encodedJWT?: string;
+  identityProviderId?: UUID;
+  noLink?: boolean;
+}
+
+export interface MultiFactorAuthenticatorMethod extends Enableable {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
+/**
+ * Search request for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchRequest {
+  search?: EntityGrantSearchCriteria;
+}
+
+/**
+ * Search response for Groups
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupSearchResponse {
+  groups?: Array<Group>;
+  total?: number;
+}
+
+/**
+ * Search criteria for entity grants.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrantSearchCriteria extends BaseSearchCriteria {
+  entityId?: UUID;
+  name?: string;
+  userId?: UUID;
+}
+
+/**
+ * User API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserRequest extends BaseEventRequest {
+  applicationId?: UUID;
+  currentPassword?: string;
+  disableDomainBlock?: boolean;
+  sendSetPasswordEmail?: boolean;
+  skipVerification?: boolean;
+  user?: User;
+}
+
+/**
+ * OpenID Connect Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
+ * Provider Metadata</a>.
+ *
+ * @author Daniel DeGroff
+ */
+export interface OpenIdConfiguration {
+  authorization_endpoint?: string;
+  backchannel_logout_supported?: boolean;
+  claims_supported?: Array<string>;
+  device_authorization_endpoint?: string;
+  end_session_endpoint?: string;
+  frontchannel_logout_supported?: boolean;
+  grant_types_supported?: Array<string>;
+  id_token_signing_alg_values_supported?: Array<string>;
+  issuer?: string;
+  jwks_uri?: string;
+  response_modes_supported?: Array<string>;
+  response_types_supported?: Array<string>;
+  scopes_supported?: Array<string>;
+  subject_types_supported?: Array<string>;
+  token_endpoint?: string;
+  token_endpoint_auth_methods_supported?: Array<string>;
+  userinfo_endpoint?: string;
+  userinfo_signing_alg_values_supported?: Array<string>;
+}
+
+/**
+ * A Application-level policy for deleting Users.
+ *
+ * @author Trevor Smith
+ */
+export interface ApplicationRegistrationDeletePolicy {
+  unverified?: TimeBasedDeletePolicy;
+}
+
+/**
+ * Response for the daily active user report.
+ *
+ * @author Brian Pontarelli
+ */
+export interface DailyActiveUserReportResponse {
+  dailyActiveUsers?: Array<Count>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface FormStep {
+  fields?: Array<UUID>;
+}
+
+/**
+ * Webhook API response object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface WebhookResponse {
+  webhook?: Webhook;
+  webhooks?: Array<Webhook>;
+}
+
+/**
+ * Search criteria for Identity Providers.
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
+  applicationId?: UUID;
+  name?: string;
+  type?: IdentityProviderType;
+}
+
+/**
+ * @author Mikey Sleevi
+ */
+export enum MessageType {
+  SMS = "SMS"
+}
+
+/**
+ * Models the Group Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupUpdateCompleteEvent extends BaseEvent {
+  group?: Group;
+  original?: Group;
+}
+
+/**
+ * @author Brett Guy
+ */
+export enum IPAccessControlEntryAction {
+  Allow = "Allow",
+  Block = "Block"
+}
+
+export interface EmailPlus extends Enableable {
+  emailTemplateId?: UUID;
+  maximumTimeToSendEmailInHours?: number;
+  minimumTimeToSendEmailInHours?: number;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export enum ExpiryUnit {
+  MINUTES = "MINUTES",
+  HOURS = "HOURS",
+  DAYS = "DAYS",
+  WEEKS = "WEEKS",
+  MONTHS = "MONTHS",
+  YEARS = "YEARS"
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2AssertionConfiguration {
+  destination?: SAMLv2DestinationAssertionConfiguration;
+}
+
+/**
+ * Location information. Useful for IP addresses and other displayable data objects.
+ *
+ * @author Brian Pontarelli
+ */
+export interface Location {
+  city?: string;
+  country?: string;
+  displayString?: string;
+  latitude?: number;
+  longitude?: number;
+  region?: string;
+  zipcode?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantFormConfiguration {
+  adminUserFormId?: UUID;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface MessengerRequest {
+  messenger?: BaseMessengerConfiguration;
+}
+
+/**
+ * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialRequestOptions {
+  allowCredentials?: Array<PublicKeyCredentialDescriptor>;
+  challenge?: string;
+  rpId?: string;
+  timeout?: number;
+  userVerification?: UserVerificationRequirement;
+}
+
+/**
+ * Authentication key response object.
+ *
+ * @author Sanjay
+ */
+export interface APIKeyResponse {
+  apiKey?: APIKey;
+}
+
+/**
+ * Models the event types that FusionAuth produces.
+ *
+ * @author Brian Pontarelli
+ */
+export enum EventType {
+  JWTPublicKeyUpdate = "jwt.public-key.update",
+  JWTRefreshTokenRevoke = "jwt.refresh-token.revoke",
+  JWTRefresh = "jwt.refresh",
+  AuditLogCreate = "audit-log.create",
+  EventLogCreate = "event-log.create",
+  KickstartSuccess = "kickstart.success",
+  GroupCreate = "group.create",
+  GroupCreateComplete = "group.create.complete",
+  GroupDelete = "group.delete",
+  GroupDeleteComplete = "group.delete.complete",
+  GroupMemberAdd = "group.member.add",
+  GroupMemberAddComplete = "group.member.add.complete",
+  GroupMemberRemove = "group.member.remove",
+  GroupMemberRemoveComplete = "group.member.remove.complete",
+  GroupMemberUpdate = "group.member.update",
+  GroupMemberUpdateComplete = "group.member.update.complete",
+  GroupUpdate = "group.update",
+  GroupUpdateComplete = "group.update.complete",
+  UserAction = "user.action",
+  UserBulkCreate = "user.bulk.create",
+  UserCreate = "user.create",
+  UserCreateComplete = "user.create.complete",
+  UserDeactivate = "user.deactivate",
+  UserDelete = "user.delete",
+  UserDeleteComplete = "user.delete.complete",
+  UserEmailUpdate = "user.email.update",
+  UserEmailVerified = "user.email.verified",
+  UserIdentityProviderLink = "user.identity-provider.link",
+  UserIdentityProviderUnlink = "user.identity-provider.unlink",
+  UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
+  UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
+  UserLoginFailed = "user.login.failed",
+  UserLoginNewDevice = "user.login.new-device",
+  UserLoginSuccess = "user.login.success",
+  UserLoginSuspicious = "user.login.suspicious",
+  UserPasswordBreach = "user.password.breach",
+  UserPasswordResetSend = "user.password.reset.send",
+  UserPasswordResetStart = "user.password.reset.start",
+  UserPasswordResetSuccess = "user.password.reset.success",
+  UserPasswordUpdate = "user.password.update",
+  UserReactivate = "user.reactivate",
+  UserRegistrationCreate = "user.registration.create",
+  UserRegistrationCreateComplete = "user.registration.create.complete",
+  UserRegistrationDelete = "user.registration.delete",
+  UserRegistrationDeleteComplete = "user.registration.delete.complete",
+  UserRegistrationUpdate = "user.registration.update",
+  UserRegistrationUpdateComplete = "user.registration.update.complete",
+  UserRegistrationVerified = "user.registration.verified",
+  UserTwoFactorMethodAdd = "user.two-factor.method.add",
+  UserTwoFactorMethodRemove = "user.two-factor.method.remove",
+  UserUpdate = "user.update",
+  UserUpdateComplete = "user.update.complete",
+  Test = "test"
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends BaseIdentityProvider<D> {
+  emailClaim?: string;
+  keyId?: UUID;
+  uniqueIdClaim?: string;
+  useNameIdForEmail?: boolean;
+  usernameClaim?: string;
+}
+
+export enum BreachMatchMode {
+  Low = "Low",
+  Medium = "Medium",
+  High = "High"
+}
+
+/**
+ * This class contains the managed fields that are also put into the database during FusionAuth setup.
+ * <p>
+ * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
+ * Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
+ *
+ * @author Brian Pontarelli
+ */
+export interface ManagedFields {
+}
+
+/**
+ * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnAuthenticatorAuthenticationResponse {
+  authenticatorData?: string;
+  clientDataJSON?: string;
+  signature?: string;
+  userHandle?: string;
+}
+
+/**
+ * Theme API request object.
+ *
+ * @author Trevor Smith
+ */
+export interface ThemeRequest {
+  sourceThemeId?: UUID;
+  theme?: Theme;
+}
+
+/**
+ * The transaction types for Webhooks and other event systems within FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
+export enum TransactionType {
+  None = "None",
+  Any = "Any",
+  SimpleMajority = "SimpleMajority",
+  SuperMajority = "SuperMajority",
+  AbsoluteMajority = "AbsoluteMajority"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantRequest extends BaseEventRequest {
+  sourceTenantId?: UUID;
+  tenant?: Tenant;
+  webhookIds?: Array<UUID>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LinkedInApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony for a new credential,.
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnRegisterCompleteRequest {
+  credential?: WebAuthnPublicKeyRegistrationRequest;
+  origin?: string;
+  rpId?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RegistrationUnverifiedOptions {
+  behavior?: UnverifiedBehavior;
+}
+
+/**
+ * Models the User Password Update Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordUpdateEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface BreachedPasswordTenantMetric {
+  actionRequired?: number;
+  matchedCommonPasswordCount?: number;
+  matchedExactCount?: number;
+  matchedPasswordCount?: number;
+  matchedSubAddressCount?: number;
+  passwordsCheckedCount?: number;
+}
+
+/**
+ * A policy for deleting Users based upon some external criteria.
+ *
+ * @author Trevor Smith
+ */
+export interface TimeBasedDeletePolicy extends Enableable {
+  enabledInstant?: number;
+  numberOfDaysToRetain?: number;
+}
+
+/**
+ * Models the User Password Reset Send Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserPasswordResetSendEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RefreshTokenUsagePolicy {
+  Reusable = "Reusable",
+  OneTimeUse = "OneTimeUse"
+}
+
+/**
+ * @author Tyler Scott
+ */
+export interface Group {
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  roles?: Record<UUID, Array<ApplicationRole>>;
+  tenantId?: UUID;
+}
+
+/**
+ * Allows the Relying Party to specify desired attributes of a new credential.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialCreationOptions {
+  attestation?: AttestationConveyancePreference;
+  authenticatorSelection?: AuthenticatorSelectionCriteria;
+  challenge?: string;
+  excludeCredentials?: Array<PublicKeyCredentialDescriptor>;
+  extensions?: WebAuthnRegistrationExtensionOptions;
+  pubKeyCredParams?: Array<PublicKeyCredentialParameters>;
+  rp?: PublicKeyCredentialRelyingPartyEntity;
+  timeout?: number;
+  user?: PublicKeyCredentialUserEntity;
+}
+
+/**
+ * Search request for Identity Providers
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchRequest {
+  search?: IdentityProviderSearchCriteria;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LoginRecordSearchCriteria extends BaseSearchCriteria {
+  applicationId?: UUID;
+  end?: number;
+  start?: number;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface OAuth2Configuration {
+  authorizedOriginURLs?: Array<string>;
+  authorizedRedirectURLs?: Array<string>;
+  authorizedURLValidationPolicy?: Oauth2AuthorizedURLValidationPolicy;
+  clientAuthenticationPolicy?: ClientAuthenticationPolicy;
+  clientId?: string;
+  clientSecret?: string;
+  consentMode?: OAuthScopeConsentMode;
+  debug?: boolean;
+  deviceVerificationURL?: string;
+  enabledGrants?: Array<GrantType>;
+  generateRefreshTokens?: boolean;
+  logoutBehavior?: LogoutBehavior;
+  logoutURL?: string;
+  proofKeyForCodeExchangePolicy?: ProofKeyForCodeExchangePolicy;
+  providedScopePolicy?: ProvidedScopePolicy;
+  relationship?: OAuthApplicationRelationship;
+  requireClientAuthentication?: boolean;
+  requireRegistration?: boolean;
+  scopeHandlingPolicy?: OAuthScopeHandlingPolicy;
+  unknownScopePolicy?: UnknownScopePolicy;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationAccessControlConfiguration {
+  uiIPAccessControlListId?: UUID;
+}
+
+export interface MultiFactorEmailMethod extends Enableable {
+  templateId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface MessengerTransport {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
+  data?: Record<string, string>;
+  identityProviderId?: UUID;
+  loginId?: string;
+  state?: Record<string, any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum RateLimitedRequestType {
+  FailedLogin = "FailedLogin",
+  ForgotPassword = "ForgotPassword",
+  SendEmailVerification = "SendEmailVerification",
+  SendPasswordless = "SendPasswordless",
+  SendRegistrationVerification = "SendRegistrationVerification",
+  SendTwoFactor = "SendTwoFactor"
+}
+
+/**
+ * Models the Group Create Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * The Integration Response
+ *
+ * @author Daniel DeGroff
+ */
+export interface IntegrationResponse {
+  integrations?: Integrations;
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface SMSMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
+}
+
+/**
+ * A raw login record response
+ *
+ * @author Daniel DeGroff
+ */
+export interface LoginRecordSearchResponse {
+  logins?: Array<DisplayableRawLogin>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorStatusResponse {
+  trusts?: Array<TwoFactorTrust>;
+  twoFactorTrustId?: string;
+}
+
+/**
+ * Tenant search response
+ *
+ * @author Mark Manes
+ */
+export interface TenantSearchResponse {
+  tenants?: Array<Tenant>;
+  total?: number;
+}
+
+/**
+ * Search criteria for the event log.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EventLogSearchCriteria extends BaseSearchCriteria {
+  end?: number;
+  message?: string;
+  start?: number;
+  type?: EventLogType;
+}
+
+/**
+ * Raw login information for each time a user logs into an application.
+ *
+ * @author Brian Pontarelli
+ */
+export interface RawLogin {
+  applicationId?: UUID;
+  instant?: number;
+  ipAddress?: string;
+  userId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface VerifyRegistrationResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationFormConfiguration {
+  adminRegistrationFormId?: UUID;
+  selfServiceFormConfiguration?: SelfServiceFormConfiguration;
+  selfServiceFormId?: UUID;
+}
+
+/**
+ * A policy to configure if and when the user-action is canceled prior to the expiration of the action.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FailedAuthenticationActionCancelPolicy {
+  onPasswordReset?: boolean;
+}
+
+/**
+ * Search response for entity types.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityTypeSearchResponse {
+  entityTypes?: Array<EntityType>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TenantRateLimitConfiguration {
+  failedLogin?: RateLimitedRequestConfiguration;
+  forgotPassword?: RateLimitedRequestConfiguration;
+  sendEmailVerification?: RateLimitedRequestConfiguration;
+  sendPasswordless?: RateLimitedRequestConfiguration;
+  sendRegistrationVerification?: RateLimitedRequestConfiguration;
+  sendTwoFactor?: RateLimitedRequestConfiguration;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface Tenant {
+  accessControlConfiguration?: TenantAccessControlConfiguration;
+  captchaConfiguration?: TenantCaptchaConfiguration;
+  configured?: boolean;
+  connectorPolicies?: Array<ConnectorPolicy>;
+  data?: Record<string, any>;
+  emailConfiguration?: EmailConfiguration;
+  eventConfiguration?: EventConfiguration;
+  externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
+  failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
+  familyConfiguration?: FamilyConfiguration;
+  formConfiguration?: TenantFormConfiguration;
+  httpSessionMaxInactiveInterval?: number;
+  id?: UUID;
+  insertInstant?: number;
+  issuer?: string;
+  jwtConfiguration?: JWTConfiguration;
+  lambdaConfiguration?: TenantLambdaConfiguration;
+  lastUpdateInstant?: number;
+  loginConfiguration?: TenantLoginConfiguration;
+  logoutURL?: string;
+  maximumPasswordAge?: MaximumPasswordAge;
+  minimumPasswordAge?: MinimumPasswordAge;
+  multiFactorConfiguration?: TenantMultiFactorConfiguration;
+  name?: string;
+  oauthConfiguration?: TenantOAuth2Configuration;
+  passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
+  passwordValidationRules?: PasswordValidationRules;
+  rateLimitConfiguration?: TenantRateLimitConfiguration;
+  registrationConfiguration?: TenantRegistrationConfiguration;
+  scimServerConfiguration?: TenantSCIMServerConfiguration;
+  ssoConfiguration?: TenantSSOConfiguration;
+  state?: ObjectState;
+  themeId?: UUID;
+  userDeletePolicy?: TenantUserDeletePolicy;
+  usernameConfiguration?: TenantUsernameConfiguration;
+  webAuthnConfiguration?: TenantWebAuthnConfiguration;
+}
+
+/**
+ * The types of lambdas that indicate how they are invoked by FusionAuth.
+ *
+ * @author Brian Pontarelli
+ */
+export enum LambdaType {
+  JWTPopulate = "JWTPopulate",
+  OpenIDReconcile = "OpenIDReconcile",
+  SAMLv2Reconcile = "SAMLv2Reconcile",
+  SAMLv2Populate = "SAMLv2Populate",
+  AppleReconcile = "AppleReconcile",
+  ExternalJWTReconcile = "ExternalJWTReconcile",
+  FacebookReconcile = "FacebookReconcile",
+  GoogleReconcile = "GoogleReconcile",
+  HYPRReconcile = "HYPRReconcile",
+  TwitterReconcile = "TwitterReconcile",
+  LDAPConnectorReconcile = "LDAPConnectorReconcile",
+  LinkedInReconcile = "LinkedInReconcile",
+  EpicGamesReconcile = "EpicGamesReconcile",
+  NintendoReconcile = "NintendoReconcile",
+  SonyPSNReconcile = "SonyPSNReconcile",
+  SteamReconcile = "SteamReconcile",
+  TwitchReconcile = "TwitchReconcile",
+  XboxReconcile = "XboxReconcile",
+  ClientCredentialsJWTPopulate = "ClientCredentialsJWTPopulate",
+  SCIMServerGroupRequestConverter = "SCIMServerGroupRequestConverter",
+  SCIMServerGroupResponseConverter = "SCIMServerGroupResponseConverter",
+  SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
+  SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
+  SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
+  UserInfoPopulate = "UserInfoPopulate"
+}
+
+/**
+ * Reindex API request
+ *
+ * @author Daniel DeGroff
+ */
+export interface ReindexRequest {
+  index?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum BreachedPasswordStatus {
+  None = "None",
+  ExactMatch = "ExactMatch",
+  SubAddressMatch = "SubAddressMatch",
+  PasswordOnly = "PasswordOnly",
+  CommonPassword = "CommonPassword"
+}
+
+/**
+ * Request for the Tenant API to delete a tenant rather than using the URL parameters.
+ *
+ * @author Brian Pontarelli
+ */
+export interface TenantDeleteRequest extends BaseEventRequest {
+  async?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<OpenIdConnectApplicationConfiguration> {
+  buttonImageURL?: string;
+  buttonText?: string;
+  domains?: Array<string>;
+  oauth2?: IdentityProviderOauth2Configuration;
+  postRequest?: boolean;
+}
+
+/**
+ * A role given to a user for a specific application.
+ *
+ * @author Seth Musselman
+ */
+export interface ApplicationRole {
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  isDefault?: boolean;
+  isSuperRole?: boolean;
+  lastUpdateInstant?: number;
+  name?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderRequest {
+  identityProvider?: BaseIdentityProvider<any>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface BaseIdentityProviderApplicationConfiguration extends Enableable {
+  createRegistration?: boolean;
+  data?: Record<string, any>;
+}
+
+/**
+ * Webhook search response
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookSearchResponse {
+  total?: number;
+  webhooks?: Array<Webhook>;
+}
+
+export interface AuthenticationTokenConfiguration extends Enableable {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LoginRecordExportRequest extends BaseExportRequest {
+  criteria?: LoginRecordSearchCriteria;
+}
+
+/**
+ * API response for refreshing a JWT with a Refresh Token.
+ * <p>
+ * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a
+ * string.
+ *
+ * @author Daniel DeGroff
+ */
+export interface JWTRefreshResponse {
+  refreshToken?: string;
+  refreshTokenId?: UUID;
+  token?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwitterApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  consumerKey?: string;
+  consumerSecret?: string;
+}
+
+/**
+ * A grant for an entity to a user or another entity.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityGrant {
+  data?: Record<string, any>;
+  entity?: Entity;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  permissions?: Array<string>;
+  recipientEntityId?: UUID;
+  userId?: UUID;
 }
 
 /**
@@ -5575,596 +10567,141 @@ export interface Application {
 }
 
 /**
- * Form response.
- *
- * @author Daniel DeGroff
- */
-export interface FormRequest {
-  form?: Form;
-}
-
-/**
- * The user action request object.
+ * Facebook social login provider.
  *
  * @author Brian Pontarelli
  */
-export interface ActionRequest extends BaseEventRequest {
-  action?: ActionData;
-  broadcast?: boolean;
-}
-
-/**
- * Entity grant API response object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrantResponse {
-  grant?: EntityGrant;
-  grants?: Array<EntityGrant>;
-}
-
-/**
- * Models an event where a user's email is updated outside of a forgot / change password workflow.
- *
- * @author Daniel DeGroff
- */
-export interface UserEmailUpdateEvent extends BaseEvent {
-  previousEmail?: string;
-  user?: User;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface HYPRApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  relyingPartyApplicationId?: string;
-  relyingPartyURL?: string;
-}
-
-/**
- * A log for an event that happened to a User.
- *
- * @author Brian Pontarelli
- */
-export interface UserComment {
-  comment?: string;
-  commenterId?: UUID;
-  id?: UUID;
-  insertInstant?: number;
-  userId?: UUID;
-}
-
-/**
- * WebAuthn Credential API response
- *
- * @author Spencer Witt
- */
-export interface WebAuthnCredentialResponse {
-  credential?: WebAuthnCredential;
-  credentials?: Array<WebAuthnCredential>;
-}
-
-/**
- * Models the Refresh Token Revoke Event. This event might be for a single token, a user
- * or an entire application.
- *
- * @author Brian Pontarelli
- */
-export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
-  applicationId?: UUID;
-  applicationTimeToLiveInSeconds?: Record<UUID, number>;
-  refreshToken?: RefreshToken;
-  user?: User;
-  userId?: UUID;
-}
-
-/**
- * The use type of a key.
- *
- * @author Daniel DeGroff
- */
-export enum KeyUse {
-  SignOnly = "SignOnly",
-  SignAndVerify = "SignAndVerify",
-  VerifyOnly = "VerifyOnly"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorResponse {
-  code?: string;
-  recoveryCodes?: Array<string>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LoginRecordSearchCriteria extends BaseSearchCriteria {
-  applicationId?: UUID;
-  end?: number;
-  start?: number;
-  userId?: UUID;
-}
-
-/**
- * Something that can be required and thus also optional. This currently extends Enableable because anything that is
- * required/optional is almost always enableable as well.
- *
- * @author Brian Pontarelli
- */
-export interface Requirable extends Enableable {
-  required?: boolean;
-}
-
-/**
- * Group Member Request
- *
- * @author Daniel DeGroff
- */
-export interface MemberRequest {
-  members?: Record<UUID, Array<GroupMember>>;
-}
-
-/**
- * Search criteria for Groups
- *
- * @author Daniel DeGroff
- */
-export interface GroupSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-  tenantId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface PasswordlessLoginRequest extends BaseLoginRequest {
-  code?: string;
-  twoFactorTrustId?: string;
-}
-
-/**
- * A number identifying a cryptographic algorithm. Values should be registered with the <a
- * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
- *
- * @author Spencer Witt
- */
-export enum CoseAlgorithmIdentifier {
-  ES256 = "SHA256withECDSA",
-  ES384 = "SHA384withECDSA",
-  ES512 = "SHA512withECDSA",
-  RS256 = "SHA256withRSA",
-  RS384 = "SHA384withRSA",
-  RS512 = "SHA512withRSA",
-  PS256 = "SHA-256",
-  PS384 = "SHA-384",
-  PS512 = "SHA-512"
-}
-
-/**
- * Information about a user event (login, register, etc) that helps identify the source of the event (location, device type, OS, etc).
- *
- * @author Brian Pontarelli
- */
-export interface EventInfo {
-  data?: Record<string, any>;
-  deviceDescription?: string;
-  deviceName?: string;
-  deviceType?: string;
-  ipAddress?: string;
-  location?: Location;
-  os?: string;
-  userAgent?: string;
-}
-
-/**
- * Theme API request object.
- *
- * @author Trevor Smith
- */
-export interface ThemeRequest {
-  sourceThemeId?: UUID;
-  theme?: Theme;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface EventLogSearchRequest {
-  search?: EventLogSearchCriteria;
-}
-
-/**
- * Supply additional information about the Relying Party when creating a new credential
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialRelyingPartyEntity extends PublicKeyCredentialEntity {
-  id?: string;
-}
-
-/**
- * Entity grant API request object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrantRequest {
-  grant?: EntityGrant;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface PasswordBreachDetection extends Enableable {
-  matchMode?: BreachMatchMode;
-  notifyUserEmailTemplateId?: UUID;
-  onLogin?: BreachAction;
-}
-
-/**
- * Models a set of localized Strings that can be stored as JSON.
- *
- * @author Brian Pontarelli
- */
-export interface LocalizedStrings extends Record<string, string> {
-}
-
-/**
- * Model a user event when a two-factor method has been added.
- *
- * @author Daniel DeGroff
- */
-export interface UserTwoFactorMethodRemoveEvent extends BaseEvent {
-  method?: TwoFactorMethod;
-  user?: User;
-}
-
-/**
- * Available JSON Web Algorithms (JWA) as described in RFC 7518 available for this JWT implementation.
- *
- * @author Daniel DeGroff
- */
-export enum Algorithm {
-  ES256 = "ES256",
-  ES384 = "ES384",
-  ES512 = "ES512",
-  HS256 = "HS256",
-  HS384 = "HS384",
-  HS512 = "HS512",
-  PS256 = "PS256",
-  PS384 = "PS384",
-  PS512 = "PS512",
-  RS256 = "RS256",
-  RS384 = "RS384",
-  RS512 = "RS512",
-  none = "none"
-}
-
-// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
-export interface BaseConnectorConfiguration {
-  data?: Record<string, any>;
-  debug?: boolean;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  type?: ConnectorType;
-}
-
-/**
- * Search request for entity grants.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrantSearchResponse {
-  grants?: Array<EntityGrant>;
-  total?: number;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAccessControlEntry {
-  action?: IPAccessControlEntryAction;
-  endIPAddress?: string;
-  startIPAddress?: string;
-}
-
-/**
- * Search request for webhooks
- *
- * @author Spencer Witt
- */
-export interface WebhookSearchRequest {
-  search?: WebhookSearchCriteria;
-}
-
-export interface SAMLv2SingleLogout extends Enableable {
-  keyId?: UUID;
-  url?: string;
-  xmlSignatureC14nMethod?: CanonicalizationMethod;
-}
-
-/**
- * A JSON Web Key as defined by <a href="https://tools.ietf.org/html/rfc7517#section-4">RFC 7517 JSON Web Key (JWK)
- * Section 4</a> and <a href="https://tools.ietf.org/html/rfc7518">RFC 7518 JSON Web Algorithms (JWA)</a>.
- *
- * @author Daniel DeGroff
- */
-export interface JSONWebKey {
-  alg?: Algorithm;
-  crv?: string;
-  d?: string;
-  dp?: string;
-  dq?: string;
-  e?: string;
-  kid?: string;
-  kty?: KeyType;
-  n?: string;
-  [other: string]: any; // Any other fields
-  p?: string;
-  q?: string;
-  qi?: string;
-  use?: string;
-  x?: string;
-  x5c?: Array<string>;
-  x5t?: string;
-  x5t_S256?: string;
-  y?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface AccessToken {
-  access_token?: string;
-  expires_in?: number;
-  id_token?: string;
-  refresh_token?: string;
-  refresh_token_id?: UUID;
-  scope?: string;
-  token_type?: TokenType;
-  userId?: UUID;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAccessControlListResponse {
-  ipAccessControlList?: IPAccessControlList;
-  ipAccessControlLists?: Array<IPAccessControlList>;
-}
-
-/**
- * Group Member Delete Request
- *
- * @author Daniel DeGroff
- */
-export interface MemberDeleteRequest {
-  memberIds?: Array<UUID>;
-  members?: Record<UUID, Array<UUID>>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface FormFieldValidator extends Enableable {
-  expression?: string;
-}
-
-/**
- * Available Integrations
- *
- * @author Daniel DeGroff
- */
-export interface Integrations {
-  cleanspeak?: CleanSpeakConfiguration;
-  kafka?: KafkaConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderOauth2Configuration {
-  authorization_endpoint?: string;
-  client_id?: string;
+export interface FacebookIdentityProvider extends BaseIdentityProvider<FacebookApplicationConfiguration> {
+  appId?: string;
+  buttonText?: string;
   client_secret?: string;
-  clientAuthenticationMethod?: ClientAuthenticationMethod;
-  emailClaim?: string;
-  emailVerifiedClaim?: string;
-  issuer?: string;
-  scope?: string;
-  token_endpoint?: string;
-  uniqueIdClaim?: string;
-  userinfo_endpoint?: string;
-  usernameClaim?: string;
+  fields?: string;
+  loginMethod?: IdentityProviderLoginMethod;
+  permissions?: string;
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface DeviceApprovalResponse {
-  deviceGrantStatus?: string;
-  deviceInfo?: DeviceInfo;
-  identityProviderLink?: IdentityProviderLink;
-  tenantId?: UUID;
-  userId?: UUID;
-}
-
-/**
- * Models the User Login Success Event.
+ * Models an event where a user is being updated and tries to use an "in-use" login Id (email or username).
  *
  * @author Daniel DeGroff
  */
-export interface UserLoginSuccessEvent extends BaseEvent {
+export interface UserLoginIdDuplicateOnUpdateEvent extends UserLoginIdDuplicateOnCreateEvent {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RefreshResponse {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface LoginHintConfiguration extends Enableable {
+  parameterName?: string;
+}
+
+/**
+ * Response for the user login report.
+ *
+ * @author Seth Musselman
+ */
+export interface RecentLoginResponse {
+  logins?: Array<DisplayableRawLogin>;
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface Tenantable {
+}
+
+/**
+ * Lambda API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface LambdaRequest {
+  lambda?: Lambda;
+}
+
+/**
+ * Models the User Login Failed Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginFailedEvent extends BaseEvent {
   applicationId?: UUID;
   authenticationType?: string;
-  connectorId?: UUID;
-  identityProviderId?: UUID;
-  identityProviderName?: string;
   ipAddress?: string;
   user?: User;
 }
 
 /**
- * Lambda API response object.
+ * @author Daniel DeGroff
+ */
+export interface KafkaConfiguration extends Enableable {
+  defaultTopic?: string;
+  producer?: Record<string, string>;
+}
+
+/**
+ * Models the User Update Event.
  *
  * @author Brian Pontarelli
  */
-export interface LambdaResponse {
-  lambda?: Lambda;
-  lambdas?: Array<Lambda>;
+export interface UserUpdateEvent extends BaseEvent {
+  original?: User;
+  user?: User;
 }
 
 /**
- * @author Trevor Smith
- */
-export enum ChangePasswordReason {
-  Administrative = "Administrative",
-  Breached = "Breached",
-  Expired = "Expired",
-  Validation = "Validation"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface UserinfoResponse extends Record<string, any> {
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface JWTVendResponse {
-  token?: string;
-}
-
-/**
- * Twitter social login provider.
+ * Models the User Update Registration Event.
  *
  * @author Daniel DeGroff
  */
-export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApplicationConfiguration> {
-  buttonText?: string;
-  consumerKey?: string;
-  consumerSecret?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface BaseLoginRequest extends BaseEventRequest {
+export interface UserRegistrationUpdateEvent extends BaseEvent {
   applicationId?: UUID;
-  ipAddress?: string;
-  metaData?: MetaData;
-  newDevice?: boolean;
-  noJWT?: boolean;
-}
-
-/**
- * Used to indicate what type of attestation was included in the authenticator response for a given WebAuthn credential at the time it was created
- *
- * @author Spencer Witt
- */
-export enum AttestationType {
-  basic = "basic",
-  self = "self",
-  attestationCa = "attestationCa",
-  anonymizationCa = "anonymizationCa",
-  none = "none"
-}
-
-/**
- * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
- * delete).
- *
- * @author Brian Pontarelli
- */
-export interface UserDeleteEvent extends BaseEvent {
+  original?: UserRegistration;
+  registration?: UserRegistration;
   user?: User;
 }
 
 /**
- * Registration delete API request object.
- *
- * @author Brian Pontarelli
- */
-export interface RegistrationDeleteRequest extends BaseEventRequest {
-}
-
-/**
- * Key API request object.
- *
- * @author Daniel DeGroff
- */
-export interface KeyRequest {
-  key?: Key;
-}
-
-/**
- * Domain for a public key, key pair or an HMAC secret. This is used by KeyMaster to manage keys for JWTs, SAML, etc.
- *
- * @author Brian Pontarelli
- */
-export interface Key {
-  algorithm?: KeyAlgorithm;
-  certificate?: string;
-  certificateInformation?: CertificateInformation;
-  expirationInstant?: number;
-  hasPrivateKey?: boolean;
-  id?: UUID;
-  insertInstant?: number;
-  issuer?: string;
-  kid?: string;
-  lastUpdateInstant?: number;
-  length?: number;
-  name?: string;
-  privateKey?: string;
-  publicKey?: string;
-  secret?: string;
-  type?: KeyType;
-}
-
-/**
- * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
+ * and request based on the Tenant configuration.
  *
  * @author Spencer Witt
  */
-export enum CoseEllipticCurve {
-  Reserved = "Reserved",
-  P256 = "P256",
-  P384 = "P384",
-  P521 = "P521",
-  X25519 = "X25519",
-  X448 = "X448",
-  Ed25519 = "Ed25519",
-  Ed448 = "Ed448",
-  Secp256k1 = "Secp256k1"
+export enum WebAuthnWorkflow {
+  bootstrap = "bootstrap",
+  general = "general",
+  reauthentication = "reauthentication"
 }
 
 /**
- * Models a family grouping of users.
+ * Models the User Password Reset Start Event.
  *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
-export interface Family {
+export interface UserPasswordResetStartEvent extends BaseEvent {
+  user?: User;
+}
+
+export interface IdentityProviderDetails {
+  applicationIds?: Array<UUID>;
   id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  members?: Array<FamilyMember>;
+  idpEndpoint?: string;
+  name?: string;
+  oauth2?: IdentityProviderOauth2Configuration;
+  type?: IdentityProviderType;
 }
 
 /**
- * The phases of a time-based user action.
- *
- * @author Brian Pontarelli
+ * @author Daniel DeGroff
  */
-export enum UserActionPhase {
-  start = "start",
-  modify = "modify",
-  cancel = "cancel",
-  end = "end"
+export interface LookupResponse {
+  identityProvider?: IdentityProviderDetails;
 }
 
 /**
@@ -6177,156 +10714,227 @@ export interface UserDeactivateEvent extends BaseEvent {
 }
 
 /**
- * Interface for any object that can provide JSON Web key Information.
+ * @author Brian Pontarelli
  */
-export interface JSONWebKeyInfoProvider {
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface OAuthResponse {
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface VersionResponse {
-  version?: string;
-}
-
-/**
- * The summary of the action that is preventing login to be returned on the login response.
- *
- * @author Daniel DeGroff
- */
-export interface LoginPreventedResponse {
-  actionerUserId?: UUID;
-  actionId?: UUID;
-  expiry?: number;
-  localizedName?: string;
-  localizedOption?: string;
-  localizedReason?: string;
-  name?: string;
-  option?: string;
+export interface AuditLogSearchCriteria extends BaseSearchCriteria {
+  end?: number;
+  message?: string;
+  newValue?: string;
+  oldValue?: string;
   reason?: string;
-  reasonCode?: string;
+  start?: number;
+  user?: string;
+}
+
+/**
+ * @author Brett Pontarelli
+ */
+export interface TenantSSOConfiguration {
+  deviceTrustTimeToLiveInSeconds?: number;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export enum FormDataType {
-  bool = "bool",
-  consent = "consent",
-  date = "date",
-  email = "email",
-  number = "number",
-  string = "string"
-}
-
-export interface LoginRecordConfiguration {
-  delete?: DeleteConfiguration;
+export enum MultiFactorLoginPolicy {
+  Disabled = "Disabled",
+  Enabled = "Enabled",
+  Required = "Required"
 }
 
 /**
- * @author Michael Sleevi
- */
-export interface MessageTemplateResponse {
-  messageTemplate?: MessageTemplate;
-  messageTemplates?: Array<MessageTemplate>;
-}
-
-/**
- * Models a consent.
+ * Event event to an audit log was created.
  *
  * @author Daniel DeGroff
  */
-export enum ConsentStatus {
-  Active = "Active",
-  Revoked = "Revoked"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum UnverifiedBehavior {
-  Allow = "Allow",
-  Gated = "Gated"
-}
-
-/**
- * @author Brett Guy
- */
-export interface MessengerRequest {
-  messenger?: BaseMessengerConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface MessengerTransport {
-}
-
-/**
- * Search request for Applications
- *
- * @author Spencer Witt
- */
-export interface ApplicationSearchRequest extends ExpandableRequest {
-  search?: ApplicationSearchCriteria;
-}
-
-/**
- * Email template response.
- *
- * @author Brian Pontarelli
- */
-export interface EmailTemplateResponse {
-  emailTemplate?: EmailTemplate;
-  emailTemplates?: Array<EmailTemplate>;
-}
-
-export interface ApplicationEmailConfiguration {
-  emailUpdateEmailTemplateId?: UUID;
-  emailVerificationEmailTemplateId?: UUID;
-  emailVerifiedEmailTemplateId?: UUID;
-  forgotPasswordEmailTemplateId?: UUID;
-  loginIdInUseOnCreateEmailTemplateId?: UUID;
-  loginIdInUseOnUpdateEmailTemplateId?: UUID;
-  loginNewDeviceEmailTemplateId?: UUID;
-  loginSuspiciousEmailTemplateId?: UUID;
-  passwordlessEmailTemplateId?: UUID;
-  passwordResetSuccessEmailTemplateId?: UUID;
-  passwordUpdateEmailTemplateId?: UUID;
-  setPasswordEmailTemplateId?: UUID;
-  twoFactorMethodAddEmailTemplateId?: UUID;
-  twoFactorMethodRemoveEmailTemplateId?: UUID;
-}
-
-/**
- * Models the Group Member Update Complete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberUpdateCompleteEvent extends BaseEvent {
-  group?: Group;
-  members?: Array<GroupMember>;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface AuditLogRequest extends BaseEventRequest {
+export interface AuditLogCreateEvent extends BaseEvent {
   auditLog?: AuditLog;
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface PasswordBreachDetection extends Enableable {
+  matchMode?: BreachMatchMode;
+  notifyUserEmailTemplateId?: UUID;
+  onLogin?: BreachAction;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderLink {
+  data?: Record<string, any>;
+  displayName?: string;
+  identityProviderId?: UUID;
+  identityProviderName?: string;
+  identityProviderType?: IdentityProviderType;
+  identityProviderUserId?: string;
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  tenantId?: UUID;
+  token?: string;
+  userId?: UUID;
+}
+
+export interface CertificateInformation {
+  issuer?: string;
+  md5Fingerprint?: string;
+  serialNumber?: string;
+  sha1Fingerprint?: string;
+  sha1Thumbprint?: string;
+  sha256Fingerprint?: string;
+  sha256Thumbprint?: string;
+  subject?: string;
+  validFrom?: number;
+  validTo?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface SystemTrustedProxyConfiguration {
+  trusted?: Array<string>;
+  trustPolicy?: SystemTrustedProxyConfigurationPolicy;
+}
+
+/**
+ * Request to complete the WebAuthn registration ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnLoginRequest extends BaseLoginRequest {
+  credential?: WebAuthnPublicKeyAuthenticationRequest;
+  origin?: string;
+  rpId?: string;
+  twoFactorTrustId?: string;
+}
+
+/**
  * @author Brett Guy
  */
-export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration {
-  defaultTopic?: string;
-  producer?: Record<string, string>;
+export interface MessengerResponse {
+  messenger?: BaseMessengerConfiguration;
+  messengers?: Array<BaseMessengerConfiguration>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface ApplicationMultiFactorConfiguration {
+  email?: MultiFactorEmailTemplate;
+  loginPolicy?: MultiFactorLoginPolicy;
+  sms?: MultiFactorSMSTemplate;
+  trustPolicy?: ApplicationMultiFactorTrustPolicy;
+}
+
+/**
+ * Email template search response
+ *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchResponse {
+  emailTemplates?: Array<EmailTemplate>;
+  total?: number;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface JWTVendResponse {
+  token?: string;
+}
+
+export interface MultiFactorSMSMethod extends Enableable {
+  messengerId?: UUID;
+  templateId?: UUID;
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FormRequest {
+  form?: Form;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface GoogleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  loginMethod?: IdentityProviderLoginMethod;
+  properties?: GoogleIdentityProviderProperties;
+  scope?: string;
+}
+
+/**
+ * Contains attributes for the Relying Party to refer to an existing public key credential as an input parameter.
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialDescriptor {
+  id?: string;
+  transports?: Array<string>;
+  type?: PublicKeyCredentialType;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface EmailHeader {
+  name?: string;
+  value?: string;
+}
+
+// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
+export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
+  applicationConfiguration?: Record<UUID, D>;
+  data?: Record<string, any>;
+  debug?: boolean;
+  id?: UUID;
+  insertInstant?: number;
+  lambdaConfiguration?: LambdaConfiguration;
+  lastUpdateInstant?: number;
+  linkingStrategy?: IdentityProviderLinkingStrategy;
+  name?: string;
+  tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
+  type?: IdentityProviderType;
+}
+
+/**
+ * Models the User Update Registration Event.
+ * <p>
+ * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserRegistrationUpdateCompleteEvent extends BaseEvent {
+  applicationId?: UUID;
+  original?: UserRegistration;
+  registration?: UserRegistration;
+  user?: User;
+}
+
+/**
+ * Entity API request object.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EntityRequest {
+  entity?: Entity;
+}
+
+/**
+ * Search request for IP ACLs .
+ *
+ * @author Brett Guy
+ */
+export interface IPAccessControlListSearchRequest {
+  search?: IPAccessControlListSearchCriteria;
 }
 
 /**
@@ -6344,300 +10952,148 @@ export interface UserActionReason {
 }
 
 /**
- * Status for content like usernames, profile attributes, etc.
+ * @author Brett Pontarelli
+ */
+export enum IdentityProviderLoginMethod {
+  UsePopup = "UsePopup",
+  UseRedirect = "UseRedirect",
+  UseVendorJavaScript = "UseVendorJavaScript"
+}
+
+/**
+ * Group API response object.
  *
+ * @author Daniel DeGroff
+ */
+export interface GroupResponse {
+  group?: Group;
+  groups?: Array<Group>;
+}
+
+/**
  * @author Brian Pontarelli
  */
-export enum ContentStatus {
-  ACTIVE = "ACTIVE",
-  PENDING = "PENDING",
-  REJECTED = "REJECTED"
-}
-
-/**
- * @author Spencer Witt
- */
-export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
-  authenticatorAttachmentPreference?: AuthenticatorAttachmentPreference;
-  userVerificationRequirement?: UserVerificationRequirement;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface TwoFactorDisableRequest extends BaseEventRequest {
-  applicationId?: UUID;
-  code?: string;
-  methodId?: string;
-}
-
-/**
- * Search criteria for Applications
- *
- * @author Spencer Witt
- */
-export interface ApplicationSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-  state?: ObjectState;
-  tenantId?: UUID;
-}
-
-/**
- * Configuration for the behavior of failed login attempts. This helps us protect against brute force password attacks.
- *
- * @author Daniel DeGroff
- */
-export interface FailedAuthenticationConfiguration {
-  actionCancelPolicy?: FailedAuthenticationActionCancelPolicy;
-  actionDuration?: number;
-  actionDurationUnit?: ExpiryUnit;
-  emailUser?: boolean;
-  resetCountInSeconds?: number;
-  tooManyAttempts?: number;
-  userActionId?: UUID;
-}
-
-/**
- * This class contains the managed fields that are also put into the database during FusionAuth setup.
- * <p>
- * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
- * Any changes to these fields needs to also be reflected in mysql.sql and postgresql.sql
- *
- * @author Brian Pontarelli
- */
-export interface ManagedFields {
-}
-
-/**
- * API response for starting a WebAuthn authentication ceremony
- *
- * @author Spencer Witt
- */
-export interface WebAuthnStartResponse {
-  options?: PublicKeyCredentialRequestOptions;
-}
-
-/**
- * Models the User Login event that is suspicious.
- *
- * @author Daniel DeGroff
- */
-export interface UserLoginSuspiciousEvent extends UserLoginSuccessEvent {
-  threatsDetected?: Array<AuthenticationThreats>;
-}
-
-export interface SAMLv2AssertionEncryptionConfiguration extends Enableable {
-  digestAlgorithm?: string;
-  encryptionAlgorithm?: string;
-  keyLocation?: string;
-  keyTransportAlgorithm?: string;
-  keyTransportEncryptionKeyId?: UUID;
-  maskGenerationFunction?: string;
-}
-
-export interface LambdaConfiguration {
-  accessTokenPopulateId?: UUID;
-  idTokenPopulateId?: UUID;
-  samlv2PopulateId?: UUID;
-  selfServiceRegistrationValidationId?: UUID;
-  userinfoPopulateId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderResponse {
-  identityProvider?: BaseIdentityProvider<any>;
-  identityProviders?: Array<BaseIdentityProvider<any>>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SecureIdentity {
-  breachedPasswordLastCheckedInstant?: number;
-  breachedPasswordStatus?: BreachedPasswordStatus;
-  connectorId?: UUID;
-  encryptionScheme?: string;
-  factor?: number;
-  id?: UUID;
-  lastLoginInstant?: number;
+export interface EmailConfiguration {
+  additionalHeaders?: Array<EmailHeader>;
+  debug?: boolean;
+  defaultFromEmail?: string;
+  defaultFromName?: string;
+  emailUpdateEmailTemplateId?: UUID;
+  emailVerifiedEmailTemplateId?: UUID;
+  forgotPasswordEmailTemplateId?: UUID;
+  host?: string;
+  implicitEmailVerificationAllowed?: boolean;
+  loginIdInUseOnCreateEmailTemplateId?: UUID;
+  loginIdInUseOnUpdateEmailTemplateId?: UUID;
+  loginNewDeviceEmailTemplateId?: UUID;
+  loginSuspiciousEmailTemplateId?: UUID;
   password?: string;
-  passwordChangeReason?: ChangePasswordReason;
-  passwordChangeRequired?: boolean;
-  passwordLastUpdateInstant?: number;
-  salt?: string;
-  uniqueUsername?: string;
+  passwordlessEmailTemplateId?: UUID;
+  passwordResetSuccessEmailTemplateId?: UUID;
+  passwordUpdateEmailTemplateId?: UUID;
+  port?: number;
+  properties?: string;
+  security?: EmailSecurityType;
+  setPasswordEmailTemplateId?: UUID;
+  twoFactorMethodAddEmailTemplateId?: UUID;
+  twoFactorMethodRemoveEmailTemplateId?: UUID;
+  unverified?: EmailUnverifiedOptions;
   username?: string;
-  usernameStatus?: ContentStatus;
-  verified?: boolean;
-  verifiedInstant?: number;
-}
-
-/**
- * Models the User Login event for a new device (un-recognized)
- *
- * @author Daniel DeGroff
- */
-export interface UserLoginNewDeviceEvent extends UserLoginSuccessEvent {
-}
-
-/**
- * External JWT-only identity provider.
- *
- * @author Daniel DeGroff and Brian Pontarelli
- */
-export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<ExternalJWTApplicationConfiguration> {
-  claimMap?: Record<string, string>;
-  defaultKeyId?: UUID;
-  domains?: Array<string>;
-  headerKeyParameter?: string;
-  oauth2?: IdentityProviderOauth2Configuration;
-  uniqueIdentityClaim?: string;
-}
-
-/**
- * An email address.
- *
- * @author Brian Pontarelli
- */
-export interface EmailAddress {
-  address?: string;
-  display?: string;
-}
-
-/**
- * Base class for requests that can contain event information. This event information is used when sending Webhooks or emails
- * during the transaction. The caller is responsible for ensuring that the event information is correct.
- *
- * @author Brian Pontarelli
- */
-export interface BaseEventRequest {
-  eventInfo?: EventInfo;
+  verificationEmailTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
+  verifyEmail?: boolean;
+  verifyEmailWhenChanged?: boolean;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export interface ApplicationWebAuthnWorkflowConfiguration extends Enableable {
+export enum UserState {
+  Authenticated = "Authenticated",
+  AuthenticatedNotRegistered = "AuthenticatedNotRegistered",
+  AuthenticatedNotVerified = "AuthenticatedNotVerified",
+  AuthenticatedRegistrationNotVerified = "AuthenticatedRegistrationNotVerified"
 }
 
-/**
- * @author Daniel DeGroff
- */
-export interface SecureGeneratorConfiguration {
-  length?: number;
-  type?: SecureGeneratorType;
-}
-
-/**
- * @author Johnathon Wood
- */
-export enum Oauth2AuthorizedURLValidationPolicy {
-  AllowWildcards = "AllowWildcards",
-  ExactMatch = "ExactMatch"
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface AuditLogSearchCriteria extends BaseSearchCriteria {
-  end?: number;
-  message?: string;
-  newValue?: string;
-  oldValue?: string;
-  reason?: string;
-  start?: number;
-  user?: string;
-}
-
-/**
- * Search criteria for user comments.
- *
- * @author Spencer Witt
- */
-export interface UserCommentSearchCriteria extends BaseSearchCriteria {
+export interface HistoryItem {
+  actionerUserId?: UUID;
   comment?: string;
-  commenterId?: UUID;
-  tenantId?: UUID;
-  userId?: UUID;
+  createInstant?: number;
+  expiry?: number;
 }
 
 /**
- * A policy for deleting Users based upon some external criteria.
+ * @author Trevor Smith
+ */
+export interface ConnectorResponse {
+  connector?: BaseConnectorConfiguration;
+  connectors?: Array<BaseConnectorConfiguration>;
+}
+
+/**
+ * Models the FusionAuth connector.
  *
  * @author Trevor Smith
  */
-export interface TimeBasedDeletePolicy extends Enableable {
-  enabledInstant?: number;
-  numberOfDaysToRetain?: number;
+export interface FusionAuthConnectorConfiguration extends BaseConnectorConfiguration {
 }
 
 /**
- * Search criteria for Email templates
+ * Models the Group Create Complete Event.
  *
- * @author Mark Manes
- */
-export interface EmailTemplateSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-}
-
-/**
- * Search request for Identity Providers
- *
- * @author Spencer Witt
- */
-export interface IdentityProviderSearchRequest {
-  search?: IdentityProviderSearchCriteria;
-}
-
-/**
  * @author Daniel DeGroff
  */
-export interface ReactorStatus {
-  advancedIdentityProviders?: ReactorFeatureStatus;
-  advancedLambdas?: ReactorFeatureStatus;
-  advancedMultiFactorAuthentication?: ReactorFeatureStatus;
-  advancedOAuthScopes?: ReactorFeatureStatus;
-  advancedOAuthScopesCustomScopes?: ReactorFeatureStatus;
-  advancedOAuthScopesThirdPartyApplications?: ReactorFeatureStatus;
-  advancedRegistration?: ReactorFeatureStatus;
-  applicationMultiFactorAuthentication?: ReactorFeatureStatus;
-  applicationThemes?: ReactorFeatureStatus;
-  breachedPasswordDetection?: ReactorFeatureStatus;
-  connectors?: ReactorFeatureStatus;
-  entityManagement?: ReactorFeatureStatus;
-  expiration?: string;
-  licenseAttributes?: Record<string, string>;
-  licensed?: boolean;
-  scimServer?: ReactorFeatureStatus;
-  threatDetection?: ReactorFeatureStatus;
-  webAuthn?: ReactorFeatureStatus;
-  webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
-  webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
+export interface GroupDeleteCompleteEvent extends BaseEvent {
+  group?: Group;
 }
 
 /**
- * Search request for entity types.
+ * Request for the Logout API that can be used as an alternative to URL parameters.
  *
  * @author Brian Pontarelli
  */
-export interface EntityTypeSearchRequest {
-  search?: EntityTypeSearchCriteria;
-}
-
-export interface MultiFactorSMSMethod extends Enableable {
-  messengerId?: UUID;
-  templateId?: UUID;
+export interface LogoutRequest extends BaseEventRequest {
+  global?: boolean;
+  refreshToken?: string;
 }
 
 /**
- * Login Ping API request object.
+ * @author Daniel DeGroff
+ */
+export interface LinkedInIdentityProvider extends BaseIdentityProvider<LinkedInApplicationConfiguration> {
+  buttonText?: string;
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+}
+
+/**
+ * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
+ * Framework - RFC 6749</a>.
+ * <p>
+ * Specific names as defined by <a href="https://tools.ietf.org/html/rfc7591#section-4.1">
+ * OAuth 2.0 Dynamic Client Registration Protocol - RFC 7591 Section 4.1</a>
  *
  * @author Daniel DeGroff
  */
-export interface LoginPingRequest extends BaseLoginRequest {
-  userId?: UUID;
+export enum GrantType {
+  authorization_code = "authorization_code",
+  implicit = "implicit",
+  password = "password",
+  client_credentials = "client_credentials",
+  refresh_token = "refresh_token",
+  unknown = "unknown",
+  device_code = "urn:ietf:params:oauth:grant-type:device_code"
+}
+
+/**
+ * Supply additional information about the user account when creating a new credential
+ *
+ * @author Spencer Witt
+ */
+export interface PublicKeyCredentialUserEntity extends PublicKeyCredentialEntity {
+  displayName?: string;
+  id?: string;
 }
 
 export enum RegistrationType {
@@ -6645,212 +11101,168 @@ export enum RegistrationType {
   advanced = "advanced"
 }
 
-export enum EmailSecurityType {
-  NONE = "NONE",
-  SSL = "SSL",
-  TLS = "TLS"
-}
-
 /**
- * @author Daniel DeGroff
- */
-export enum LambdaEngineType {
-  GraalJS = "GraalJS",
-  Nashorn = "Nashorn"
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface SMSMessageTemplate extends MessageTemplate {
-  defaultTemplate?: string;
-  localizedTemplates?: LocalizedStrings;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum FormControl {
-  checkbox = "checkbox",
-  number = "number",
-  password = "password",
-  radio = "radio",
-  select = "select",
-  textarea = "textarea",
-  text = "text"
-}
-
-/**
- * @author Trevor Smith
- */
-export interface Theme {
-  data?: Record<string, any>;
-  defaultMessages?: string;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  localizedMessages?: LocalizedStrings;
-  name?: string;
-  stylesheet?: string;
-  templates?: Templates;
-}
-
-/**
- * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
- * token, a user or an entire application.
+ * The response from the total report. This report stores the total numbers for each application.
  *
  * @author Brian Pontarelli
  */
-export interface JWTPublicKeyUpdateEvent extends BaseEvent {
-  applicationIds?: Array<UUID>;
+export interface TotalsReportResponse {
+  applicationTotals?: Record<UUID, Totals>;
+  globalRegistrations?: number;
+  totalGlobalRegistrations?: number;
 }
 
 /**
- * Models the User Password Reset Send Event.
+ * Password Encryption Scheme Configuration
  *
  * @author Daniel DeGroff
  */
-export interface UserPasswordResetSendEvent extends BaseEvent {
-  user?: User;
+export interface PasswordEncryptionConfiguration {
+  encryptionScheme?: string;
+  encryptionSchemeFactor?: number;
+  modifyEncryptionSchemeOnLogin?: boolean;
 }
 
 /**
- * Models the Group Member Remove Complete Event.
+ * @author Daniel DeGroff
+ */
+export interface AppleIdentityProvider extends BaseIdentityProvider<AppleApplicationConfiguration> {
+  bundleId?: string;
+  buttonText?: string;
+  keyId?: UUID;
+  scope?: string;
+  servicesId?: string;
+  teamId?: string;
+}
+
+/**
+ * Refresh Token Import request.
+ *
+ * @author Brett Guy
+ */
+export interface RefreshTokenImportRequest {
+  refreshTokens?: Array<RefreshToken>;
+  validateDbConstraints?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface AuthenticatorConfiguration {
+  algorithm?: TOTPAlgorithm;
+  codeLength?: number;
+  timeStep?: number;
+}
+
+/**
+ * API request to start a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartRequest {
+  applicationId?: UUID;
+  credentialId?: UUID;
+  loginId?: string;
+  state?: Record<string, any>;
+  userId?: UUID;
+  workflow?: WebAuthnWorkflow;
+}
+
+/**
+ * IdP Initiated login configuration
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberRemoveCompleteEvent extends BaseEvent {
+export interface SAMLv2IdPInitiatedLoginConfiguration extends Enableable {
+  nameIdFormat?: string;
+}
+
+/**
+ * API response for retrieving Refresh Tokens
+ *
+ * @author Daniel DeGroff
+ */
+export interface RefreshTokenResponse {
+  refreshToken?: RefreshToken;
+  refreshTokens?: Array<RefreshToken>;
+}
+
+/**
+ * Models the Group Member Add Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberAddEvent extends BaseEvent {
   group?: Group;
   members?: Array<GroupMember>;
 }
 
 /**
- * Search request for Tenants
- *
- * @author Mark Manes
- */
-export interface TenantSearchRequest {
-  search?: TenantSearchCriteria;
-}
-
-/**
- * The Application Scope API response.
- *
- * @author Spencer Witt
- */
-export interface ApplicationOAuthScopeResponse {
-  scope?: ApplicationOAuthScope;
-}
-
-export interface MultiFactorSMSTemplate {
-  templateId?: UUID;
-}
-
-/**
- * User API request object.
- *
  * @author Brian Pontarelli
  */
-export interface UserRequest extends BaseEventRequest {
+export interface TwoFactorRequest extends BaseEventRequest {
   applicationId?: UUID;
-  currentPassword?: string;
-  disableDomainBlock?: boolean;
-  sendSetPasswordEmail?: boolean;
-  skipVerification?: boolean;
-  user?: User;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface PendingResponse {
-  users?: Array<User>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorStartResponse {
+  authenticatorId?: string;
   code?: string;
-  methods?: Array<TwoFactorMethod>;
+  email?: string;
+  method?: string;
+  mobilePhone?: string;
+  secret?: string;
+  secretBase32Encoded?: string;
   twoFactorId?: string;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export interface VerifyEmailResponse {
-  oneTimeCode?: string;
-  verificationId?: string;
+export interface ReactorMetrics {
+  breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
+}
+
+/**
+ * Form response.
+ *
+ * @author Daniel DeGroff
+ */
+export interface FormResponse {
+  form?: Form;
+  forms?: Array<Form>;
+}
+
+/**
+ * Models the Group Delete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupDeleteEvent extends BaseEvent {
+  group?: Group;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export interface OpenIdConnectApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonImageURL?: string;
-  buttonText?: string;
-  oauth2?: IdentityProviderOauth2Configuration;
+export interface IdentityProviderLinkRequest extends BaseEventRequest {
+  identityProviderLink?: IdentityProviderLink;
+  pendingIdPLinkId?: string;
 }
 
 /**
- * Defines valid credential types. This is an extension point in the WebAuthn spec. The only defined value at this time is "public-key"
- *
- * @author Spencer Witt
+ * @author Trevor Smith
  */
-export enum PublicKeyCredentialType {
-  publicKey = "public-key"
+export interface ConnectorPolicy {
+  connectorId?: UUID;
+  data?: Record<string, any>;
+  domains?: Array<string>;
+  migrate?: boolean;
 }
 
 /**
- * @author Daniel DeGroff
+ * @author Rob Davis
  */
-export interface PasswordlessStartRequest {
-  applicationId?: UUID;
-  loginId?: string;
-  state?: Record<string, any>;
-}
-
-/**
- * Response for the registration report.
- *
- * @author Brian Pontarelli
- */
-export interface RegistrationReportResponse {
-  hourlyCounts?: Array<Count>;
-  total?: number;
-}
-
-/**
- * Authentication key request object.
- *
- * @author Sanjay
- */
-export interface APIKeyRequest {
-  apiKey?: APIKey;
-  sourceKeyId?: UUID;
-}
-
-/**
- * User Action Reason API request object.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionReasonRequest {
-  userActionReason?: UserActionReason;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface OAuthError {
-  change_password_id?: string;
-  error?: OAuthErrorType;
-  error_description?: string;
-  error_reason?: OAuthErrorReason;
-  error_uri?: string;
-  two_factor_id?: string;
-  two_factor_methods?: Array<TwoFactorMethod>;
+export interface TenantSCIMServerConfiguration extends Enableable {
+  clientEntityTypeId?: UUID;
+  schemas?: Record<string, any>;
+  serverEntityTypeId?: UUID;
 }
 
 export enum OAuthErrorReason {
@@ -6918,550 +11330,86 @@ export enum OAuthErrorReason {
 }
 
 /**
- * An Event "event" to indicate an event log was created.
- *
  * @author Daniel DeGroff
  */
-export interface EventLogCreateEvent extends BaseEvent {
-  eventLog?: EventLog;
+export interface IdentityProviderLimitUserLinkingPolicy extends Enableable {
+  maximumLinks?: number;
 }
 
 /**
- * @author Daniel DeGroff
- */
-export enum RefreshTokenExpirationPolicy {
-  Fixed = "Fixed",
-  SlidingWindow = "SlidingWindow",
-  SlidingWindowWithMaximumLifetime = "SlidingWindowWithMaximumLifetime"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantLoginConfiguration {
-  requireAuthentication?: boolean;
-}
-
-/**
- * Models the User Login Failed Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserLoginFailedEvent extends BaseEvent {
-  applicationId?: UUID;
-  authenticationType?: string;
-  ipAddress?: string;
-  user?: User;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface AppleIdentityProvider extends BaseIdentityProvider<AppleApplicationConfiguration> {
-  bundleId?: string;
-  buttonText?: string;
-  keyId?: UUID;
-  scope?: string;
-  servicesId?: string;
-  teamId?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SendResponse {
-  anonymousResults?: Record<string, EmailTemplateErrors>;
-  results?: Record<UUID, EmailTemplateErrors>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum FormType {
-  registration = "registration",
-  adminRegistration = "adminRegistration",
-  adminUser = "adminUser",
-  selfServiceUser = "selfServiceUser"
-}
-
-/**
- * @author Brett Guy
- */
-export interface MessengerResponse {
-  messenger?: BaseMessengerConfiguration;
-  messengers?: Array<BaseMessengerConfiguration>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum RateLimitedRequestType {
-  FailedLogin = "FailedLogin",
-  ForgotPassword = "ForgotPassword",
-  SendEmailVerification = "SendEmailVerification",
-  SendPasswordless = "SendPasswordless",
-  SendRegistrationVerification = "SendRegistrationVerification",
-  SendTwoFactor = "SendTwoFactor"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ReactorMetrics {
-  breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
-}
-
-/**
- * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
- * and request based on the Tenant configuration.
- *
- * @author Spencer Witt
- */
-export enum WebAuthnWorkflow {
-  bootstrap = "bootstrap",
-  general = "general",
-  reauthentication = "reauthentication"
-}
-
-/**
- * The types of lambdas that indicate how they are invoked by FusionAuth.
- *
- * @author Brian Pontarelli
- */
-export enum LambdaType {
-  JWTPopulate = "JWTPopulate",
-  OpenIDReconcile = "OpenIDReconcile",
-  SAMLv2Reconcile = "SAMLv2Reconcile",
-  SAMLv2Populate = "SAMLv2Populate",
-  AppleReconcile = "AppleReconcile",
-  ExternalJWTReconcile = "ExternalJWTReconcile",
-  FacebookReconcile = "FacebookReconcile",
-  GoogleReconcile = "GoogleReconcile",
-  HYPRReconcile = "HYPRReconcile",
-  TwitterReconcile = "TwitterReconcile",
-  LDAPConnectorReconcile = "LDAPConnectorReconcile",
-  LinkedInReconcile = "LinkedInReconcile",
-  EpicGamesReconcile = "EpicGamesReconcile",
-  NintendoReconcile = "NintendoReconcile",
-  SonyPSNReconcile = "SonyPSNReconcile",
-  SteamReconcile = "SteamReconcile",
-  TwitchReconcile = "TwitchReconcile",
-  XboxReconcile = "XboxReconcile",
-  ClientCredentialsJWTPopulate = "ClientCredentialsJWTPopulate",
-  SCIMServerGroupRequestConverter = "SCIMServerGroupRequestConverter",
-  SCIMServerGroupResponseConverter = "SCIMServerGroupResponseConverter",
-  SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
-  SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
-  SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
-  UserInfoPopulate = "UserInfoPopulate"
-}
-
-/**
- * CleanSpeak configuration at the system and application level.
- *
- * @author Brian Pontarelli
- */
-export interface CleanSpeakConfiguration extends Enableable {
-  apiKey?: string;
-  applicationIds?: Array<UUID>;
-  url?: string;
-  usernameModeration?: UsernameModeration;
-}
-
-export enum LDAPSecurityMethod {
-  None = "None",
-  LDAPS = "LDAPS",
-  StartTLS = "StartTLS"
-}
-
-/**
- * Entity API request object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityRequest {
-  entity?: Entity;
-}
-
-/**
- * Something that can be enabled and thus also disabled.
- *
- * @author Daniel DeGroff
- */
-export interface Enableable {
-  enabled?: boolean;
-}
-
-export interface EmailTemplateErrors {
-  parseErrors?: Record<string, string>;
-  renderErrors?: Record<string, string>;
-}
-
-/**
- * Base-class for all FusionAuth events.
- *
- * @author Brian Pontarelli
- */
-export interface BaseEvent {
-  createInstant?: number;
-  id?: UUID;
-  info?: EventInfo;
-  tenantId?: UUID;
-  type?: EventType;
-}
-
-/**
- * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
- * for a third-party application.
- *
- * @author Spencer Witt
- */
-export enum OAuthScopeConsentMode {
-  AlwaysPrompt = "AlwaysPrompt",
-  RememberDecision = "RememberDecision",
-  NeverPrompt = "NeverPrompt"
-}
-
-/**
- * Models the User Identity Provider Link Event.
- *
- * @author Rob Davis
- */
-export interface UserIdentityProviderLinkEvent extends BaseEvent {
-  identityProviderLink?: IdentityProviderLink;
-  user?: User;
-}
-
-/**
- * Location information. Useful for IP addresses and other displayable data objects.
- *
- * @author Brian Pontarelli
- */
-export interface Location {
-  city?: string;
-  country?: string;
-  displayString?: string;
-  latitude?: number;
-  longitude?: number;
-  region?: string;
-  zipcode?: string;
-}
-
-/**
- * A grant for an entity to a user or another entity.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrant {
-  data?: Record<string, any>;
-  entity?: Entity;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  permissions?: Array<string>;
-  recipientEntityId?: UUID;
-  userId?: UUID;
-}
-
-export interface TenantOAuth2Configuration {
-  clientCredentialsAccessTokenPopulateLambdaId?: UUID;
-}
-
-/**
- * Request for managing FusionAuth Reactor and licenses.
- *
- * @author Brian Pontarelli
- */
-export interface ReactorRequest {
-  license?: string;
-  licenseId?: string;
-}
-
-/**
- * Models the User Password Reset Success Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserPasswordResetSuccessEvent extends BaseEvent {
-  user?: User;
-}
-
-export interface AuthenticationTokenConfiguration extends Enableable {
-}
-
-/**
- * Controls the policy for whether OAuth workflows will more strictly adhere to the OAuth and OIDC specification
- * or run in backwards compatibility mode.
- *
- * @author David Charles
- */
-export enum OAuthScopeHandlingPolicy {
-  Compatibility = "Compatibility",
-  Strict = "Strict"
-}
-
-/**
- * Models the User Created Registration Event.
- * <p>
- * This is different than the user.registration.create event in that it will be sent after the user has been created. This event cannot be made
- * transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserRegistrationCreateCompleteEvent extends BaseEvent {
-  applicationId?: UUID;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * The response from the total report. This report stores the total numbers for each application.
- *
- * @author Brian Pontarelli
- */
-export interface TotalsReportResponse {
-  applicationTotals?: Record<UUID, Totals>;
-  globalRegistrations?: number;
-  totalGlobalRegistrations?: number;
-}
-
-/**
- * A JavaScript lambda function that is executed during certain events inside FusionAuth.
- *
- * @author Brian Pontarelli
- */
-export interface Lambda {
-  body?: string;
-  debug?: boolean;
-  engineType?: LambdaEngineType;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  type?: LambdaType;
-}
-
-/**
- * @author Lyle Schemmerling
- */
-export interface SAMLv2DestinationAssertionConfiguration {
-  alternates?: Array<string>;
-  policy?: SAMLv2DestinationAssertionPolicy;
-}
-
-/**
- * A policy to configure if and when the user-action is canceled prior to the expiration of the action.
- *
- * @author Daniel DeGroff
- */
-export interface FailedAuthenticationActionCancelPolicy {
-  onPasswordReset?: boolean;
-}
-
-/**
- * Steam gaming login provider.
+ * Xbox gaming login provider.
  *
  * @author Brett Pontarelli
  */
-export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplicationConfiguration> {
-  apiMode?: SteamAPIMode;
+export interface XboxIdentityProvider extends BaseIdentityProvider<XboxApplicationConfiguration> {
   buttonText?: string;
   client_id?: string;
+  client_secret?: string;
   scope?: string;
-  webAPIKey?: string;
 }
 
-/**
- * @author Daniel DeGroff
- */
-export interface BreachedPasswordTenantMetric {
-  actionRequired?: number;
-  matchedCommonPasswordCount?: number;
-  matchedExactCount?: number;
-  matchedPasswordCount?: number;
-  matchedSubAddressCount?: number;
-  passwordsCheckedCount?: number;
-}
-
-/**
- * Response for the daily active user report.
- *
- * @author Brian Pontarelli
- */
-export interface DailyActiveUserReportResponse {
-  dailyActiveUsers?: Array<Count>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwitterApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  consumerKey?: string;
-  consumerSecret?: string;
-}
-
-/**
- * @author Trevor Smith
- */
-export interface ConnectorPolicy {
-  connectorId?: UUID;
+export interface MetaData {
   data?: Record<string, any>;
-  domains?: Array<string>;
-  migrate?: boolean;
+  device?: DeviceInfo;
+  scopes?: Array<string>;
+}
+
+/**
+ * Models a consent.
+ *
+ * @author Daniel DeGroff
+ */
+export enum ConsentStatus {
+  Active = "Active",
+  Revoked = "Revoked"
 }
 
 /**
  * @author Daniel DeGroff
  */
-export enum HTTPMethod {
-  GET = "GET",
-  POST = "POST",
-  PUT = "PUT",
-  DELETE = "DELETE",
-  HEAD = "HEAD",
-  OPTIONS = "OPTIONS",
-  PATCH = "PATCH"
+export interface TwoFactorSendRequest {
+  applicationId?: UUID;
+  email?: string;
+  method?: string;
+  methodId?: string;
+  mobilePhone?: string;
+  userId?: UUID;
+}
+
+/**
+ * Models the Group Member Remove Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberRemoveEvent extends BaseEvent {
+  group?: Group;
+  members?: Array<GroupMember>;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RefreshTokenRevocationPolicy {
+  onLoginPrevented?: boolean;
+  onMultiFactorEnable?: boolean;
+  onPasswordChanged?: boolean;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface HYPRApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  relyingPartyApplicationId?: string;
+  relyingPartyURL?: string;
 }
 
 /**
  * @author Brett Guy
  */
-export interface IPAccessControlListRequest {
-  ipAccessControlList?: IPAccessControlList;
-}
-
-/**
- * Search request for entities
- *
- * @author Brett Guy
- */
-export interface EntitySearchResponse {
-  entities?: Array<Entity>;
-  nextResults?: string;
-  total?: number;
-}
-
-/**
- * Search API request.
- *
- * @author Brian Pontarelli
- */
-export interface SearchRequest extends ExpandableRequest {
-  search?: UserSearchCriteria;
-}
-
-/**
- * Response for the user login report.
- *
- * @author Seth Musselman
- */
-export interface RecentLoginResponse {
-  logins?: Array<DisplayableRawLogin>;
-}
-
-/**
- * Supply information on credential type and algorithm to the <i>authenticator</i>.
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialParameters {
-  alg?: CoseAlgorithmIdentifier;
-  type?: PublicKeyCredentialType;
-}
-
-/**
- * Search criteria for Consents
- *
- * @author Spencer Witt
- */
-export interface ConsentSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-}
-
-/**
- * Password Encryption Scheme Configuration
- *
- * @author Daniel DeGroff
- */
-export interface PasswordEncryptionConfiguration {
-  encryptionScheme?: string;
-  encryptionSchemeFactor?: number;
-  modifyEncryptionSchemeOnLogin?: boolean;
-}
-
-export interface SAMLv2Logout {
-  behavior?: SAMLLogoutBehavior;
-  defaultVerificationKeyId?: UUID;
-  keyId?: UUID;
-  requireSignedRequests?: boolean;
-  singleLogout?: SAMLv2SingleLogout;
-  xmlSignatureC14nMethod?: CanonicalizationMethod;
-}
-
-/**
- * Response for the login report.
- *
- * @author Brian Pontarelli
- */
-export interface LoginReportResponse {
-  hourlyCounts?: Array<Count>;
-  total?: number;
-}
-
-/**
- * A User's WebAuthnCredential. Contains all data required to complete WebAuthn authentication ceremonies.
- *
- * @author Spencer Witt
- */
-export interface WebAuthnCredential {
-  algorithm?: CoseAlgorithmIdentifier;
-  attestationType?: AttestationType;
-  authenticatorSupportsUserVerification?: boolean;
-  credentialId?: string;
-  data?: Record<string, any>;
-  discoverable?: boolean;
-  displayName?: string;
-  id?: UUID;
-  insertInstant?: number;
-  lastUseInstant?: number;
-  name?: string;
-  publicKey?: string;
-  relyingPartyId?: string;
-  signCount?: number;
-  tenantId?: UUID;
-  transports?: Array<string>;
-  userAgent?: string;
-  userId?: UUID;
-}
-
-/**
- * Search criteria for Identity Providers.
- *
- * @author Spencer Witt
- */
-export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
-  applicationId?: UUID;
-  name?: string;
-  type?: IdentityProviderType;
-}
-
-/**
- * Models the JWT Refresh Event. This event will be fired when a JWT is "refreshed" (generated) using a Refresh Token.
- *
- * @author Daniel DeGroff
- */
-export interface JWTRefreshEvent extends BaseEvent {
-  applicationId?: UUID;
-  original?: string;
-  refreshToken?: string;
-  token?: string;
-  userId?: UUID;
-}
-
-export interface UsernameModeration extends Enableable {
-  applicationId?: UUID;
+export enum ProofKeyForCodeExchangePolicy {
+  Required = "Required",
+  NotRequired = "NotRequired",
+  NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
 }
 
 export enum OAuthErrorType {
@@ -7484,691 +11432,11 @@ export enum OAuthErrorType {
 }
 
 /**
- * Models the Group Member Remove Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberRemoveEvent extends BaseEvent {
-  group?: Group;
-  members?: Array<GroupMember>;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface TwoFactorRequest extends BaseEventRequest {
-  applicationId?: UUID;
-  authenticatorId?: string;
-  code?: string;
-  email?: string;
-  method?: string;
-  mobilePhone?: string;
-  secret?: string;
-  secretBase32Encoded?: string;
-  twoFactorId?: string;
-}
-
-/**
- * Policy for handling unknown OAuth scopes in the request
- *
- * @author Spencer Witt
- */
-export enum UnknownScopePolicy {
-  Allow = "Allow",
-  Remove = "Remove",
-  Reject = "Reject"
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAccessControlListSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-}
-
-/**
- * User Action API response object.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionResponse {
-  userAction?: UserAction;
-  userActions?: Array<UserAction>;
-}
-
-/**
- * Models the Group Created Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupCreateCompleteEvent extends BaseEvent {
-  group?: Group;
-}
-
-/**
- * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
- * Framework - RFC 6749</a>.
- * <p>
- * Specific names as defined by <a href="https://tools.ietf.org/html/rfc7591#section-4.1">
- * OAuth 2.0 Dynamic Client Registration Protocol - RFC 7591 Section 4.1</a>
- *
- * @author Daniel DeGroff
- */
-export enum GrantType {
-  authorization_code = "authorization_code",
-  implicit = "implicit",
-  password = "password",
-  client_credentials = "client_credentials",
-  refresh_token = "refresh_token",
-  unknown = "unknown",
-  device_code = "urn:ietf:params:oauth:grant-type:device_code"
-}
-
-/**
- * User API bulk response object.
- *
- * @author Trevor Smith
- */
-export interface UserDeleteResponse {
-  dryRun?: boolean;
-  hardDelete?: boolean;
-  total?: number;
-  userIds?: Array<UUID>;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAccessControlList {
-  data?: Record<string, any>;
-  entries?: Array<IPAccessControlEntry>;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-}
-
-export interface MultiFactorEmailMethod extends Enableable {
-  templateId?: UUID;
-}
-
-/**
- * A historical state of a user log event. Since events can be modified, this stores the historical state.
- *
- * @author Brian Pontarelli
- */
-export interface LogHistory {
-  historyItems?: Array<HistoryItem>;
-}
-
-/**
- * Container for the event information. This is the JSON that is sent from FusionAuth to webhooks.
- *
- * @author Brian Pontarelli
- */
-export interface EventRequest {
-  event?: BaseEvent;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderLimitUserLinkingPolicy extends Enableable {
-  maximumLinks?: number;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export enum CaptchaMethod {
-  GoogleRecaptchaV2 = "GoogleRecaptchaV2",
-  GoogleRecaptchaV3 = "GoogleRecaptchaV3",
-  HCaptcha = "HCaptcha",
-  HCaptchaEnterprise = "HCaptchaEnterprise"
-}
-
-/**
- * @author Lyle Schemmerling
- */
-export enum SAMLv2DestinationAssertionPolicy {
-  Enabled = "Enabled",
-  Disabled = "Disabled",
-  AllowAlternates = "AllowAlternates"
-}
-
-/**
- * Search request for IP ACLs .
- *
- * @author Brett Guy
- */
-export interface IPAccessControlListSearchRequest {
-  search?: IPAccessControlListSearchCriteria;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum ObjectState {
-  Active = "Active",
-  Inactive = "Inactive",
-  PendingDelete = "PendingDelete"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SystemLogsExportRequest extends BaseExportRequest {
-  includeArchived?: boolean;
-  lastNBytes?: number;
-}
-
-/**
- * Request for the Logout API that can be used as an alternative to URL parameters.
- *
- * @author Brian Pontarelli
- */
-export interface LogoutRequest extends BaseEventRequest {
-  global?: boolean;
-  refreshToken?: string;
-}
-
-/**
- * Event log response.
- *
- * @author Brian Pontarelli
- */
-export interface EventLogSearchResponse {
-  eventLogs?: Array<EventLog>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface EmailHeader {
-  name?: string;
-  value?: string;
-}
-
-/**
- * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
- *
- * @author Brian Pontarelli
- */
-export interface SupportsPostBindings {
-}
-
-/**
- * An expandable API response.
- *
- * @author Daniel DeGroff
- */
-export interface ExpandableResponse {
-  expandable?: Array<string>;
-}
-
-export interface EventLogConfiguration {
-  numberToRetain?: number;
-}
-
-/**
- * Type for webhook headers.
- *
- * @author Brian Pontarelli
- */
-export interface HTTPHeaders extends Record<string, string> {
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface Form {
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  steps?: Array<FormStep>;
-  type?: FormType;
-}
-
-/**
- * Search response for Groups
- *
- * @author Daniel DeGroff
- */
-export interface GroupSearchResponse {
-  groups?: Array<Group>;
-  total?: number;
-}
-
-/**
- * API request for User consent types.
- *
- * @author Daniel DeGroff
- */
-export interface ConsentRequest {
-  consent?: Consent;
-}
-
-/**
- * Application search response
- *
- * @author Spencer Witt
- */
-export interface ApplicationSearchResponse extends ExpandableResponse {
-  applications?: Array<Application>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface PasswordlessStartResponse {
-  code?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IssueResponse {
-  refreshToken?: string;
-  token?: string;
-}
-
-export interface MultiFactorAuthenticatorMethod extends Enableable {
-  algorithm?: TOTPAlgorithm;
-  codeLength?: number;
-  timeStep?: number;
-}
-
-/**
- * Request for the Tenant API to delete a tenant rather than using the URL parameters.
- *
- * @author Brian Pontarelli
- */
-export interface TenantDeleteRequest extends BaseEventRequest {
-  async?: boolean;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export enum AuthenticationThreats {
-  ImpossibleTravel = "ImpossibleTravel"
-}
-
-/**
- * A marker interface indicating this event cannot be made transactional.
- *
- * @author Daniel DeGroff
- */
-export interface NonTransactionalEvent {
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface PreviewMessageTemplateResponse {
-  errors?: Errors;
-  message?: SMSMessage;
-}
-
-/**
- * Theme API response object.
- *
- * @author Trevor Smith
- */
-export interface ThemeResponse {
-  theme?: Theme;
-  themes?: Array<Theme>;
-}
-
-/**
- * Interface for all identity providers that are passwordless and do not accept a password.
- */
-export interface PasswordlessIdentityProvider {
-}
-
-/**
- * This class is an abstraction of a simple email message.
- *
- * @author Brian Pontarelli
- */
-export interface Email {
-  attachments?: Array<Attachment>;
-  bcc?: Array<EmailAddress>;
-  cc?: Array<EmailAddress>;
-  from?: EmailAddress;
-  html?: string;
-  replyTo?: EmailAddress;
-  subject?: string;
-  text?: string;
-  to?: Array<EmailAddress>;
-}
-
-/**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
- * preferred languages, global attributes, etc.
- *
- * @author Seth Musselman
- */
-export interface User extends SecureIdentity {
-  active?: boolean;
-  birthDate?: string;
-  cleanSpeakId?: UUID;
-  data?: Record<string, any>;
-  email?: string;
-  expiry?: number;
-  firstName?: string;
-  fullName?: string;
-  imageUrl?: string;
-  insertInstant?: number;
-  lastName?: string;
-  lastUpdateInstant?: number;
-  memberships?: Array<GroupMember>;
-  middleName?: string;
-  mobilePhone?: string;
-  parentEmail?: string;
-  preferredLanguages?: Array<string>;
-  registrations?: Array<UserRegistration>;
-  tenantId?: UUID;
-  timezone?: string;
-  twoFactor?: UserTwoFactorConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface OAuthConfigurationResponse {
-  httpSessionMaxInactiveInterval?: number;
-  logoutURL?: string;
-  oauthConfiguration?: OAuth2Configuration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LinkedInIdentityProvider extends BaseIdentityProvider<LinkedInApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * JWT Configuration. A JWT Configuration for an Application may not be active if it is using the global configuration, the configuration
- * may be <code>enabled = false</code>.
- *
- * @author Daniel DeGroff
- */
-export interface JWTConfiguration extends Enableable {
-  accessTokenKeyId?: UUID;
-  idTokenKeyId?: UUID;
-  refreshTokenExpirationPolicy?: RefreshTokenExpirationPolicy;
-  refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
-  refreshTokenSlidingWindowConfiguration?: RefreshTokenSlidingWindowConfiguration;
-  refreshTokenTimeToLiveInMinutes?: number;
-  refreshTokenUsagePolicy?: RefreshTokenUsagePolicy;
-  timeToLiveInSeconds?: number;
-}
-
-/**
- * Models the Group Member Update Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberUpdateEvent extends BaseEvent {
-  group?: Group;
-  members?: Array<GroupMember>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface BaseExportRequest {
-  dateTimeSecondsFormat?: string;
-  zoneId?: string;
-}
-
-/**
- * Models the Group Delete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupDeleteEvent extends BaseEvent {
-  group?: Group;
-}
-
-// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
-export interface BaseMessengerConfiguration {
-  data?: Record<string, any>;
-  debug?: boolean;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  transport?: string;
-  type?: MessengerType;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RateLimitedRequestConfiguration extends Enableable {
-  limit?: number;
-  timePeriodInSeconds?: number;
-}
-
-/**
- * User comment search response
- *
- * @author Spencer Witt
- */
-export interface UserCommentSearchResponse {
-  total?: number;
-  userComments?: Array<UserComment>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum MultiFactorLoginPolicy {
-  Disabled = "Disabled",
-  Enabled = "Enabled",
-  Required = "Required"
-}
-
-export enum SAMLLogoutBehavior {
-  AllParticipants = "AllParticipants",
-  OnlyOriginator = "OnlyOriginator"
-}
-
-/**
- * Models the User Password Breach Event.
- *
  * @author Matthew Altman
  */
-export interface UserPasswordBreachEvent extends BaseEvent {
-  user?: User;
-}
-
-/**
- * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
- *
- * @author Trevor Smith
- */
-export enum ConnectorType {
-  FusionAuth = "FusionAuth",
-  Generic = "Generic",
-  LDAP = "LDAP"
-}
-
-export interface MetaData {
-  data?: Record<string, any>;
-  device?: DeviceInfo;
-  scopes?: Array<string>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface VerifyRegistrationRequest extends BaseEventRequest {
-  oneTimeCode?: string;
-  verificationId?: string;
-}
-
-/**
- * Search request for Themes.
- *
- * @author Mark Manes
- */
-export interface ThemeSearchRequest {
-  search?: ThemeSearchCriteria;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface EmailConfiguration {
-  additionalHeaders?: Array<EmailHeader>;
-  debug?: boolean;
-  defaultFromEmail?: string;
-  defaultFromName?: string;
-  emailUpdateEmailTemplateId?: UUID;
-  emailVerifiedEmailTemplateId?: UUID;
-  forgotPasswordEmailTemplateId?: UUID;
-  host?: string;
-  implicitEmailVerificationAllowed?: boolean;
-  loginIdInUseOnCreateEmailTemplateId?: UUID;
-  loginIdInUseOnUpdateEmailTemplateId?: UUID;
-  loginNewDeviceEmailTemplateId?: UUID;
-  loginSuspiciousEmailTemplateId?: UUID;
-  password?: string;
-  passwordlessEmailTemplateId?: UUID;
-  passwordResetSuccessEmailTemplateId?: UUID;
-  passwordUpdateEmailTemplateId?: UUID;
-  port?: number;
-  properties?: string;
-  security?: EmailSecurityType;
-  setPasswordEmailTemplateId?: UUID;
-  twoFactorMethodAddEmailTemplateId?: UUID;
-  twoFactorMethodRemoveEmailTemplateId?: UUID;
-  unverified?: EmailUnverifiedOptions;
-  username?: string;
-  verificationEmailTemplateId?: UUID;
-  verificationStrategy?: VerificationStrategy;
-  verifyEmail?: boolean;
-  verifyEmailWhenChanged?: boolean;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ReloadRequest {
-  names?: Array<string>;
-}
-
-/**
- * @author Trevor Smith
- */
-export interface CORSConfiguration extends Enableable {
-  allowCredentials?: boolean;
-  allowedHeaders?: Array<string>;
-  allowedMethods?: Array<HTTPMethod>;
-  allowedOrigins?: Array<string>;
-  debug?: boolean;
-  exposedHeaders?: Array<string>;
-  preflightMaxAgeInSeconds?: number;
-}
-
-/**
- * Audit log response.
- *
- * @author Brian Pontarelli
- */
-export interface AuditLogResponse {
-  auditLog?: AuditLog;
-}
-
-/**
- * Models a generic connector.
- *
- * @author Trevor Smith
- */
-export interface GenericConnectorConfiguration extends BaseConnectorConfiguration {
-  authenticationURL?: string;
-  connectTimeout?: number;
-  headers?: HTTPHeaders;
-  httpAuthenticationPassword?: string;
-  httpAuthenticationUsername?: string;
-  readTimeout?: number;
-  sslCertificateKeyId?: UUID;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface TwitchApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * Webhook search response
- *
- * @author Spencer Witt
- */
-export interface WebhookSearchResponse {
-  total?: number;
-  webhooks?: Array<Webhook>;
-}
-
-/**
- * Model a user event when a two-factor method has been removed.
- *
- * @author Daniel DeGroff
- */
-export interface UserTwoFactorMethodAddEvent extends BaseEvent {
-  method?: TwoFactorMethod;
-  user?: User;
-}
-
-/**
- * Stores an email template used to send emails to users.
- *
- * @author Brian Pontarelli
- */
-export interface EmailTemplate {
-  defaultFromName?: string;
-  defaultHtmlTemplate?: string;
-  defaultSubject?: string;
-  defaultTextTemplate?: string;
-  fromEmail?: string;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  localizedFromNames?: LocalizedStrings;
-  localizedHtmlTemplates?: LocalizedStrings;
-  localizedSubjects?: LocalizedStrings;
-  localizedTextTemplates?: LocalizedStrings;
-  name?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface UserTwoFactorConfiguration {
-  methods?: Array<TwoFactorMethod>;
-  recoveryCodes?: Array<string>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ExternalJWTApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+export enum LogoutBehavior {
+  RedirectOnly = "RedirectOnly",
+  AllApplications = "AllApplications"
 }
 
 /**
@@ -8180,707 +11448,87 @@ export interface EntityJWTConfiguration extends Enableable {
 }
 
 /**
- * @author Mikey Sleevi
- */
-export interface Message {
-}
-
-/**
- * @author Mikey Sleevi
- */
-export interface TenantMultiFactorConfiguration {
-  authenticator?: MultiFactorAuthenticatorMethod;
-  email?: MultiFactorEmailMethod;
-  loginPolicy?: MultiFactorLoginPolicy;
-  sms?: MultiFactorSMSMethod;
-}
-
-/**
- * Describes the authenticator attachment modality preference for a WebAuthn workflow. See {@link AuthenticatorAttachment}
- *
- * @author Spencer Witt
- */
-export enum AuthenticatorAttachmentPreference {
-  any = "any",
-  platform = "platform",
-  crossPlatform = "crossPlatform"
-}
-
-/**
- * @author Brett Guy
- */
-export enum ProofKeyForCodeExchangePolicy {
-  Required = "Required",
-  NotRequired = "NotRequired",
-  NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
-}
-
-/**
- * Request for the Refresh Token API to revoke a refresh token rather than using the URL parameters.
+ * Models an entity type that has a specific set of permissions. These are global objects and can be used across tenants.
  *
  * @author Brian Pontarelli
  */
-export interface RefreshTokenRevokeRequest extends BaseEventRequest {
-  applicationId?: UUID;
-  token?: string;
-  userId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorStatusResponse {
-  trusts?: Array<TwoFactorTrust>;
-  twoFactorTrustId?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum Sort {
-  asc = "asc",
-  desc = "desc"
-}
-
-export enum LoginIdType {
-  email = "email",
-  username = "username"
-}
-
-/**
- * The Application Scope API request object.
- *
- * @author Spencer Witt
- */
-export interface ApplicationOAuthScopeRequest {
-  scope?: ApplicationOAuthScope;
-}
-
-/**
- * Refresh Token Import request.
- *
- * @author Brett Guy
- */
-export interface RefreshTokenImportRequest {
-  refreshTokens?: Array<RefreshToken>;
-  validateDbConstraints?: boolean;
-}
-
-/**
- * @author Brett Guy
- */
-export enum IPAccessControlEntryAction {
-  Allow = "Allow",
-  Block = "Block"
-}
-
-/**
- * API response for managing families and members.
- *
- * @author Brian Pontarelli
- */
-export interface FamilyResponse {
-  families?: Array<Family>;
-  family?: Family;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
-  data?: Record<string, string>;
-  identityProviderId?: UUID;
-  loginId?: string;
-  state?: Record<string, any>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum ApplicationMultiFactorTrustPolicy {
-  Any = "Any",
-  This = "This",
-  None = "None"
-}
-
-/**
- * Identity Provider response.
- *
- * @author Spencer Witt
- */
-export interface IdentityProviderSearchResponse {
-  identityProviders?: Array<BaseIdentityProvider<any>>;
-  total?: number;
-}
-
-export interface SAMLv2Configuration extends Enableable {
-  assertionEncryptionConfiguration?: SAMLv2AssertionEncryptionConfiguration;
-  audience?: string;
-  authorizedRedirectURLs?: Array<string>;
-  callbackURL?: string;
-  debug?: boolean;
-  defaultVerificationKeyId?: UUID;
-  initiatedLogin?: SAMLv2IdPInitiatedLoginConfiguration;
-  issuer?: string;
-  keyId?: UUID;
-  loginHintConfiguration?: LoginHintConfiguration;
-  logout?: SAMLv2Logout;
-  logoutURL?: string;
-  requireSignedRequests?: boolean;
-  xmlSignatureC14nMethod?: CanonicalizationMethod;
-  xmlSignatureLocation?: XMLSignatureLocation;
-}
-
-/**
- * Describes the <a href="https://www.w3.org/TR/webauthn-2/#authenticator-attachment-modality">authenticator attachment modality</a>.
- *
- * @author Spencer Witt
- */
-export enum AuthenticatorAttachment {
-  platform = "platform",
-  crossPlatform = "crossPlatform"
-}
-
-/**
- * The <i>authenticator's</i> response for the authentication ceremony in its encoded format
- *
- * @author Spencer Witt
- */
-export interface WebAuthnAuthenticatorAuthenticationResponse {
-  authenticatorData?: string;
-  clientDataJSON?: string;
-  signature?: string;
-  userHandle?: string;
-}
-
-/**
- * Search request for Consents
- *
- * @author Spencer Witt
- */
-export interface ConsentSearchRequest {
-  search?: ConsentSearchCriteria;
-}
-
-/**
- * XML canonicalization method enumeration. This is used for the IdP and SP side of FusionAuth SAML.
- *
- * @author Brian Pontarelli
- */
-export enum CanonicalizationMethod {
-  exclusive = "exclusive",
-  exclusive_with_comments = "exclusive_with_comments",
-  inclusive = "inclusive",
-  inclusive_with_comments = "inclusive_with_comments"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface DeviceInfo {
-  description?: string;
-  lastAccessedAddress?: string;
-  lastAccessedInstant?: number;
-  name?: string;
-  type?: string;
-}
-
-/**
- * Search request for Lambdas
- *
- * @author Mark Manes
- */
-export interface LambdaSearchRequest {
-  search?: LambdaSearchCriteria;
-}
-
-/**
- * OpenID Connect Configuration as described by the <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID
- * Provider Metadata</a>.
- *
- * @author Daniel DeGroff
- */
-export interface OpenIdConfiguration {
-  authorization_endpoint?: string;
-  backchannel_logout_supported?: boolean;
-  claims_supported?: Array<string>;
-  device_authorization_endpoint?: string;
-  end_session_endpoint?: string;
-  frontchannel_logout_supported?: boolean;
-  grant_types_supported?: Array<string>;
-  id_token_signing_alg_values_supported?: Array<string>;
-  issuer?: string;
-  jwks_uri?: string;
-  response_modes_supported?: Array<string>;
-  response_types_supported?: Array<string>;
-  scopes_supported?: Array<string>;
-  subject_types_supported?: Array<string>;
-  token_endpoint?: string;
-  token_endpoint_auth_methods_supported?: Array<string>;
-  userinfo_endpoint?: string;
-  userinfo_signing_alg_values_supported?: Array<string>;
-}
-
-export interface APIKeyMetaData {
-  attributes?: Record<string, string>;
-}
-
-/**
- * The FormField API request object.
- *
- * @author Brett Guy
- */
-export interface FormFieldRequest {
-  field?: FormField;
-  fields?: Array<FormField>;
-}
-
-/**
- * Models the User Created Event.
- * <p>
- * This is different than the user.create event in that it will be sent after the user has been created. This event cannot be made transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserCreateCompleteEvent extends BaseEvent {
-  user?: User;
-}
-
-export interface EventConfigurationData extends Enableable {
-  transactionType?: TransactionType;
-}
-
-/**
- * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
- *
- * @author Brian Pontarelli
- */
-export interface UserSearchCriteria extends BaseElasticSearchCriteria {
-}
-
-export interface MultiFactorEmailTemplate {
-  templateId?: UUID;
-}
-
-/**
- * Models the User Delete Registration Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserRegistrationDeleteEvent extends BaseEvent {
-  applicationId?: UUID;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * Webhook API response object.
- *
- * @author Brian Pontarelli
- */
-export interface WebhookResponse {
-  webhook?: Webhook;
-  webhooks?: Array<Webhook>;
-}
-
-/**
- * A raw login record response
- *
- * @author Daniel DeGroff
- */
-export interface LoginRecordSearchResponse {
-  logins?: Array<DisplayableRawLogin>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface VerifyRegistrationResponse {
-  oneTimeCode?: string;
-  verificationId?: string;
-}
-
-/**
- * API request for managing families and members.
- *
- * @author Brian Pontarelli
- */
-export interface FamilyRequest {
-  familyMember?: FamilyMember;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RememberPreviousPasswords extends Enableable {
-  count?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface MinimumPasswordAge extends Enableable {
-  seconds?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface EmailUnverifiedOptions {
-  allowEmailChangeWhenGated?: boolean;
-  behavior?: UnverifiedBehavior;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorEnableDisableSendRequest {
-  email?: string;
-  method?: string;
-  methodId?: string;
-  mobilePhone?: string;
-}
-
-export interface IdentityProviderDetails {
-  applicationIds?: Array<UUID>;
-  id?: UUID;
-  idpEndpoint?: string;
-  name?: string;
-  oauth2?: IdentityProviderOauth2Configuration;
-  type?: IdentityProviderType;
-}
-
-export interface Totals {
-  logins?: number;
-  registrations?: number;
-  totalRegistrations?: number;
-}
-
-export enum BreachMatchMode {
-  Low = "Low",
-  Medium = "Medium",
-  High = "High"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum BreachedPasswordStatus {
-  None = "None",
-  ExactMatch = "ExactMatch",
-  SubAddressMatch = "SubAddressMatch",
-  PasswordOnly = "PasswordOnly",
-  CommonPassword = "CommonPassword"
-}
-
-/**
- * A server where events are sent. This includes user action events and any other events sent by FusionAuth.
- *
- * @author Brian Pontarelli
- */
-export interface Webhook {
-  connectTimeout?: number;
+export interface EntityType {
   data?: Record<string, any>;
-  description?: string;
-  eventsEnabled?: Record<EventType, boolean>;
-  global?: boolean;
-  headers?: HTTPHeaders;
-  httpAuthenticationPassword?: string;
-  httpAuthenticationUsername?: string;
   id?: UUID;
   insertInstant?: number;
+  jwtConfiguration?: EntityJWTConfiguration;
   lastUpdateInstant?: number;
-  readTimeout?: number;
-  signatureConfiguration?: WebhookSignatureConfiguration;
-  sslCertificate?: string;
-  sslCertificateKeyId?: UUID;
-  tenantIds?: Array<UUID>;
-  url?: string;
-}
-
-/**
- * Email template request.
- *
- * @author Brian Pontarelli
- */
-export interface EmailTemplateRequest {
-  emailTemplate?: EmailTemplate;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface XboxApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LookupResponse {
-  identityProvider?: IdentityProviderDetails;
-}
-
-/**
- * Event Log Type
- *
- * @author Daniel DeGroff
- */
-export enum EventLogType {
-  Information = "Information",
-  Debug = "Debug",
-  Error = "Error"
-}
-
-/**
- * Tenant search response
- *
- * @author Mark Manes
- */
-export interface TenantSearchResponse {
-  tenants?: Array<Tenant>;
-  total?: number;
-}
-
-/**
- * <ul>
- * <li>Bearer Token type as defined by <a href="https://tools.ietf.org/html/rfc6750">RFC 6750</a>.</li>
- * <li>MAC Token type as referenced by <a href="https://tools.ietf.org/html/rfc6749">RFC 6749</a> and
- * <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">
- * Draft RFC on OAuth 2.0 Message Authentication Code (MAC) Tokens</a>
- * </li>
- * </ul>
- *
- * @author Daniel DeGroff
- */
-export enum TokenType {
-  Bearer = "Bearer",
-  MAC = "MAC"
-}
-
-/**
- * Search criteria for entity grants.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrantSearchCriteria extends BaseSearchCriteria {
-  entityId?: UUID;
   name?: string;
-  userId?: UUID;
+  permissions?: Array<EntityTypePermission>;
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface PendingIdPLink {
-  displayName?: string;
-  email?: string;
-  identityProviderId?: UUID;
-  identityProviderLinks?: Array<IdentityProviderLink>;
-  identityProviderName?: string;
-  identityProviderTenantConfiguration?: IdentityProviderTenantConfiguration;
-  identityProviderType?: IdentityProviderType;
-  identityProviderUserId?: string;
-  user?: User;
-  username?: string;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface PreviewRequest {
-  emailTemplate?: EmailTemplate;
-  locale?: string;
-}
-
-/**
- * Search results.
- *
- * @author Brian Pontarelli
- */
-export interface SearchResults<T> {
-  nextResults?: string;
-  results?: Array<T>;
-  total?: number;
-  totalEqualToActual?: boolean;
-}
-
-export interface APIKeyPermissions {
-  endpoints?: Record<string, Array<string>>;
-}
-
-/**
- * Lambda search response
- *
- * @author Mark Manes
- */
-export interface LambdaSearchResponse {
-  lambdas?: Array<Lambda>;
-  total?: number;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface Count {
-  count?: number;
-  interval?: number;
-}
-
-/**
- * User Action Reason API response object.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionReasonResponse {
-  userActionReason?: UserActionReason;
-  userActionReasons?: Array<UserActionReason>;
-}
-
-export interface PasswordlessConfiguration extends Enableable {
-}
-
-/**
- * SAML v2 identity provider configuration.
- *
- * @author Brian Pontarelli
- */
-export interface SAMLv2IdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2ApplicationConfiguration> {
-  assertionConfiguration?: SAMLv2AssertionConfiguration;
-  buttonImageURL?: string;
-  buttonText?: string;
-  domains?: Array<string>;
-  idpEndpoint?: string;
-  idpInitiatedConfiguration?: SAMLv2IdpInitiatedConfiguration;
-  issuer?: string;
-  loginHintConfiguration?: LoginHintConfiguration;
-  nameIdFormat?: string;
-  postRequest?: boolean;
-  requestSigningKeyId?: UUID;
-  signRequest?: boolean;
-  xmlSignatureC14nMethod?: CanonicalizationMethod;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface PasswordValidationRulesResponse {
-  passwordValidationRules?: PasswordValidationRules;
-}
-
-export enum ClientAuthenticationMethod {
-  none = "none",
-  client_secret_basic = "client_secret_basic",
-  client_secret_post = "client_secret_post"
-}
-
-/**
- * Search criteria for entity types.
- *
- * @author Brian Pontarelli
- */
-export interface EntityTypeSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-}
-
-/**
- * Contains extension output for requested extensions during a WebAuthn ceremony
+ * Supply information on credential type and algorithm to the <i>authenticator</i>.
  *
  * @author Spencer Witt
  */
-export interface WebAuthnExtensionsClientOutputs {
-  credProps?: CredentialPropertiesOutput;
-}
-
-/**
- * User Action API request object.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionRequest {
-  userAction?: UserAction;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface AppleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  bundleId?: string;
-  buttonText?: string;
-  keyId?: UUID;
-  scope?: string;
-  servicesId?: string;
-  teamId?: string;
-}
-
-/**
- * Group API request object.
- *
- * @author Daniel DeGroff
- */
-export interface GroupRequest {
-  group?: Group;
-  roleIds?: Array<UUID>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ValidateResponse {
-  jwt?: JWT;
+export interface PublicKeyCredentialParameters {
+  alg?: CoseAlgorithmIdentifier;
+  type?: PublicKeyCredentialType;
 }
 
 /**
  * @author Seth Musselman
  */
-export interface UserCommentRequest {
-  userComment?: UserComment;
+export interface PreviewResponse {
+  email?: Email;
+  errors?: Errors;
 }
 
 /**
- * API request to start a WebAuthn registration ceremony
+ * Tenant-level configuration for WebAuthn
  *
  * @author Spencer Witt
  */
-export interface WebAuthnRegisterStartRequest {
-  displayName?: string;
-  name?: string;
-  userAgent?: string;
-  userId?: UUID;
-  workflow?: WebAuthnWorkflow;
+export interface TenantWebAuthnConfiguration extends Enableable {
+  bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  debug?: boolean;
+  reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
+  relyingPartyId?: string;
+  relyingPartyName?: string;
 }
 
 /**
- * Models the Group Member Add Event.
+ * Search request for email templates
  *
+ * @author Mark Manes
+ */
+export interface EmailTemplateSearchRequest {
+  search?: EmailTemplateSearchCriteria;
+}
+
+/**
  * @author Daniel DeGroff
  */
-export interface GroupMemberAddEvent extends BaseEvent {
-  group?: Group;
-  members?: Array<GroupMember>;
+export interface IdentityProviderLinkResponse {
+  identityProviderLink?: IdentityProviderLink;
+  identityProviderLinks?: Array<IdentityProviderLink>;
 }
 
 /**
- * Search request for entities
- *
- * @author Brett Guy
- */
-export interface EntitySearchRequest {
-  search?: EntitySearchCriteria;
-}
-
-/**
- * Models the User Update Event.
+ * Entity Type API request object.
  *
  * @author Brian Pontarelli
  */
-export interface UserUpdateEvent extends BaseEvent {
-  original?: User;
-  user?: User;
+export interface EntityTypeRequest {
+  entityType?: EntityType;
+  permission?: EntityTypePermission;
+}
+
+/**
+ * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
+ *
+ * @author Trevor Smith
+ */
+export enum ConnectorType {
+  FusionAuth = "FusionAuth",
+  Generic = "Generic",
+  LDAP = "LDAP"
 }
 
 /**
@@ -8905,77 +11553,274 @@ export enum IdentityProviderType {
   Xbox = "Xbox"
 }
 
-/**
- * Entity Type API request object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityTypeRequest {
-  entityType?: EntityType;
-  permission?: EntityTypePermission;
+export enum TOTPAlgorithm {
+  HmacSHA1 = "HmacSHA1",
+  HmacSHA256 = "HmacSHA256",
+  HmacSHA512 = "HmacSHA512"
 }
 
 /**
  * @author Trevor Smith
  */
-export interface ConnectorResponse {
+export interface ConnectorRequest {
   connector?: BaseConnectorConfiguration;
-  connectors?: Array<BaseConnectorConfiguration>;
+}
+
+/**
+ * Models the User Login event for a new device (un-recognized)
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginNewDeviceEvent extends UserLoginSuccessEvent {
+}
+
+/**
+ * Events that are bound to applications.
+ *
+ * @author Brian Pontarelli
+ */
+export interface ApplicationEvent {
+}
+
+/**
+ * A log for an event that happened to a User.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserComment {
+  comment?: string;
+  commenterId?: UUID;
+  id?: UUID;
+  insertInstant?: number;
+  userId?: UUID;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export interface IdentityProviderLinkResponse {
-  identityProviderLink?: IdentityProviderLink;
-  identityProviderLinks?: Array<IdentityProviderLink>;
+export interface OAuthError {
+  change_password_id?: string;
+  error?: OAuthErrorType;
+  error_description?: string;
+  error_reason?: OAuthErrorReason;
+  error_uri?: string;
+  two_factor_id?: string;
+  two_factor_methods?: Array<TwoFactorMethod>;
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface ApplicationExternalIdentifierConfiguration {
-  twoFactorTrustIdTimeToLiveInSeconds?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantFormConfiguration {
-  adminUserFormId?: UUID;
-}
-
-/**
- * Search criteria for Lambdas
+ * Search response for Themes
  *
  * @author Mark Manes
  */
-export interface LambdaSearchCriteria extends BaseSearchCriteria {
-  body?: string;
-  name?: string;
-  type?: LambdaType;
+export interface ThemeSearchResponse {
+  themes?: Array<Theme>;
+  total?: number;
 }
 
 /**
- * Search criteria for Tenants
+ * CleanSpeak configuration at the system and application level.
  *
- * @author Mark Manes
+ * @author Brian Pontarelli
  */
-export interface TenantSearchCriteria extends BaseSearchCriteria {
-  name?: string;
+export interface CleanSpeakConfiguration extends Enableable {
+  apiKey?: string;
+  applicationIds?: Array<UUID>;
+  url?: string;
+  usernameModeration?: UsernameModeration;
 }
 
 /**
- * Tenant-level configuration for WebAuthn
+ * Options to request extensions during credential registration
  *
  * @author Spencer Witt
  */
-export interface TenantWebAuthnConfiguration extends Enableable {
-  bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
-  debug?: boolean;
-  reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
-  relyingPartyId?: string;
-  relyingPartyName?: string;
+export interface WebAuthnRegistrationExtensionOptions {
+  credProps?: boolean;
+}
+
+export enum SAMLLogoutBehavior {
+  AllParticipants = "AllParticipants",
+  OnlyOriginator = "OnlyOriginator"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface RefreshRequest extends BaseEventRequest {
+  refreshToken?: string;
+  token?: string;
+}
+
+/**
+ * @author Brett Guy
+ */
+export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration {
+  defaultTopic?: string;
+  producer?: Record<string, string>;
+}
+
+/**
+ * The handling policy for scopes provided by FusionAuth
+ *
+ * @author Spencer Witt
+ */
+export interface ProvidedScopePolicy {
+  address?: Requirable;
+  email?: Requirable;
+  phone?: Requirable;
+  profile?: Requirable;
+}
+
+export interface UniqueUsernameConfiguration extends Enableable {
+  numberOfDigits?: number;
+  separator?: string;
+  strategy?: UniqueUsernameStrategy;
+}
+
+/**
+ * Models the Group Created Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupCreateCompleteEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
+ * Event log response.
+ *
+ * @author Brian Pontarelli
+ */
+export interface EventLogSearchResponse {
+  eventLogs?: Array<EventLog>;
+  total?: number;
+}
+
+export enum ClientAuthenticationMethod {
+  none = "none",
+  client_secret_basic = "client_secret_basic",
+  client_secret_post = "client_secret_post"
+}
+
+/**
+ * COSE Elliptic Curve identifier to determine which elliptic curve to use with a given key
+ *
+ * @author Spencer Witt
+ */
+export enum CoseEllipticCurve {
+  Reserved = "Reserved",
+  P256 = "P256",
+  P384 = "P384",
+  P521 = "P521",
+  X25519 = "X25519",
+  X448 = "X448",
+  Ed25519 = "Ed25519",
+  Ed448 = "Ed448",
+  Secp256k1 = "Secp256k1"
+}
+
+/**
+ * @author Brian Pontarelli
+ */
+export interface AuditLogSearchRequest {
+  search?: AuditLogSearchCriteria;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderTenantConfiguration {
+  data?: Record<string, any>;
+  limitUserLinkCount?: IdentityProviderLimitUserLinkingPolicy;
+}
+
+/**
+ * Config for regular SAML IDP configurations that support IdP initiated requests
+ *
+ * @author Lyle Schemmerling
+ */
+export interface SAMLv2IdpInitiatedConfiguration extends Enableable {
+  issuer?: string;
+}
+
+/**
+ * domain POJO to represent AuthenticationKey
+ *
+ * @author sanjay
+ */
+export interface APIKey {
+  id?: UUID;
+  insertInstant?: number;
+  ipAccessControlListId?: UUID;
+  key?: string;
+  keyManager?: boolean;
+  lastUpdateInstant?: number;
+  metaData?: APIKeyMetaData;
+  permissions?: APIKeyPermissions;
+  tenantId?: UUID;
+}
+
+/**
+ * Theme API response object.
+ *
+ * @author Trevor Smith
+ */
+export interface ThemeResponse {
+  theme?: Theme;
+  themes?: Array<Theme>;
+}
+
+/**
+ * Application-level configuration for WebAuthn
+ *
+ * @author Daniel DeGroff
+ */
+export interface ApplicationWebAuthnConfiguration extends Enableable {
+  bootstrapWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
+  reauthenticationWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
+}
+
+/**
+ * @author Rob Davis
+ */
+export interface TenantLambdaConfiguration {
+  scimEnterpriseUserRequestConverterId?: UUID;
+  scimEnterpriseUserResponseConverterId?: UUID;
+  scimGroupRequestConverterId?: UUID;
+  scimGroupResponseConverterId?: UUID;
+  scimUserRequestConverterId?: UUID;
+  scimUserResponseConverterId?: UUID;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface AppleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  bundleId?: string;
+  buttonText?: string;
+  keyId?: UUID;
+  scope?: string;
+  servicesId?: string;
+  teamId?: string;
+}
+
+/**
+ * A custom OAuth scope for a specific application.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScope {
+  applicationId?: UUID;
+  data?: Record<string, any>;
+  defaultConsentDetail?: string;
+  defaultConsentMessage?: string;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  required?: boolean;
 }
 
 /**
@@ -8989,37 +11834,26 @@ export interface Error {
   message?: string;
 }
 
-/**
- * @author Daniel DeGroff
- */
-export interface SendRequest {
+export interface UsernameModeration extends Enableable {
   applicationId?: UUID;
-  bccAddresses?: Array<string>;
-  ccAddresses?: Array<string>;
-  preferredLanguages?: Array<string>;
-  requestData?: Record<string, any>;
-  toAddresses?: Array<EmailAddress>;
-  userIds?: Array<UUID>;
 }
 
 /**
- * Interface for all identity providers that can be domain based.
+ * Models the User Update Event once it is completed. This cannot be transactional.
+ *
+ * @author Daniel DeGroff
  */
-export interface DomainBasedIdentityProvider {
-}
-
-export interface EmailPlus extends Enableable {
-  emailTemplateId?: UUID;
-  maximumTimeToSendEmailInHours?: number;
-  minimumTimeToSendEmailInHours?: number;
+export interface UserUpdateCompleteEvent extends BaseEvent {
+  original?: User;
+  user?: User;
 }
 
 /**
  * @author Daniel DeGroff
  */
-export enum SystemTrustedProxyConfigurationPolicy {
-  All = "All",
-  OnlyConfigured = "OnlyConfigured"
+export interface BaseExportRequest {
+  dateTimeSecondsFormat?: string;
+  zoneId?: string;
 }
 
 /**
@@ -9034,34 +11868,11 @@ export enum AttestationConveyancePreference {
   enterprise = "enterprise"
 }
 
-export interface CertificateInformation {
-  issuer?: string;
-  md5Fingerprint?: string;
-  serialNumber?: string;
-  sha1Fingerprint?: string;
-  sha1Thumbprint?: string;
-  sha256Fingerprint?: string;
-  sha256Thumbprint?: string;
-  subject?: string;
-  validFrom?: number;
-  validTo?: number;
-}
-
 /**
- * JWT Public Key Response Object
- *
  * @author Daniel DeGroff
  */
-export interface PublicKeyResponse {
-  publicKey?: string;
-  publicKeys?: Record<string, string>;
-}
-
-/**
- * @author Mikey Sleevi
- */
-export enum MessageType {
-  SMS = "SMS"
+export interface JWKSResponse {
+  keys?: Array<JSONWebKey>;
 }
 
 /**
@@ -9077,1237 +11888,24 @@ export interface EventLog {
 }
 
 /**
- * Config for regular SAML IDP configurations that support IdP initiated requests
- *
- * @author Lyle Schemmerling
- */
-export interface SAMLv2IdpInitiatedConfiguration extends Enableable {
-  issuer?: string;
-}
-
-/**
- * API response for refreshing a JWT with a Refresh Token.
- * <p>
- * Using a different response object from RefreshTokenResponse because the retrieve response will return an object for refreshToken, and this is a
- * string.
- *
- * @author Daniel DeGroff
- */
-export interface JWTRefreshResponse {
-  refreshToken?: string;
-  refreshTokenId?: UUID;
-  token?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LoginHintConfiguration extends Enableable {
-  parameterName?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface FacebookApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  appId?: string;
-  buttonText?: string;
-  client_secret?: string;
-  fields?: string;
-  loginMethod?: IdentityProviderLoginMethod;
-  permissions?: string;
-}
-
-/**
- * User Comment Response
- *
- * @author Seth Musselman
- */
-export interface UserCommentResponse {
-  userComment?: UserComment;
-  userComments?: Array<UserComment>;
-}
-
-/**
- * Models the event types that FusionAuth produces.
- *
- * @author Brian Pontarelli
- */
-export enum EventType {
-  JWTPublicKeyUpdate = "jwt.public-key.update",
-  JWTRefreshTokenRevoke = "jwt.refresh-token.revoke",
-  JWTRefresh = "jwt.refresh",
-  AuditLogCreate = "audit-log.create",
-  EventLogCreate = "event-log.create",
-  KickstartSuccess = "kickstart.success",
-  GroupCreate = "group.create",
-  GroupCreateComplete = "group.create.complete",
-  GroupDelete = "group.delete",
-  GroupDeleteComplete = "group.delete.complete",
-  GroupMemberAdd = "group.member.add",
-  GroupMemberAddComplete = "group.member.add.complete",
-  GroupMemberRemove = "group.member.remove",
-  GroupMemberRemoveComplete = "group.member.remove.complete",
-  GroupMemberUpdate = "group.member.update",
-  GroupMemberUpdateComplete = "group.member.update.complete",
-  GroupUpdate = "group.update",
-  GroupUpdateComplete = "group.update.complete",
-  UserAction = "user.action",
-  UserBulkCreate = "user.bulk.create",
-  UserCreate = "user.create",
-  UserCreateComplete = "user.create.complete",
-  UserDeactivate = "user.deactivate",
-  UserDelete = "user.delete",
-  UserDeleteComplete = "user.delete.complete",
-  UserEmailUpdate = "user.email.update",
-  UserEmailVerified = "user.email.verified",
-  UserIdentityProviderLink = "user.identity-provider.link",
-  UserIdentityProviderUnlink = "user.identity-provider.unlink",
-  UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
-  UserLoginIdDuplicateOnUpdate = "user.loginId.duplicate.update",
-  UserLoginFailed = "user.login.failed",
-  UserLoginNewDevice = "user.login.new-device",
-  UserLoginSuccess = "user.login.success",
-  UserLoginSuspicious = "user.login.suspicious",
-  UserPasswordBreach = "user.password.breach",
-  UserPasswordResetSend = "user.password.reset.send",
-  UserPasswordResetStart = "user.password.reset.start",
-  UserPasswordResetSuccess = "user.password.reset.success",
-  UserPasswordUpdate = "user.password.update",
-  UserReactivate = "user.reactivate",
-  UserRegistrationCreate = "user.registration.create",
-  UserRegistrationCreateComplete = "user.registration.create.complete",
-  UserRegistrationDelete = "user.registration.delete",
-  UserRegistrationDeleteComplete = "user.registration.delete.complete",
-  UserRegistrationUpdate = "user.registration.update",
-  UserRegistrationUpdateComplete = "user.registration.update.complete",
-  UserRegistrationVerified = "user.registration.verified",
-  UserTwoFactorMethodAdd = "user.two-factor.method.add",
-  UserTwoFactorMethodRemove = "user.two-factor.method.remove",
-  UserUpdate = "user.update",
-  UserUpdateComplete = "user.update.complete",
-  Test = "test"
-}
-
-/**
- * Used to express whether the Relying Party requires <a href="https://www.w3.org/TR/webauthn-2/#user-verification">user verification</a> for the
- * current operation.
- *
- * @author Spencer Witt
- */
-export enum UserVerificationRequirement {
-  required = "required",
-  preferred = "preferred",
-  discouraged = "discouraged"
-}
-
-/**
- * Models the User Password Update Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserPasswordUpdateEvent extends BaseEvent {
-  user?: User;
-}
-
-/**
- * Request to authenticate with WebAuthn
- *
- * @author Spencer Witt
- */
-export interface WebAuthnPublicKeyAuthenticationRequest {
-  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
-  id?: string;
-  response?: WebAuthnAuthenticatorAuthenticationResponse;
-  rpId?: string;
-  type?: string;
-}
-
-/**
- * Standard error domain object that can also be used as the response from an API call.
- *
- * @author Brian Pontarelli
- */
-export interface Errors {
-  fieldErrors?: Record<string, Array<Error>>;
-  generalErrors?: Array<Error>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LoginRecordExportRequest extends BaseExportRequest {
-  criteria?: LoginRecordSearchCriteria;
-}
-
-/**
- * IdP Initiated login configuration
- *
- * @author Daniel DeGroff
- */
-export interface SAMLv2IdPInitiatedLoginConfiguration extends Enableable {
-  nameIdFormat?: string;
-}
-
-/**
- * A marker interface indicating this event is not scoped to a tenant and will be sent to all webhooks.
- *
- * @author Daniel DeGroff
- */
-export interface InstanceEvent extends NonTransactionalEvent {
-}
-
-/**
- * The IdP behavior when no user link has been made yet.
- *
- * @author Daniel DeGroff
- */
-export enum IdentityProviderLinkingStrategy {
-  CreatePendingLink = "CreatePendingLink",
-  Disabled = "Disabled",
-  LinkAnonymously = "LinkAnonymously",
-  LinkByEmail = "LinkByEmail",
-  LinkByEmailForExistingUser = "LinkByEmailForExistingUser",
-  LinkByUsername = "LinkByUsername",
-  LinkByUsernameForExistingUser = "LinkByUsernameForExistingUser",
-  Unsupported = "Unsupported"
-}
-
-/**
- * Event to indicate kickstart has been successfully completed.
- *
- * @author Daniel DeGroff
- */
-export interface KickstartSuccessEvent extends BaseEvent {
-  instanceId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface JWKSResponse {
-  keys?: Array<JSONWebKey>;
-}
-
-export enum KeyType {
-  EC = "EC",
-  RSA = "RSA",
-  HMAC = "HMAC"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum RefreshTokenUsagePolicy {
-  Reusable = "Reusable",
-  OneTimeUse = "OneTimeUse"
-}
-
-/**
- * User API response object.
- *
- * @author Brian Pontarelli
- */
-export interface UserResponse {
-  emailVerificationId?: string;
-  emailVerificationOneTimeCode?: string;
-  registrationVerificationIds?: Record<UUID, string>;
-  registrationVerificationOneTimeCodes?: Record<UUID, string>;
-  token?: string;
-  tokenExpirationInstant?: number;
-  user?: User;
-}
-
-/**
- * A User's membership into a Group
- *
- * @author Daniel DeGroff
- */
-export interface GroupMember {
-  data?: Record<string, any>;
-  groupId?: UUID;
-  id?: UUID;
-  insertInstant?: number;
-  user?: User;
-  userId?: UUID;
-}
-
-/**
- * User registration information for a single application.
- *
- * @author Brian Pontarelli
- */
-export interface UserRegistration {
-  applicationId?: UUID;
-  authenticationToken?: string;
-  cleanSpeakId?: UUID;
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  lastLoginInstant?: number;
-  lastUpdateInstant?: number;
-  preferredLanguages?: Array<string>;
-  roles?: Array<string>;
-  timezone?: string;
-  tokens?: Record<string, string>;
-  username?: string;
-  usernameStatus?: ContentStatus;
-  verified?: boolean;
-  verifiedInstant?: number;
-}
-
-/**
- * @author Brett Guy
- */
-export interface TenantAccessControlConfiguration {
-  uiIPAccessControlListId?: UUID;
-}
-
-/**
- * Webhook API request object.
- *
- * @author Brian Pontarelli
- */
-export interface WebhookRequest {
-  webhook?: Webhook;
-}
-
-/**
- * Models the user action Event.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionEvent extends BaseEvent {
-  action?: string;
-  actioneeUserId?: UUID;
-  actionerUserId?: UUID;
-  actionId?: UUID;
-  applicationIds?: Array<UUID>;
-  comment?: string;
-  email?: Email;
-  emailedUser?: boolean;
-  expiry?: number;
-  localizedAction?: string;
-  localizedDuration?: string;
-  localizedOption?: string;
-  localizedReason?: string;
-  notifyUser?: boolean;
-  option?: string;
-  phase?: UserActionPhase;
-  reason?: string;
-  reasonCode?: string;
-}
-
-/**
- * Models the Group Member Add Complete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberAddCompleteEvent extends BaseEvent {
-  group?: Group;
-  members?: Array<GroupMember>;
-}
-
-/**
- * Search API response.
- *
- * @author Brian Pontarelli
- */
-export interface SearchResponse extends ExpandableResponse {
-  nextResults?: string;
-  total?: number;
-  users?: Array<User>;
-}
-
-/**
- * The handling policy for scopes provided by FusionAuth
- *
- * @author Spencer Witt
- */
-export interface ProvidedScopePolicy {
-  address?: Requirable;
-  email?: Requirable;
-  phone?: Requirable;
-  profile?: Requirable;
-}
-
-/**
- * Search criteria for themes
- *
- * @author Mark Manes
- */
-export interface ThemeSearchCriteria extends BaseSearchCriteria {
-  name?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface OAuth2Configuration {
-  authorizedOriginURLs?: Array<string>;
-  authorizedRedirectURLs?: Array<string>;
-  authorizedURLValidationPolicy?: Oauth2AuthorizedURLValidationPolicy;
-  clientAuthenticationPolicy?: ClientAuthenticationPolicy;
-  clientId?: string;
-  clientSecret?: string;
-  consentMode?: OAuthScopeConsentMode;
-  debug?: boolean;
-  deviceVerificationURL?: string;
-  enabledGrants?: Array<GrantType>;
-  generateRefreshTokens?: boolean;
-  logoutBehavior?: LogoutBehavior;
-  logoutURL?: string;
-  proofKeyForCodeExchangePolicy?: ProofKeyForCodeExchangePolicy;
-  providedScopePolicy?: ProvidedScopePolicy;
-  relationship?: OAuthApplicationRelationship;
-  requireClientAuthentication?: boolean;
-  requireRegistration?: boolean;
-  scopeHandlingPolicy?: OAuthScopeHandlingPolicy;
-  unknownScopePolicy?: UnknownScopePolicy;
-}
-
-/**
- * Search criteria for Group Members
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberSearchCriteria extends BaseSearchCriteria {
-  groupId?: UUID;
-  tenantId?: UUID;
-  userId?: UUID;
-}
-
-/**
- * Models the User Create Registration Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserRegistrationCreateEvent extends BaseEvent {
-  applicationId?: UUID;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * @author Rob Davis
- */
-export interface TenantSCIMServerConfiguration extends Enableable {
-  clientEntityTypeId?: UUID;
-  schemas?: Record<string, any>;
-  serverEntityTypeId?: UUID;
-}
-
-export interface UIConfiguration {
-  headerColor?: string;
-  logoURL?: string;
-  menuFontColor?: string;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface EventConfiguration {
-  events?: Record<EventType, EventConfigurationData>;
-}
-
-/**
- * A log for an action that was taken on a User.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionLog {
-  actioneeUserId?: UUID;
-  actionerUserId?: UUID;
-  applicationIds?: Array<UUID>;
-  comment?: string;
-  emailUserOnEnd?: boolean;
-  endEventSent?: boolean;
-  expiry?: number;
-  history?: LogHistory;
-  id?: UUID;
-  insertInstant?: number;
-  localizedName?: string;
-  localizedOption?: string;
-  localizedReason?: string;
-  name?: string;
-  notifyUserOnEnd?: boolean;
-  option?: string;
-  reason?: string;
-  reasonCode?: string;
-  userActionId?: UUID;
-}
-
-/**
- * Email template search response
- *
- * @author Mark Manes
- */
-export interface EmailTemplateSearchResponse {
-  emailTemplates?: Array<EmailTemplate>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ExternalIdentifierConfiguration {
-  authorizationGrantIdTimeToLiveInSeconds?: number;
-  changePasswordIdGenerator?: SecureGeneratorConfiguration;
-  changePasswordIdTimeToLiveInSeconds?: number;
-  deviceCodeTimeToLiveInSeconds?: number;
-  deviceUserCodeIdGenerator?: SecureGeneratorConfiguration;
-  emailVerificationIdGenerator?: SecureGeneratorConfiguration;
-  emailVerificationIdTimeToLiveInSeconds?: number;
-  emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
-  externalAuthenticationIdTimeToLiveInSeconds?: number;
-  oneTimePasswordTimeToLiveInSeconds?: number;
-  passwordlessLoginGenerator?: SecureGeneratorConfiguration;
-  passwordlessLoginTimeToLiveInSeconds?: number;
-  pendingAccountLinkTimeToLiveInSeconds?: number;
-  registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
-  registrationVerificationIdTimeToLiveInSeconds?: number;
-  registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
-  rememberOAuthScopeConsentChoiceTimeToLiveInSeconds?: number;
-  samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
-  setupPasswordIdGenerator?: SecureGeneratorConfiguration;
-  setupPasswordIdTimeToLiveInSeconds?: number;
-  trustTokenTimeToLiveInSeconds?: number;
-  twoFactorIdTimeToLiveInSeconds?: number;
-  twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
-  twoFactorOneTimeCodeIdTimeToLiveInSeconds?: number;
-  twoFactorTrustIdTimeToLiveInSeconds?: number;
-  webAuthnAuthenticationChallengeTimeToLiveInSeconds?: number;
-  webAuthnRegistrationChallengeTimeToLiveInSeconds?: number;
-}
-
-export enum DeviceType {
-  BROWSER = "BROWSER",
-  DESKTOP = "DESKTOP",
-  LAPTOP = "LAPTOP",
-  MOBILE = "MOBILE",
-  OTHER = "OTHER",
-  SERVER = "SERVER",
-  TABLET = "TABLET",
-  TV = "TV",
-  UNKNOWN = "UNKNOWN"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantRateLimitConfiguration {
-  failedLogin?: RateLimitedRequestConfiguration;
-  forgotPassword?: RateLimitedRequestConfiguration;
-  sendEmailVerification?: RateLimitedRequestConfiguration;
-  sendPasswordless?: RateLimitedRequestConfiguration;
-  sendRegistrationVerification?: RateLimitedRequestConfiguration;
-  sendTwoFactor?: RateLimitedRequestConfiguration;
-}
-
-/**
- * Search request for entity grants.
- *
- * @author Brian Pontarelli
- */
-export interface EntityGrantSearchRequest {
-  search?: EntityGrantSearchCriteria;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface Tenant {
-  accessControlConfiguration?: TenantAccessControlConfiguration;
-  captchaConfiguration?: TenantCaptchaConfiguration;
-  configured?: boolean;
-  connectorPolicies?: Array<ConnectorPolicy>;
-  data?: Record<string, any>;
-  emailConfiguration?: EmailConfiguration;
-  eventConfiguration?: EventConfiguration;
-  externalIdentifierConfiguration?: ExternalIdentifierConfiguration;
-  failedAuthenticationConfiguration?: FailedAuthenticationConfiguration;
-  familyConfiguration?: FamilyConfiguration;
-  formConfiguration?: TenantFormConfiguration;
-  httpSessionMaxInactiveInterval?: number;
-  id?: UUID;
-  insertInstant?: number;
-  issuer?: string;
-  jwtConfiguration?: JWTConfiguration;
-  lambdaConfiguration?: TenantLambdaConfiguration;
-  lastUpdateInstant?: number;
-  loginConfiguration?: TenantLoginConfiguration;
-  logoutURL?: string;
-  maximumPasswordAge?: MaximumPasswordAge;
-  minimumPasswordAge?: MinimumPasswordAge;
-  multiFactorConfiguration?: TenantMultiFactorConfiguration;
-  name?: string;
-  oauthConfiguration?: TenantOAuth2Configuration;
-  passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
-  passwordValidationRules?: PasswordValidationRules;
-  rateLimitConfiguration?: TenantRateLimitConfiguration;
-  registrationConfiguration?: TenantRegistrationConfiguration;
-  scimServerConfiguration?: TenantSCIMServerConfiguration;
-  ssoConfiguration?: TenantSSOConfiguration;
-  state?: ObjectState;
-  themeId?: UUID;
-  userDeletePolicy?: TenantUserDeletePolicy;
-  usernameConfiguration?: TenantUsernameConfiguration;
-  webAuthnConfiguration?: TenantWebAuthnConfiguration;
-}
-
-/**
- * @author Lyle Schemmerling
- */
-export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends BaseIdentityProvider<D> {
-  emailClaim?: string;
-  keyId?: UUID;
-  uniqueIdClaim?: string;
-  useNameIdForEmail?: boolean;
-  usernameClaim?: string;
-}
-
-/**
- * Models the User Password Reset Start Event.
- *
- * @author Daniel DeGroff
- */
-export interface UserPasswordResetStartEvent extends BaseEvent {
-  user?: User;
-}
-
-export interface LoginConfiguration {
-  allowTokenRefresh?: boolean;
-  generateRefreshTokens?: boolean;
-  requireAuthentication?: boolean;
-}
-
-/**
- * Change password request object.
- *
- * @author Brian Pontarelli
- */
-export interface ChangePasswordRequest extends BaseEventRequest {
-  applicationId?: UUID;
-  changePasswordId?: string;
-  currentPassword?: string;
-  loginId?: string;
-  password?: string;
-  refreshToken?: string;
-  trustChallenge?: string;
-  trustToken?: string;
-}
-
-/**
- * Contains attributes for the Relying Party to refer to an existing public key credential as an input parameter.
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialDescriptor {
-  id?: string;
-  transports?: Array<string>;
-  type?: PublicKeyCredentialType;
-}
-
-/**
- * Models a single family member.
- *
- * @author Brian Pontarelli
- */
-export interface FamilyMember {
-  data?: Record<string, any>;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  owner?: boolean;
-  role?: FamilyRole;
-  userId?: UUID;
-}
-
-export interface RegistrationConfiguration extends Enableable {
-  birthDate?: Requirable;
-  confirmPassword?: boolean;
-  firstName?: Requirable;
-  formId?: UUID;
-  fullName?: Requirable;
-  lastName?: Requirable;
-  loginIdType?: LoginIdType;
-  middleName?: Requirable;
-  mobilePhone?: Requirable;
-  preferredLanguages?: Requirable;
-  type?: RegistrationType;
-}
-
-export enum BreachAction {
-  Off = "Off",
-  RecordOnly = "RecordOnly",
-  NotifyUser = "NotifyUser",
-  RequireChange = "RequireChange"
-}
-
-/**
- * Search request for Keys
- *
- * @author Spencer Witt
- */
-export interface KeySearchRequest {
-  search?: KeySearchCriteria;
-}
-
-/**
- * The application's relationship to the authorization server. First-party applications will be granted implicit permission for requested scopes.
- * Third-party applications will use the {@link OAuthScopeConsentMode} policy.
- *
- * @author Spencer Witt
- */
-export enum OAuthApplicationRelationship {
-  FirstParty = "FirstParty",
-  ThirdParty = "ThirdParty"
-}
-
-/**
- * Group Member Response
- *
- * @author Daniel DeGroff
- */
-export interface MemberResponse {
-  members?: Record<UUID, Array<GroupMember>>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SystemTrustedProxyConfiguration {
-  trusted?: Array<string>;
-  trustPolicy?: SystemTrustedProxyConfigurationPolicy;
-}
-
-/**
- * Key search response
- *
- * @author Spencer Witt
- */
-export interface KeySearchResponse {
-  keys?: Array<Key>;
-  total?: number;
-}
-
-/**
- * API response for User consent.
- *
- * @author Daniel DeGroff
- */
-export interface UserConsentRequest {
-  userConsent?: UserConsent;
-}
-
-/**
- * Describes the Relying Party's requirements for <a href="https://www.w3.org/TR/webauthn-2/#client-side-discoverable-credential">client-side
- * discoverable credentials</a> (formerly known as "resident keys")
- *
- * @author Spencer Witt
- */
-export enum ResidentKeyRequirement {
-  discouraged = "discouraged",
-  preferred = "preferred",
-  required = "required"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RefreshRequest extends BaseEventRequest {
-  refreshToken?: string;
-  token?: string;
-}
-
-/**
- * Form field response.
- *
- * @author Brett Guy
- */
-export interface FormFieldResponse {
-  field?: FormField;
-  fields?: Array<FormField>;
-}
-
-/**
- * API response for completing WebAuthn credential registration or assertion
- *
- * @author Spencer Witt
- */
-export interface WebAuthnRegisterCompleteResponse {
-  credential?: WebAuthnCredential;
-}
-
-/**
- * Change password response object.
- *
- * @author Daniel DeGroff
- */
-export interface ChangePasswordResponse {
-  oneTimePassword?: string;
-  state?: Record<string, any>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantResponse {
-  tenant?: Tenant;
-  tenants?: Array<Tenant>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ApplicationFormConfiguration {
-  adminRegistrationFormId?: UUID;
-  selfServiceFormConfiguration?: SelfServiceFormConfiguration;
-  selfServiceFormId?: UUID;
-}
-
-/**
- * Raw login information for each time a user logs into an application.
- *
- * @author Brian Pontarelli
- */
-export interface RawLogin {
-  applicationId?: UUID;
-  instant?: number;
-  ipAddress?: string;
-  userId?: UUID;
-}
-
-/**
- * Models an event where a user is being updated and tries to use an "in-use" login Id (email or username).
- *
- * @author Daniel DeGroff
- */
-export interface UserLoginIdDuplicateOnUpdateEvent extends UserLoginIdDuplicateOnCreateEvent {
-}
-
-/**
  * @author Brett Pontarelli
  */
-export interface TenantSSOConfiguration {
-  deviceTrustTimeToLiveInSeconds?: number;
-}
-
-/**
- * API response for starting a WebAuthn registration ceremony
- *
- * @author Spencer Witt
- */
-export interface WebAuthnRegisterStartResponse {
-  options?: PublicKeyCredentialCreationOptions;
-}
-
-/**
- * SonyPSN gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface SonyPSNIdentityProvider extends BaseIdentityProvider<SonyPSNApplicationConfiguration> {
+export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  apiMode?: SteamAPIMode;
   buttonText?: string;
   client_id?: string;
-  client_secret?: string;
   scope?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SAMLv2IdPInitiatedApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface VerifyEmailRequest extends BaseEventRequest {
-  oneTimeCode?: string;
-  userId?: UUID;
-  verificationId?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface AuditLogExportRequest extends BaseExportRequest {
-  criteria?: AuditLogSearchCriteria;
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface SMSMessage {
-  phoneNumber?: string;
-  textMessage?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum VerificationStrategy {
-  ClickableLink = "ClickableLink",
-  FormField = "FormField"
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface SAMLv2ApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonImageURL?: string;
-  buttonText?: string;
-}
-
-/**
- * @author Matthew Altman
- */
-export enum LogoutBehavior {
-  RedirectOnly = "RedirectOnly",
-  AllApplications = "AllApplications"
-}
-
-/**
- * This class is a simple attachment with a byte array, name and MIME type.
- *
- * @author Brian Pontarelli
- */
-export interface Attachment {
-  attachment?: Array<number>;
-  mime?: string;
-  name?: string;
-}
-
-/**
- * User API delete request object.
- *
- * @author Daniel DeGroff
- */
-export interface UserDeleteRequest extends BaseEventRequest {
-  dryRun?: boolean;
-  hardDelete?: boolean;
-  limit?: number;
-  query?: string;
-  queryString?: string;
-  userIds?: Array<UUID>;
-}
-
-/**
- * SAML v2 IdP Initiated identity provider configuration.
- *
- * @author Daniel DeGroff
- */
-export interface SAMLv2IdPInitiatedIdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv2IdPInitiatedApplicationConfiguration> {
-  issuer?: string;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface LoginResponse {
-  actions?: Array<LoginPreventedResponse>;
-  changePasswordId?: string;
-  changePasswordReason?: ChangePasswordReason;
-  configurableMethods?: Array<string>;
-  emailVerificationId?: string;
-  methods?: Array<TwoFactorMethod>;
-  pendingIdPLinkId?: string;
-  refreshToken?: string;
-  refreshTokenId?: UUID;
-  registrationVerificationId?: string;
-  state?: Record<string, any>;
-  threatsDetected?: Array<AuthenticationThreats>;
-  token?: string;
-  tokenExpirationInstant?: number;
-  trustToken?: string;
-  twoFactorId?: string;
-  twoFactorTrustId?: string;
-  user?: User;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ReactorResponse {
-  status?: ReactorStatus;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
-  accurateTotal?: boolean;
-  ids?: Array<UUID>;
-  nextResults?: string;
-  query?: string;
-  queryString?: string;
-  sortFields?: Array<SortField>;
-}
-
-/**
- * The user action response object.
- *
- * @author Brian Pontarelli
- */
-export interface ActionResponse {
-  action?: UserActionLog;
-  actions?: Array<UserActionLog>;
-}
-
-/**
- * Models the Group Create Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupCreateEvent extends BaseEvent {
-  group?: Group;
-}
-
-/**
- * Models an entity that a user can be granted permissions to. Or an entity that can be granted permissions to another entity.
- *
- * @author Brian Pontarelli
- */
-export interface Entity {
-  clientId?: string;
-  clientSecret?: string;
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  parentId?: UUID;
-  tenantId?: UUID;
-  type?: EntityType;
-}
-
-export enum FamilyRole {
-  Child = "Child",
-  Teen = "Teen",
-  Adult = "Adult"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SortField {
-  missing?: string;
-  name?: string;
-  order?: Sort;
-}
-
-/**
- * Entity Type API response object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityTypeResponse {
-  entityType?: EntityType;
-  entityTypes?: Array<EntityType>;
-  permission?: EntityTypePermission;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ReactorMetricsResponse {
-  metrics?: ReactorMetrics;
-}
-
-/**
- * Steam API modes.
- *
- * @author Daniel DeGroff
- */
-export enum SteamAPIMode {
-  Public = "Public",
-  Partner = "Partner"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderRequest {
-  identityProvider?: BaseIdentityProvider<any>;
-}
-
-/**
- * Search criteria for the event log.
- *
- * @author Brian Pontarelli
- */
-export interface EventLogSearchCriteria extends BaseSearchCriteria {
-  end?: number;
-  message?: string;
-  start?: number;
-  type?: EventLogType;
-}
-
-/**
- * Search request for email templates
- *
- * @author Mark Manes
- */
-export interface EmailTemplateSearchRequest {
-  search?: EmailTemplateSearchCriteria;
-}
-
-/**
- * Models the User Registration Verified Event.
- *
- * @author Trevor Smith
- */
-export interface UserRegistrationVerifiedEvent extends BaseEvent {
-  applicationId?: UUID;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * The Integration Request
- *
- * @author Daniel DeGroff
- */
-export interface IntegrationRequest {
-  integrations?: Integrations;
-}
-
-export interface AuditLogConfiguration {
-  delete?: DeleteConfiguration;
-}
-
-/**
- * @author Lyle Schemmerling
- */
-export interface SAMLv2AssertionConfiguration {
-  destination?: SAMLv2DestinationAssertionConfiguration;
-}
-
-/**
- * Google social login provider parameters.
- *
- * @author Daniel DeGroff
- */
-export interface GoogleIdentityProviderProperties {
-  api?: string;
-  button?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ApplicationAccessControlConfiguration {
-  uiIPAccessControlListId?: UUID;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TestEvent extends BaseEvent {
-  message?: string;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface Tenantable {
-}
-
-/**
- * This class is the entity query. It provides a build pattern as well as public fields for use on forms and in actions.
- *
- * @author Brian Pontarelli
- */
-export interface EntitySearchCriteria extends BaseElasticSearchCriteria {
-}
-
-/**
- * Event log response.
- *
- * @author Daniel DeGroff
- */
-export interface EventLogResponse {
-  eventLog?: EventLog;
-}
-
-/**
- * Search criteria for Keys
- *
- * @author Spencer Witt
- */
-export interface KeySearchCriteria extends BaseSearchCriteria {
-  algorithm?: KeyAlgorithm;
-  name?: string;
-  type?: KeyType;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RefreshTokenSlidingWindowConfiguration {
-  maximumTimeToLiveInMinutes?: number;
-}
-
-/**
- * Events that are bound to applications.
- *
- * @author Brian Pontarelli
- */
-export interface ApplicationEvent {
-}
-
-/**
- * Forgot password response object.
- *
- * @author Daniel DeGroff
- */
-export interface ForgotPasswordResponse {
-  changePasswordId?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface LoginRecordSearchRequest {
-  retrieveTotal?: boolean;
-  search?: LoginRecordSearchCriteria;
-}
-
-/**
- * API response for retrieving Refresh Tokens
- *
- * @author Daniel DeGroff
- */
-export interface RefreshTokenResponse {
-  refreshToken?: RefreshToken;
-  refreshTokens?: Array<RefreshToken>;
-}
-
-/**
- * Models the Group Update Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupUpdateEvent extends BaseEvent {
-  group?: Group;
-  original?: Group;
+  webAPIKey?: string;
 }
 
 /**
  * @author Brett Pontarelli
  */
-export interface NintendoApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  emailClaim?: string;
-  scope?: string;
-  uniqueIdClaim?: string;
-  usernameClaim?: string;
+export interface TenantCaptchaConfiguration extends Enableable {
+  captchaMethod?: CaptchaMethod;
+  secretKey?: string;
+  siteKey?: string;
+  threshold?: number;
 }
 
 /**
@@ -10332,1020 +11930,8 @@ export interface LDAPConnectorConfiguration extends BaseConnectorConfiguration {
 /**
  * @author Daniel DeGroff
  */
-export interface DeviceUserCodeResponse {
-  client_id?: string;
-  deviceInfo?: DeviceInfo;
-  expires_in?: number;
-  pendingIdPLink?: PendingIdPLink;
-  scope?: string;
-  tenantId?: UUID;
-  user_code?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<OpenIdConnectApplicationConfiguration> {
-  buttonImageURL?: string;
-  buttonText?: string;
-  domains?: Array<string>;
-  oauth2?: IdentityProviderOauth2Configuration;
-  postRequest?: boolean;
-}
-
-export interface LambdaConfiguration {
-  reconcileId?: UUID;
-}
-
-/**
- * Models the User Bulk Create Event.
- *
- * @author Brian Pontarelli
- */
-export interface UserBulkCreateEvent extends BaseEvent {
-  users?: Array<User>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface JWTVendRequest {
-  claims?: Record<string, any>;
-  keyId?: UUID;
-  timeToLiveInSeconds?: number;
-}
-
-/**
- * Models a User consent.
- *
- * @author Daniel DeGroff
- */
-export interface UserConsent {
-  consent?: Consent;
-  consentId?: UUID;
-  data?: Record<string, any>;
-  giverUserId?: UUID;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  status?: ConsentStatus;
-  userId?: UUID;
-  values?: Array<string>;
-}
-
-/**
- * A displayable raw login that includes application name and user loginId.
- *
- * @author Brian Pontarelli
- */
-export interface DisplayableRawLogin extends RawLogin {
-  applicationName?: string;
-  location?: Location;
-  loginId?: string;
-}
-
-/**
- * Search response for Themes
- *
- * @author Mark Manes
- */
-export interface ThemeSearchResponse {
-  themes?: Array<Theme>;
-  total?: number;
-}
-
-export interface TwoFactorTrust {
-  applicationId?: UUID;
-  expiration?: number;
-  startInstant?: number;
-}
-
-/**
- * Models the User Identity Provider Unlink Event.
- *
- * @author Rob Davis
- */
-export interface UserIdentityProviderUnlinkEvent extends BaseEvent {
-  identityProviderLink?: IdentityProviderLink;
-  user?: User;
-}
-
-/**
- * @author Derek Klatt
- */
-export interface PasswordValidationRules {
-  breachDetection?: PasswordBreachDetection;
-  maxLength?: number;
-  minLength?: number;
-  rememberPreviousPasswords?: RememberPreviousPasswords;
-  requireMixedCase?: boolean;
-  requireNonAlpha?: boolean;
-  requireNumber?: boolean;
-  validateOnLogin?: boolean;
-}
-
-/**
- * Models the Group Update Complete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupUpdateCompleteEvent extends BaseEvent {
-  group?: Group;
-  original?: Group;
-}
-
-/**
- * Models a specific entity type permission. This permission can be granted to users or other entities.
- *
- * @author Brian Pontarelli
- */
-export interface EntityTypePermission {
-  data?: Record<string, any>;
-  description?: string;
-  id?: UUID;
-  insertInstant?: number;
-  isDefault?: boolean;
-  lastUpdateInstant?: number;
-  name?: string;
-}
-
-/**
- * Response for the daily active user report.
- *
- * @author Brian Pontarelli
- */
-export interface MonthlyActiveUserReportResponse {
-  monthlyActiveUsers?: Array<Count>;
-  total?: number;
-}
-
-/**
- * @author Brett Guy
- */
-export enum ClientAuthenticationPolicy {
-  Required = "Required",
-  NotRequired = "NotRequired",
-  NotRequiredWhenUsingPKCE = "NotRequiredWhenUsingPKCE"
-}
-
-/**
- * Event event to an audit log was created.
- *
- * @author Daniel DeGroff
- */
-export interface AuditLogCreateEvent extends BaseEvent {
-  auditLog?: AuditLog;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantUsernameConfiguration {
-  unique?: UniqueUsernameConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorMethod {
-  authenticator?: AuthenticatorConfiguration;
-  email?: string;
-  id?: string;
-  lastUsed?: boolean;
-  method?: string;
-  mobilePhone?: string;
-  secret?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantUnverifiedConfiguration {
-  email?: UnverifiedBehavior;
-  whenGated?: RegistrationUnverifiedOptions;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorSendRequest {
-  applicationId?: UUID;
-  email?: string;
-  method?: string;
-  methodId?: string;
-  mobilePhone?: string;
-  userId?: UUID;
-}
-
-/**
- * Models content user action options.
- *
- * @author Brian Pontarelli
- */
-export interface UserActionOption {
-  localizedNames?: LocalizedStrings;
-  name?: string;
-}
-
-/**
- * The transaction types for Webhooks and other event systems within FusionAuth.
- *
- * @author Brian Pontarelli
- */
-export enum TransactionType {
-  None = "None",
-  Any = "Any",
-  SimpleMajority = "SimpleMajority",
-  SuperMajority = "SuperMajority",
-  AbsoluteMajority = "AbsoluteMajority"
-}
-
-/**
- * The Application API request object.
- *
- * @author Brian Pontarelli
- */
-export interface ApplicationRequest extends BaseEventRequest {
-  application?: Application;
-  role?: ApplicationRole;
-  sourceApplicationId?: UUID;
-}
-
-// Do not require a setter for 'type', it is defined by the concrete class and is not mutable
-export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
-  applicationConfiguration?: Record<UUID, D>;
-  data?: Record<string, any>;
-  debug?: boolean;
-  id?: UUID;
-  insertInstant?: number;
-  lambdaConfiguration?: LambdaConfiguration;
-  lastUpdateInstant?: number;
-  linkingStrategy?: IdentityProviderLinkingStrategy;
-  name?: string;
-  tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
-  type?: IdentityProviderType;
-}
-
-/**
- * Describes a user account or WebAuthn Relying Party associated with a public key credential
- */
-export interface PublicKeyCredentialEntity {
-  name?: string;
-}
-
-/**
- * Models the User Update Registration Event.
- * <p>
- * This is different than user.registration.update in that it is sent after this event completes, this cannot be transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserRegistrationUpdateCompleteEvent extends BaseEvent {
-  applicationId?: UUID;
-  original?: UserRegistration;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * Audit log response.
- *
- * @author Brian Pontarelli
- */
-export interface AuditLogSearchResponse {
-  auditLogs?: Array<AuditLog>;
-  total?: number;
-}
-
-/**
- * COSE key type
- *
- * @author Spencer Witt
- */
-export enum CoseKeyType {
-  Reserved = "0",
-  OKP = "1",
-  EC2 = "2",
-  RSA = "3",
-  Symmetric = "4"
-}
-
-/**
- * @author Brian Pontarelli
- */
-export enum ExpiryUnit {
-  MINUTES = "MINUTES",
-  HOURS = "HOURS",
-  DAYS = "DAYS",
-  WEEKS = "WEEKS",
-  MONTHS = "MONTHS",
-  YEARS = "YEARS"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface KafkaConfiguration extends Enableable {
-  defaultTopic?: string;
-  producer?: Record<string, string>;
-}
-
-/**
- * Contains the output for the {@code credProps} extension
- *
- * @author Spencer Witt
- */
-export interface CredentialPropertiesOutput {
-  rk?: boolean;
-}
-
-/**
- * An action that can be executed on a user (discipline or reward potentially).
- *
- * @author Brian Pontarelli
- */
-export interface UserAction {
-  active?: boolean;
-  cancelEmailTemplateId?: UUID;
-  endEmailTemplateId?: UUID;
-  id?: UUID;
-  includeEmailInEventJSON?: boolean;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  localizedNames?: LocalizedStrings;
-  modifyEmailTemplateId?: UUID;
-  name?: string;
-  options?: Array<UserActionOption>;
-  preventLogin?: boolean;
-  sendEndEvent?: boolean;
-  startEmailTemplateId?: UUID;
-  temporal?: boolean;
-  transactionType?: TransactionType;
-  userEmailingEnabled?: boolean;
-  userNotificationsEnabled?: boolean;
-}
-
-/**
- * An audit log.
- *
- * @author Brian Pontarelli
- */
-export interface AuditLog {
-  data?: Record<string, any>;
-  id?: number;
-  insertInstant?: number;
-  insertUser?: string;
-  message?: string;
-  newValue?: any;
-  oldValue?: any;
-  reason?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderTenantConfiguration {
-  data?: Record<string, any>;
-  limitUserLinkCount?: IdentityProviderLimitUserLinkingPolicy;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface AuthenticatorConfiguration {
-  algorithm?: TOTPAlgorithm;
-  codeLength?: number;
-  timeStep?: number;
-}
-
-/**
- * Registration API request object.
- *
- * @author Brian Pontarelli
- */
-export interface RegistrationRequest extends BaseEventRequest {
-  disableDomainBlock?: boolean;
-  generateAuthenticationToken?: boolean;
-  registration?: UserRegistration;
-  sendSetPasswordEmail?: boolean;
-  skipRegistrationVerification?: boolean;
-  skipVerification?: boolean;
-  user?: User;
-}
-
-/**
- * JSON Web Token (JWT) as defined by RFC 7519.
- * <pre>
- * From RFC 7519 Section 1. Introduction:
- *    The suggested pronunciation of JWT is the same as the English word "jot".
- * </pre>
- * The JWT is not Thread-Safe and should not be re-used.
- *
- * @author Daniel DeGroff
- */
-export interface JWT {
-  aud?: any;
-  exp?: number;
-  iat?: number;
-  iss?: string;
-  jti?: string;
-  nbf?: number;
-  [otherClaims: string]: any; // Any other fields
-  sub?: string;
-}
-
-/**
- * @author Brett Guy
- */
-export interface IPAccessControlListSearchResponse {
-  ipAccessControlLists?: Array<IPAccessControlList>;
-  total?: number;
-}
-
-/**
- * Login API request object used for login to third-party systems (i.e. Login with Facebook).
- *
- * @author Brian Pontarelli
- */
-export interface IdentityProviderLoginRequest extends BaseLoginRequest {
-  data?: Record<string, string>;
-  encodedJWT?: string;
-  identityProviderId?: UUID;
-  noLink?: boolean;
-}
-
-/**
- * A Application-level policy for deleting Users.
- *
- * @author Trevor Smith
- */
-export interface ApplicationRegistrationDeletePolicy {
-  unverified?: TimeBasedDeletePolicy;
-}
-
-/**
- * Models an entity type that has a specific set of permissions. These are global objects and can be used across tenants.
- *
- * @author Brian Pontarelli
- */
-export interface EntityType {
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  jwtConfiguration?: EntityJWTConfiguration;
-  lastUpdateInstant?: number;
-  name?: string;
-  permissions?: Array<EntityTypePermission>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface FormStep {
-  fields?: Array<UUID>;
-}
-
-/**
- * Lambda API request object.
- *
- * @author Brian Pontarelli
- */
-export interface LambdaRequest {
-  lambda?: Lambda;
-}
-
-/**
- * API response for consent.
- *
- * @author Daniel DeGroff
- */
-export interface ConsentResponse {
-  consent?: Consent;
-  consents?: Array<Consent>;
-}
-
-/**
- * Xbox gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface XboxIdentityProvider extends BaseIdentityProvider<XboxApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface ApplicationMultiFactorConfiguration {
-  email?: MultiFactorEmailTemplate;
-  loginPolicy?: MultiFactorLoginPolicy;
-  sms?: MultiFactorSMSTemplate;
-  trustPolicy?: ApplicationMultiFactorTrustPolicy;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface SystemConfiguration {
-  auditLogConfiguration?: AuditLogConfiguration;
-  corsConfiguration?: CORSConfiguration;
-  data?: Record<string, any>;
-  eventLogConfiguration?: EventLogConfiguration;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  loginRecordConfiguration?: LoginRecordConfiguration;
-  reportTimezone?: string;
-  trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
-  uiConfiguration?: UIConfiguration;
-}
-
-/**
- * Interface describing the need for CORS configuration.
- *
- * @author Daniel DeGroff
- */
-export interface RequiresCORSConfiguration {
-}
-
-/**
- * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
- * delete).
- * <p>
- * This is different than user.delete because it is sent after the tx is committed, this cannot be transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserDeleteCompleteEvent extends BaseEvent {
-  user?: User;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorLoginRequest extends BaseLoginRequest {
-  code?: string;
-  trustComputer?: boolean;
-  twoFactorId?: string;
-  userId?: UUID;
-}
-
-/**
- * A custom OAuth scope for a specific application.
- *
- * @author Spencer Witt
- */
-export interface ApplicationOAuthScope {
-  applicationId?: UUID;
-  data?: Record<string, any>;
-  defaultConsentDetail?: string;
-  defaultConsentMessage?: string;
-  description?: string;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  required?: boolean;
-}
-
-export interface ActionData {
-  actioneeUserId?: UUID;
-  actionerUserId?: UUID;
-  applicationIds?: Array<UUID>;
-  comment?: string;
-  emailUser?: boolean;
-  expiry?: number;
-  notifyUser?: boolean;
-  option?: string;
-  reasonId?: UUID;
-  userActionId?: UUID;
-}
-
-/**
- * Search request for user comments
- *
- * @author Spencer Witt
- */
-export interface UserCommentSearchRequest {
-  search?: UserCommentSearchCriteria;
-}
-
-/**
- * Models the FusionAuth connector.
- *
- * @author Trevor Smith
- */
-export interface FusionAuthConnectorConfiguration extends BaseConnectorConfiguration {
-}
-
-/**
- * @author Brett Pontarelli
- */
-export enum IdentityProviderLoginMethod {
-  UsePopup = "UsePopup",
-  UseRedirect = "UseRedirect",
-  UseVendorJavaScript = "UseVendorJavaScript"
-}
-
-/**
- * The <i>authenticator's</i> response for the registration ceremony in its encoded format
- *
- * @author Spencer Witt
- */
-export interface WebAuthnAuthenticatorRegistrationResponse {
-  attestationObject?: string;
-  clientDataJSON?: string;
-}
-
-export enum TOTPAlgorithm {
-  HmacSHA1 = "HmacSHA1",
-  HmacSHA256 = "HmacSHA256",
-  HmacSHA512 = "HmacSHA512"
-}
-
-/**
- * API response for User consent.
- *
- * @author Daniel DeGroff
- */
-export interface UserConsentResponse {
-  userConsent?: UserConsent;
-  userConsents?: Array<UserConsent>;
-}
-
-/**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
- *
- * @author Daniel DeGroff
- */
-export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
-  duplicateEmail?: string;
-  duplicateUsername?: string;
-  existing?: User;
-  user?: User;
-}
-
-/**
- * Consent search response
- *
- * @author Spencer Witt
- */
-export interface ConsentSearchResponse {
-  consents?: Array<Consent>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TwoFactorRecoveryCodeResponse {
-  recoveryCodes?: Array<string>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantRequest extends BaseEventRequest {
-  sourceTenantId?: UUID;
-  tenant?: Tenant;
-  webhookIds?: Array<UUID>;
-}
-
-/**
- * API request to start a WebAuthn authentication ceremony
- *
- * @author Spencer Witt
- */
-export interface WebAuthnStartRequest {
-  applicationId?: UUID;
-  credentialId?: UUID;
-  loginId?: string;
-  state?: Record<string, any>;
-  userId?: UUID;
-  workflow?: WebAuthnWorkflow;
-}
-
-/**
- * Google social login provider.
- *
- * @author Daniel DeGroff
- */
-export interface GoogleIdentityProvider extends BaseIdentityProvider<GoogleApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  loginMethod?: IdentityProviderLoginMethod;
-  properties?: GoogleIdentityProviderProperties;
-  scope?: string;
-}
-
-/**
- * API response for completing WebAuthn assertion
- *
- * @author Spencer Witt
- */
-export interface WebAuthnAssertResponse {
-  credential?: WebAuthnCredential;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RefreshTokenRevocationPolicy {
-  onLoginPrevented?: boolean;
-  onMultiFactorEnable?: boolean;
-  onPasswordChanged?: boolean;
-}
-
-/**
- * Entity API response object.
- *
- * @author Brian Pontarelli
- */
-export interface EntityResponse {
-  entity?: Entity;
-}
-
-/**
- * @author andrewpai
- */
-export interface SelfServiceFormConfiguration {
-  requireCurrentPasswordOnPasswordChange?: boolean;
-}
-
-/**
- * Models a consent.
- *
- * @author Daniel DeGroff
- */
-export interface Consent {
-  consentEmailTemplateId?: UUID;
-  countryMinimumAgeForSelfConsent?: LocalizedIntegers;
-  data?: Record<string, any>;
-  defaultMinimumAgeForSelfConsent?: number;
-  emailPlus?: EmailPlus;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  multipleValuesAllowed?: boolean;
-  name?: string;
-  values?: Array<string>;
-}
-
-/**
- * @author Tyler Scott
- */
-export interface Group {
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  roles?: Record<UUID, Array<ApplicationRole>>;
-  tenantId?: UUID;
-}
-
-/**
- * @author Trevor Smith
- */
-export interface ConnectorRequest {
-  connector?: BaseConnectorConfiguration;
-}
-
-/**
- * Response for the system configuration API.
- *
- * @author Brian Pontarelli
- */
-export interface SystemConfigurationResponse {
-  systemConfiguration?: SystemConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface GoogleApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  loginMethod?: IdentityProviderLoginMethod;
-  properties?: GoogleIdentityProviderProperties;
-  scope?: string;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface BaseSearchCriteria {
-  numberOfResults?: number;
-  orderBy?: string;
-  startRow?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum FormFieldAdminPolicy {
-  Edit = "Edit",
-  View = "View"
-}
-
-export enum UniqueUsernameStrategy {
-  Always = "Always",
-  OnCollision = "OnCollision"
-}
-
-/**
- * Models the User Deleted Registration Event.
- * <p>
- * This is different than user.registration.delete in that it is sent after the TX has been committed. This event cannot be transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserRegistrationDeleteCompleteEvent extends BaseEvent {
-  applicationId?: UUID;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * The Integration Response
- *
- * @author Daniel DeGroff
- */
-export interface IntegrationResponse {
-  integrations?: Integrations;
-}
-
-/**
- * The Application API response.
- *
- * @author Brian Pontarelli
- */
-export interface ApplicationResponse {
-  application?: Application;
-  applications?: Array<Application>;
-  role?: ApplicationRole;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface FamilyConfiguration extends Enableable {
-  allowChildRegistrations?: boolean;
-  confirmChildEmailTemplateId?: UUID;
-  deleteOrphanedAccounts?: boolean;
-  deleteOrphanedAccountsDays?: number;
-  familyRequestEmailTemplateId?: UUID;
-  maximumChildAge?: number;
-  minimumOwnerAge?: number;
-  parentEmailRequired?: boolean;
-  parentRegistrationEmailTemplateId?: UUID;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface AuditLogSearchRequest {
-  search?: AuditLogSearchCriteria;
-}
-
-/**
- * Provides the <i>authenticator</i> with the data it needs to generate an assertion.
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialRequestOptions {
-  allowCredentials?: Array<PublicKeyCredentialDescriptor>;
-  challenge?: string;
-  rpId?: string;
-  timeout?: number;
-  userVerification?: UserVerificationRequirement;
-}
-
-export interface DeleteConfiguration extends Enableable {
-  numberOfDaysToRetain?: number;
-}
-
-/**
- * Request to complete the WebAuthn registration ceremony
- *
- * @author Spencer Witt
- */
-export interface WebAuthnLoginRequest extends BaseLoginRequest {
-  credential?: WebAuthnPublicKeyAuthenticationRequest;
-  origin?: string;
-  rpId?: string;
-  twoFactorTrustId?: string;
-}
-
-/**
- * Request for the system configuration API.
- *
- * @author Brian Pontarelli
- */
-export interface SystemConfigurationRequest {
-  systemConfiguration?: SystemConfiguration;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum UserState {
-  Authenticated = "Authenticated",
-  AuthenticatedNotRegistered = "AuthenticatedNotRegistered",
-  AuthenticatedNotVerified = "AuthenticatedNotVerified",
-  AuthenticatedRegistrationNotVerified = "AuthenticatedRegistrationNotVerified"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum SecureGeneratorType {
-  randomDigits = "randomDigits",
-  randomBytes = "randomBytes",
-  randomAlpha = "randomAlpha",
-  randomAlphaNumeric = "randomAlphaNumeric"
-}
-
-/**
- * A Tenant-level policy for deleting Users.
- *
- * @author Trevor Smith
- */
-export interface TenantUserDeletePolicy {
-  unverified?: TimeBasedDeletePolicy;
-}
-
-/**
- * domain POJO to represent AuthenticationKey
- *
- * @author sanjay
- */
-export interface APIKey {
-  id?: UUID;
-  insertInstant?: number;
-  ipAccessControlListId?: UUID;
-  key?: string;
-  keyManager?: boolean;
-  lastUpdateInstant?: number;
-  metaData?: APIKeyMetaData;
-  permissions?: APIKeyPermissions;
-  tenantId?: UUID;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export enum ReactorFeatureStatus {
-  ACTIVE = "ACTIVE",
-  DISCONNECTED = "DISCONNECTED",
-  PENDING = "PENDING",
-  DISABLED = "DISABLED",
-  UNKNOWN = "UNKNOWN"
-}
-
-/**
- * Reindex API request
- *
- * @author Daniel DeGroff
- */
-export interface ReindexRequest {
-  index?: string;
-}
-
-/**
- * Search response for entity types.
- *
- * @author Brian Pontarelli
- */
-export interface EntityTypeSearchResponse {
-  entityTypes?: Array<EntityType>;
-  total?: number;
-}
-
-/**
- * A role given to a user for a specific application.
- *
- * @author Seth Musselman
- */
-export interface ApplicationRole {
-  description?: string;
-  id?: UUID;
-  insertInstant?: number;
-  isDefault?: boolean;
-  isSuperRole?: boolean;
-  lastUpdateInstant?: number;
-  name?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantRegistrationConfiguration {
-  blockedDomains?: Array<string>;
+export interface FormFieldValidator extends Enableable {
+  expression?: string;
 }
 
 /**
@@ -11359,625 +11945,39 @@ export interface KeyResponse {
 }
 
 /**
- * @author Brett Pontarelli
+ * @author Daniel DeGroff
  */
-export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  apiMode?: SteamAPIMode;
-  buttonText?: string;
-  client_id?: string;
-  scope?: string;
-  webAPIKey?: string;
+export interface TestEvent extends BaseEvent {
+  message?: string;
 }
 
 /**
- * @author Brett Guy
- */
-export interface TwoFactorStartRequest {
-  applicationId?: UUID;
-  code?: string;
-  loginId?: string;
-  state?: Record<string, any>;
-  trustChallenge?: string;
-  userId?: UUID;
-}
-
-/**
- * Models the User Update Registration Event.
+ * Search criteria for Tenants
  *
- * @author Daniel DeGroff
+ * @author Mark Manes
  */
-export interface UserRegistrationUpdateEvent extends BaseEvent {
-  applicationId?: UUID;
-  original?: UserRegistration;
-  registration?: UserRegistration;
-  user?: User;
-}
-
-/**
- * Search response for Group Members
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberSearchResponse {
-  members?: Array<GroupMember>;
-  total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderLinkRequest extends BaseEventRequest {
-  identityProviderLink?: IdentityProviderLink;
-  pendingIdPLinkId?: string;
-}
-
-/**
- * Used by the Relying Party to specify their requirements for authenticator attributes. Fields use the deprecated "resident key" terminology to refer
- * to client-side discoverable credentials to maintain backwards compatibility with WebAuthn Level 1.
- *
- * @author Spencer Witt
- */
-export interface AuthenticatorSelectionCriteria {
-  authenticatorAttachment?: AuthenticatorAttachment;
-  requireResidentKey?: boolean;
-  residentKey?: ResidentKeyRequirement;
-  userVerification?: UserVerificationRequirement;
-}
-
-/**
- * Form response.
- *
- * @author Daniel DeGroff
- */
-export interface FormResponse {
-  form?: Form;
-  forms?: Array<Form>;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicationConfiguration> {
-  relyingPartyApplicationId?: string;
-  relyingPartyURL?: string;
-}
-
-/**
- * Group API response object.
- *
- * @author Daniel DeGroff
- */
-export interface GroupResponse {
-  group?: Group;
-  groups?: Array<Group>;
-}
-
-/**
- * Request to register a new public key with WebAuthn
- *
- * @author Spencer Witt
- */
-export interface WebAuthnPublicKeyRegistrationRequest {
-  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
-  id?: string;
-  response?: WebAuthnAuthenticatorRegistrationResponse;
-  rpId?: string;
-  transports?: Array<string>;
-  type?: string;
-}
-
-/**
- * Models the Group Create Complete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupDeleteCompleteEvent extends BaseEvent {
-  group?: Group;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RegistrationUnverifiedOptions {
-  behavior?: UnverifiedBehavior;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderPendingLinkResponse {
-  identityProviderTenantConfiguration?: IdentityProviderTenantConfiguration;
-  linkCount?: number;
-  pendingIdPLink?: PendingIdPLink;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface PasswordlessSendRequest {
-  applicationId?: UUID;
-  code?: string;
-  loginId?: string;
-  state?: Record<string, any>;
-}
-
-/**
- * @author Brett Guy
- */
-export interface GenericMessengerConfiguration extends BaseMessengerConfiguration {
-  connectTimeout?: number;
-  headers?: HTTPHeaders;
-  httpAuthenticationPassword?: string;
-  httpAuthenticationUsername?: string;
-  readTimeout?: number;
-  sslCertificate?: string;
-  url?: string;
-}
-
-/**
- * API request to import an existing WebAuthn credential(s)
- *
- * @author Spencer Witt
- */
-export interface WebAuthnCredentialImportRequest {
-  credentials?: Array<WebAuthnCredential>;
-  validateDbConstraints?: boolean;
-}
-
-export interface Templates {
-  accountEdit?: string;
-  accountIndex?: string;
-  accountTwoFactorDisable?: string;
-  accountTwoFactorEnable?: string;
-  accountTwoFactorIndex?: string;
-  accountWebAuthnAdd?: string;
-  accountWebAuthnDelete?: string;
-  accountWebAuthnIndex?: string;
-  confirmationRequired?: string;
-  emailComplete?: string;
-  emailSend?: string;
-  emailSent?: string;
-  emailVerificationRequired?: string;
-  emailVerify?: string;
-  helpers?: string;
-  index?: string;
-  oauth2Authorize?: string;
-  oauth2AuthorizedNotRegistered?: string;
-  oauth2ChildRegistrationNotAllowed?: string;
-  oauth2ChildRegistrationNotAllowedComplete?: string;
-  oauth2CompleteRegistration?: string;
-  oauth2Consent?: string;
-  oauth2Device?: string;
-  oauth2DeviceComplete?: string;
-  oauth2Error?: string;
-  oauth2Logout?: string;
-  oauth2Passwordless?: string;
-  oauth2Register?: string;
-  oauth2StartIdPLink?: string;
-  oauth2TwoFactor?: string;
-  oauth2TwoFactorEnable?: string;
-  oauth2TwoFactorEnableComplete?: string;
-  oauth2TwoFactorMethods?: string;
-  oauth2Wait?: string;
-  oauth2WebAuthn?: string;
-  oauth2WebAuthnReauth?: string;
-  oauth2WebAuthnReauthEnable?: string;
-  passwordChange?: string;
-  passwordComplete?: string;
-  passwordForgot?: string;
-  passwordSent?: string;
-  registrationComplete?: string;
-  registrationSend?: string;
-  registrationSent?: string;
-  registrationVerificationRequired?: string;
-  registrationVerify?: string;
-  samlv2Logout?: string;
-  unauthorized?: string;
-}
-
-/**
- * Nintendo gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  emailClaim?: string;
-  scope?: string;
-  uniqueIdClaim?: string;
-  usernameClaim?: string;
-}
-
-/**
- * @author Brett Guy
- */
-export interface TwilioMessengerConfiguration extends BaseMessengerConfiguration {
-  accountSID?: string;
-  authToken?: string;
-  fromPhoneNumber?: string;
-  messagingServiceSid?: string;
-  url?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface FormField {
-  confirm?: boolean;
-  consentId?: UUID;
-  control?: FormControl;
-  data?: Record<string, any>;
-  description?: string;
-  id?: UUID;
-  insertInstant?: number;
-  key?: string;
-  lastUpdateInstant?: number;
+export interface TenantSearchCriteria extends BaseSearchCriteria {
   name?: string;
-  options?: Array<string>;
-  required?: boolean;
-  type?: FormDataType;
-  validator?: FormFieldValidator;
 }
 
 /**
- * Twitch gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface TwitchIdentityProvider extends BaseIdentityProvider<TwitchApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface PreviewMessageTemplateRequest {
-  locale?: string;
-  messageTemplate?: MessageTemplate;
-}
-
-/**
- * Stores an message template used to distribute messages;
- *
- * @author Michael Sleevi
- */
-export interface MessageTemplate {
-  data?: Record<string, any>;
-  id?: UUID;
-  insertInstant?: number;
-  lastUpdateInstant?: number;
-  name?: string;
-  type?: MessageType;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface TenantCaptchaConfiguration extends Enableable {
-  captchaMethod?: CaptchaMethod;
-  secretKey?: string;
-  siteKey?: string;
-  threshold?: number;
-}
-
-/**
- * Models the User Reactivate Event.
+ * Base class for requests that can contain event information. This event information is used when sending Webhooks or emails
+ * during the transaction. The caller is responsible for ensuring that the event information is correct.
  *
  * @author Brian Pontarelli
  */
-export interface UserReactivateEvent extends BaseEvent {
-  user?: User;
+export interface BaseEventRequest {
+  eventInfo?: EventInfo;
+}
+
+export interface AuditLogConfiguration {
+  delete?: DeleteConfiguration;
 }
 
 /**
- * Models the User Create Event.
- *
- * @author Brian Pontarelli
+ * @author andrewpai
  */
-export interface UserCreateEvent extends BaseEvent {
-  user?: User;
-}
-
-export interface HistoryItem {
-  actionerUserId?: UUID;
-  comment?: string;
-  createInstant?: number;
-  expiry?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderLink {
-  data?: Record<string, any>;
-  displayName?: string;
-  identityProviderId?: UUID;
-  identityProviderName?: string;
-  identityProviderType?: IdentityProviderType;
-  identityProviderUserId?: string;
-  insertInstant?: number;
-  lastLoginInstant?: number;
-  tenantId?: UUID;
-  token?: string;
-  userId?: UUID;
-}
-
-/**
- * @author Seth Musselman
- */
-export interface PreviewResponse {
-  email?: Email;
-  errors?: Errors;
-}
-
-/**
- * Supply additional information about the user account when creating a new credential
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialUserEntity extends PublicKeyCredentialEntity {
-  displayName?: string;
-  id?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RefreshResponse {
-}
-
-/**
- * User API delete request object for a single user.
- *
- * @author Brian Pontarelli
- */
-export interface UserDeleteSingleRequest extends BaseEventRequest {
-  hardDelete?: boolean;
-}
-
-/**
- * Application-level configuration for WebAuthn
- *
- * @author Daniel DeGroff
- */
-export interface ApplicationWebAuthnConfiguration extends Enableable {
-  bootstrapWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
-  reauthenticationWorkflow?: ApplicationWebAuthnWorkflowConfiguration;
-}
-
-/**
- * A Message Template Request to the API
- *
- * @author Michael Sleevi
- */
-export interface MessageTemplateRequest {
-  messageTemplate?: MessageTemplate;
-}
-
-/**
- * Registration API request object.
- *
- * @author Brian Pontarelli
- */
-export interface RegistrationResponse {
-  refreshToken?: string;
-  registration?: UserRegistration;
-  registrationVerificationId?: string;
-  registrationVerificationOneTimeCode?: string;
-  token?: string;
-  tokenExpirationInstant?: number;
-  user?: User;
-}
-
-/**
- * @author Brett Guy
- */
-export enum MessengerType {
-  Generic = "Generic",
-  Kafka = "Kafka",
-  Twilio = "Twilio"
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface SecretResponse {
-  secret?: string;
-  secretBase32Encoded?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IntrospectResponse extends Record<string, any> {
-}
-
-/**
- * Search request for Group Members.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberSearchRequest {
-  search?: GroupMemberSearchCriteria;
-}
-
-/**
- * @author Rob Davis
- */
-export interface TenantLambdaConfiguration {
-  scimEnterpriseUserRequestConverterId?: UUID;
-  scimEnterpriseUserResponseConverterId?: UUID;
-  scimGroupRequestConverterId?: UUID;
-  scimGroupResponseConverterId?: UUID;
-  scimUserRequestConverterId?: UUID;
-  scimUserResponseConverterId?: UUID;
-}
-
-/**
- * Search criteria for webhooks.
- *
- * @author Spencer Witt
- */
-export interface WebhookSearchCriteria extends BaseSearchCriteria {
-  description?: string;
-  tenantId?: UUID;
-  url?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface BaseIdentityProviderApplicationConfiguration extends Enableable {
-  createRegistration?: boolean;
-  data?: Record<string, any>;
-}
-
-/**
- * Configuration for signing webhooks.
- *
- * @author Brent Halsey
- */
-export interface WebhookSignatureConfiguration extends Enableable {
-  signingKeyId?: UUID;
-}
-
-/**
- * Import request.
- *
- * @author Brian Pontarelli
- */
-export interface ImportRequest extends BaseEventRequest {
-  encryptionScheme?: string;
-  factor?: number;
-  users?: Array<User>;
-  validateDbConstraints?: boolean;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface MaximumPasswordAge extends Enableable {
-  days?: number;
-}
-
-/**
- * Epic gaming login provider.
- *
- * @author Brett Pontarelli
- */
-export interface EpicGamesIdentityProvider extends BaseIdentityProvider<EpicGamesApplicationConfiguration> {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * Models the User Email Verify Event.
- *
- * @author Trevor Smith
- */
-export interface UserEmailVerifiedEvent extends BaseEvent {
-  user?: User;
-}
-
-/**
- * An expandable API request.
- *
- * @author Daniel DeGroff
- */
-export interface ExpandableRequest {
-  expand?: Array<string>;
-}
-
-/**
- * Authentication key response object.
- *
- * @author Sanjay
- */
-export interface APIKeyResponse {
-  apiKey?: APIKey;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderStartLoginResponse {
-  code?: string;
-}
-
-/**
- * Models the User Update Event once it is completed. This cannot be transactional.
- *
- * @author Daniel DeGroff
- */
-export interface UserUpdateCompleteEvent extends BaseEvent {
-  original?: User;
-  user?: User;
-}
-
-/**
- * @author Trevor Smith
- */
-export interface DeviceResponse {
-  device_code?: string;
-  expires_in?: number;
-  interval?: number;
-  user_code?: string;
-  verification_uri?: string;
-  verification_uri_complete?: string;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface SonyPSNApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  buttonText?: string;
-  client_id?: string;
-  client_secret?: string;
-  scope?: string;
-}
-
-/**
- * Options to request extensions during credential registration
- *
- * @author Spencer Witt
- */
-export interface WebAuthnRegistrationExtensionOptions {
-  credProps?: boolean;
-}
-
-/**
- * Allows the Relying Party to specify desired attributes of a new credential.
- *
- * @author Spencer Witt
- */
-export interface PublicKeyCredentialCreationOptions {
-  attestation?: AttestationConveyancePreference;
-  authenticatorSelection?: AuthenticatorSelectionCriteria;
-  challenge?: string;
-  excludeCredentials?: Array<PublicKeyCredentialDescriptor>;
-  extensions?: WebAuthnRegistrationExtensionOptions;
-  pubKeyCredParams?: Array<PublicKeyCredentialParameters>;
-  rp?: PublicKeyCredentialRelyingPartyEntity;
-  timeout?: number;
-  user?: PublicKeyCredentialUserEntity;
-}
-
-/**
- * Request to complete the WebAuthn registration ceremony for a new credential,.
- *
- * @author Spencer Witt
- */
-export interface WebAuthnRegisterCompleteRequest {
-  credential?: WebAuthnPublicKeyRegistrationRequest;
-  origin?: string;
-  rpId?: string;
-  userId?: UUID;
+export interface SelfServiceFormConfiguration {
+  requireCurrentPasswordOnPasswordChange?: boolean;
 }
 
