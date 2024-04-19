@@ -640,6 +640,26 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a new custom OAuth scope for an application. You must specify the Id of the application you are creating the scope for.
+   * You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+   *
+   * @param {UUID} applicationId The Id of the application to create the OAuth scope on.
+   * @param {UUID} scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+   * @param {ApplicationOAuthScopeRequest} request The request object that contains all the information used to create the OAuth OAuth scope.
+   * @returns {Promise<ClientResponse<ApplicationOAuthScopeResponse>>}
+   */
+  createOAuthScope(applicationId: UUID, scopeId: UUID, request: ApplicationOAuthScopeRequest): Promise<ClientResponse<ApplicationOAuthScopeResponse>> {
+    return this.start<ApplicationOAuthScopeResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a tenant. You can optionally specify an Id for the tenant, if not provided one will be generated.
    *
    * @param {UUID} tenantId (Optional) The Id for the tenant. If not provided a secure random UUID will be generated.
@@ -891,7 +911,7 @@ export class FusionAuthClient {
    * Hard deletes an application role. This is a dangerous operation and should not be used in most circumstances. This
    * permanently removes the given role from all users that had it.
    *
-   * @param {UUID} applicationId The Id of the application to deactivate.
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
    * @param {UUID} roleId The Id of the role to delete.
    * @returns {Promise<ClientResponse<void>>}
    */
@@ -1148,6 +1168,24 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/messenger')
         .withUriSegment(messengerId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Hard deletes a custom OAuth scope.
+   * OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the application's unknown scope policy.
+   *
+   * @param {UUID} applicationId The Id of the application that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteOAuthScope(applicationId: UUID, scopeId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
         .withMethod("DELETE")
         .go();
   }
@@ -2169,6 +2207,25 @@ export class FusionAuthClient {
     return this.start<MessengerResponse, Errors>()
         .withUri('/api/messenger')
         .withUriSegment(messengerId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the custom OAuth scope with the given Id for the application.
+   *
+   * @param {UUID} applicationId The Id of the application that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to update.
+   * @param {ApplicationOAuthScopeRequest} request The request that contains just the new OAuth scope information.
+   * @returns {Promise<ClientResponse<ApplicationOAuthScopeResponse>>}
+   */
+  patchOAuthScope(applicationId: UUID, scopeId: UUID, request: ApplicationOAuthScopeRequest): Promise<ClientResponse<ApplicationOAuthScopeResponse>> {
+    return this.start<ApplicationOAuthScopeResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
         .withJSONBody(request)
         .withMethod("PATCH")
         .go();
@@ -3236,6 +3293,23 @@ export class FusionAuthClient {
         .withParameter('applicationId', applicationId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves a custom OAuth scope.
+   *
+   * @param {UUID} applicationId The Id of the application that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to retrieve.
+   * @returns {Promise<ClientResponse<ApplicationOAuthScopeResponse>>}
+   */
+  retrieveOAuthScope(applicationId: UUID, scopeId: UUID): Promise<ClientResponse<ApplicationOAuthScopeResponse>> {
+    return this.start<ApplicationOAuthScopeResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
         .withMethod("GET")
         .go();
   }
@@ -4976,6 +5050,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the OAuth scope with the given Id for the application.
+   *
+   * @param {UUID} applicationId The Id of the application that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to update.
+   * @param {ApplicationOAuthScopeRequest} request The request that contains all the new OAuth scope information.
+   * @returns {Promise<ClientResponse<ApplicationOAuthScopeResponse>>}
+   */
+  updateOAuthScope(applicationId: UUID, scopeId: UUID, request: ApplicationOAuthScopeRequest): Promise<ClientResponse<ApplicationOAuthScopeResponse>> {
+    return this.start<ApplicationOAuthScopeResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the registration for the user with the given Id and the application defined in the request.
    *
    * @param {UUID} userId The Id of the user whose registration is going to be updated.
@@ -5622,6 +5715,7 @@ export interface LambdaConfiguration {
   idTokenPopulateId?: UUID;
   samlv2PopulateId?: UUID;
   selfServiceRegistrationValidationId?: UUID;
+  userinfoPopulateId?: UUID;
 }
 
 /**
@@ -5887,7 +5981,7 @@ export interface UserIdentityProviderLinkEvent extends BaseEvent {
  *
  * @author Spencer Witt
  */
-export interface ApplicationSearchResponse {
+export interface ApplicationSearchResponse extends ExpandableResponse {
   applications?: Array<Application>;
   total?: number;
 }
@@ -5990,6 +6084,17 @@ export interface GroupMember {
 export interface UserUpdateEvent extends BaseEvent {
   original?: User;
   user?: User;
+}
+
+/**
+ * The application's relationship to the authorization server. First-party applications will be granted implicit permission for requested scopes.
+ * Third-party applications will use the {@link OAuthScopeConsentMode} policy.
+ *
+ * @author Spencer Witt
+ */
+export enum OAuthApplicationRelationship {
+  FirstParty = "FirstParty",
+  ThirdParty = "ThirdParty"
 }
 
 /**
@@ -6450,6 +6555,18 @@ export interface IdentityProviderLinkResponse {
   identityProviderLinks?: Array<IdentityProviderLink>;
 }
 
+/**
+ * The handling policy for scopes provided by FusionAuth
+ *
+ * @author Spencer Witt
+ */
+export interface ProvidedScopePolicy {
+  address?: Requirable;
+  email?: Requirable;
+  phone?: Requirable;
+  profile?: Requirable;
+}
+
 export interface HistoryItem {
   actionerUserId?: UUID;
   comment?: string;
@@ -6881,6 +6998,9 @@ export interface ReactorStatus {
   advancedIdentityProviders?: ReactorFeatureStatus;
   advancedLambdas?: ReactorFeatureStatus;
   advancedMultiFactorAuthentication?: ReactorFeatureStatus;
+  advancedOAuthScopes?: ReactorFeatureStatus;
+  advancedOAuthScopesCustomScopes?: ReactorFeatureStatus;
+  advancedOAuthScopesThirdPartyApplications?: ReactorFeatureStatus;
   advancedRegistration?: ReactorFeatureStatus;
   applicationMultiFactorAuthentication?: ReactorFeatureStatus;
   applicationThemes?: ReactorFeatureStatus;
@@ -7166,7 +7286,8 @@ export enum LambdaType {
   SCIMServerGroupResponseConverter = "SCIMServerGroupResponseConverter",
   SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
   SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
-  SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation"
+  SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
+  UserInfoPopulate = "UserInfoPopulate"
 }
 
 /**
@@ -7783,6 +7904,7 @@ export interface Application {
   registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
+  scopes?: Array<ApplicationOAuthScope>;
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
@@ -7893,6 +8015,7 @@ export interface OAuth2Configuration {
   clientAuthenticationPolicy?: ClientAuthenticationPolicy;
   clientId?: string;
   clientSecret?: string;
+  consentMode?: OAuthScopeConsentMode;
   debug?: boolean;
   deviceVerificationURL?: string;
   enabledGrants?: Array<GrantType>;
@@ -7900,8 +8023,12 @@ export interface OAuth2Configuration {
   logoutBehavior?: LogoutBehavior;
   logoutURL?: string;
   proofKeyForCodeExchangePolicy?: ProofKeyForCodeExchangePolicy;
+  providedScopePolicy?: ProvidedScopePolicy;
+  relationship?: OAuthApplicationRelationship;
   requireClientAuthentication?: boolean;
   requireRegistration?: boolean;
+  scopeHandlingPolicy?: OAuthScopeHandlingPolicy;
+  unknownScopePolicy?: UnknownScopePolicy;
 }
 
 /**
@@ -8386,6 +8513,7 @@ export interface ExternalIdentifierConfiguration {
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
   registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
+  rememberOAuthScopeConsentChoiceTimeToLiveInSeconds?: number;
   samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
@@ -8452,6 +8580,7 @@ export interface UserResponse {
   emailVerificationId?: string;
   emailVerificationOneTimeCode?: string;
   registrationVerificationIds?: Record<UUID, string>;
+  registrationVerificationOneTimeCodes?: Record<UUID, string>;
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
@@ -8879,6 +9008,24 @@ export interface UserDeleteEvent extends BaseEvent {
 }
 
 /**
+ * A custom OAuth scope for a specific application.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScope {
+  applicationId?: UUID;
+  data?: Record<string, any>;
+  defaultConsentDetail?: string;
+  defaultConsentMessage?: string;
+  description?: string;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  required?: boolean;
+}
+
+/**
  * Registration delete API request object.
  *
  * @author Brian Pontarelli
@@ -9052,6 +9199,7 @@ export enum OAuthErrorType {
   server_error = "server_error",
   unsupported_grant_type = "unsupported_grant_type",
   unsupported_response_type = "unsupported_response_type",
+  access_denied = "access_denied",
   change_password_required = "change_password_required",
   not_licensed = "not_licensed",
   two_factor_required = "two_factor_required",
@@ -10022,6 +10170,7 @@ export interface RegistrationResponse {
   refreshToken?: string;
   registration?: UserRegistration;
   registrationVerificationId?: string;
+  registrationVerificationOneTimeCode?: string;
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
@@ -10107,6 +10256,15 @@ export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
  */
 export interface IPAccessControlListSearchRequest {
   search?: IPAccessControlListSearchCriteria;
+}
+
+/**
+ * The Application Scope API request object.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScopeRequest {
+  scope?: ApplicationOAuthScope;
 }
 
 export interface LoginConfiguration {
@@ -10369,15 +10527,6 @@ export interface EmailTemplateSearchRequest {
   search?: EmailTemplateSearchCriteria;
 }
 
-/**
- * @author Daniel DeGroff
- */
-export interface ApplicationUnverifiedConfiguration {
-  registration?: UnverifiedBehavior;
-  verificationStrategy?: VerificationStrategy;
-  whenGated?: RegistrationUnverifiedOptions;
-}
-
 export enum EmailSecurityType {
   NONE = "NONE",
   SSL = "SSL",
@@ -10618,6 +10767,7 @@ export interface DeviceUserCodeResponse {
   deviceInfo?: DeviceInfo;
   expires_in?: number;
   pendingIdPLink?: PendingIdPLink;
+  scope?: string;
   tenantId?: UUID;
   user_code?: string;
 }
@@ -10862,6 +11012,7 @@ export interface Templates {
   oauth2ChildRegistrationNotAllowed?: string;
   oauth2ChildRegistrationNotAllowedComplete?: string;
   oauth2CompleteRegistration?: string;
+  oauth2Consent?: string;
   oauth2Device?: string;
   oauth2DeviceComplete?: string;
   oauth2Error?: string;
@@ -10986,6 +11137,15 @@ export interface LoginResponse {
   twoFactorId?: string;
   twoFactorTrustId?: string;
   user?: User;
+}
+
+/**
+ * The Application Scope API response.
+ *
+ * @author Spencer Witt
+ */
+export interface ApplicationOAuthScopeResponse {
+  scope?: ApplicationOAuthScope;
 }
 
 /**
@@ -11198,6 +11358,17 @@ export interface LoginHintConfiguration extends Enableable {
 }
 
 /**
+ * Controls the policy for whether OAuth workflows will more strictly adhere to the OAuth and OIDC specification
+ * or run in backwards compatibility mode.
+ *
+ * @author David Charles
+ */
+export enum OAuthScopeHandlingPolicy {
+  Compatibility = "Compatibility",
+  Strict = "Strict"
+}
+
+/**
  * API request for managing families and members.
  *
  * @author Brian Pontarelli
@@ -11250,7 +11421,7 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
  *
  * @author Spencer Witt
  */
-export interface ApplicationSearchRequest {
+export interface ApplicationSearchRequest extends ExpandableRequest {
   search?: ApplicationSearchCriteria;
 }
 
@@ -11436,7 +11607,7 @@ export interface UserPasswordResetSuccessEvent extends BaseEvent {
 
 /**
  * Something that can be required and thus also optional. This currently extends Enableable because anything that is
- * require/optional is almost always enableable as well.
+ * required/optional is almost always enableable as well.
  *
  * @author Brian Pontarelli
  */
@@ -11509,6 +11680,17 @@ export interface WebhookSearchCriteria extends BaseSearchCriteria {
 }
 
 /**
+ * Policy for handling unknown OAuth scopes in the request
+ *
+ * @author Spencer Witt
+ */
+export enum UnknownScopePolicy {
+  Allow = "Allow",
+  Remove = "Remove",
+  Reject = "Reject"
+}
+
+/**
  * Models the User Password Reset Start Event.
  *
  * @author Daniel DeGroff
@@ -11537,6 +11719,7 @@ export enum OAuthErrorReason {
   access_token_unavailable_for_processing = "access_token_unavailable_for_processing",
   access_token_failed_processing = "access_token_failed_processing",
   access_token_invalid = "access_token_invalid",
+  access_token_required = "access_token_required",
   refresh_token_not_found = "refresh_token_not_found",
   refresh_token_type_not_supported = "refresh_token_type_not_supported",
   invalid_client_id = "invalid_client_id",
@@ -11587,7 +11770,10 @@ export enum OAuthErrorReason {
   change_password_breached = "change_password_breached",
   change_password_expired = "change_password_expired",
   change_password_validation = "change_password_validation",
-  unknown = "unknown"
+  unknown = "unknown",
+  missing_required_scope = "missing_required_scope",
+  unknown_scope = "unknown_scope",
+  consent_canceled = "consent_canceled"
 }
 
 /**
@@ -11711,6 +11897,18 @@ export interface IPAccessControlListResponse {
 export interface ReactorRequest {
   license?: string;
   licenseId?: string;
+}
+
+/**
+ * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
+ * for a third-party application.
+ *
+ * @author Spencer Witt
+ */
+export enum OAuthScopeConsentMode {
+  AlwaysPrompt = "AlwaysPrompt",
+  RememberDecision = "RememberDecision",
+  NeverPrompt = "NeverPrompt"
 }
 
 /**
