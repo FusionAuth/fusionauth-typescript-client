@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * language governing permissions and limitations under the License.
  */
 
-import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
+import IRESTClient, { ErrorResponseHandler, ResponseHandler } from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
-import {URLSearchParams} from "url";
+import fetch, { BodyInit, RequestCredentials, Response } from 'node-fetch';
+import { URLSearchParams } from "url";
 
 /**
  * @author Brett P
@@ -35,6 +35,42 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.ErrorJSONResponseHandler;
 
   constructor(public host: string) {
+  }
+
+  /**
+   * A function that returns the JSON form of the response text.
+   *
+   * @param response
+   * @constructor
+   */
+  static async JSONResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
+    let clientResponse = new ClientResponse<RT>();
+
+    clientResponse.statusCode = response.status;
+    let type = response.headers.get("content-type");
+    if (type && type.startsWith("application/json")) {
+      clientResponse.response = await response.json();
+    }
+
+    return clientResponse;
+  }
+
+  /**
+   * A function that returns the JSON form of the response text.
+   *
+   * @param response
+   * @constructor
+   */
+  static async ErrorJSONResponseHandler<ERT>(response: Response): Promise<ClientResponse<ERT>> {
+    let clientResponse = new ClientResponse<ERT>();
+
+    clientResponse.statusCode = response.status;
+    let type = response.headers.get("content-type");
+    if (type && type.startsWith("application/json")) {
+      clientResponse.exception = await response.json();
+    }
+
+    return clientResponse;
   }
 
   /**
@@ -86,7 +122,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
     if (body) {
       body.forEach((value, name, searchParams) => {
         if (value && value.length > 0 && value != "null" && value != "undefined") {
-          body2.set(name,value);
+          body2.set(name, value);
         }
       });
       body = body2;
@@ -206,47 +242,19 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   }
 
   private getQueryString() {
-    var queryString = '';
-    for (let key in this.parameters) {
+    let queryString = '';
+    const appendParam = (key: string, param: string) => {
       queryString += (queryString.length === 0) ? '?' : '&';
-      queryString += key + '=' + encodeURIComponent(this.parameters[key]);
+      queryString += encodeURIComponent(key) + '=' + encodeURIComponent(param);
+    }
+    for (let key in this.parameters) {
+      const value = this.parameters[key];
+      if (Array.isArray(value)) {
+        value.forEach(val => appendParam(key, val))
+      } else {
+        appendParam(key, value);
+      }
     }
     return queryString;
-  }
-
-  /**
-   * A function that returns the JSON form of the response text.
-   *
-   * @param response
-   * @constructor
-   */
-  static async JSONResponseHandler<RT>(response: Response): Promise<ClientResponse<RT>> {
-    let clientResponse = new ClientResponse<RT>();
-
-    clientResponse.statusCode = response.status;
-    let type = response.headers.get("content-type");
-    if (type && type.startsWith("application/json")) {
-      clientResponse.response = await response.json();
-    }
-
-    return clientResponse;
-  }
-
-  /**
-   * A function that returns the JSON form of the response text.
-   *
-   * @param response
-   * @constructor
-   */
-  static async ErrorJSONResponseHandler<ERT>(response: Response): Promise<ClientResponse<ERT>> {
-    let clientResponse = new ClientResponse<ERT>();
-
-    clientResponse.statusCode = response.status;
-    let type = response.headers.get("content-type");
-    if (type && type.startsWith("application/json")) {
-      clientResponse.exception = await response.json();
-    }
-
-    return clientResponse;
   }
 }
