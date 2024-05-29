@@ -6358,7 +6358,7 @@ export interface RecentLoginResponse {
 export interface SimpleThemeVariables {
   alertBackgroundColor?: string;
   alertFontColor?: string;
-  backgroundImageUrl?: string;
+  backgroundImageURL?: string;
   backgroundSize?: string;
   borderRadius?: string;
   deleteButtonColor?: string;
@@ -6379,7 +6379,7 @@ export interface SimpleThemeVariables {
   linkTextColor?: string;
   linkTextFocusColor?: string;
   logoImageSize?: string;
-  logoImageUrl?: string;
+  logoImageURL?: string;
   monoFontColor?: string;
   monoFontFamily?: string;
   pageBackgroundColor?: string;
