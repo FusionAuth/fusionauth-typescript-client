@@ -6324,6 +6324,11 @@ export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
   user?: User;
 }
 
+export enum ThemeType {
+  advanced = "advanced",
+  simple = "simple"
+}
+
 /**
  * Login API request object.
  *
@@ -6343,6 +6348,46 @@ export interface LoginRequest extends BaseLoginRequest {
  */
 export interface RecentLoginResponse {
   logins?: Array<DisplayableRawLogin>;
+}
+
+/**
+ * Theme object for values used in the css variables for simple themes.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface SimpleThemeVariables {
+  alertBackgroundColor?: string;
+  alertFontColor?: string;
+  backgroundImageUrl?: string;
+  backgroundSize?: string;
+  borderRadius?: string;
+  deleteButtonColor?: string;
+  deleteButtonFocusColor?: string;
+  deleteButtonTextColor?: string;
+  deleteButtonTextFocusColor?: string;
+  errorFontColor?: string;
+  errorIconColor?: string;
+  fontColor?: string;
+  fontFamily?: string;
+  footerDisplay?: boolean;
+  iconBackgroundColor?: string;
+  iconColor?: string;
+  infoIconColor?: string;
+  inputBackgroundColor?: string;
+  inputIconColor?: string;
+  inputTextColor?: string;
+  linkTextColor?: string;
+  linkTextFocusColor?: string;
+  logoImageSize?: string;
+  logoImageUrl?: string;
+  monoFontColor?: string;
+  monoFontFamily?: string;
+  pageBackgroundColor?: string;
+  panelBackgroundColor?: string;
+  primaryButtonColor?: string;
+  primaryButtonFocusColor?: string;
+  primaryButtonTextColor?: string;
+  primaryButtonTextFocusColor?: string;
 }
 
 /**
@@ -8873,6 +8918,8 @@ export interface Theme {
   name?: string;
   stylesheet?: string;
   templates?: Templates;
+  type?: ThemeType;
+  variables?: SimpleThemeVariables;
 }
 
 /**
@@ -11336,6 +11383,7 @@ export enum CanonicalizationMethod {
  */
 export interface ThemeSearchCriteria extends BaseSearchCriteria {
   name?: string;
+  type?: ThemeType;
 }
 
 /**
