@@ -3531,6 +3531,42 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the FusionAuth system health. This API will return 200 if the system is healthy, and 500 if the system is un-healthy.
+   *
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  retrieveSystemHealth(): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, void>()
+        .withUri('/api/health')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the FusionAuth system status. This request is anonymous and does not require an API key. When an API key is not provided the response will contain a single value in the JSON response indicating the current health check.
+   *
+   * @returns {Promise<ClientResponse<StatusResponse>>}
+   */
+  retrieveSystemStatus(): Promise<ClientResponse<StatusResponse>> {
+    return this.startAnonymous<StatusResponse, void>()
+        .withUri('/api/status')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the FusionAuth system status using an API key. Using an API key will cause the response to include the product version, health checks and various runtime metrics.
+   *
+   * @returns {Promise<ClientResponse<StatusResponse>>}
+   */
+  retrieveSystemStatusUsingAPIKey(): Promise<ClientResponse<StatusResponse>> {
+    return this.start<StatusResponse, void>()
+        .withUri('/api/status')
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the tenant for the given Id.
    *
    * @param {UUID} tenantId The Id of the tenant.
@@ -8767,6 +8803,14 @@ export interface UIConfiguration {
   headerColor?: string;
   logoURL?: string;
   menuFontColor?: string;
+}
+
+/**
+ * The public Status API response
+ *
+ * @author Daniel DeGroff
+ */
+export interface StatusResponse extends Record<string, any> {
 }
 
 export enum RegistrationType {
