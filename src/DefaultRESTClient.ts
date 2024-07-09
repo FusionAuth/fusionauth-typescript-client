@@ -16,7 +16,7 @@
 
 import IRESTClient, { ErrorResponseHandler, ResponseHandler } from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import fetch, { BodyInit, RequestCredentials, Response } from 'node-fetch';
+import fetch, { BodyInit, RequestCredentials, Response } from "node-fetch";
 import { URLSearchParams } from "url";
 
 /**
@@ -33,6 +33,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   public credentials: RequestCredentials;
   public responseHandler: ResponseHandler<RT> = DefaultRESTClient.JSONResponseHandler;
   public errorResponseHandler: ErrorResponseHandler<ERT> = DefaultRESTClient.ErrorJSONResponseHandler;
+  public abortSignal: AbortSignal = undefined;
 
   constructor(public host: string) {
   }
@@ -203,6 +204,15 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
   }
 
   /**
+   * Sets the AbortSignal for the request.
+   * @param signal The AbortSignal to use to abort the request.
+   */
+  withAbortSignal(signal: AbortSignal): DefaultRESTClient<RT, ERT> {
+    this.abortSignal = signal;
+    return this;
+  }
+
+  /**
    * Run the request and return a promise. This promise will resolve if the request is successful
    * and reject otherwise.
    */
@@ -219,8 +229,7 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
             body: this.body as BodyInit,
             // @ts-ignore (Credentials are not supported on NodeJS)
             credentials: this.credentials,
-            // 60-second timeout expressed in ms
-            timeout: 60000,
+            signal: this.abortSignal,
           },
       );
 
