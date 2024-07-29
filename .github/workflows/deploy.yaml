@@ -1,8 +1,8 @@
 # Run locally with act:
 #
 # act pull_request [--input command=[command]] \
-#  --platform fusionauth-builder=[ecr-repo-name]/fusionauth-builder:latest] \
-#  --workflows ./.github/workflows/release.yaml \
+#  --platform fusionauth-standard=[ecr-repo-name]/fusionauth-standard:latest] \
+#  --workflows ./.github/workflows/deploy.yaml \
 #  --env-file <(aws configure export-credentials --profile [aws-profile] --format env)
 
 name: Deploy
@@ -46,7 +46,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' &&
       (inputs.command == 'release' || inputs.command == 'publish')
-    runs-on: fusionauth-builder
+    runs-on: fusionauth-standard
     steps:
       - name: checkout
         uses: actions/checkout@v4
