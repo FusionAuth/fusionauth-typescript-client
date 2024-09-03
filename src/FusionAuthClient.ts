@@ -4069,6 +4069,34 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves a single webhook attempt log for the given Id.
+   *
+   * @param {UUID} webhookAttemptLogId The Id of the webhook attempt log to retrieve.
+   * @returns {Promise<ClientResponse<WebhookAttemptLogResponse>>}
+   */
+  retrieveWebhookAttemptLog(webhookAttemptLogId: UUID): Promise<ClientResponse<WebhookAttemptLogResponse>> {
+    return this.start<WebhookAttemptLogResponse, Errors>()
+        .withUri('/api/system/webhook-attempt-log')
+        .withUriSegment(webhookAttemptLogId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves a single webhook event log for the given Id.
+   *
+   * @param {UUID} webhookEventLogId The Id of the webhook event log to retrieve.
+   * @returns {Promise<ClientResponse<WebhookEventLogResponse>>}
+   */
+  retrieveWebhookEventLog(webhookEventLogId: UUID): Promise<ClientResponse<WebhookEventLogResponse>> {
+    return this.start<WebhookEventLogResponse, Errors>()
+        .withUri('/api/system/webhook-event-log')
+        .withUriSegment(webhookEventLogId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves all the webhooks.
    *
    * @returns {Promise<ClientResponse<WebhookResponse>>}
@@ -4545,6 +4573,20 @@ export class FusionAuthClient {
   searchUsersByQueryString(request: SearchRequest): Promise<ClientResponse<SearchResponse>> {
     return this.start<SearchResponse, Errors>()
         .withUri('/api/user/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches the webhook event logs with the specified criteria and pagination.
+   *
+   * @param {WebhookEventLogSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<WebhookEventLogSearchResponse>>}
+   */
+  searchWebhookEventLogs(request: WebhookEventLogSearchRequest): Promise<ClientResponse<WebhookEventLogSearchResponse>> {
+    return this.start<WebhookEventLogSearchResponse, Errors>()
+        .withUri('/api/system/webhook-event-log/search')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -5447,9 +5489,19 @@ export type UUID = string;
 
 
 /**
+ * Webhook attempt log response.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookAttemptLogResponse {
+  webhookAttemptLog?: WebhookAttemptLog;
+}
+
+/**
  * @author Rob Davis
  */
 export interface TenantLambdaConfiguration {
+  loginValidationId?: UUID;
   scimEnterpriseUserRequestConverterId?: UUID;
   scimEnterpriseUserResponseConverterId?: UUID;
   scimGroupRequestConverterId?: UUID;
@@ -5485,7 +5537,7 @@ export interface AuthenticationTokenConfiguration extends Enableable {
 }
 
 /**
- * Event event to an audit log was created.
+ * Event to indicate an audit log was created.
  *
  * @author Daniel DeGroff
  */
@@ -5593,10 +5645,9 @@ export interface ApplicationRegistrationDeletePolicy {
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationDeleteEvent extends BaseEvent {
+export interface UserRegistrationDeleteEvent extends BaseUserEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -5644,8 +5695,7 @@ export interface UserComment {
  *
  * @author Daniel DeGroff
  */
-export interface GroupDeleteCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupDeleteCompleteEvent extends BaseGroupEvent {
 }
 
 /**
@@ -5820,8 +5870,7 @@ export interface EmailTemplate {
  *
  * @author Trevor Smith
  */
-export interface UserEmailVerifiedEvent extends BaseEvent {
-  user?: User;
+export interface UserEmailVerifiedEvent extends BaseUserEvent {
 }
 
 /**
@@ -5892,8 +5941,7 @@ export interface ConsentSearchRequest {
  *
  * @author Brian Pontarelli
  */
-export interface UserReactivateEvent extends BaseEvent {
-  user?: User;
+export interface UserReactivateEvent extends BaseUserEvent {
 }
 
 /**
@@ -6007,9 +6055,8 @@ export interface AuditLog {
  *
  * @author Rob Davis
  */
-export interface UserIdentityProviderLinkEvent extends BaseEvent {
+export interface UserIdentityProviderLinkEvent extends BaseUserEvent {
   identityProviderLink?: IdentityProviderLink;
-  user?: User;
 }
 
 /**
@@ -6117,9 +6164,8 @@ export interface GroupMember {
  *
  * @author Brian Pontarelli
  */
-export interface UserUpdateEvent extends BaseEvent {
+export interface UserUpdateEvent extends BaseUserEvent {
   original?: User;
-  user?: User;
 }
 
 /**
@@ -6214,8 +6260,7 @@ export interface TwoFactorStartRequest {
  *
  * @author Daniel DeGroff
  */
-export interface GroupCreateEvent extends BaseEvent {
-  group?: Group;
+export interface GroupCreateEvent extends BaseGroupEvent {
 }
 
 /**
@@ -6353,11 +6398,10 @@ export interface RefreshRequest extends BaseEventRequest {
  *
  * @author Daniel DeGroff
  */
-export interface UserLoginIdDuplicateOnCreateEvent extends BaseEvent {
+export interface UserLoginIdDuplicateOnCreateEvent extends BaseUserEvent {
   duplicateEmail?: string;
   duplicateUsername?: string;
   existing?: User;
-  user?: User;
 }
 
 export enum ThemeType {
@@ -6375,6 +6419,17 @@ export interface LoginRequest extends BaseLoginRequest {
   oneTimePassword?: string;
   password?: string;
   twoFactorTrustId?: string;
+}
+
+/**
+ * The reason for the login failure.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserLoginFailedReason {
+  code?: string;
+  lambdaId?: UUID;
+  lambdaResult?: Errors;
 }
 
 /**
@@ -6709,8 +6764,7 @@ export enum AuthenticatorAttachmentPreference {
  *
  * @author Daniel DeGroff
  */
-export interface GroupUpdateCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupUpdateCompleteEvent extends BaseGroupEvent {
   original?: Group;
 }
 
@@ -6743,6 +6797,7 @@ export interface SystemConfiguration {
   reportTimezone?: string;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
+  webhookEventLogConfiguration?: WebhookEventLogConfiguration;
 }
 
 /**
@@ -7227,8 +7282,7 @@ export interface ConnectorRequest {
  *
  * @author Daniel DeGroff
  */
-export interface UserCreateCompleteEvent extends BaseEvent {
-  user?: User;
+export interface UserCreateCompleteEvent extends BaseUserEvent {
 }
 
 /**
@@ -7287,10 +7341,9 @@ export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration 
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationCreateCompleteEvent extends BaseEvent {
+export interface UserRegistrationCreateCompleteEvent extends BaseUserEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -7368,7 +7421,8 @@ export enum LambdaType {
   SCIMServerUserRequestConverter = "SCIMServerUserRequestConverter",
   SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
   SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
-  UserInfoPopulate = "UserInfoPopulate"
+  UserInfoPopulate = "UserInfoPopulate",
+  LoginValidation = "LoginValidation"
 }
 
 /**
@@ -7426,9 +7480,8 @@ export interface LambdaRequest {
  *
  * @author Daniel DeGroff
  */
-export interface UserEmailUpdateEvent extends BaseEvent {
+export interface UserEmailUpdateEvent extends BaseUserEvent {
   previousEmail?: string;
-  user?: User;
 }
 
 /**
@@ -7682,9 +7735,8 @@ export interface TenantWebAuthnWorkflowConfiguration extends Enableable {
  *
  * @author Daniel DeGroff
  */
-export interface UserTwoFactorMethodRemoveEvent extends BaseEvent {
+export interface UserTwoFactorMethodRemoveEvent extends BaseUserEvent {
   method?: TwoFactorMethod;
-  user?: User;
 }
 
 export interface UsernameModeration extends Enableable {
@@ -7859,8 +7911,7 @@ export interface Integrations {
  *
  * @author Daniel DeGroff
  */
-export interface UserPasswordUpdateEvent extends BaseEvent {
-  user?: User;
+export interface UserPasswordUpdateEvent extends BaseUserEvent {
 }
 
 /**
@@ -7879,6 +7930,17 @@ export interface Errors {
 export interface PreviewMessageTemplateResponse {
   errors?: Errors;
   message?: SMSMessage;
+}
+
+/**
+ * The possible states of an individual webhook attempt to a single endpoint.
+ *
+ * @author Spencer Witt
+ */
+export enum WebhookAttemptResult {
+  Success = "Success",
+  Failure = "Failure",
+  Unknown = "Unknown"
 }
 
 /**
@@ -8140,10 +8202,9 @@ export interface ApplicationSearchCriteria extends BaseSearchCriteria {
  *
  * @author Trevor Smith
  */
-export interface UserRegistrationVerifiedEvent extends BaseEvent {
+export interface UserRegistrationVerifiedEvent extends BaseUserEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -8178,8 +8239,7 @@ export interface NonTransactionalEvent {
  *
  * @author Brian Pontarelli
  */
-export interface UserCreateEvent extends BaseEvent {
-  user?: User;
+export interface UserCreateEvent extends BaseUserEvent {
 }
 
 /**
@@ -8293,6 +8353,15 @@ export interface RefreshTokenRevocationPolicy {
 }
 
 /**
+ * Base class for all {@link User}-related events.
+ *
+ * @author Spencer Witt
+ */
+export interface BaseUserEvent extends BaseEvent {
+  user?: User;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface MinimumPasswordAge extends Enableable {
@@ -8326,8 +8395,7 @@ export enum AttestationType {
  *
  * @author Daniel DeGroff
  */
-export interface GroupUpdateEvent extends BaseEvent {
-  group?: Group;
+export interface GroupUpdateEvent extends BaseGroupEvent {
   original?: Group;
 }
 
@@ -8520,8 +8588,7 @@ export interface UserLoginIdDuplicateOnUpdateEvent extends UserLoginIdDuplicateO
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberRemoveCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberRemoveCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -8551,8 +8618,7 @@ export interface WebhookSearchRequest {
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberAddCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberAddCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -8587,6 +8653,7 @@ export interface ExternalIdentifierConfiguration {
   emailVerificationIdTimeToLiveInSeconds?: number;
   emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   externalAuthenticationIdTimeToLiveInSeconds?: number;
+  loginIntentTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
@@ -8806,6 +8873,15 @@ export interface UIConfiguration {
 }
 
 /**
+ * Webhook event log response.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookEventLogResponse {
+  webhookEventLog?: WebhookEventLog;
+}
+
+/**
  * The public Status API response
  *
  * @author Daniel DeGroff
@@ -8856,11 +8932,11 @@ export interface MessengerResponse {
  *
  * @author Daniel DeGroff
  */
-export interface UserLoginFailedEvent extends BaseEvent {
+export interface UserLoginFailedEvent extends BaseUserEvent {
   applicationId?: UUID;
   authenticationType?: string;
   ipAddress?: string;
-  user?: User;
+  reason?: UserLoginFailedReason;
 }
 
 /**
@@ -8910,8 +8986,7 @@ export interface Tenant {
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberUpdateCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberUpdateCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -9060,8 +9135,7 @@ export interface AuditLogSearchRequest {
  *
  * @author Matthew Altman
  */
-export interface UserPasswordBreachEvent extends BaseEvent {
-  user?: User;
+export interface UserPasswordBreachEvent extends BaseUserEvent {
 }
 
 /**
@@ -9089,13 +9163,18 @@ export interface AuditLogConfiguration {
 }
 
 /**
+ * User login failed reason codes.
+ */
+export interface UserLoginFailedReasonCode {
+}
+
+/**
  * Models the User Event (and can be converted to JSON) that is used for all user modifications (create, update,
  * delete).
  *
  * @author Brian Pontarelli
  */
-export interface UserDeleteEvent extends BaseEvent {
-  user?: User;
+export interface UserDeleteEvent extends BaseUserEvent {
 }
 
 /**
@@ -9357,6 +9436,22 @@ export interface MetaData {
   scopes?: Array<string>;
 }
 
+export interface WebhookEventLog {
+  attempts?: Array<WebhookAttemptLog>;
+  data?: Record<string, any>;
+  event?: EventRequest;
+  eventResult?: WebhookEventResult;
+  eventType?: EventType;
+  failedAttempts?: number;
+  id?: UUID;
+  insertInstant?: number;
+  lastAttemptInstant?: number;
+  lastUpdateInstant?: number;
+  linkedObjectId?: UUID;
+  sequence?: number;
+  successfulAttempts?: number;
+}
+
 export enum SAMLLogoutBehavior {
   AllParticipants = "AllParticipants",
   OnlyOriginator = "OnlyOriginator"
@@ -9559,11 +9654,10 @@ export enum EventLogType {
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationUpdateEvent extends BaseEvent {
+export interface UserRegistrationUpdateEvent extends BaseUserEvent {
   applicationId?: UUID;
   original?: UserRegistration;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -9623,10 +9717,9 @@ export interface EpicGamesApplicationConfiguration extends BaseIdentityProviderA
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationDeleteCompleteEvent extends BaseEvent {
+export interface UserRegistrationDeleteCompleteEvent extends BaseUserEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -9676,8 +9769,7 @@ export interface GoogleApplicationConfiguration extends BaseIdentityProviderAppl
  *
  * @author Daniel DeGroff
  */
-export interface UserDeleteCompleteEvent extends BaseEvent {
-  user?: User;
+export interface UserDeleteCompleteEvent extends BaseUserEvent {
 }
 
 /**
@@ -9844,6 +9936,22 @@ export interface User extends SecureIdentity {
 }
 
 /**
+ * A webhook call attempt log.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookAttemptLog {
+  attemptResult?: WebhookAttemptResult;
+  data?: Record<string, any>;
+  endInstant?: number;
+  id?: UUID;
+  startInstant?: number;
+  webhookCallResponse?: WebhookCallResponse;
+  webhookEventLogId?: UUID;
+  webhookId?: UUID;
+}
+
+/**
  * Search criteria for entity types.
  *
  * @author Brian Pontarelli
@@ -9857,9 +9965,8 @@ export interface EntityTypeSearchCriteria extends BaseSearchCriteria {
  *
  * @author Rob Davis
  */
-export interface UserIdentityProviderUnlinkEvent extends BaseEvent {
+export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
   identityProviderLink?: IdentityProviderLink;
-  user?: User;
 }
 
 /**
@@ -9908,8 +10015,7 @@ export interface TenantWebAuthnConfiguration extends Enableable {
  *
  * @author Daniel DeGroff
  */
-export interface GroupCreateCompleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupCreateCompleteEvent extends BaseGroupEvent {
 }
 
 /**
@@ -9919,6 +10025,15 @@ export interface GroupCreateCompleteEvent extends BaseEvent {
  */
 export interface WebAuthnRegistrationExtensionOptions {
   credProps?: boolean;
+}
+
+/**
+ * The system configuration for Webhook Event Log data.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookEventLogConfiguration {
+  delete?: DeleteConfiguration;
 }
 
 /**
@@ -10209,9 +10324,16 @@ export interface NintendoIdentityProvider extends BaseIdentityProvider<NintendoA
  *
  * @author Daniel DeGroff
  */
-export interface UserUpdateCompleteEvent extends BaseEvent {
+export interface UserUpdateCompleteEvent extends BaseUserEvent {
   original?: User;
-  user?: User;
+}
+
+/**
+ * A marker interface indicating this event is an event that can supply a linked object Id.
+ *
+ * @author Spencer Witt
+ */
+export interface ObjectIdentifiable {
 }
 
 /**
@@ -10232,14 +10354,13 @@ export enum TransactionType {
  *
  * @author Daniel DeGroff
  */
-export interface UserLoginSuccessEvent extends BaseEvent {
+export interface UserLoginSuccessEvent extends BaseUserEvent {
   applicationId?: UUID;
   authenticationType?: string;
   connectorId?: UUID;
   identityProviderId?: UUID;
   identityProviderName?: string;
   ipAddress?: string;
-  user?: User;
 }
 
 /**
@@ -10274,11 +10395,10 @@ export interface RegistrationResponse {
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationUpdateCompleteEvent extends BaseEvent {
+export interface UserRegistrationUpdateCompleteEvent extends BaseUserEvent {
   applicationId?: UUID;
   original?: UserRegistration;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -10369,8 +10489,7 @@ export interface LoginConfiguration {
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberAddEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberAddEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -10425,6 +10544,15 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
 }
 
 /**
+ * Base class for all {@link Group} and {@link GroupMember} events.
+ *
+ * @author Spencer Witt
+ */
+export interface BaseGroupEvent extends BaseEvent {
+  group?: Group;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface MessengerTransport {
@@ -10469,6 +10597,16 @@ export interface RefreshTokenImportRequest {
 export interface WebAuthnCredentialResponse {
   credential?: WebAuthnCredential;
   credentials?: Array<WebAuthnCredential>;
+}
+
+/**
+ * Webhook event log search response.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookEventLogSearchResponse {
+  total?: number;
+  webhookEventLogs?: Array<WebhookEventLog>;
 }
 
 /**
@@ -10948,7 +11086,7 @@ export interface PasswordBreachDetection extends Enableable {
 }
 
 /**
- * Base-class for all FusionAuth events.
+ * Base class for all FusionAuth events.
  *
  * @author Brian Pontarelli
  */
@@ -11146,8 +11284,7 @@ export interface LambdaSearchRequest {
  *
  * @author Daniel DeGroff
  */
-export interface UserPasswordResetSendEvent extends BaseEvent {
-  user?: User;
+export interface UserPasswordResetSendEvent extends BaseUserEvent {
 }
 
 /**
@@ -11327,9 +11464,8 @@ export enum VerificationStrategy {
  *
  * @author Daniel DeGroff
  */
-export interface UserTwoFactorMethodAddEvent extends BaseEvent {
+export interface UserTwoFactorMethodAddEvent extends BaseUserEvent {
   method?: TwoFactorMethod;
-  user?: User;
 }
 
 /**
@@ -11366,8 +11502,7 @@ export interface IPAccessControlEntry {
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberUpdateEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberUpdateEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -11376,8 +11511,20 @@ export interface GroupMemberUpdateEvent extends BaseEvent {
  *
  * @author Brian Pontarelli
  */
-export interface UserDeactivateEvent extends BaseEvent {
-  user?: User;
+export interface UserDeactivateEvent extends BaseUserEvent {
+}
+
+/**
+ * Search criteria for the webhook event log.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookEventLogSearchCriteria extends BaseSearchCriteria {
+  end?: number;
+  event?: string;
+  eventResult?: WebhookEventResult;
+  eventType?: EventType;
+  start?: number;
 }
 
 /**
@@ -11387,6 +11534,15 @@ export interface UserDeactivateEvent extends BaseEvent {
  */
 export interface MemberResponse {
   members?: Record<UUID, Array<GroupMember>>;
+}
+
+/**
+ * Webhook event log search request.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookEventLogSearchRequest {
+  search?: WebhookEventLogSearchCriteria;
 }
 
 /**
@@ -11502,10 +11658,9 @@ export interface LogHistory {
  *
  * @author Daniel DeGroff
  */
-export interface UserRegistrationCreateEvent extends BaseEvent {
+export interface UserRegistrationCreateEvent extends BaseUserEvent {
   applicationId?: UUID;
   registration?: UserRegistration;
-  user?: User;
 }
 
 /**
@@ -11515,6 +11670,17 @@ export interface UserRegistrationCreateEvent extends BaseEvent {
  */
 export interface ApplicationSearchRequest extends ExpandableRequest {
   search?: ApplicationSearchCriteria;
+}
+
+/**
+ * A webhook call response.
+ *
+ * @author Spencer Witt
+ */
+export interface WebhookCallResponse {
+  exception?: string;
+  statusCode?: number;
+  url?: string;
 }
 
 /**
@@ -11693,8 +11859,7 @@ export interface HYPRIdentityProvider extends BaseIdentityProvider<HYPRApplicati
  *
  * @author Daniel DeGroff
  */
-export interface UserPasswordResetSuccessEvent extends BaseEvent {
-  user?: User;
+export interface UserPasswordResetSuccessEvent extends BaseUserEvent {
 }
 
 /**
@@ -11787,8 +11952,7 @@ export enum UnknownScopePolicy {
  *
  * @author Daniel DeGroff
  */
-export interface UserPasswordResetStartEvent extends BaseEvent {
-  user?: User;
+export interface UserPasswordResetStartEvent extends BaseUserEvent {
 }
 
 /**
@@ -11796,8 +11960,7 @@ export interface UserPasswordResetStartEvent extends BaseEvent {
  *
  * @author Daniel DeGroff
  */
-export interface GroupDeleteEvent extends BaseEvent {
-  group?: Group;
+export interface GroupDeleteEvent extends BaseGroupEvent {
 }
 
 export interface MultiFactorEmailTemplate {
@@ -11900,8 +12063,7 @@ export interface ConsentResponse {
  *
  * @author Daniel DeGroff
  */
-export interface GroupMemberRemoveEvent extends BaseEvent {
-  group?: Group;
+export interface GroupMemberRemoveEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
@@ -12043,6 +12205,18 @@ export interface TenantDeleteRequest extends BaseEventRequest {
  */
 export interface EventLogCreateEvent extends BaseEvent {
   eventLog?: EventLog;
+}
+
+/**
+ * The possible result states of a webhook event. This tracks the success of the overall webhook transaction according to the {@link TransactionType}
+ * and configured webhooks.
+ *
+ * @author Spencer Witt
+ */
+export enum WebhookEventResult {
+  Failed = "Failed",
+  Running = "Running",
+  Succeeded = "Succeeded"
 }
 
 export interface UniqueUsernameConfiguration extends Enableable {
