@@ -5631,6 +5631,13 @@ export interface KeySearchResponse {
   total?: number;
 }
 
+export interface VerifyStartRequest {
+  applicationId?: UUID;
+  codeType?: string;
+  loginId?: string;
+  loginType?: string;
+}
+
 /**
  * A Application-level policy for deleting Users.
  *
@@ -6223,6 +6230,7 @@ export interface PasswordlessSendRequest {
   code?: string;
   loginId?: string;
   state?: Record<string, any>;
+  transport?: string;
 }
 
 /**
@@ -6419,6 +6427,7 @@ export interface LoginRequest extends BaseLoginRequest {
   oneTimePassword?: string;
   password?: string;
   twoFactorTrustId?: string;
+  types?: Array<string>;
 }
 
 /**
@@ -7185,6 +7194,7 @@ export interface CertificateInformation {
  */
 export interface PasswordlessStartResponse {
   code?: string;
+  oneTimeCode?: string;
 }
 
 /**
@@ -7687,6 +7697,11 @@ export interface IdentityProviderDetails {
 export interface ApplicationEvent {
 }
 
+export interface TenantPasswordlessSMSMethod extends Enableable {
+  messengerId?: UUID;
+  templateId?: UUID;
+}
+
 /**
  * @author Brett Pontarelli
  */
@@ -7767,11 +7782,18 @@ export interface WebAuthnAuthenticatorRegistrationResponse {
   clientDataJSON?: string;
 }
 
+export interface SMSConfiguration {
+  messengerId?: UUID;
+  verificationTemplateId?: UUID;
+  verifyPhoneNumber?: boolean;
+}
+
 /**
  * @author Daniel DeGroff
  */
 export interface PasswordlessLoginRequest extends BaseLoginRequest {
   code?: string;
+  oneTimeCode?: string;
   twoFactorTrustId?: string;
 }
 
@@ -7804,6 +7826,14 @@ export interface JWTConfiguration extends Enableable {
 export interface EmailTemplateErrors {
   parseErrors?: Record<string, string>;
   renderErrors?: Record<string, string>;
+}
+
+/**
+ * Models the User Phone Verify Event.
+ *
+ * @author Trevor Smith
+ */
+export interface UserPhoneVerifiedEvent extends BaseUserEvent {
 }
 
 /**
@@ -8048,6 +8078,7 @@ export interface Application {
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
   scopes?: Array<ApplicationOAuthScope>;
+  smsConfiguration?: SMSConfiguration;
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
@@ -8592,6 +8623,11 @@ export interface GroupMemberRemoveCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
+export interface VerifySendCompleteRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
 export interface EventLogConfiguration {
   numberToRetain?: number;
 }
@@ -8636,7 +8672,9 @@ export enum MultiFactorLoginPolicy {
  */
 export interface PasswordlessStartRequest {
   applicationId?: UUID;
+  codeType?: string;
   loginId?: string;
+  loginType?: string;
   state?: Record<string, any>;
 }
 
@@ -8657,6 +8695,8 @@ export interface ExternalIdentifierConfiguration {
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
+  passwordlessShortCodeLoginGenerator?: SecureGeneratorConfiguration;
+  passwordlessShortCodeLoginTimeToLiveInSeconds?: number;
   pendingAccountLinkTimeToLiveInSeconds?: number;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
@@ -8665,6 +8705,9 @@ export interface ExternalIdentifierConfiguration {
   samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
+  smsVerificationIdGenerator?: SecureGeneratorConfiguration;
+  smsVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
+  smsVerificationTimeToLiveInSeconds?: number;
   trustTokenTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
   twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
@@ -8969,10 +9012,12 @@ export interface Tenant {
   name?: string;
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
+  passwordlessSMSMethod?: TenantPasswordlessSMSMethod;
   passwordValidationRules?: PasswordValidationRules;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
   scimServerConfiguration?: TenantSCIMServerConfiguration;
+  smsConfiguration?: SMSConfiguration;
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
@@ -9978,6 +10023,12 @@ export interface WebAuthnExtensionsClientOutputs {
   credProps?: CredentialPropertiesOutput;
 }
 
+export enum IdentityTypes {
+  email = "email",
+  phoneNumber = "phoneNumber",
+  username = "username"
+}
+
 /**
  * @author Daniel DeGroff
  */
@@ -10912,6 +10963,11 @@ export interface WebAuthnStartRequest {
   workflow?: WebAuthnWorkflow;
 }
 
+export interface VerifyStartResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
 /**
  * A raw login record response
  *
@@ -11162,6 +11218,7 @@ export enum EventType {
   UserDeleteComplete = "user.delete.complete",
   UserEmailUpdate = "user.email.update",
   UserEmailVerified = "user.email.verified",
+  UserPhoneVerified = "user.phone.verified",
   UserIdentityProviderLink = "user.identity-provider.link",
   UserIdentityProviderUnlink = "user.identity-provider.unlink",
   UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
@@ -12187,6 +12244,11 @@ export enum IdentityProviderLoginMethod {
  */
 export interface MessengerRequest {
   messenger?: BaseMessengerConfiguration;
+}
+
+export enum CodeTypes {
+  clickable = "clickable",
+  shortCode = "shortCode"
 }
 
 /**
