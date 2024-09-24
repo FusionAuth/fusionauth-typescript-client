@@ -5643,7 +5643,7 @@ export interface Application {
   roles?: Array<ApplicationRole>;
   samlv2Configuration?: SAMLv2Configuration;
   scopes?: Array<ApplicationOAuthScope>;
-  smsConfiguration?: SMSConfiguration;
+  smsConfiguration?: TenantSMSConfiguration;
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
@@ -6136,6 +6136,11 @@ export interface JWTVendResponse {
   token?: string;
 }
 
+export enum CodeTypes {
+  clickable = "clickable",
+  shortCode = "shortCode"
+}
+
 /**
  * Twitter social login provider.
  *
@@ -6349,11 +6354,6 @@ export enum UnverifiedBehavior {
   Gated = "Gated"
 }
 
-export interface TenantPasswordlessSMSMethod extends Enableable {
-  messengerId?: UUID;
-  templateId?: UUID;
-}
-
 /**
  * @author Brett Guy
  */
@@ -6425,6 +6425,12 @@ export interface AuditLogRequest extends BaseEventRequest {
 export interface KafkaMessengerConfiguration extends BaseMessengerConfiguration {
   defaultTopic?: string;
   producer?: Record<string, string>;
+}
+
+export enum IdentityTypes {
+  email = "email",
+  phoneNumber = "phoneNumber",
+  username = "username"
 }
 
 /**
@@ -7470,6 +7476,19 @@ export enum HTTPMethod {
 }
 
 /**
+ * Hold SMS configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+export interface TenantSMSConfiguration {
+  messengerId?: UUID;
+  passwordlessEnabled?: boolean;
+  passwordlessTemplateId?: UUID;
+  verificationTemplateId?: UUID;
+  verifyPhoneNumber?: boolean;
+}
+
+/**
  * @author Brett Guy
  */
 export interface IPAccessControlListRequest {
@@ -8057,17 +8076,6 @@ export interface OAuthConfigurationResponse {
   httpSessionMaxInactiveInterval?: number;
   logoutURL?: string;
   oauthConfiguration?: OAuth2Configuration;
-}
-
-/**
- * Hold SMS configuration for passwordless and verification cases.
- *
- * @author Brady Wied
- */
-export interface SMSConfiguration {
-  messengerId?: UUID;
-  verificationTemplateId?: UUID;
-  verifyPhoneNumber?: boolean;
 }
 
 /**
@@ -9359,7 +9367,7 @@ export enum EventType {
   UserDeleteComplete = "user.delete.complete",
   UserEmailUpdate = "user.email.update",
   UserEmailVerified = "user.email.verified",
-  UserPhoneVerified = "user.phone.verified",
+  IdentityVerified = "identity.verified",
   UserIdentityProviderLink = "user.identity-provider.link",
   UserIdentityProviderUnlink = "user.identity-provider.unlink",
   UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
@@ -9851,12 +9859,11 @@ export interface Tenant {
   name?: string;
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
-  passwordlessSMSMethod?: TenantPasswordlessSMSMethod;
   passwordValidationRules?: PasswordValidationRules;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
   scimServerConfiguration?: TenantSCIMServerConfiguration;
-  smsConfiguration?: SMSConfiguration;
+  smsConfiguration?: TenantSMSConfiguration;
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
@@ -9874,6 +9881,15 @@ export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplic
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+}
+
+/**
+ * Models the identity verified event
+ *
+ * @author Brady Wied
+ */
+export interface IdentityVerifiedEvent extends BaseUserEvent {
+  loginId?: string;
 }
 
 /**
@@ -10072,14 +10088,6 @@ export interface ApplicationFormConfiguration {
   adminRegistrationFormId?: UUID;
   selfServiceFormConfiguration?: SelfServiceFormConfiguration;
   selfServiceFormId?: UUID;
-}
-
-/**
- * Models the User Phone Verify Event.
- *
- * @author Trevor Smith
- */
-export interface UserPhoneVerifiedEvent extends BaseUserEvent {
 }
 
 /**
