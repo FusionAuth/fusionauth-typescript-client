@@ -14,7 +14,7 @@
  * language governing permissions and limitations under the License.
  */
 
-project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.54.0", licenses: ["ApacheV2_0"]) {
+project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.55.0", licenses: ["ApacheV2_0"]) {
   workflow {
     fetch {
       cache()
