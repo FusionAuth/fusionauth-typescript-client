@@ -5546,6 +5546,14 @@ export interface AuditLogCreateEvent extends BaseEvent {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export enum TenantIdentityConfigurationMode {
+  Compatible = "Compatible",
+  Discrete = "Discrete"
+}
+
+/**
  * Models the FusionAuth connector.
  *
  * @author Trevor Smith
@@ -5631,7 +5639,10 @@ export interface KeySearchResponse {
   total?: number;
 }
 
-export interface VerifyStartRequest {
+/**
+ * @author Brady Wied
+ */
+export interface VerifyStartRequest extends BaseEventRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdType?: string;
@@ -5984,6 +5995,22 @@ export interface OpenIdConfiguration {
  * @author Brian Pontarelli
  */
 export interface UserSearchCriteria extends BaseElasticSearchCriteria {
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserIdentity {
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  lastUpdateInstant?: number;
+  moderationStatus?: ContentStatus;
+  primary?: boolean;
+  type?: IdentityType;
+  uniqueValue?: string;
+  value?: string;
+  verified?: boolean;
+  verifiedInstant?: number;
 }
 
 /**
@@ -6347,6 +6374,7 @@ export interface DisplayableRawLogin extends RawLogin {
   applicationName?: string;
   location?: Location;
   loginId?: string;
+  loginIdType?: IdentityType;
 }
 
 export interface SAMLv2SingleLogout extends Enableable {
@@ -6819,6 +6847,7 @@ export interface SystemConfiguration {
   reportTimezone?: string;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
+  usageDataConfiguration?: UsageDataConfiguration;
   webhookEventLogConfiguration?: WebhookEventLogConfiguration;
 }
 
@@ -8011,6 +8040,15 @@ export interface Attachment {
 }
 
 /**
+ * Config for Usage Data / Stats
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UsageDataConfiguration extends Enableable {
+  numberOfDaysToRetain?: number;
+}
+
+/**
  * A grant for an entity to a user or another entity.
  *
  * @author Brian Pontarelli
@@ -8560,6 +8598,7 @@ export interface SecureIdentity {
   encryptionScheme?: string;
   factor?: number;
   id?: UUID;
+  identities?: Array<UserIdentity>;
   lastLoginInstant?: number;
   password?: string;
   passwordChangeReason?: ChangePasswordReason;
@@ -8627,6 +8666,9 @@ export interface GroupMemberRemoveCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
 }
 
+/**
+ * @author Brady Wied
+ */
 export interface VerifySendCompleteRequest extends BaseEventRequest {
   oneTimeCode?: string;
   verificationId?: string;
@@ -8651,6 +8693,13 @@ export interface IdentityProviderResponse {
  */
 export interface WebhookSearchRequest {
   search?: WebhookSearchCriteria;
+}
+
+/**
+ * @author Brady Wied
+ */
+export interface IdentityType {
+  name?: string;
 }
 
 /**
@@ -8895,7 +8944,7 @@ export enum CoseEllipticCurve {
   Secp256k1 = "Secp256k1"
 }
 
-// TODO : ENG-1 : Brady - this overlaps with the IdentityType enumeration
+//      This is separate from IdentityType.
 export enum LoginIdType {
   email = "email",
   username = "username"
@@ -9002,6 +9051,7 @@ export interface Tenant {
   formConfiguration?: TenantFormConfiguration;
   httpSessionMaxInactiveInterval?: number;
   id?: UUID;
+  identityConfiguration?: TenantIdentityConfiguration;
   insertInstant?: number;
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
@@ -9280,6 +9330,14 @@ export interface VerifyEmailRequest extends BaseEventRequest {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface TenantIdentityConfiguration {
+  enabledTypes?: Array<string>;
+  mode?: TenantIdentityConfigurationMode;
+}
+
+/**
  * @author Brian Pontarelli
  */
 export interface TwoFactorDisableRequest extends BaseEventRequest {
@@ -9494,7 +9552,7 @@ export interface MetaData {
 export interface WebhookEventLog {
   attempts?: Array<WebhookAttemptLog>;
   data?: Record<string, any>;
-  event?: EventRequest;
+  event?: Record<string, any>;
   eventResult?: WebhookEventResult;
   eventType?: EventType;
   failedAttempts?: number;
@@ -10031,12 +10089,6 @@ export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
  */
 export interface WebAuthnExtensionsClientOutputs {
   credProps?: CredentialPropertiesOutput;
-}
-
-export enum IdentityTypes {
-  email = "email",
-  phoneNumber = "phoneNumber",
-  username = "username"
 }
 
 /**
@@ -10968,11 +11020,15 @@ export interface WebAuthnStartRequest {
   applicationId?: UUID;
   credentialId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
   userId?: UUID;
   workflow?: WebAuthnWorkflow;
 }
 
+/**
+ * @author Brady Wied
+ */
 export interface VerifyStartResponse {
   oneTimeCode?: string;
   verificationId?: string;
