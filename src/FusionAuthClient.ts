@@ -9333,7 +9333,6 @@ export interface VerifyEmailRequest extends BaseEventRequest {
  * @author Daniel DeGroff
  */
 export interface TenantIdentityConfiguration {
-  enabledTypes?: Array<string>;
   mode?: TenantIdentityConfigurationMode;
 }
 
