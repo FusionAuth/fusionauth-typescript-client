@@ -6011,6 +6011,7 @@ export interface UserIdentity {
   value?: string;
   verified?: boolean;
   verifiedInstant?: number;
+  verifiedReason?: IdentityVerifiedReason;
 }
 
 /**
@@ -6325,19 +6326,6 @@ export interface FormField {
   required?: boolean;
   type?: FormDataType;
   validator?: FormFieldValidator;
-}
-
-/**
- * Hold SMS configuration for passwordless and verification cases.
- *
- * @author Brady Wied
- */
-export interface TenantSMSConfiguration {
-  messengerId?: UUID;
-  passwordlessTemplateId?: UUID;
-  verificationStrategy?: VerificationStrategy;
-  verificationTemplateId?: UUID;
-  verifyPhoneNumber?: boolean;
 }
 
 /**
@@ -8504,6 +8492,22 @@ export interface EventLogSearchRequest {
 }
 
 /**
+ * Models the reason that {@link UserIdentity#verified} was set to true or false.
+ *
+ * @author Brady Wied
+ */
+export enum IdentityVerifiedReason {
+  Unknown = "Unknown",
+  Skipped = "Skipped",
+  Trusted = "Trusted",
+  Unverifiable = "Unverifiable",
+  Implicit = "Implicit",
+  Pending = "Pending",
+  Completed = "Completed",
+  Disabled = "Disabled"
+}
+
+/**
  * The types of connectors. This enum is stored as an ordinal on the <code>identities</code> table, order must be maintained.
  *
  * @author Trevor Smith
@@ -9066,10 +9070,10 @@ export interface Tenant {
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
+  phoneConfiguration?: TenantPhoneConfiguration;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
   scimServerConfiguration?: TenantSCIMServerConfiguration;
-  smsConfiguration?: TenantSMSConfiguration;
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
@@ -9859,6 +9863,19 @@ export interface UserCommentResponse {
  */
 export interface ValidateResponse {
   jwt?: JWT;
+}
+
+/**
+ * Hold tenant phone configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+export interface TenantPhoneConfiguration {
+  messengerId?: UUID;
+  passwordlessTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
+  verificationTemplateId?: UUID;
+  verifyPhoneNumber?: boolean;
 }
 
 /**
