@@ -5626,6 +5626,7 @@ export enum FormDataType {
   date = "date",
   email = "email",
   number = "number",
+  phoneNumber = "phoneNumber",
   string = "string"
 }
 
