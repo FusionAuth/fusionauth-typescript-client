@@ -10390,6 +10390,7 @@ export interface MemberDeleteRequest {
  */
 export interface RegistrationResponse {
   refreshToken?: string;
+  refreshTokenId?: UUID;
   registration?: UserRegistration;
   registrationVerificationId?: string;
   registrationVerificationOneTimeCode?: string;
