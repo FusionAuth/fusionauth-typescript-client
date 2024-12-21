@@ -5489,16 +5489,6 @@ export type UUID = string;
 
 
 /**
- * Identity Provider response.
- *
- * @author Spencer Witt
- */
-export interface IdentityProviderSearchResponse {
-  identityProviders?: Array<BaseIdentityProvider<any>>;
-  total?: number;
-}
-
-/**
  * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
  * Framework - RFC 6749</a>.
  * <p>
@@ -5528,6 +5518,16 @@ export enum AttestationType {
   attestationCa = "attestationCa",
   anonymizationCa = "anonymizationCa",
   none = "none"
+}
+
+/**
+ * Identity Provider response.
+ *
+ * @author Spencer Witt
+ */
+export interface IdentityProviderSearchResponse {
+  identityProviders?: Array<BaseIdentityProvider<any>>;
+  total?: number;
 }
 
 /**
@@ -5805,6 +5805,15 @@ export interface XboxApplicationConfiguration extends BaseIdentityProviderApplic
 }
 
 /**
+ * An Event "event" to indicate an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+export interface EventLogCreateEvent extends BaseEvent {
+  eventLog?: EventLog;
+}
+
+/**
  * Models a generic connector.
  *
  * @author Trevor Smith
@@ -5817,15 +5826,6 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
   httpAuthenticationUsername?: string;
   readTimeout?: number;
   sslCertificateKeyId?: UUID;
-}
-
-/**
- * An Event "event" to indicate an event log was created.
- *
- * @author Daniel DeGroff
- */
-export interface EventLogCreateEvent extends BaseEvent {
-  eventLog?: EventLog;
 }
 
 /**
@@ -5941,6 +5941,14 @@ export interface UserCommentSearchCriteria extends BaseSearchCriteria {
 }
 
 /**
+ * Models the User Email Verify Event.
+ *
+ * @author Trevor Smith
+ */
+export interface UserEmailVerifiedEvent extends BaseUserEvent {
+}
+
+/**
  * @author Derek Klatt
  */
 export interface PasswordValidationRules {
@@ -5952,14 +5960,6 @@ export interface PasswordValidationRules {
   requireNonAlpha?: boolean;
   requireNumber?: boolean;
   validateOnLogin?: boolean;
-}
-
-/**
- * Models the User Email Verify Event.
- *
- * @author Trevor Smith
- */
-export interface UserEmailVerifiedEvent extends BaseUserEvent {
 }
 
 /**
@@ -6079,6 +6079,15 @@ export interface ReactorResponse {
 }
 
 /**
+ * Models the User Identity Provider Unlink Event.
+ *
+ * @author Rob Davis
+ */
+export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
+  identityProviderLink?: IdentityProviderLink;
+}
+
+/**
  * Login API request object.
  *
  * @author Seth Musselman
@@ -6088,15 +6097,6 @@ export interface LoginRequest extends BaseLoginRequest {
   oneTimePassword?: string;
   password?: string;
   twoFactorTrustId?: string;
-}
-
-/**
- * Models the User Identity Provider Unlink Event.
- *
- * @author Rob Davis
- */
-export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
-  identityProviderLink?: IdentityProviderLink;
 }
 
 /**
@@ -6325,6 +6325,17 @@ export interface UserinfoResponse extends Record<string, any> {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
+  apiMode?: SteamAPIMode;
+  buttonText?: string;
+  client_id?: string;
+  scope?: string;
+  webAPIKey?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface TwoFactorSendRequest {
@@ -6334,17 +6345,6 @@ export interface TwoFactorSendRequest {
   methodId?: string;
   mobilePhone?: string;
   userId?: UUID;
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface SteamApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
-  apiMode?: SteamAPIMode;
-  buttonText?: string;
-  client_id?: string;
-  scope?: string;
-  webAPIKey?: string;
 }
 
 /**
@@ -6728,14 +6728,6 @@ export interface SendRequest {
 }
 
 /**
- * @author Michael Sleevi
- */
-export interface MessageTemplateResponse {
-  messageTemplate?: MessageTemplate;
-  messageTemplates?: Array<MessageTemplate>;
-}
-
-/**
  * Identifies the WebAuthn workflow. This will affect the parameters used for credential creation
  * and request based on the Tenant configuration.
  *
@@ -6745,6 +6737,14 @@ export enum WebAuthnWorkflow {
   bootstrap = "bootstrap",
   general = "general",
   reauthentication = "reauthentication"
+}
+
+/**
+ * @author Michael Sleevi
+ */
+export interface MessageTemplateResponse {
+  messageTemplate?: MessageTemplate;
+  messageTemplates?: Array<MessageTemplate>;
 }
 
 /**
@@ -6965,15 +6965,6 @@ export interface Group {
 }
 
 /**
- * Base class for all {@link User}-related events.
- *
- * @author Spencer Witt
- */
-export interface BaseUserEvent extends BaseEvent {
-  user?: User;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export interface Form {
@@ -6984,6 +6975,15 @@ export interface Form {
   name?: string;
   steps?: Array<FormStep>;
   type?: FormType;
+}
+
+/**
+ * Base class for all {@link User}-related events.
+ *
+ * @author Spencer Witt
+ */
+export interface BaseUserEvent extends BaseEvent {
+  user?: User;
 }
 
 /**
@@ -7350,21 +7350,21 @@ export interface EntityJWTConfiguration extends Enableable {
 }
 
 /**
- * Models the Group Member Update Complete Event.
- *
- * @author Daniel DeGroff
- */
-export interface GroupMemberUpdateCompleteEvent extends BaseGroupEvent {
-  members?: Array<GroupMember>;
-}
-
-/**
  * Search criteria for Consents
  *
  * @author Spencer Witt
  */
 export interface ConsentSearchCriteria extends BaseSearchCriteria {
   name?: string;
+}
+
+/**
+ * Models the Group Member Update Complete Event.
+ *
+ * @author Daniel DeGroff
+ */
+export interface GroupMemberUpdateCompleteEvent extends BaseGroupEvent {
+  members?: Array<GroupMember>;
 }
 
 /**
@@ -7553,13 +7553,6 @@ export interface UserConsent {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface IdentityProviderStartLoginResponse {
-  code?: string;
-}
-
-/**
  * Twitch gaming login provider.
  *
  * @author Brett Pontarelli
@@ -7569,6 +7562,13 @@ export interface TwitchIdentityProvider extends BaseIdentityProvider<TwitchAppli
   client_id?: string;
   client_secret?: string;
   scope?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface IdentityProviderStartLoginResponse {
+  code?: string;
 }
 
 /**
@@ -8138,6 +8138,12 @@ export interface WebhookSearchResponse {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface RefreshResponse {
+}
+
+/**
  * Response for the login report.
  *
  * @author Brian Pontarelli
@@ -8145,12 +8151,6 @@ export interface WebhookSearchResponse {
 export interface LoginReportResponse {
   hourlyCounts?: Array<Count>;
   total?: number;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface RefreshResponse {
 }
 
 /**
@@ -8203,20 +8203,20 @@ export interface NonTransactionalEvent {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface TwoFactorResponse {
-  code?: string;
-  recoveryCodes?: Array<string>;
-}
-
-/**
  * @author Brett Guy
  */
 export enum ProofKeyForCodeExchangePolicy {
   Required = "Required",
   NotRequired = "NotRequired",
   NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorResponse {
+  code?: string;
+  recoveryCodes?: Array<string>;
 }
 
 /**
@@ -8812,15 +8812,6 @@ export enum LambdaEngineType {
 }
 
 /**
- * API response for starting a WebAuthn authentication ceremony
- *
- * @author Spencer Witt
- */
-export interface WebAuthnStartResponse {
-  options?: PublicKeyCredentialRequestOptions;
-}
-
-/**
  * SAML v2 identity provider configuration.
  *
  * @author Brian Pontarelli
@@ -8839,6 +8830,15 @@ export interface SAMLv2IdentityProvider extends BaseSAMLv2IdentityProvider<SAMLv
   requestSigningKeyId?: UUID;
   signRequest?: boolean;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
+}
+
+/**
+ * API response for starting a WebAuthn authentication ceremony
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnStartResponse {
+  options?: PublicKeyCredentialRequestOptions;
 }
 
 /**
@@ -9894,20 +9894,20 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 }
 
 /**
+ * @author Michael Sleevi
+ */
+export interface SMSMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
+}
+
+/**
  * Lambda API request object.
  *
  * @author Brian Pontarelli
  */
 export interface LambdaRequest {
   lambda?: Lambda;
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface SMSMessageTemplate extends MessageTemplate {
-  defaultTemplate?: string;
-  localizedTemplates?: LocalizedStrings;
 }
 
 /**
@@ -11212,6 +11212,18 @@ export interface CertificateInformation {
 }
 
 /**
+ * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
+ * for a third-party application.
+ *
+ * @author Spencer Witt
+ */
+export enum OAuthScopeConsentMode {
+  AlwaysPrompt = "AlwaysPrompt",
+  RememberDecision = "RememberDecision",
+  NeverPrompt = "NeverPrompt"
+}
+
+/**
  * Search criteria for entity grants.
  *
  * @author Brian Pontarelli
@@ -11223,14 +11235,6 @@ export interface EntityGrantSearchCriteria extends BaseSearchCriteria {
 }
 
 /**
- * Models the FusionAuth connector.
- *
- * @author Trevor Smith
- */
-export interface FusionAuthConnectorConfiguration extends BaseConnectorConfiguration {
-}
-
-/**
  * @author Trevor Smith
  */
 export interface ConnectorResponse {
@@ -11239,15 +11243,11 @@ export interface ConnectorResponse {
 }
 
 /**
- * Controls the policy for requesting user permission to grant access to requested scopes during an OAuth workflow
- * for a third-party application.
+ * Models the FusionAuth connector.
  *
- * @author Spencer Witt
+ * @author Trevor Smith
  */
-export enum OAuthScopeConsentMode {
-  AlwaysPrompt = "AlwaysPrompt",
-  RememberDecision = "RememberDecision",
-  NeverPrompt = "NeverPrompt"
+export interface FusionAuthConnectorConfiguration extends BaseConnectorConfiguration {
 }
 
 /**
@@ -11267,21 +11267,21 @@ export interface ThemeSearchRequest {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export enum ObjectState {
-  Active = "Active",
-  Inactive = "Inactive",
-  PendingDelete = "PendingDelete"
-}
-
-/**
  * Search request for Consents
  *
  * @author Spencer Witt
  */
 export interface ConsentSearchRequest {
   search?: ConsentSearchCriteria;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum ObjectState {
+  Active = "Active",
+  Inactive = "Inactive",
+  PendingDelete = "PendingDelete"
 }
 
 /**
@@ -11370,18 +11370,18 @@ export interface UserComment {
 }
 
 /**
+ * @author Brett Pontarelli
+ */
+export interface TenantSSOConfiguration {
+  deviceTrustTimeToLiveInSeconds?: number;
+}
+
+/**
  * Models the Group Created Event.
  *
  * @author Daniel DeGroff
  */
 export interface GroupCreateCompleteEvent extends BaseGroupEvent {
-}
-
-/**
- * @author Brett Pontarelli
- */
-export interface TenantSSOConfiguration {
-  deviceTrustTimeToLiveInSeconds?: number;
 }
 
 /**
@@ -11732,6 +11732,12 @@ export interface TenantAccessControlConfiguration {
 }
 
 /**
+ * Interface for any object that can provide JSON Web key Information.
+ */
+export interface JSONWebKeyInfoProvider {
+}
+
+/**
  * This class is a simple attachment with a byte array, name and MIME type.
  *
  * @author Brian Pontarelli
@@ -11740,12 +11746,6 @@ export interface Attachment {
   attachment?: Array<number>;
   mime?: string;
   name?: string;
-}
-
-/**
- * Interface for any object that can provide JSON Web key Information.
- */
-export interface JSONWebKeyInfoProvider {
 }
 
 /**
@@ -11882,15 +11882,6 @@ export interface LambdaResponse {
 }
 
 /**
- * The Integration Request
- *
- * @author Daniel DeGroff
- */
-export interface IntegrationRequest {
-  integrations?: Integrations;
-}
-
-/**
  * Models the JWT public key Refresh Token Revoke Event. This event might be for a single
  * token, a user or an entire application.
  *
@@ -11898,6 +11889,15 @@ export interface IntegrationRequest {
  */
 export interface JWTPublicKeyUpdateEvent extends BaseEvent {
   applicationIds?: Array<UUID>;
+}
+
+/**
+ * The Integration Request
+ *
+ * @author Daniel DeGroff
+ */
+export interface IntegrationRequest {
+  integrations?: Integrations;
 }
 
 /**
@@ -12155,6 +12155,14 @@ export interface EntityTypePermission {
 }
 
 /**
+ * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
+ *
+ * @author Brian Pontarelli
+ */
+export interface UserSearchCriteria extends BaseElasticSearchCriteria {
+}
+
+/**
  * User comment search response
  *
  * @author Spencer Witt
@@ -12162,14 +12170,6 @@ export interface EntityTypePermission {
 export interface UserCommentSearchResponse {
   total?: number;
   userComments?: Array<UserComment>;
-}
-
-/**
- * This class is the user query. It provides a build pattern as well as public fields for use on forms and in actions.
- *
- * @author Brian Pontarelli
- */
-export interface UserSearchCriteria extends BaseElasticSearchCriteria {
 }
 
 /**
