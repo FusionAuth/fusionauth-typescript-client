@@ -6642,11 +6642,6 @@ export enum ProofKeyForCodeExchangePolicy {
   NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
 }
 
-export enum APIVersion {
-  V1 = "v1",
-  V2 = "v2"
-}
-
 /**
  * Audit log response.
  *
