@@ -11503,6 +11503,7 @@ export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
 }
 
