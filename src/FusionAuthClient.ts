@@ -267,6 +267,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Completes verification of an identity using verification codes from the Verify Start API.
+   *
+   * @param {VerifySendCompleteRequest} request The identity verify complete request that contains all the information used to verify the identity.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  completeVerifyIdentity(request: VerifySendCompleteRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/identity/verify/complete')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
    *
    * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
@@ -4715,6 +4729,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Send a verification code using the appropriate transport for the identity type being verified.
+   *
+   * @param {VerifySendCompleteRequest} request The identity verify send request that contains all the information used send the code.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendVerifyIdentity(request: VerifySendCompleteRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/identity/verify/send')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Begins a login request for a 3rd party login that requires user interaction such as HYPR.
    *
    * @param {IdentityProviderStartLoginRequest} request The third-party login request that contains information from the third-party login
@@ -4758,6 +4786,21 @@ export class FusionAuthClient {
   startTwoFactorLogin(request: TwoFactorStartRequest): Promise<ClientResponse<TwoFactorStartResponse>> {
     return this.start<TwoFactorStartResponse, Errors>()
         .withUri('/api/two-factor/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start a verification of an identity by generating a code. This code can be sent to the User using the Verify Send API
+   * Verification Code API or using a mechanism outside of FusionAuth. The verification is completed by using the Verify Complete API with this code.
+   *
+   * @param {VerifyStartRequest} request The identity verify start request that contains all the information used to begin the request.
+   * @returns {Promise<ClientResponse<VerifyStartResponse>>}
+   */
+  startVerifyIdentity(request: VerifyStartRequest): Promise<ClientResponse<VerifyStartResponse>> {
+    return this.start<VerifyStartResponse, Errors>()
+        .withUri('/api/identity/verify/start')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -5543,14 +5586,6 @@ export interface AuthenticationTokenConfiguration extends Enableable {
  */
 export interface AuditLogCreateEvent extends BaseEvent {
   auditLog?: AuditLog;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export enum TenantIdentityConfigurationMode {
-  Compatible = "Compatible",
-  Discrete = "Discrete"
 }
 
 /**
@@ -6432,12 +6467,13 @@ export interface RefreshRequest extends BaseEventRequest {
 }
 
 /**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
+ * Models an event where a user is being created with an "in-use" login Id (email, username, or other identities).
  *
  * @author Daniel DeGroff
  */
 export interface UserLoginIdDuplicateOnCreateEvent extends BaseUserEvent {
   duplicateEmail?: string;
+  duplicateIdentities?: Array<IdentityInfo>;
   duplicateUsername?: string;
   existing?: User;
 }
@@ -8498,7 +8534,6 @@ export interface EventLogSearchRequest {
  * @author Brady Wied
  */
 export enum IdentityVerifiedReason {
-  Unknown = "Unknown",
   Skipped = "Skipped",
   Trusted = "Trusted",
   Unverifiable = "Unverifiable",
@@ -9056,7 +9091,6 @@ export interface Tenant {
   formConfiguration?: TenantFormConfiguration;
   httpSessionMaxInactiveInterval?: number;
   id?: UUID;
-  identityConfiguration?: TenantIdentityConfiguration;
   insertInstant?: number;
   issuer?: string;
   jwtConfiguration?: JWTConfiguration;
@@ -9332,13 +9366,6 @@ export interface VerifyEmailRequest extends BaseEventRequest {
   oneTimeCode?: string;
   userId?: UUID;
   verificationId?: string;
-}
-
-/**
- * @author Daniel DeGroff
- */
-export interface TenantIdentityConfiguration {
-  mode?: TenantIdentityConfigurationMode;
 }
 
 /**
@@ -10036,7 +10063,7 @@ export interface TwitchIdentityProvider extends BaseIdentityProvider<TwitchAppli
 }
 
 /**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * The public, global view of a User. This object contains all global information about the user including birthdate, registration information
  * preferred languages, global attributes, etc.
  *
  * @author Seth Musselman
@@ -10510,6 +10537,7 @@ export interface MemberDeleteRequest {
  */
 export interface RegistrationResponse {
   refreshToken?: string;
+  refreshTokenId?: UUID;
   registration?: UserRegistration;
   registrationVerificationId?: string;
   registrationVerificationOneTimeCode?: string;
@@ -10827,6 +10855,11 @@ export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplic
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+}
+
+export interface IdentityInfo {
+  type?: string;
+  value?: string;
 }
 
 /**
@@ -11301,7 +11334,6 @@ export enum EventType {
   UserDeleteComplete = "user.delete.complete",
   UserEmailUpdate = "user.email.update",
   UserEmailVerified = "user.email.verified",
-  IdentityVerified = "identity.verified",
   UserIdentityProviderLink = "user.identity-provider.link",
   UserIdentityProviderUnlink = "user.identity-provider.unlink",
   UserLoginIdDuplicateOnCreate = "user.loginId.duplicate.create",
@@ -11327,7 +11359,8 @@ export enum EventType {
   UserTwoFactorMethodRemove = "user.two-factor.method.remove",
   UserUpdate = "user.update",
   UserUpdateComplete = "user.update.complete",
-  Test = "test"
+  Test = "test",
+  IdentityVerified = "identity.verified"
 }
 
 /**
@@ -11469,6 +11502,7 @@ export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
 }
 
