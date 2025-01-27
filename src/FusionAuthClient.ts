@@ -10085,6 +10085,7 @@ export interface User extends SecureIdentity {
   middleName?: string;
   mobilePhone?: string;
   parentEmail?: string;
+  phoneNumber?: string;
   preferredLanguages?: Array<string>;
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
