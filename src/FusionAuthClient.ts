@@ -5678,7 +5678,7 @@ export interface KeySearchResponse {
 /**
  * @author Brady Wied
  */
-export interface VerifyStartRequest extends BaseEventRequest {
+export interface VerifyStartRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdType?: string;
