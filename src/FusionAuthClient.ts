@@ -8505,6 +8505,7 @@ export enum Sort {
 //      This is separate from IdentityType.
 export enum LoginIdType {
   email = "email",
+  phoneNumber = "phoneNumber",
   username = "username"
 }
 
