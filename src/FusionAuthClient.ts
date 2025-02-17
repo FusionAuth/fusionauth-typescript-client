@@ -5678,7 +5678,7 @@ export interface KeySearchResponse {
 /**
  * @author Brady Wied
  */
-export interface VerifyStartRequest extends BaseEventRequest {
+export interface VerifyStartRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdType?: string;
@@ -6474,6 +6474,7 @@ export interface RefreshRequest extends BaseEventRequest {
 export interface UserLoginIdDuplicateOnCreateEvent extends BaseUserEvent {
   duplicateEmail?: string;
   duplicateIdentities?: Array<IdentityInfo>;
+  duplicatePhoneNumber?: string;
   duplicateUsername?: string;
   existing?: User;
 }
@@ -8229,6 +8230,13 @@ export interface RegistrationConfiguration extends Enableable {
   type?: RegistrationType;
 }
 
+export interface VerificationId {
+  id?: string;
+  oneTimeCode?: string;
+  type?: IdentityType;
+  value?: string;
+}
+
 /**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
@@ -8868,6 +8876,7 @@ export interface UserResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
 }
 
 /**
@@ -12119,7 +12128,9 @@ export interface APIKey {
   keyManager?: boolean;
   lastUpdateInstant?: number;
   metaData?: APIKeyMetaData;
+  name?: string;
   permissions?: APIKeyPermissions;
+  retrievable?: boolean;
   tenantId?: UUID;
 }
 
