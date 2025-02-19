@@ -8998,6 +8998,7 @@ export enum CoseEllipticCurve {
 //      This is separate from IdentityType.
 export enum LoginIdType {
   email = "email",
+  phoneNumber = "phoneNumber",
   username = "username"
 }
 
