@@ -8230,6 +8230,13 @@ export interface RegistrationConfiguration extends Enableable {
   type?: RegistrationType;
 }
 
+export interface VerificationId {
+  id?: string;
+  oneTimeCode?: string;
+  type?: IdentityType;
+  value?: string;
+}
+
 /**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
@@ -8787,9 +8794,6 @@ export interface ExternalIdentifierConfiguration {
   emailVerificationIdTimeToLiveInSeconds?: number;
   emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   externalAuthenticationIdTimeToLiveInSeconds?: number;
-  identityVerificationIdGenerator?: SecureGeneratorConfiguration;
-  identityVerificationIdTimeToLiveInSeconds?: number;
-  identityVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   loginIntentTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
@@ -8804,6 +8808,7 @@ export interface ExternalIdentifierConfiguration {
   samlv2AuthNRequestIdTimeToLiveInSeconds?: number;
   setupPasswordIdGenerator?: SecureGeneratorConfiguration;
   setupPasswordIdTimeToLiveInSeconds?: number;
+  smsVerificationTimeToLiveInSeconds?: number;
   trustTokenTimeToLiveInSeconds?: number;
   twoFactorIdTimeToLiveInSeconds?: number;
   twoFactorOneTimeCodeIdGenerator?: SecureGeneratorConfiguration;
@@ -8871,6 +8876,7 @@ export interface UserResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
 }
 
 /**
