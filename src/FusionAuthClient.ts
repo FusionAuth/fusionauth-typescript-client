@@ -6141,6 +6141,15 @@ export interface ApplicationSearchResponse extends ExpandableResponse {
 }
 
 /**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+export interface PhoneUnverifiedOptions {
+  behavior?: UnverifiedBehavior;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface OAuthConfigurationResponse {
@@ -8230,6 +8239,13 @@ export interface RegistrationConfiguration extends Enableable {
   type?: RegistrationType;
 }
 
+export interface VerificationId {
+  id?: string;
+  oneTimeCode?: string;
+  type?: IdentityType;
+  value?: string;
+}
+
 /**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
@@ -8871,6 +8887,7 @@ export interface UserResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
 }
 
 /**
@@ -9907,6 +9924,8 @@ export interface ValidateResponse {
 export interface TenantPhoneConfiguration {
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
+  unverified?: PhoneUnverifiedOptions;
+  verificationCompleteTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
   verificationTemplateId?: UUID;
   verifyPhoneNumber?: boolean;
