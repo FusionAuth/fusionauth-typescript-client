@@ -6141,6 +6141,15 @@ export interface ApplicationSearchResponse extends ExpandableResponse {
 }
 
 /**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+export interface PhoneUnverifiedOptions {
+  behavior?: UnverifiedBehavior;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface OAuthConfigurationResponse {
@@ -9915,6 +9924,8 @@ export interface ValidateResponse {
 export interface TenantPhoneConfiguration {
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
+  unverified?: PhoneUnverifiedOptions;
+  verificationCompleteTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
   verificationTemplateId?: UUID;
   verifyPhoneNumber?: boolean;
