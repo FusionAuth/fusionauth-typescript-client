@@ -10482,6 +10482,7 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
+  sendPhoneNumberVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
 }
@@ -11471,6 +11472,7 @@ export interface Templates {
   passwordComplete?: string;
   passwordForgot?: string;
   passwordSent?: string;
+  phoneNumberVerificationRequired?: string;
   registrationComplete?: string;
   registrationSend?: string;
   registrationSent?: string;
@@ -11815,7 +11817,8 @@ export enum RateLimitedRequestType {
   SendEmailVerification = "SendEmailVerification",
   SendPasswordless = "SendPasswordless",
   SendRegistrationVerification = "SendRegistrationVerification",
-  SendTwoFactor = "SendTwoFactor"
+  SendTwoFactor = "SendTwoFactor",
+  SendPhoneNumberVerification = "SendPhoneNumberVerification"
 }
 
 /**
