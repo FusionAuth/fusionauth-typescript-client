@@ -5707,7 +5707,7 @@ export interface UserRegistrationDeleteEvent extends BaseUserEvent {
 /**
  * Verify Send API request object.
  */
-export interface VerifySendRequest extends BaseEventRequest {
+export interface VerifySendRequest {
   oneTimeCode?: string;
   verificationId?: string;
 }
