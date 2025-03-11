@@ -269,10 +269,10 @@ export class FusionAuthClient {
   /**
    * Completes verification of an identity using verification codes from the Verify Start API.
    *
-   * @param {VerifySendCompleteRequest} request The identity verify complete request that contains all the information used to verify the identity.
+   * @param {VerifyCompleteRequest} request The identity verify complete request that contains all the information used to verify the identity.
    * @returns {Promise<ClientResponse<void>>}
    */
-  completeVerifyIdentity(request: VerifySendCompleteRequest): Promise<ClientResponse<void>> {
+  completeVerifyIdentity(request: VerifyCompleteRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/identity/verify/complete')
         .withJSONBody(request)
@@ -4731,10 +4731,10 @@ export class FusionAuthClient {
   /**
    * Send a verification code using the appropriate transport for the identity type being verified.
    *
-   * @param {VerifySendCompleteRequest} request The identity verify send request that contains all the information used send the code.
+   * @param {VerifySendRequest} request The identity verify send request that contains all the information used send the code.
    * @returns {Promise<ClientResponse<void>>}
    */
-  sendVerifyIdentity(request: VerifySendCompleteRequest): Promise<ClientResponse<void>> {
+  sendVerifyIdentity(request: VerifySendRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/identity/verify/send')
         .withJSONBody(request)
@@ -5705,6 +5705,14 @@ export interface UserRegistrationDeleteEvent extends BaseUserEvent {
 }
 
 /**
+ * Verify Send API request object.
+ */
+export interface VerifySendRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface AccessToken {
@@ -6371,6 +6379,14 @@ export interface FormField {
   required?: boolean;
   type?: FormDataType;
   validator?: FormFieldValidator;
+}
+
+/**
+ * Verify Complete API request object.
+ */
+export interface VerifyCompleteRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
 }
 
 /**
@@ -8723,14 +8739,6 @@ export interface UserLoginIdDuplicateOnUpdateEvent extends UserLoginIdDuplicateO
  */
 export interface GroupMemberRemoveCompleteEvent extends BaseGroupEvent {
   members?: Array<GroupMember>;
-}
-
-/**
- * @author Brady Wied
- */
-export interface VerifySendCompleteRequest extends BaseEventRequest {
-  oneTimeCode?: string;
-  verificationId?: string;
 }
 
 export interface EventLogConfiguration {
@@ -11472,7 +11480,7 @@ export interface Templates {
   passwordComplete?: string;
   passwordForgot?: string;
   passwordSent?: string;
-  phoneNumberVerificationRequired?: string;
+  phoneVerificationRequired?: string;
   registrationComplete?: string;
   registrationSend?: string;
   registrationSent?: string;
