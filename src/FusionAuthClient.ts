@@ -10490,7 +10490,7 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
-  sendPhoneNumberVerification?: RateLimitedRequestConfiguration;
+  sendPhoneVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
 }
@@ -11826,7 +11826,7 @@ export enum RateLimitedRequestType {
   SendPasswordless = "SendPasswordless",
   SendRegistrationVerification = "SendRegistrationVerification",
   SendTwoFactor = "SendTwoFactor",
-  SendPhoneNumberVerification = "SendPhoneNumberVerification"
+  SendPhoneVerification = "SendPhoneVerification"
 }
 
 /**
