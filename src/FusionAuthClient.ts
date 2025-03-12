@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
- */
+* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+* either express or implied. See the License for the specific
+* language governing permissions and limitations under the License.
+*/
 
 import IRESTClient from "./IRESTClient"
 import DefaultRESTClientBuilder from "./DefaultRESTClientBuilder";
@@ -5590,6 +5590,7 @@ export interface FamilyEmailRequest {
  */
 export interface LoginRequest extends BaseLoginRequest {
   loginId?: string;
+  loginIdTypes?: Array<string>;
   oneTimePassword?: string;
   password?: string;
   twoFactorTrustId?: string;
@@ -5733,13 +5734,6 @@ export interface UserEmailUpdateEvent extends BaseUserEvent {
   previousEmail?: string;
 }
 
-export interface VerificationId {
-  id?: string;
-  oneTimeCode?: string;
-  type?: IdentityType;
-  value?: string;
-}
-
 /**
  * @author Daniel DeGroff
  */
@@ -5848,6 +5842,7 @@ export interface GroupSearchCriteria extends BaseSearchCriteria {
  */
 export interface PasswordlessLoginRequest extends BaseLoginRequest {
   code?: string;
+  oneTimeCode?: string;
   twoFactorTrustId?: string;
 }
 
@@ -6245,6 +6240,21 @@ export interface KeyRequest {
 }
 
 /**
+ * Models the reason that {@link UserIdentity#verified} was set to true or false.
+ *
+ * @author Brady Wied
+ */
+export enum IdentityVerifiedReason {
+  Skipped = "Skipped",
+  Trusted = "Trusted",
+  Unverifiable = "Unverifiable",
+  Implicit = "Implicit",
+  Pending = "Pending",
+  Completed = "Completed",
+  Disabled = "Disabled"
+}
+
+/**
  * Domain for a public key, key pair or an HMAC secret. This is used by KeyMaster to manage keys for JWTs, SAML, etc.
  *
  * @author Brian Pontarelli
@@ -6363,6 +6373,7 @@ export enum FormDataType {
   date = "date",
   email = "email",
   number = "number",
+  phoneNumber = "phoneNumber",
   string = "string"
 }
 
@@ -6520,6 +6531,16 @@ export interface ApplicationSearchCriteria extends BaseSearchCriteria {
   name?: string;
   state?: ObjectState;
   tenantId?: UUID;
+}
+
+/**
+ * @author Brady Wied
+ */
+export interface VerifyStartRequest {
+  applicationId?: UUID;
+  loginId?: string;
+  loginIdType?: string;
+  verificationStrategy?: string;
 }
 
 /**
@@ -6908,6 +6929,14 @@ export interface MultiFactorSMSTemplate {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export enum PasswordlessStrategy {
+  ClickableLink = "ClickableLink",
+  FormField = "FormField"
+}
+
+/**
  * User API request object.
  *
  * @author Brian Pontarelli
@@ -6919,6 +6948,7 @@ export interface UserRequest extends BaseEventRequest {
   sendSetPasswordEmail?: boolean;
   skipVerification?: boolean;
   user?: User;
+  verificationIds?: Array<string>;
 }
 
 /**
@@ -6946,6 +6976,21 @@ export interface VerifyEmailResponse {
 }
 
 /**
+ * Hold tenant phone configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+export interface TenantPhoneConfiguration {
+  messengerId?: UUID;
+  passwordlessTemplateId?: UUID;
+  unverified?: PhoneUnverifiedOptions;
+  verificationCompleteTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
+  verificationTemplateId?: UUID;
+  verifyPhoneNumber?: boolean;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface OpenIdConnectApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
@@ -6969,7 +7014,8 @@ export enum PublicKeyCredentialType {
 export interface PasswordlessStartRequest {
   applicationId?: UUID;
   loginId?: string;
-  loginIdTypes?: Array<string>;
+  loginIdType?: string;
+  loginStrategy?: string;
   state?: Record<string, any>;
 }
 
@@ -7175,7 +7221,8 @@ export enum RateLimitedRequestType {
   SendEmailVerification = "SendEmailVerification",
   SendPasswordless = "SendPasswordless",
   SendRegistrationVerification = "SendRegistrationVerification",
-  SendTwoFactor = "SendTwoFactor"
+  SendTwoFactor = "SendTwoFactor",
+  SendPhoneVerification = "SendPhoneVerification"
 }
 
 /**
@@ -7983,6 +8030,7 @@ export interface ApplicationSearchResponse extends ExpandableResponse {
  */
 export interface PasswordlessStartResponse {
   code?: string;
+  oneTimeCode?: string;
 }
 
 /**
@@ -8065,7 +8113,7 @@ export interface Email {
 }
 
 /**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * The public, global view of a User. This object contains all global information about the user including birthdate, registration information
  * preferred languages, global attributes, etc.
  *
  * @author Seth Musselman
@@ -8087,6 +8135,7 @@ export interface User extends SecureIdentity {
   middleName?: string;
   mobilePhone?: string;
   parentEmail?: string;
+  phoneNumber?: string;
   preferredLanguages?: Array<string>;
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
@@ -8456,8 +8505,10 @@ export enum Sort {
   desc = "desc"
 }
 
+//      This is separate from IdentityType.
 export enum LoginIdType {
   email = "email",
+  phoneNumber = "phoneNumber",
   username = "username"
 }
 
@@ -8505,6 +8556,7 @@ export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
 }
 
@@ -9343,6 +9395,14 @@ export interface LoginHintConfiguration extends Enableable {
 }
 
 /**
+ * Verify Complete API request object.
+ */
+export interface VerifyCompleteRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface FacebookApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
@@ -9422,7 +9482,8 @@ export enum EventType {
   UserTwoFactorMethodRemove = "user.two-factor.method.remove",
   UserUpdate = "user.update",
   UserUpdateComplete = "user.update.complete",
-  Test = "test"
+  Test = "test",
+  IdentityVerified = "identity.verified"
 }
 
 /**
@@ -9551,6 +9612,7 @@ export interface UserResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
 }
 
 /**
@@ -9605,6 +9667,14 @@ export interface TenantAccessControlConfiguration {
  */
 export interface WebhookRequest {
   webhook?: Webhook;
+}
+
+/**
+ * @author Brady Wied
+ */
+export interface VerifyStartResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
 }
 
 /**
@@ -9798,7 +9868,12 @@ export interface ExternalIdentifierConfiguration {
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
+  passwordlessShortCodeLoginGenerator?: SecureGeneratorConfiguration;
+  passwordlessShortCodeLoginTimeToLiveInSeconds?: number;
   pendingAccountLinkTimeToLiveInSeconds?: number;
+  phoneNumberVerificationIdGenerator?: SecureGeneratorConfiguration;
+  phoneNumberVerificationIdTimeToLiveInSeconds?: number;
+  phoneNumberVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
   registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
@@ -9835,6 +9910,7 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
+  sendPhoneVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
 }
@@ -9879,6 +9955,7 @@ export interface Tenant {
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
+  phoneConfiguration?: TenantPhoneConfiguration;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
   scimServerConfiguration?: TenantSCIMServerConfiguration;
@@ -9900,6 +9977,16 @@ export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplic
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+}
+
+/**
+ * Models the identity verified event
+ *
+ * @author Brady Wied
+ */
+export interface IdentityVerifiedEvent extends BaseUserEvent {
+  loginId?: string;
+  loginIdType?: string;
 }
 
 /**
@@ -10051,6 +10138,7 @@ export enum ResidentKeyRequirement {
  */
 export interface RefreshRequest extends BaseEventRequest {
   refreshToken?: string;
+  timeToLiveInSeconds?: number;
   token?: string;
 }
 
@@ -10180,6 +10268,11 @@ export enum WebhookAttemptResult {
  */
 export interface AuditLogExportRequest extends BaseExportRequest {
   criteria?: AuditLogSearchCriteria;
+}
+
+export interface IdentityInfo {
+  type?: string;
+  value?: string;
 }
 
 /**
@@ -10662,6 +10755,13 @@ export interface OpenIdConnectIdentityProvider extends BaseIdentityProvider<Open
   postRequest?: boolean;
 }
 
+export interface VerificationId {
+  id?: string;
+  oneTimeCode?: string;
+  type?: IdentityType;
+  value?: string;
+}
+
 export interface LambdaConfiguration {
   reconcileId?: UUID;
 }
@@ -10720,6 +10820,7 @@ export interface DisplayableRawLogin extends RawLogin {
   applicationName?: string;
   location?: Location;
   loginId?: string;
+  loginIdType?: IdentityType;
 }
 
 /**
@@ -10842,6 +10943,13 @@ export interface TenantUnverifiedConfiguration {
 }
 
 /**
+ * @author Brady Wied
+ */
+export interface IdentityType {
+  name?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface TwoFactorSendRequest {
@@ -10925,7 +11033,7 @@ export interface UserRegistrationUpdateCompleteEvent extends BaseUserEvent {
 export interface WebhookEventLog {
   attempts?: Array<WebhookAttemptLog>;
   data?: Record<string, any>;
-  event?: EventRequest;
+  event?: Record<string, any>;
   eventResult?: WebhookEventResult;
   eventType?: EventType;
   failedAttempts?: number;
@@ -11316,12 +11424,14 @@ export interface UserConsentResponse {
 }
 
 /**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
+ * Models an event where a user is being created with an "in-use" login Id (email, username, or other identities).
  *
  * @author Daniel DeGroff
  */
 export interface UserLoginIdDuplicateOnCreateEvent extends BaseUserEvent {
   duplicateEmail?: string;
+  duplicateIdentities?: Array<IdentityInfo>;
+  duplicatePhoneNumber?: string;
   duplicateUsername?: string;
   existing?: User;
 }
@@ -11361,6 +11471,7 @@ export interface WebAuthnStartRequest {
   applicationId?: UUID;
   credentialId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
   userId?: UUID;
   workflow?: WebAuthnWorkflow;
@@ -11510,6 +11621,14 @@ export interface UserRegistrationDeleteCompleteEvent extends BaseUserEvent {
 }
 
 /**
+ * Verify Send API request object.
+ */
+export interface VerifySendRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
  * The Integration Response
  *
  * @author Daniel DeGroff
@@ -11562,6 +11681,15 @@ export interface PublicKeyCredentialRequestOptions {
   rpId?: string;
   timeout?: number;
   userVerification?: UserVerificationRequirement;
+}
+
+/**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+export interface PhoneUnverifiedOptions {
+  behavior?: UnverifiedBehavior;
 }
 
 export interface DeleteConfiguration extends Enableable {
@@ -11882,6 +12010,23 @@ export interface WebAuthnCredentialImportRequest {
   validateDbConstraints?: boolean;
 }
 
+/**
+ * @author Daniel DeGroff
+ */
+export interface UserIdentity {
+  displayValue?: string;
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  lastUpdateInstant?: number;
+  moderationStatus?: ContentStatus;
+  primary?: boolean;
+  type?: IdentityType;
+  value?: string;
+  verified?: boolean;
+  verifiedInstant?: number;
+  verifiedReason?: IdentityVerifiedReason;
+}
+
 export interface Templates {
   accountEdit?: string;
   accountIndex?: string;
@@ -11924,6 +12069,7 @@ export interface Templates {
   passwordComplete?: string;
   passwordForgot?: string;
   passwordSent?: string;
+  phoneVerificationRequired?: string;
   registrationComplete?: string;
   registrationSend?: string;
   registrationSent?: string;
