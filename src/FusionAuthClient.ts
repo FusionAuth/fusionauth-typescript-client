@@ -11480,7 +11480,10 @@ export interface Templates {
   passwordComplete?: string;
   passwordForgot?: string;
   passwordSent?: string;
+  phoneComplete?: string;
+  phoneSent?: string;
   phoneVerificationRequired?: string;
+  phoneVerify?: string;
   registrationComplete?: string;
   registrationSend?: string;
   registrationSent?: string;
