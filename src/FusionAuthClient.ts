@@ -11576,6 +11576,7 @@ export interface LoginResponse {
   changePasswordReason?: ChangePasswordReason;
   configurableMethods?: Array<string>;
   emailVerificationId?: string;
+  identityVerificationId?: string;
   methods?: Array<TwoFactorMethod>;
   pendingIdPLinkId?: string;
   refreshToken?: string;
