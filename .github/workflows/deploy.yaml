@@ -1,10 +1,4 @@
-# Run locally with act:
-#
-# act pull_request [--input command=[command]] \
-#  --platform fusionauth-standard=[ecr-repo-name]/fusionauth-standard:latest] \
-#  --workflows ./.github/workflows/deploy.yaml \
-#  --env-file <(aws configure export-credentials --profile [aws-profile] --format env)
-
+---
 name: Deploy
 
 on:
@@ -26,39 +20,52 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  build:
-    if: |
-      github.event_name == 'pull_request' ||
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch' && inputs.command == 'build'
-    runs-on: fusionauth-standard
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: /usr/bin/bash -l -e -o pipefail {0}
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: setup java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          java-package: jre
+
+      - name: install savant
+        run: |
+          curl -O https://repository.savantbuild.org/org/savantbuild/savant-core/2.0.0/savant-2.0.0.tar.gz
+          tar xzvf savant-2.0.0.tar.gz
+          savant-2.0.0/bin/sb --version
+          SAVANT_PATH=$(realpath -s "./savant-2.0.0/bin")
+          echo "${SAVANT_PATH}" >> $GITHUB_PATH
+          mkdir -p ~/.savant/plugins
+          cat << EOF > ~/.savant/plugins/org.savantbuild.plugin.java.properties
+          21=${JAVA_HOME}
+          EOF
 
       - name: compile
-        shell: bash -l {0}
         run: sb compile
 
-  deploy:
-    if: |
-      github.event_name == 'workflow_dispatch' &&
-      (inputs.command == 'release' || inputs.command == 'publish')
-    runs-on: fusionauth-standard
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
+      ### Everything below this line will only run on a workflow_dispatch
 
       - name: set aws credentials
+        if: inputs.command == 'release' || inputs.command == 'publish'
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::752443094709:role/github-actions
+          role-to-assume: arn:aws:iam::752443094709:role/gha-fusionauth-typescript-client
           role-session-name: aws-auth-action
           aws-region: us-west-2
 
       - name: get secret
+        if: inputs.command == 'release' || inputs.command == 'publish'
         run: |
           while IFS=$'\t' read -r key value; do
             echo "::add-mask::${value}"
@@ -71,6 +78,7 @@ jobs:
             jq -r 'to_entries[] | [.key, .value] | @tsv')
 
       - name: create npmrc
+        if: inputs.command == 'release' || inputs.command == 'publish'
         run: |
           echo "color=false" > ~/.npmrc
           echo "//registry.npmjs.org/:_authToken=${{ env.API_KEY }}" >> ~/.npmrc
@@ -78,10 +86,8 @@ jobs:
 
       - name: release to svn
         if: inputs.command == 'release'
-        shell: bash -l {0}
         run: sb release
 
       - name: publish to npmjs
         if: inputs.command == 'publish'
-        shell: bash -l {0}
         run: sb publish
