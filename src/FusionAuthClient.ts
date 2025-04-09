@@ -6453,6 +6453,7 @@ export interface TwoFactorStartRequest {
   applicationId?: UUID;
   code?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
   trustChallenge?: string;
   userId?: UUID;
