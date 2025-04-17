@@ -8910,7 +8910,7 @@ export enum MultiFactorLoginPolicy {
 export interface PasswordlessStartRequest {
   applicationId?: UUID;
   loginId?: string;
-  loginIdType?: string;
+  loginIdTypes?: Array<string>;
   loginStrategy?: string;
   state?: Record<string, any>;
 }
