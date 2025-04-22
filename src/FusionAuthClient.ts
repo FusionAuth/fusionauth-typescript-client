@@ -5920,6 +5920,15 @@ export interface XboxApplicationConfiguration extends BaseIdentityProviderApplic
 }
 
 /**
+ * An Event "event" to indicate an event log was created.
+ *
+ * @author Daniel DeGroff
+ */
+export interface EventLogCreateEvent extends BaseEvent {
+  eventLog?: EventLog;
+}
+
+/**
  * Models a generic connector.
  *
  * @author Trevor Smith
@@ -5932,15 +5941,6 @@ export interface GenericConnectorConfiguration extends BaseConnectorConfiguratio
   httpAuthenticationUsername?: string;
   readTimeout?: number;
   sslCertificateKeyId?: UUID;
-}
-
-/**
- * An Event "event" to indicate an event log was created.
- *
- * @author Daniel DeGroff
- */
-export interface EventLogCreateEvent extends BaseEvent {
-  eventLog?: EventLog;
 }
 
 /**
@@ -6568,6 +6568,13 @@ export enum MessengerType {
 }
 
 /**
+ * @author Brian Pontarelli
+ */
+export interface EventLogSearchRequest {
+  search?: EventLogSearchCriteria;
+}
+
+/**
  * Event log response.
  *
  * @author Brian Pontarelli
@@ -6575,13 +6582,6 @@ export enum MessengerType {
 export interface EventLogSearchResponse {
   eventLogs?: Array<EventLog>;
   total?: number;
-}
-
-/**
- * @author Brian Pontarelli
- */
-export interface EventLogSearchRequest {
-  search?: EventLogSearchCriteria;
 }
 
 /**
@@ -7121,15 +7121,6 @@ export interface WebhookEventLogConfiguration extends Enableable {
 }
 
 /**
- * Model a user event when a two-factor method has been removed.
- *
- * @author Daniel DeGroff
- */
-export interface UserTwoFactorMethodAddEvent extends BaseUserEvent {
-  method?: TwoFactorMethod;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export interface LinkedInApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
@@ -7137,6 +7128,15 @@ export interface LinkedInApplicationConfiguration extends BaseIdentityProviderAp
   client_id?: string;
   client_secret?: string;
   scope?: string;
+}
+
+/**
+ * Model a user event when a two-factor method has been removed.
+ *
+ * @author Daniel DeGroff
+ */
+export interface UserTwoFactorMethodAddEvent extends BaseUserEvent {
+  method?: TwoFactorMethod;
 }
 
 /**
@@ -8215,20 +8215,6 @@ export interface ConnectorRequest {
 }
 
 /**
- * Request to register a new public key with WebAuthn
- *
- * @author Spencer Witt
- */
-export interface WebAuthnPublicKeyRegistrationRequest {
-  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
-  id?: string;
-  response?: WebAuthnAuthenticatorRegistrationResponse;
-  rpId?: string;
-  transports?: Array<string>;
-  type?: string;
-}
-
-/**
  * External JWT-only identity provider.
  *
  * @author Daniel DeGroff and Brian Pontarelli
@@ -8240,6 +8226,20 @@ export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<Extern
   headerKeyParameter?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   uniqueIdentityClaim?: string;
+}
+
+/**
+ * Request to register a new public key with WebAuthn
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnPublicKeyRegistrationRequest {
+  clientExtensionResults?: WebAuthnExtensionsClientOutputs;
+  id?: string;
+  response?: WebAuthnAuthenticatorRegistrationResponse;
+  rpId?: string;
+  transports?: Array<string>;
+  type?: string;
 }
 
 /**
@@ -8318,20 +8318,20 @@ export interface NonTransactionalEvent {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export interface TwoFactorResponse {
-  code?: string;
-  recoveryCodes?: Array<string>;
-}
-
-/**
  * @author Brett Guy
  */
 export enum ProofKeyForCodeExchangePolicy {
   Required = "Required",
   NotRequired = "NotRequired",
   NotRequiredWhenUsingClientAuthentication = "NotRequiredWhenUsingClientAuthentication"
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export interface TwoFactorResponse {
+  code?: string;
+  recoveryCodes?: Array<string>;
 }
 
 /**
@@ -8846,15 +8846,6 @@ export interface SystemConfigurationResponse {
 }
 
 /**
- * API response for completing WebAuthn assertion
- *
- * @author Spencer Witt
- */
-export interface WebAuthnAssertResponse {
-  credential?: WebAuthnCredential;
-}
-
-/**
  * @author Daniel DeGroff
  */
 export interface ReactorStatus {
@@ -8878,6 +8869,15 @@ export interface ReactorStatus {
   webAuthn?: ReactorFeatureStatus;
   webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
   webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
+}
+
+/**
+ * API response for completing WebAuthn assertion
+ *
+ * @author Spencer Witt
+ */
+export interface WebAuthnAssertResponse {
+  credential?: WebAuthnCredential;
 }
 
 /**
@@ -8965,15 +8965,6 @@ export interface EntityTypeSearchRequest {
   search?: EntityTypeSearchCriteria;
 }
 
-/**
- * API request for managing families and members.
- *
- * @author Brian Pontarelli
- */
-export interface FamilyRequest {
-  familyMember?: FamilyMember;
-}
-
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseConnectorConfiguration {
   data?: Record<string, any>;
@@ -8983,6 +8974,15 @@ export interface BaseConnectorConfiguration {
   lastUpdateInstant?: number;
   name?: string;
   type?: ConnectorType;
+}
+
+/**
+ * API request for managing families and members.
+ *
+ * @author Brian Pontarelli
+ */
+export interface FamilyRequest {
+  familyMember?: FamilyMember;
 }
 
 /**
@@ -9734,6 +9734,14 @@ export interface RefreshTokenRevokeRequest extends BaseEventRequest {
 }
 
 /**
+ * A marker interface indicating this event is an event that can supply a linked object Id.
+ *
+ * @author Spencer Witt
+ */
+export interface ObjectIdentifiable {
+}
+
+/**
  * Models a JWT Refresh Token.
  *
  * @author Daniel DeGroff
@@ -9754,14 +9762,6 @@ export interface MetaData {
   data?: Record<string, any>;
   device?: DeviceInfo;
   scopes?: Array<string>;
-}
-
-/**
- * A marker interface indicating this event is an event that can supply a linked object Id.
- *
- * @author Spencer Witt
- */
-export interface ObjectIdentifiable {
 }
 
 /**
@@ -10009,20 +10009,20 @@ export interface TwitterIdentityProvider extends BaseIdentityProvider<TwitterApp
 }
 
 /**
+ * @author Michael Sleevi
+ */
+export interface SMSMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
+}
+
+/**
  * Lambda API request object.
  *
  * @author Brian Pontarelli
  */
 export interface LambdaRequest {
   lambda?: Lambda;
-}
-
-/**
- * @author Michael Sleevi
- */
-export interface SMSMessageTemplate extends MessageTemplate {
-  defaultTemplate?: string;
-  localizedTemplates?: LocalizedStrings;
 }
 
 /**
