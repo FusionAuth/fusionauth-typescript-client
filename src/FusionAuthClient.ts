@@ -3877,13 +3877,27 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user for the loginId, using specific loginIdTypes. If no loginIdTypes are provided, the default is [email, username]
+   * Retrieves the user for the loginId. The loginId can be either the username or the email.
    *
    * @param {string} loginId The email or username of the user.
-   * @param {Array<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  retrieveUserByLoginId(loginId: string, loginIdTypes?: Array<String>): Promise<ClientResponse<UserResponse>> {
+  retrieveUserByLoginId(loginId: string): Promise<ClientResponse<UserResponse>> {
+    return this.start<UserResponse, Errors>()
+        .withUri('/api/user')
+        .withParameter('loginId', loginId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the user for the loginId, using specific loginIdTypes.
+   *
+   * @param {string} loginId The email or username of the user.
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes?: Array<String>): Promise<ClientResponse<UserResponse>> {
     return this.start<UserResponse, Errors>()
         .withUri('/api/user')
         .withParameter('loginId', loginId)
