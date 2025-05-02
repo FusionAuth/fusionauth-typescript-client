@@ -4077,22 +4077,24 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+   * Retrieves the login report between the two instants for a particular user by login Id, using specific loginIdTypes. If you specify an application id, it will only return the
    * login counts for that application.
    *
    * @param {UUID} applicationId (Optional) The application id.
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
+   * @param {Array<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveUserLoginReportByLoginId(applicationId: UUID, loginId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveUserLoginReportByLoginId(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes?: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
     return this.start<LoginReportResponse, Errors>()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
         .withParameter('loginId', loginId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withOptionalParameter('loginIdTypes', loginIdTypes)
         .withMethod("GET")
         .go();
   }
