@@ -6519,6 +6519,7 @@ export interface ChangePasswordRequest extends BaseEventRequest {
   changePasswordId?: string;
   currentPassword?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   password?: string;
   refreshToken?: string;
   trustChallenge?: string;
@@ -7653,7 +7654,9 @@ export interface ForgotPasswordRequest extends BaseEventRequest {
   changePasswordId?: string;
   email?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   sendForgotPasswordEmail?: boolean;
+  sendForgotPasswordMessage?: boolean;
   state?: Record<string, any>;
   username?: string;
 }
@@ -10755,6 +10758,7 @@ export interface MultiFactorSMSMethod extends Enableable {
  * @author Brady Wied
  */
 export interface TenantPhoneConfiguration {
+  forgotPasswordTemplateId?: UUID;
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
   unverified?: PhoneUnverifiedOptions;
