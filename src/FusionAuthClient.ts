@@ -3877,17 +3877,31 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user for the loginId, using specific loginIdTypes.
+   * Retrieves the user for the loginId. The loginId can be either the username or the email.
    *
    * @param {string} loginId The email or username of the user.
-   * @param {Array<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  retrieveUserByLoginId(loginId: string, loginIdTypes?: Array<String>): Promise<ClientResponse<UserResponse>> {
+  retrieveUserByLoginId(loginId: string): Promise<ClientResponse<UserResponse>> {
     return this.start<UserResponse, Errors>()
         .withUri('/api/user')
         .withParameter('loginId', loginId)
-        .withOptionalParameter('loginIdTypes', loginIdTypes)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the user for the loginId, using specific loginIdTypes.
+   *
+   * @param {string} loginId The email or username of the user.
+   * @param {List<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: List<String>): Promise<ClientResponse<UserResponse>> {
+    return this.start<UserResponse, Errors>()
+        .withUri('/api/user')
+        .withParameter('loginId', loginId)
+        .withParameter('loginIdTypes', loginIdTypes)
         .withMethod("GET")
         .go();
   }
@@ -4077,6 +4091,27 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+   * login counts for that application.
+   *
+   * @param {UUID} applicationId (Optional) The application id.
+   * @param {string} loginId The userId id.
+   * @param {number} start The start instant as UTC milliseconds since Epoch.
+   * @param {number} end The end instant as UTC milliseconds since Epoch.
+   * @returns {Promise<ClientResponse<LoginReportResponse>>}
+   */
+  retrieveUserLoginReportByLoginId(applicationId: UUID, loginId: string, start: number, end: number): Promise<ClientResponse<LoginReportResponse>> {
+    return this.start<LoginReportResponse, Errors>()
+        .withUri('/api/report/login')
+        .withParameter('applicationId', applicationId)
+        .withParameter('loginId', loginId)
+        .withParameter('start', start)
+        .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the login report between the two instants for a particular user by login Id, using specific loginIdTypes. If you specify an application id, it will only return the
    * login counts for that application.
    *
@@ -4084,17 +4119,17 @@ export class FusionAuthClient {
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
-   * @param {Array<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @param {List<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveUserLoginReportByLoginId(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes?: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: List<String>): Promise<ClientResponse<LoginReportResponse>> {
     return this.start<LoginReportResponse, Errors>()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
         .withParameter('loginId', loginId)
         .withParameter('start', start)
         .withParameter('end', end)
-        .withOptionalParameter('loginIdTypes', loginIdTypes)
+        .withParameter('loginIdTypes', loginIdTypes)
         .withMethod("GET")
         .go();
   }
