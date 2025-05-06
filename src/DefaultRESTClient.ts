@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * language governing permissions and limitations under the License.
  */
 
-import IRESTClient, {ErrorResponseHandler, ResponseHandler} from "./IRESTClient";
+import IRESTClient, { ErrorResponseHandler, ResponseHandler } from "./IRESTClient";
 import ClientResponse from "./ClientResponse";
-import fetch, {BodyInit, RequestCredentials, Response} from 'node-fetch';
-import {URLSearchParams} from "url";
+import fetch, { BodyInit, RequestCredentials, Response } from 'node-fetch';
+import { URLSearchParams } from "url";
 
 /**
  * @author Brett P
@@ -179,19 +179,6 @@ export default class DefaultRESTClient<RT, ERT> implements IRESTClient<RT, ERT> 
    */
   withParameter(name: string, value: any): DefaultRESTClient<RT, ERT> {
     this.parameters[name] = value;
-    return this;
-  }
-
-  /**
-   * Adds optional parameters to the request.
-   *
-   * @param name The name of the parameter.
-   * @param value The value of the parameter, may be a string, object or number. If the value is undefined, it will not be added
-   */
-  withOptionalParameter(name: string, value?: any): DefaultRESTClient<RT, ERT> {
-    if (typeof value !== 'undefined') {
-      this.parameters[name] = value;
-    }
     return this;
   }
 

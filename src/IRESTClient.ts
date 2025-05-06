@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,14 +76,6 @@ export interface IRESTClient<RT, ERT> {
   withParameter(name: string, value: any): IRESTClient<RT, ERT>;
 
   /**
-   * Adds optional parameters to the request.
-   *
-   * @param name The name of the parameter.
-   * @param value The value of the parameter, may be a string, object or number. If the value is undefined, it will not be added
-   */
-  withOptionalParameter(name: string, value?: any): IRESTClient<RT, ERT>;
-
-  /**
    * Sets request's credentials.
    *
    * @param value A string indicating whether credentials will be sent with the request always, never, or only when sent to a same-origin URL.
@@ -100,7 +92,7 @@ export interface IRESTClient<RT, ERT> {
   /**
    * Sets the error response handler.  Error response handlers have a generic but due to typescript limitations,
    * this value will not be propagated to the Promise catch statement
-   *
+   * 
    * @param handler
    */
   withErrorResponseHandler(handler: ErrorResponseHandler<ERT>): IRESTClient<RT, ERT>;
