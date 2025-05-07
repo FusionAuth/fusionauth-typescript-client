@@ -3894,10 +3894,10 @@ export class FusionAuthClient {
    * Retrieves the user for the loginId, using specific loginIdTypes.
    *
    * @param {string} loginId The email or username of the user.
-   * @param {List<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
-  retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: List<String>): Promise<ClientResponse<UserResponse>> {
+  retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: Array<String>): Promise<ClientResponse<UserResponse>> {
     return this.start<UserResponse, Errors>()
         .withUri('/api/user')
         .withParameter('loginId', loginId)
@@ -4119,10 +4119,10 @@ export class FusionAuthClient {
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
-   * @param {List<String>} loginIdTypes (Optional) the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
-  retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: List<String>): Promise<ClientResponse<LoginReportResponse>> {
+  retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
     return this.start<LoginReportResponse, Errors>()
         .withUri('/api/report/login')
         .withParameter('applicationId', applicationId)
