@@ -16,7 +16,7 @@
 
 'use strict';
 
-import {ApplicationRequest, FusionAuthClient, GrantType, SearchResponse} from '../index';
+import { ApplicationRequest, FusionAuthClient, GrantType, SearchResponse } from '../index';
 import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
 
