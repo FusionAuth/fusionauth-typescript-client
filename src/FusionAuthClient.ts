@@ -3894,7 +3894,7 @@ export class FusionAuthClient {
    * Retrieves the user for the loginId, using specific loginIdTypes.
    *
    * @param {string} loginId The email or username of the user.
-   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
   retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: Array<String>): Promise<ClientResponse<UserResponse>> {
@@ -4119,7 +4119,7 @@ export class FusionAuthClient {
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
-   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to. Defaults to [email, username]
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
   retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
