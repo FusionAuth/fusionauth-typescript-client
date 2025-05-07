@@ -257,12 +257,12 @@ describe('#FusionAuthClient()', function () {
 
   it('Retrieve user by loginId - specified loginIdTypes', async () => {
     client.setTenantId("30663132-6464-6665-3032-326466613934");
-    const dinesh = (await client.retrieveUserByLoginId("dinesh@fusionauth.io", ["email"])).response.user;
+    const dinesh = (await client.retrieveUserByLoginIdWithLoginIdTypes("dinesh@fusionauth.io", ["email"])).response.user;
     // it's spelled wrong in kickstart
     chai.assert.equal(dinesh.firstName, "Dinish");
 
     try {
-      await client.retrieveUserByLoginId("dinesh@fusionauth.io", ["username"]);
+      await client.retrieveUserByLoginIdWithLoginIdTypes("dinesh@fusionauth.io", ["username"]);
     } catch (e) {
       // there is no one with the username dinesh@fusionauth.io
       chai.assert.equal(e.statusCode, 404);
