@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import * as chai from 'chai';
 import ClientResponse from "../src/ClientResponse";
 
 let client;
-const fusionauthUrl = process.env.FUSIONAUTH_URL || "https://local.fusionauth.io";
+const fusionauthUrl = process.env.FUSIONAUTH_URL || "http://localhost:9011";
 const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
 const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
 const tenantId = '65323339-6137-6531-3135-316238623265';
@@ -56,17 +56,19 @@ describe('#FusionAuthClient()', function () {
     }
 
     try {
-      const applicationRequest: ApplicationRequest = {application:
+      const applicationRequest: ApplicationRequest = {
+        application:
             {
               name: 'TypeScript FusionAuth Client',
               oauthConfiguration: {
                 enabledGrants: [
-                    GrantType.password,
-                    GrantType.authorization_code
+                  GrantType.password,
+                  GrantType.authorization_code
                 ],
                 authorizedRedirectURLs: ["http://localhost"]
               }
-            }};
+            }
+      };
       response = await client.createApplication(applicationId, applicationRequest);
     } catch (error) {
       console.error("Failed to setup FusionAuth Client for testing.", error)
@@ -243,6 +245,27 @@ describe('#FusionAuthClient()', function () {
       // chai.assert.deepStrictEqual(e, {
       //   statusCode: 404
       // }, "Unexpected error");
+    }
+  });
+
+  it('Retrieve user by loginId - default loginIdTypes', async () => {
+    client.setTenantId("30663132-6464-6665-3032-326466613934");
+    const dinesh = (await client.retrieveUserByLoginId("dinesh@fusionauth.io")).response.user;
+    // it's spelled wrong in kickstart
+    chai.assert.equal(dinesh.firstName, "Dinish");
+  });
+
+  it('Retrieve user by loginId - specified loginIdTypes', async () => {
+    client.setTenantId("30663132-6464-6665-3032-326466613934");
+    const dinesh = (await client.retrieveUserByLoginIdWithLoginIdTypes("dinesh@fusionauth.io", ["email"])).response.user;
+    // it's spelled wrong in kickstart
+    chai.assert.equal(dinesh.firstName, "Dinish");
+
+    try {
+      await client.retrieveUserByLoginIdWithLoginIdTypes("dinesh@fusionauth.io", ["username"]);
+    } catch (e) {
+      // there is no one with the username dinesh@fusionauth.io
+      chai.assert.equal(e.statusCode, 404);
     }
   });
 
