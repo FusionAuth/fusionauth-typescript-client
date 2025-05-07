@@ -10960,7 +10960,6 @@ export interface Templates {
   oauth2Error?: string;
   oauth2Logout?: string;
   oauth2Passwordless?: string;
-  oauth2PasswordlessFormField?: string;
   oauth2Register?: string;
   oauth2StartIdPLink?: string;
   oauth2TwoFactor?: string;
