@@ -7515,7 +7515,7 @@ export interface ExternalIdentifierConfiguration {
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
-  passwordlessShortCodeLoginGenerator?: SecureGeneratorConfiguration;
+  passwordlessOneTimeCodeLoginGenerator?: SecureGeneratorConfiguration;
   passwordlessShortCodeLoginTimeToLiveInSeconds?: number;
   pendingAccountLinkTimeToLiveInSeconds?: number;
   phoneVerificationIdGenerator?: SecureGeneratorConfiguration;
