@@ -10146,6 +10146,7 @@ export interface RegistrationRequest extends BaseEventRequest {
   generateAuthenticationToken?: boolean;
   registration?: UserRegistration;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordPhone?: boolean;
   skipRegistrationVerification?: boolean;
   skipVerification?: boolean;
   user?: User;
@@ -10799,6 +10800,7 @@ export interface TenantPhoneConfiguration {
   forgotPasswordTemplateId?: UUID;
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
+  setPasswordTemplateId?: UUID;
   unverified?: PhoneUnverifiedOptions;
   verificationCompleteTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -12006,6 +12008,7 @@ export interface UserRequest extends BaseEventRequest {
   currentPassword?: string;
   disableDomainBlock?: boolean;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordPhone?: boolean;
   skipVerification?: boolean;
   user?: User;
   verificationIds?: Array<string>;
