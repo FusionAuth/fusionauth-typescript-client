@@ -9743,6 +9743,7 @@ export interface PendingResponse {
  * @author Spencer Witt
  */
 export interface PhoneUnverifiedOptions {
+  allowPhoneNumberChangeWhenGated?: boolean;
   behavior?: UnverifiedBehavior;
 }
 
@@ -10808,9 +10809,19 @@ export interface MultiFactorSMSMethod extends Enableable {
  */
 export interface TenantPhoneConfiguration {
   forgotPasswordTemplateId?: UUID;
+  identityUpdateTemplateId?: UUID;
+  implicitPhoneVerificationAllowed?: boolean;
+  loginIdInUseOnCreateTemplateId?: UUID;
+  loginIdInUseOnUpdateTemplateId?: UUID;
+  loginNewDeviceTemplateId?: UUID;
+  loginSuspiciousTemplateId?: UUID;
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
+  passwordResetSuccessTemplateId?: UUID;
+  passwordUpdateTemplateId?: UUID;
   setPasswordTemplateId?: UUID;
+  twoFactorMethodAddTemplateId?: UUID;
+  twoFactorMethodRemoveTemplateId?: UUID;
   unverified?: PhoneUnverifiedOptions;
   verificationCompleteTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
