@@ -10146,6 +10146,7 @@ export interface RegistrationRequest extends BaseEventRequest {
   generateAuthenticationToken?: boolean;
   registration?: UserRegistration;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordIdentityType?: SendSetPasswordIdentityType;
   skipRegistrationVerification?: boolean;
   skipVerification?: boolean;
   user?: User;
@@ -10451,6 +10452,16 @@ export interface SendResponse {
 export interface EmailTemplateErrors {
   parseErrors?: Record<string, string>;
   renderErrors?: Record<string, string>;
+}
+
+/**
+ * Used to indicate which identity type a password "request" might go to. It could be
+ * used for send set passwords or send password resets.
+ */
+export enum SendSetPasswordIdentityType {
+  email = "email",
+  phone = "phone",
+  doNotSend = "doNotSend"
 }
 
 /**
@@ -10799,6 +10810,7 @@ export interface TenantPhoneConfiguration {
   forgotPasswordTemplateId?: UUID;
   messengerId?: UUID;
   passwordlessTemplateId?: UUID;
+  setPasswordTemplateId?: UUID;
   unverified?: PhoneUnverifiedOptions;
   verificationCompleteTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -12006,6 +12018,7 @@ export interface UserRequest extends BaseEventRequest {
   currentPassword?: string;
   disableDomainBlock?: boolean;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordIdentityType?: SendSetPasswordIdentityType;
   skipVerification?: boolean;
   user?: User;
   verificationIds?: Array<string>;
