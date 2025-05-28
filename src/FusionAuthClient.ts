@@ -5854,6 +5854,7 @@ export interface Application {
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
+  universalConfiguration?: UniversalConfiguration;
   unverified?: RegistrationUnverifiedOptions;
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -5974,6 +5975,12 @@ export interface SAMLv2SingleLogout extends Enableable {
 export enum XMLSignatureLocation {
   Assertion = "Assertion",
   Response = "Response"
+}
+
+export interface UniversalConfiguration {
+  applicationTenants?: Array<UniversalApplicationTenant>;
+  global?: boolean;
+  universal?: boolean;
 }
 
 /**
@@ -9453,6 +9460,7 @@ export enum OAuthErrorReason {
   invalid_target_entity_scope = "invalid_target_entity_scope",
   invalid_entity_permission_scope = "invalid_entity_permission_scope",
   invalid_user_id = "invalid_user_id",
+  invalid_tenant_id = "invalid_tenant_id",
   grant_type_disabled = "grant_type_disabled",
   missing_client_id = "missing_client_id",
   missing_client_secret = "missing_client_secret",
@@ -9468,6 +9476,7 @@ export enum OAuthErrorReason {
   missing_user_code = "missing_user_code",
   missing_user_id = "missing_user_id",
   missing_verification_uri = "missing_verification_uri",
+  missing_tenant_id = "missing_tenant_id",
   login_prevented = "login_prevented",
   not_licensed = "not_licensed",
   user_code_expired = "user_code_expired",
@@ -9990,8 +9999,10 @@ export interface ReactorStatus {
   expiration?: string;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
+  organizationAdminApplication?: ReactorFeatureStatus;
   scimServer?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  universalApplication?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
   webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
   webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
@@ -11333,6 +11344,13 @@ export interface TwoFactorTrust {
   applicationId?: UUID;
   expiration?: number;
   startInstant?: number;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenant {
+  tenantId?: UUID;
 }
 
 /**
