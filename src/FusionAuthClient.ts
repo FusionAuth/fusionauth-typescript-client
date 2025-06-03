@@ -270,10 +270,10 @@ export class FusionAuthClient {
    * Completes verification of an identity using verification codes from the Verify Start API.
    *
    * @param {VerifyCompleteRequest} request The identity verify complete request that contains all the information used to verify the identity.
-   * @returns {Promise<ClientResponse<void>>}
+   * @returns {Promise<ClientResponse<VerifyCompleteResponse>>}
    */
-  completeVerifyIdentity(request: VerifyCompleteRequest): Promise<ClientResponse<void>> {
-    return this.start<void, Errors>()
+  completeVerifyIdentity(request: VerifyCompleteRequest): Promise<ClientResponse<VerifyCompleteResponse>> {
+    return this.start<VerifyCompleteResponse, Errors>()
         .withUri('/api/identity/verify/complete')
         .withJSONBody(request)
         .withMethod("POST")
@@ -12162,6 +12162,13 @@ export interface VerifyCompleteRequest extends BaseEventRequest {
 }
 
 /**
+ * Verify Complete API response object.
+ */
+export interface VerifyCompleteResponse {
+  state?: Record<string, any>;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface VerifyEmailRequest extends BaseEventRequest {
@@ -12209,6 +12216,7 @@ export interface VerifyStartRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdType?: string;
+  state?: Record<string, any>;
   verificationStrategy?: string;
 }
 
