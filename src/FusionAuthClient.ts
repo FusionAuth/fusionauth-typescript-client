@@ -11772,6 +11772,7 @@ export interface UserEmailVerifiedEvent extends BaseUserEvent {
  */
 export interface UserIdentity {
   displayValue?: string;
+  id?: number;
   insertInstant?: number;
   lastLoginInstant?: number;
   lastUpdateInstant?: number;
