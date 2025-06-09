@@ -5611,6 +5611,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Administratively verify a user identity.
+   *
+   * @param {VerifyRequest} request The identity verify request that contains information to verify the identity.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  verifyIdentity(request: VerifyRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/identity/verify')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Confirms an application registration. The Id given is usually from an email sent to the user.
    *
    * @param {string} verificationId The registration verification Id sent to the user.
@@ -8476,7 +8490,8 @@ export enum IdentityVerifiedReason {
   Implicit = "Implicit",
   Pending = "Pending",
   Completed = "Completed",
-  Disabled = "Disabled"
+  Disabled = "Disabled",
+  Administrative = "Administrative"
 }
 
 /**
@@ -12192,6 +12207,14 @@ export interface VerifyRegistrationRequest extends BaseEventRequest {
 export interface VerifyRegistrationResponse {
   oneTimeCode?: string;
   verificationId?: string;
+}
+
+/**
+ * Identity verify request. Used to administratively verify an identity.
+ */
+export interface VerifyRequest extends BaseEventRequest {
+  identityId?: number;
+  userId?: UUID;
 }
 
 /**
