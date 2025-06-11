@@ -12213,8 +12213,8 @@ export interface VerifyRegistrationResponse {
  * Identity verify request. Used to administratively verify an identity.
  */
 export interface VerifyRequest extends BaseEventRequest {
-  identityId?: number;
-  userId?: UUID;
+  loginId?: string;
+  loginIdType?: string;
 }
 
 /**
