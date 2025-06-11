@@ -9905,19 +9905,6 @@ export interface RateLimitedRequestConfiguration extends Enableable {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export enum RateLimitedRequestType {
-  FailedLogin = "FailedLogin",
-  ForgotPassword = "ForgotPassword",
-  SendEmailVerification = "SendEmailVerification",
-  SendPasswordless = "SendPasswordless",
-  SendRegistrationVerification = "SendRegistrationVerification",
-  SendTwoFactor = "SendTwoFactor",
-  SendPhoneVerification = "SendPhoneVerification"
-}
-
-/**
  * Raw login information for each time a user logs into an application.
  *
  * @author Brian Pontarelli
@@ -10837,6 +10824,7 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
+  sendPasswordlessPhone?: RateLimitedRequestConfiguration;
   sendPhoneVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
