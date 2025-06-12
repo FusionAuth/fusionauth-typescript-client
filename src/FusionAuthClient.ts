@@ -159,6 +159,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Changes a user's password using their access token (JWT) instead of the changePasswordId
+   * A common use case for this method will be if you want to allow the user to change their own password.
+   * 
+   * Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+   *
+   * @param {string} encodedJWT The encoded JWT (access token).
+   * @param {ChangePasswordRequest} request The change password request that contains all the information used to change the password.
+   * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
+   */
+  changePasswordByJWT(encodedJWT: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
+    return this.startAnonymous<ChangePasswordResponse, Errors>()
+        .withUri('/api/user/change-password')
+        .withAuthorization('Bearer ' + encodedJWT)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Changes a user's password using their identity (loginId and password). Using a loginId instead of the changePasswordId
    * bypasses the email verification and allows a password to be changed directly without first calling the #forgotPassword
    * method.
