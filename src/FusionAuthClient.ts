@@ -10824,7 +10824,6 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
-  sendPasswordlessPhone?: RateLimitedRequestConfiguration;
   sendPhoneVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
