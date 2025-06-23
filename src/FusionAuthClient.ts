@@ -12235,7 +12235,6 @@ export interface VerifyRequest extends BaseEventRequest {
  * Verify Send API request object.
  */
 export interface VerifySendRequest {
-  oneTimeCode?: string;
   verificationId?: string;
 }
 
