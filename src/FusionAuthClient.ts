@@ -5879,6 +5879,7 @@ export interface Application {
   name?: string;
   oauthConfiguration?: OAuth2Configuration;
   passwordlessConfiguration?: PasswordlessConfiguration;
+  phoneConfiguration?: ApplicationPhoneConfiguration;
   registrationConfiguration?: RegistrationConfiguration;
   registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
@@ -6101,6 +6102,26 @@ export interface ApplicationOAuthScopeRequest {
  */
 export interface ApplicationOAuthScopeResponse {
   scope?: ApplicationOAuthScope;
+}
+
+/**
+ * Hold application phone configuration for template overrides.
+ */
+export interface ApplicationPhoneConfiguration {
+  forgotPasswordTemplateId?: UUID;
+  identityUpdateTemplateId?: UUID;
+  loginIdInUseOnCreateTemplateId?: UUID;
+  loginIdInUseOnUpdateTemplateId?: UUID;
+  loginNewDeviceTemplateId?: UUID;
+  loginSuspiciousTemplateId?: UUID;
+  passwordlessTemplateId?: UUID;
+  passwordResetSuccessTemplateId?: UUID;
+  passwordUpdateTemplateId?: UUID;
+  setPasswordTemplateId?: UUID;
+  twoFactorMethodAddTemplateId?: UUID;
+  twoFactorMethodRemoveTemplateId?: UUID;
+  verificationCompleteTemplateId?: UUID;
+  verificationTemplateId?: UUID;
 }
 
 /**
