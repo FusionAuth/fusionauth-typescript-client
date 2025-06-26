@@ -711,6 +711,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Adds the application tenants for universal applications.
+   *
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
+   * @param {UniversalApplicationTenantsRequest} request The request object that contains all the information used to create the Entity.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantsResponse>>}
+   */
+  createUniversalApplicationTenants(applicationId: UUID, request: UniversalApplicationTenantsRequest): Promise<ClientResponse<UniversalApplicationTenantsResponse>> {
+    return this.start<UniversalApplicationTenantsResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a user. You can optionally specify an Id for the user, if not provided one will be generated.
    *
    * @param {UUID} userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
@@ -1301,6 +1318,40 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/theme')
         .withUriSegment(themeId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Removes the specified tenant from the universal application tenants list.
+   *
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
+   * @param {UUID} tenantId The Id of the tenant to delete from the universal application tenants list.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteUniversalApplicationTenant(applicationId: UUID, tenantId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withUriSegment(tenantId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Removes the specified tenants from the universal application tenants list.
+   *
+   * @param {UUID} applicationId The Id of the universal application that the tenants are linked to.
+   * @param {Array<string>} tenantIds The Ids of the tenants to delete from the universal application tenants list.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteUniversalApplicationTenants(applicationId: UUID, tenantIds: Array<string>): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withParameter('tenantIds', tenantIds)
         .withMethod("DELETE")
         .go();
   }
@@ -3785,6 +3836,21 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the application tenants for universal applications.
+   *
+   * @param {UUID} applicationId The Id of the application that the role belongs to.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantsResponse>>}
+   */
+  retrieveUniversalApplicationTenants(applicationId: UUID): Promise<ClientResponse<UniversalApplicationTenantsResponse>> {
+    return this.start<UniversalApplicationTenantsResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the user for the given Id.
    *
    * @param {UUID} userId The Id of the user.
@@ -5913,7 +5979,6 @@ export enum XMLSignatureLocation {
 }
 
 export interface UniversalConfiguration {
-  applicationTenants?: Array<UniversalApplicationTenant>;
   global?: boolean;
   universal?: boolean;
 }
@@ -11163,7 +11228,22 @@ export interface TwoFactorTrust {
  * @author Lyle Schemmerling
  */
 export interface UniversalApplicationTenant {
+  applicationId?: UUID;
   tenantId?: UUID;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantsRequest {
+  applicationTenants?: Array<UniversalApplicationTenant>;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantsResponse {
+  applicationTenants?: Array<UniversalApplicationTenant>;
 }
 
 /**
