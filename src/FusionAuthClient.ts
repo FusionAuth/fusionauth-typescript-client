@@ -711,6 +711,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Adds the application tenants for universal applications.
+   *
+   * @param {UUID} applicationId The Id of the application that the universal application tenant belongs to.
+   * @param {UUID} universalApplicationTenantId (Optional) The Id of the universal application tenant.
+   * @param {UniversalApplicationTenantRequest} request The request object that contains all the information used to create the UniversalApplicationTenants.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantResponse>>}
+   */
+  createUniversalApplicationTenant(applicationId: UUID, universalApplicationTenantId: UUID, request: UniversalApplicationTenantRequest): Promise<ClientResponse<UniversalApplicationTenantResponse>> {
+    return this.start<UniversalApplicationTenantResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("universal-application-tenant")
+        .withUriSegment(universalApplicationTenantId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a user. You can optionally specify an Id for the user, if not provided one will be generated.
    *
    * @param {UUID} userId (Optional) The Id for the user. If not provided a secure random UUID will be generated.
@@ -1301,6 +1320,40 @@ export class FusionAuthClient {
     return this.start<void, Errors>()
         .withUri('/api/theme')
         .withUriSegment(themeId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the universal application tenant.
+   *
+   * @param {UUID} applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+   * @param {UUID} universalApplicationTenantId The Id of the UniversalApplicationTenant to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteUniversalApplicationTenant(applicationId: UUID, universalApplicationTenantId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("universal-application-tenant")
+        .withUriSegment(universalApplicationTenantId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Removes the specified tenants from the universal application tenants list.
+   *
+   * @param {UUID} applicationId The Id of the universal application that the tenants are linked to.
+   * @param {Array<string>} tenantIds The Ids of the tenants to delete from the universal application tenants list.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteUniversalApplicationTenants(applicationId: UUID, tenantIds: Array<string>): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withParameter('tenantIds', tenantIds)
         .withMethod("DELETE")
         .go();
   }
@@ -3785,6 +3838,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the universal application tenant.
+   *
+   * @param {UUID} applicationId The Id of the universal application that tenant is mapped to
+   * @param {UUID} universalApplicationTenantId The Id of the universal application tenant.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantResponse>>}
+   */
+  retrieveUniversalApplicationTenant(applicationId: UUID, universalApplicationTenantId: UUID): Promise<ClientResponse<UniversalApplicationTenantResponse>> {
+    return this.start<UniversalApplicationTenantResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("application-tenant")
+        .withUriSegment(universalApplicationTenantId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the user for the given Id.
    *
    * @param {UUID} userId The Id of the user.
@@ -4621,6 +4691,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches universal application tenants for the specified applicationId and with the specified criteria and pagination.
+   *
+   * @param {UniversalApplicationTenantSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantSearchResponse>>}
+   */
+  searchUniversalApplicationTenants(request: UniversalApplicationTenantSearchRequest): Promise<ClientResponse<UniversalApplicationTenantSearchResponse>> {
+    return this.start<UniversalApplicationTenantSearchResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment("universal-application-tenant")
+        .withUriSegment("search")
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches user comments with the specified criteria and pagination.
    *
    * @param {UserCommentSearchRequest} request The search criteria and pagination information.
@@ -5343,6 +5429,25 @@ export class FusionAuthClient {
   }
 
   /**
+   * Adds the application tenants for universal applications.
+   *
+   * @param {UUID} applicationId The Id of the application that the UniversalApplicationTenant belongs to.
+   * @param {UUID} universalApplicationTenantId The Id of the universal application tenant.
+   * @param {UniversalApplicationTenantRequest} request The request object that contains all the information used to create the UniversalApplicationTenant.
+   * @returns {Promise<ClientResponse<UniversalApplicationTenantResponse>>}
+   */
+  updateUniversalApplicationTenant(applicationId: UUID, universalApplicationTenantId: UUID, request: UniversalApplicationTenantRequest): Promise<ClientResponse<UniversalApplicationTenantResponse>> {
+    return this.start<UniversalApplicationTenantResponse, Errors>()
+        .withUri('/api/application')
+        .withUriSegment(applicationId)
+        .withUriSegment("universal-application-tenant")
+        .withUriSegment(universalApplicationTenantId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the user with the given Id.
    *
    * @param {UUID} userId The Id of the user to update.
@@ -5791,7 +5896,7 @@ export interface Application {
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
-  universalConfiguration?: UniversalConfiguration;
+  universalConfiguration?: UniversalApplicationConfiguration;
   unverified?: RegistrationUnverifiedOptions;
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -5910,12 +6015,6 @@ export interface SAMLv2SingleLogout extends Enableable {
 export enum XMLSignatureLocation {
   Assertion = "Assertion",
   Response = "Response"
-}
-
-export interface UniversalConfiguration {
-  applicationTenants?: Array<UniversalApplicationTenant>;
-  global?: boolean;
-  universal?: boolean;
 }
 
 /**
@@ -11162,8 +11261,69 @@ export interface TwoFactorTrust {
 /**
  * @author Lyle Schemmerling
  */
+export interface UniversalApplicationConfiguration {
+  global?: boolean;
+  universal?: boolean;
+}
+
+/**
+ * An object that represents the mapping between a Universal Application and a Tenant.
+ *
+ * @author Lyle Schemmerling
+ */
 export interface UniversalApplicationTenant {
+  applicationId?: UUID;
+  data?: Record<string, any>;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
   tenantId?: UUID;
+}
+
+/**
+ * The request object for creating or updating a Universal Application Tenant.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantRequest {
+  universalApplicationTenant?: UniversalApplicationTenant;
+}
+
+/**
+ * The response object for a single Universal Application Tenant.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantResponse {
+  universalApplicationTenant?: UniversalApplicationTenant;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantSearchCriteria extends BaseSearchCriteria {
+  applicationId?: UUID;
+  tenantId?: UUID;
+  tenantName?: string;
+}
+
+/**
+ * The request object with the search criteria for Universal Application Tenants.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantSearchRequest {
+  search?: UniversalApplicationTenantSearchCriteria;
+}
+
+/**
+ * The response object for Universal Application Tenants search results.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationTenantSearchResponse {
+  total?: number;
+  universalApplicationTenants?: Array<UniversalApplicationTenant>;
 }
 
 /**
