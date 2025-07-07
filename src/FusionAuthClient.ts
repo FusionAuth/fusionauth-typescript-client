@@ -12573,7 +12573,7 @@ export interface WebhookCallResponse {
 export interface WebhookEventLog {
   attempts?: Array<WebhookAttemptLog>;
   data?: Record<string, any>;
-  event?: Record<string, any>;
+  event?: EventRequest;
   eventResult?: WebhookEventResult;
   eventType?: EventType;
   failedAttempts?: number;
