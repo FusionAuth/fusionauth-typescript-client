@@ -7520,7 +7520,8 @@ export enum EventType {
   UserUpdate = "user.update",
   UserUpdateComplete = "user.update.complete",
   Test = "test",
-  IdentityVerified = "identity.verified"
+  IdentityVerified = "identity.verified",
+  UserIdentityUpdate = "user.identity.update"
 }
 
 /**
@@ -11828,6 +11829,17 @@ export interface UserIdentityProviderLinkEvent extends BaseUserEvent {
  */
 export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
   identityProviderLink?: IdentityProviderLink;
+}
+
+/**
+ * Models the user identity update event
+ *
+ * @author Brent Halsey
+ */
+export interface UserIdentityUpdateEvent extends BaseUserEvent {
+  loginIdType?: string;
+  newLoginId?: string;
+  previousLoginId?: string;
 }
 
 /**
