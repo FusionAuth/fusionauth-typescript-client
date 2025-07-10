@@ -11161,13 +11161,6 @@ export interface UniversalApplicationConfiguration {
 }
 
 /**
- * @author Lyle Schemmerling
- */
-export interface UniversalApplicationTenant {
-  tenantId?: UUID;
-}
-
-/**
  * Policy for handling unknown OAuth scopes in the request
  *
  * @author Spencer Witt
