@@ -7520,7 +7520,7 @@ export enum EventType {
   UserUpdate = "user.update",
   UserUpdateComplete = "user.update.complete",
   Test = "test",
-  IdentityVerified = "identity.verified",
+  UserIdentityVerified = "user.identity.verified",
   UserIdentityUpdate = "user.identity.update"
 }
 
@@ -8507,16 +8507,6 @@ export enum IdentityProviderType {
  */
 export interface IdentityType {
   name?: string;
-}
-
-/**
- * Models the identity verified event
- *
- * @author Brady Wied
- */
-export interface IdentityVerifiedEvent extends BaseUserEvent {
-  loginId?: string;
-  loginIdType?: string;
 }
 
 /**
@@ -11839,6 +11829,16 @@ export interface UserIdentityUpdateEvent extends BaseUserEvent {
   loginIdType?: string;
   newLoginId?: string;
   previousLoginId?: string;
+}
+
+/**
+ * Models the user identity verified event
+ *
+ * @author Brady Wied
+ */
+export interface UserIdentityVerifiedEvent extends BaseUserEvent {
+  loginId?: string;
+  loginIdType?: string;
 }
 
 /**
