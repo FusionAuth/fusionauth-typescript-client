@@ -10738,7 +10738,6 @@ export interface Tenant {
   multiFactorConfiguration?: TenantMultiFactorConfiguration;
   name?: string;
   oauthConfiguration?: TenantOAuth2Configuration;
-  passwordEnabled?: boolean;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
   phoneConfiguration?: TenantPhoneConfiguration;
