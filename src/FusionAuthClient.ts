@@ -9854,8 +9854,8 @@ export interface ReactorStatus {
   expiration?: string;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
-  organizationAdminApplication?: ReactorFeatureStatus;
   scimServer?: ReactorFeatureStatus;
+  tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
   universalApplication?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
