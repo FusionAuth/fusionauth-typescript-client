@@ -5791,7 +5791,7 @@ export interface Application {
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
-  universalConfiguration?: UniversalConfiguration;
+  universalConfiguration?: UniversalApplicationConfiguration;
   unverified?: RegistrationUnverifiedOptions;
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -5910,12 +5910,6 @@ export interface SAMLv2SingleLogout extends Enableable {
 export enum XMLSignatureLocation {
   Assertion = "Assertion",
   Response = "Response"
-}
-
-export interface UniversalConfiguration {
-  applicationTenants?: Array<UniversalApplicationTenant>;
-  global?: boolean;
-  universal?: boolean;
 }
 
 /**
@@ -11162,8 +11156,8 @@ export interface TwoFactorTrust {
 /**
  * @author Lyle Schemmerling
  */
-export interface UniversalApplicationTenant {
-  tenantId?: UUID;
+export interface UniversalApplicationConfiguration {
+  universal?: boolean;
 }
 
 /**
