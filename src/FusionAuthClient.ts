@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2023, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -167,6 +167,8 @@ export class FusionAuthClient {
    * @param {string} encodedJWT The encoded JWT (access token).
    * @param {ChangePasswordRequest} request The change password request that contains all the information used to change the password.
    * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
+   *
+   * @deprecated This method has been renamed to changePasswordUsingJWT, use that method instead.
    */
   changePasswordByJWT(encodedJWT: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
     return this.startAnonymous<ChangePasswordResponse, Errors>()
@@ -188,6 +190,25 @@ export class FusionAuthClient {
   changePasswordByIdentity(request: ChangePasswordRequest): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/change-password')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Changes a user's password using their access token (JWT) instead of the changePasswordId
+   * A common use case for this method will be if you want to allow the user to change their own password.
+   * 
+   * Remember to send refreshToken in the request body if you want to get a new refresh token when login using the returned oneTimePassword.
+   *
+   * @param {string} encodedJWT The encoded JWT (access token).
+   * @param {ChangePasswordRequest} request The change password request that contains all the information used to change the password.
+   * @returns {Promise<ClientResponse<ChangePasswordResponse>>}
+   */
+  changePasswordUsingJWT(encodedJWT: string, request: ChangePasswordRequest): Promise<ClientResponse<ChangePasswordResponse>> {
+    return this.startAnonymous<ChangePasswordResponse, Errors>()
+        .withUri('/api/user/change-password')
+        .withAuthorization('Bearer ' + encodedJWT)
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -875,7 +896,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deactivates the users with the given ids.
+   * Deactivates the users with the given Ids.
    *
    * @param {Array<string>} userIds The ids of the users to deactivate.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
@@ -893,7 +914,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deactivates the users with the given ids.
+   * Deactivates the users with the given Ids.
    *
    * @param {Array<string>} userIds The ids of the users to deactivate.
    * @returns {Promise<ClientResponse<UserDeleteResponse>>}
@@ -1401,8 +1422,8 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-   * The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+   * Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+   * The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
    * 
    * This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
    * Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -1421,8 +1442,8 @@ export class FusionAuthClient {
   }
 
   /**
-   * Deletes the users with the given ids, or users matching the provided JSON query or queryString.
-   * The order of preference is ids, query and then queryString, it is recommended to only provide one of the three for the request.
+   * Deletes the users with the given Ids, or users matching the provided JSON query or queryString.
+   * The order of preference is Ids, query and then queryString, it is recommended to only provide one of the three for the request.
    * 
    * This method can be used to deactivate or permanently delete (hard-delete) users based upon the hardDelete boolean in the request body.
    * Using the dryRun parameter you may also request the result of the action without actually deleting or deactivating any users.
@@ -2009,7 +2030,7 @@ export class FusionAuthClient {
    * Modifies a temporal user action by changing the expiration of the action and optionally adding a comment to the
    * action.
    *
-   * @param {UUID} actionId The Id of the action to modify. This is technically the user action log id.
+   * @param {UUID} actionId The Id of the action to modify. This is technically the user action log Id.
    * @param {ActionRequest} request The request that contains all the information about the modification.
    * @returns {Promise<ClientResponse<ActionResponse>>}
    */
@@ -2037,10 +2058,10 @@ export class FusionAuthClient {
   }
 
   /**
-   * Updates an authentication API key by given id
+   * Updates an API key with the given Id.
    *
-   * @param {UUID} keyId The Id of the authentication key. If not provided a secure random api key will be generated.
-   * @param {APIKeyRequest} request The request object that contains all the information needed to create the APIKey.
+   * @param {UUID} keyId The Id of the API key. If not provided a secure random api key will be generated.
+   * @param {APIKeyRequest} request The request object that contains all the information needed to create the API key.
    * @returns {Promise<ClientResponse<APIKeyResponse>>}
    */
   patchAPIKey(keyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
@@ -2048,7 +2069,7 @@ export class FusionAuthClient {
         .withUri('/api/api-key')
         .withUriSegment(keyId)
         .withJSONBody(request)
-        .withMethod("POST")
+        .withMethod("PATCH")
         .go();
   }
 
@@ -2629,7 +2650,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Removes a user from the family with the given id.
+   * Removes a user from the family with the given Id.
    *
    * @param {UUID} familyId The Id of the family to remove the user from.
    * @param {UUID} userId The Id of the user to remove from the family.
@@ -2692,7 +2713,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves an authentication API key for the given id
+   * Retrieves an authentication API key for the given Id.
    *
    * @param {UUID} keyId The Id of the API key to retrieve.
    * @returns {Promise<ClientResponse<APIKeyResponse>>}
@@ -2768,7 +2789,7 @@ export class FusionAuthClient {
   /**
    * Retrieves the application for the given Id or all the applications if the Id is null.
    *
-   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application Id.
    * @returns {Promise<ClientResponse<ApplicationResponse>>}
    */
   retrieveApplication(applicationId: UUID): Promise<ClientResponse<ApplicationResponse>> {
@@ -2858,10 +2879,10 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the daily active user report between the two instants. If you specify an application id, it will only
+   * Retrieves the daily active user report between the two instants. If you specify an application Id, it will only
    * return the daily active counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<DailyActiveUserReportResponse>>}
@@ -2877,7 +2898,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the email template for the given Id. If you don't specify the id, this will return all the email templates.
+   * Retrieves the email template for the given Id. If you don't specify the Id, this will return all the email templates.
    *
    * @param {UUID} emailTemplateId (Optional) The Id of the email template.
    * @returns {Promise<ClientResponse<EmailTemplateResponse>>}
@@ -3326,10 +3347,10 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the login report between the two instants. If you specify an application id, it will only return the
+   * Retrieves the login report between the two instants. If you specify an application Id, it will only return the
    * login counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
@@ -3345,7 +3366,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the message template for the given Id. If you don't specify the id, this will return all the message templates.
+   * Retrieves the message template for the given Id. If you don't specify the Id, this will return all the message templates.
    *
    * @param {UUID} messageTemplateId (Optional) The Id of the message template.
    * @returns {Promise<ClientResponse<MessageTemplateResponse>>}
@@ -3411,10 +3432,10 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the monthly active user report between the two instants. If you specify an application id, it will only
+   * Retrieves the monthly active user report between the two instants. If you specify an application Id, it will only
    * return the monthly active counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<MonthlyActiveUserReportResponse>>}
@@ -3603,7 +3624,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user registration for the user with the given Id and the given application id.
+   * Retrieves the user registration for the user with the given Id and the given application Id.
    *
    * @param {UUID} userId The Id of the user.
    * @param {UUID} applicationId The Id of the application.
@@ -3619,10 +3640,10 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the registration report between the two instants. If you specify an application id, it will only return
+   * Retrieves the registration report between the two instants. If you specify an application Id, it will only return
    * the registration counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
+   * @param {UUID} applicationId (Optional) The application Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<RegistrationReportResponse>>}
@@ -3813,7 +3834,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user action for the given Id. If you pass in null for the id, this will return all the user
+   * Retrieves the user action for the given Id. If you pass in null for the Id, this will return all the user
    * actions.
    *
    * @param {UUID} userActionId (Optional) The Id of the user action.
@@ -3828,7 +3849,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user action reason for the given Id. If you pass in null for the id, this will return all the user
+   * Retrieves the user action reason for the given Id. If you pass in null for the Id, this will return all the user
    * action reasons.
    *
    * @param {UUID} userActionReasonId (Optional) The Id of the user action reason.
@@ -3959,8 +3980,8 @@ export class FusionAuthClient {
    * 
    * This API is useful if you want to build your own login workflow to complete a device grant.
    *
-   * @param {string} client_id The client id.
-   * @param {string} client_secret The client id.
+   * @param {string} client_id The client Id.
+   * @param {string} client_secret The client Id.
    * @param {string} user_code The end-user verification code.
    * @returns {Promise<ClientResponse<void>>}
    */
@@ -4089,11 +4110,11 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the login report between the two instants for a particular user by Id. If you specify an application id, it will only return the
+   * Retrieves the login report between the two instants for a particular user by Id. If you specify an application Id, it will only return the
    * login counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
-   * @param {UUID} userId The userId id.
+   * @param {UUID} applicationId (Optional) The application Id.
+   * @param {UUID} userId The userId Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
@@ -4110,11 +4131,11 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application id, it will only return the
+   * Retrieves the login report between the two instants for a particular user by login Id. If you specify an application Id, it will only return the
    * login counts for that application.
    *
-   * @param {UUID} applicationId (Optional) The application id.
-   * @param {string} loginId The userId id.
+   * @param {UUID} applicationId (Optional) The application Id.
+   * @param {string} loginId The userId Id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
@@ -4226,7 +4247,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the webhook for the given Id. If you pass in null for the id, this will return all the webhooks.
+   * Retrieves the webhook for the given Id. If you pass in null for the Id, this will return all the webhooks.
    *
    * @param {UUID} webhookId (Optional) The Id of the webhook.
    * @returns {Promise<ClientResponse<WebhookResponse>>}
@@ -4492,7 +4513,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the entities for the given ids. If any Id is invalid, it is ignored.
+   * Retrieves the entities for the given Ids. If any Id is invalid, it is ignored.
    *
    * @param {Array<string>} ids The entity ids to search for.
    * @returns {Promise<ClientResponse<EntitySearchResponse>>}
@@ -4688,7 +4709,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+   * Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
    *
    * @param {Array<string>} ids The user ids to search for.
    * @returns {Promise<ClientResponse<SearchResponse>>}
@@ -4704,9 +4725,9 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the users for the given ids. If any Id is invalid, it is ignored.
+   * Retrieves the users for the given Ids. If any Id is invalid, it is ignored.
    *
-   * @param {Array<string>} ids The user ids to search for.
+   * @param {Array<string>} ids The user Ids to search for.
    * @returns {Promise<ClientResponse<SearchResponse>>}
    */
   searchUsersByIds(ids: Array<string>): Promise<ClientResponse<SearchResponse>> {
@@ -4778,7 +4799,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Send an email using an email template id. You can optionally provide <code>requestData</code> to access key value
+   * Send an email using an email template Id. You can optionally provide <code>requestData</code> to access key value
    * pairs in the email template.
    *
    * @param {UUID} emailTemplateId The Id for the template.
@@ -5006,16 +5027,16 @@ export class FusionAuthClient {
   }
 
   /**
-   * Updates an API key by given id
+   * Updates an API key with the given Id.
    *
-   * @param {UUID} apiKeyId The Id of the API key to update.
-   * @param {APIKeyRequest} request The request object that contains all the information used to create the API Key.
+   * @param {UUID} keyId The Id of the API key to update.
+   * @param {APIKeyRequest} request The request that contains all the new API key information.
    * @returns {Promise<ClientResponse<APIKeyResponse>>}
    */
-  updateAPIKey(apiKeyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
+  updateAPIKey(keyId: UUID, request: APIKeyRequest): Promise<ClientResponse<APIKeyResponse>> {
     return this.start<APIKeyResponse, Errors>()
         .withUri('/api/api-key')
-        .withUriSegment(apiKeyId)
+        .withUriSegment(keyId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -5526,7 +5547,7 @@ export class FusionAuthClient {
    * If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
    *
    * @param {string} user_code The end-user verification code.
-   * @param {string} client_id The client id.
+   * @param {string} client_id The client Id.
    * @returns {Promise<ClientResponse<void>>}
    */
   validateDevice(user_code: string, client_id: string): Promise<ClientResponse<void>> {
@@ -5888,6 +5909,7 @@ export interface Application {
   state?: ObjectState;
   tenantId?: UUID;
   themeId?: UUID;
+  universalConfiguration?: UniversalApplicationConfiguration;
   unverified?: RegistrationUnverifiedOptions;
   verificationEmailTemplateId?: UUID;
   verificationStrategy?: VerificationStrategy;
@@ -9499,6 +9521,7 @@ export enum OAuthErrorReason {
   invalid_target_entity_scope = "invalid_target_entity_scope",
   invalid_entity_permission_scope = "invalid_entity_permission_scope",
   invalid_user_id = "invalid_user_id",
+  invalid_tenant_id = "invalid_tenant_id",
   grant_type_disabled = "grant_type_disabled",
   missing_client_id = "missing_client_id",
   missing_client_secret = "missing_client_secret",
@@ -9514,6 +9537,7 @@ export enum OAuthErrorReason {
   missing_user_code = "missing_user_code",
   missing_user_id = "missing_user_id",
   missing_verification_uri = "missing_verification_uri",
+  missing_tenant_id = "missing_tenant_id",
   login_prevented = "login_prevented",
   not_licensed = "not_licensed",
   user_code_expired = "user_code_expired",
@@ -10024,7 +10048,9 @@ export interface ReactorStatus {
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
   scimServer?: ReactorFeatureStatus;
+  tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  universalApplication?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
   webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
   webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
@@ -11366,6 +11392,13 @@ export interface TwoFactorTrust {
   applicationId?: UUID;
   expiration?: number;
   startInstant?: number;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface UniversalApplicationConfiguration {
+  universal?: boolean;
 }
 
 /**
