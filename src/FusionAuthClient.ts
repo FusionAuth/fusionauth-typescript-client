@@ -8525,7 +8525,7 @@ export enum IdentityProviderType {
 }
 
 /**
- * @author Brady Wied
+ * Keep track of identity types that FusionAuth provides out of the box.
  */
 export interface IdentityType {
   name?: string;
@@ -8544,7 +8544,8 @@ export enum IdentityVerifiedReason {
   Pending = "Pending",
   Completed = "Completed",
   Disabled = "Disabled",
-  Administrative = "Administrative"
+  Administrative = "Administrative",
+  Import = "Import"
 }
 
 /**
