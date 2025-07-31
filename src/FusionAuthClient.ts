@@ -8525,7 +8525,7 @@ export enum IdentityProviderType {
 }
 
 /**
- * Keep track of identity types that FusionAuth provides out of the box.
+ * Model identity types provided by FusionAuth.
  */
 export interface IdentityType {
   name?: string;
