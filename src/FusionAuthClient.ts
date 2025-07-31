@@ -9348,6 +9348,7 @@ export enum OAuthErrorReason {
   invalid_pkce_code_verifier = "invalid_pkce_code_verifier",
   invalid_pkce_code_challenge = "invalid_pkce_code_challenge",
   invalid_pkce_code_challenge_method = "invalid_pkce_code_challenge_method",
+  invalid_prompt = "invalid_prompt",
   invalid_redirect_uri = "invalid_redirect_uri",
   invalid_response_mode = "invalid_response_mode",
   invalid_response_type = "invalid_response_type",
@@ -9393,7 +9394,10 @@ export enum OAuthErrorReason {
   unknown = "unknown",
   missing_required_scope = "missing_required_scope",
   unknown_scope = "unknown_scope",
-  consent_canceled = "consent_canceled"
+  consent_canceled = "consent_canceled",
+  authentication_required = "authentication_required",
+  multi_factor_challenge_required = "multi_factor_challenge_required",
+  consent_required = "consent_required"
 }
 
 export enum OAuthErrorType {
@@ -9401,6 +9405,9 @@ export enum OAuthErrorType {
   invalid_client = "invalid_client",
   invalid_grant = "invalid_grant",
   invalid_token = "invalid_token",
+  consent_required = "consent_required",
+  interaction_required = "interaction_required",
+  login_required = "login_required",
   unauthorized_client = "unauthorized_client",
   invalid_scope = "invalid_scope",
   server_error = "server_error",
