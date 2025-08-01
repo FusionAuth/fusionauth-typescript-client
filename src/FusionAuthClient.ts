@@ -9396,7 +9396,11 @@ export enum OAuthErrorReason {
   unknown_scope = "unknown_scope",
   consent_canceled = "consent_canceled",
   authentication_required = "authentication_required",
+  email_verification_required = "email_verification_required",
   multi_factor_challenge_required = "multi_factor_challenge_required",
+  registration_missing_requirement = "registration_missing_requirement",
+  registration_required = "registration_required",
+  registration_verification_required = "registration_verification_required",
   consent_required = "consent_required"
 }
 
