@@ -9765,7 +9765,7 @@ export interface PasswordlessStartRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdTypes?: Array<string>;
-  loginStrategy?: string;
+  loginStrategy?: PasswordlessStrategy;
   state?: Record<string, any>;
 }
 
@@ -12312,7 +12312,7 @@ export interface VerifyStartRequest {
   loginId?: string;
   loginIdType?: string;
   state?: Record<string, any>;
-  verificationStrategy?: string;
+  verificationStrategy?: VerificationStrategy;
 }
 
 /**
