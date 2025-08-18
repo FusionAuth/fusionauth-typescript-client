@@ -307,6 +307,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Completes verification of an identity using verification codes from the Verify Start API.
+   *
+   * @param {VerifyCompleteRequest} request The identity verify complete request that contains all the information used to verify the identity.
+   * @returns {Promise<ClientResponse<VerifyCompleteResponse>>}
+   */
+  completeVerifyIdentity(request: VerifyCompleteRequest): Promise<ClientResponse<VerifyCompleteResponse>> {
+    return this.start<VerifyCompleteResponse, Errors>()
+        .withUri('/api/identity/verify/complete')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Complete a WebAuthn authentication ceremony by validating the signature against the previously generated challenge without logging the user in
    *
    * @param {WebAuthnLoginRequest} request An object containing data necessary for completing the authentication ceremony
@@ -3917,6 +3931,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the user for the loginId, using specific loginIdTypes.
+   *
+   * @param {string} loginId The email or username of the user.
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
+   * @returns {Promise<ClientResponse<UserResponse>>}
+   */
+  retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: Array<String>): Promise<ClientResponse<UserResponse>> {
+    return this.start<UserResponse, Errors>()
+        .withUri('/api/user')
+        .withParameter('loginId', loginId)
+        .withParameter('loginIdTypes', loginIdTypes)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves the user for the given username.
    *
    * @param {string} username The username of the user.
@@ -4117,6 +4147,29 @@ export class FusionAuthClient {
         .withParameter('loginId', loginId)
         .withParameter('start', start)
         .withParameter('end', end)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the login report between the two instants for a particular user by login Id, using specific loginIdTypes. If you specify an application id, it will only return the
+   * login counts for that application.
+   *
+   * @param {UUID} applicationId (Optional) The application id.
+   * @param {string} loginId The userId id.
+   * @param {number} start The start instant as UTC milliseconds since Epoch.
+   * @param {number} end The end instant as UTC milliseconds since Epoch.
+   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
+   * @returns {Promise<ClientResponse<LoginReportResponse>>}
+   */
+  retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
+    return this.start<LoginReportResponse, Errors>()
+        .withUri('/api/report/login')
+        .withParameter('applicationId', applicationId)
+        .withParameter('loginId', loginId)
+        .withParameter('start', start)
+        .withParameter('end', end)
+        .withParameter('loginIdTypes', loginIdTypes)
         .withMethod("GET")
         .go();
   }
@@ -4854,6 +4907,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Send a verification code using the appropriate transport for the identity type being verified.
+   *
+   * @param {VerifySendRequest} request The identity verify send request that contains all the information used send the code.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  sendVerifyIdentity(request: VerifySendRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/identity/verify/send')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Begins a login request for a 3rd party login that requires user interaction such as HYPR.
    *
    * @param {IdentityProviderStartLoginRequest} request The third-party login request that contains information from the third-party login
@@ -4897,6 +4964,21 @@ export class FusionAuthClient {
   startTwoFactorLogin(request: TwoFactorStartRequest): Promise<ClientResponse<TwoFactorStartResponse>> {
     return this.start<TwoFactorStartResponse, Errors>()
         .withUri('/api/two-factor/start')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start a verification of an identity by generating a code. This code can be sent to the User using the Verify Send API
+   * Verification Code API or using a mechanism outside of FusionAuth. The verification is completed by using the Verify Complete API with this code.
+   *
+   * @param {VerifyStartRequest} request The identity verify start request that contains all the information used to begin the request.
+   * @returns {Promise<ClientResponse<VerifyStartResponse>>}
+   */
+  startVerifyIdentity(request: VerifyStartRequest): Promise<ClientResponse<VerifyStartResponse>> {
+    return this.start<VerifyStartResponse, Errors>()
+        .withUri('/api/identity/verify/start')
         .withJSONBody(request)
         .withMethod("POST")
         .go();
@@ -5569,6 +5651,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Administratively verify a user identity.
+   *
+   * @param {VerifyRequest} request The identity verify request that contains information to verify the identity.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  verifyIdentity(request: VerifyRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/identity/verify')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Confirms an application registration. The Id given is usually from an email sent to the user.
    *
    * @param {string} verificationId The registration verification Id sent to the user.
@@ -5804,6 +5900,7 @@ export interface Application {
   name?: string;
   oauthConfiguration?: OAuth2Configuration;
   passwordlessConfiguration?: PasswordlessConfiguration;
+  phoneConfiguration?: ApplicationPhoneConfiguration;
   registrationConfiguration?: RegistrationConfiguration;
   registrationDeletePolicy?: ApplicationRegistrationDeletePolicy;
   roles?: Array<ApplicationRole>;
@@ -5871,8 +5968,10 @@ export interface RegistrationConfiguration extends Enableable {
   type?: RegistrationType;
 }
 
+//      This is separate from IdentityType.
 export enum LoginIdType {
   email = "email",
+  phoneNumber = "phoneNumber",
   username = "username"
 }
 
@@ -6025,6 +6124,26 @@ export interface ApplicationOAuthScopeRequest {
  */
 export interface ApplicationOAuthScopeResponse {
   scope?: ApplicationOAuthScope;
+}
+
+/**
+ * Hold application phone configuration for template overrides.
+ */
+export interface ApplicationPhoneConfiguration {
+  forgotPasswordTemplateId?: UUID;
+  identityUpdateTemplateId?: UUID;
+  loginIdInUseOnCreateTemplateId?: UUID;
+  loginIdInUseOnUpdateTemplateId?: UUID;
+  loginNewDeviceTemplateId?: UUID;
+  loginSuspiciousTemplateId?: UUID;
+  passwordlessTemplateId?: UUID;
+  passwordResetSuccessTemplateId?: UUID;
+  passwordUpdateTemplateId?: UUID;
+  setPasswordTemplateId?: UUID;
+  twoFactorMethodAddTemplateId?: UUID;
+  twoFactorMethodRemoveTemplateId?: UUID;
+  verificationCompleteTemplateId?: UUID;
+  verificationTemplateId?: UUID;
 }
 
 /**
@@ -6432,6 +6551,11 @@ export interface BaseUserEvent extends BaseEvent {
   user?: User;
 }
 
+export interface IdentityInfo {
+  type?: string;
+  value?: string;
+}
+
 /**
  * @author Daniel DeGroff
  */
@@ -6510,6 +6634,7 @@ export interface ChangePasswordRequest extends BaseEventRequest {
   changePasswordId?: string;
   currentPassword?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   password?: string;
   refreshToken?: string;
   trustChallenge?: string;
@@ -6823,6 +6948,7 @@ export interface DisplayableRawLogin extends RawLogin {
   applicationName?: string;
   location?: Location;
   loginId?: string;
+  loginIdType?: IdentityType;
 }
 
 /**
@@ -7415,7 +7541,9 @@ export enum EventType {
   UserTwoFactorMethodRemove = "user.two-factor.method.remove",
   UserUpdate = "user.update",
   UserUpdateComplete = "user.update.complete",
-  Test = "test"
+  Test = "test",
+  UserIdentityVerified = "user.identity.verified",
+  UserIdentityUpdate = "user.identity.update"
 }
 
 /**
@@ -7464,8 +7592,12 @@ export interface ExternalIdentifierConfiguration {
   loginIntentTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
+  passwordlessLoginOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   passwordlessLoginTimeToLiveInSeconds?: number;
   pendingAccountLinkTimeToLiveInSeconds?: number;
+  phoneVerificationIdGenerator?: SecureGeneratorConfiguration;
+  phoneVerificationIdTimeToLiveInSeconds?: number;
+  phoneVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdGenerator?: SecureGeneratorConfiguration;
   registrationVerificationIdTimeToLiveInSeconds?: number;
   registrationVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
@@ -7637,7 +7769,9 @@ export interface ForgotPasswordRequest extends BaseEventRequest {
   changePasswordId?: string;
   email?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   sendForgotPasswordEmail?: boolean;
+  sendForgotPasswordMessage?: boolean;
   state?: Record<string, any>;
   username?: string;
 }
@@ -7686,6 +7820,7 @@ export enum FormDataType {
   date = "date",
   email = "email",
   number = "number",
+  phoneNumber = "phoneNumber",
   string = "string"
 }
 
@@ -8348,6 +8483,7 @@ export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
   data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
 }
 
@@ -8386,6 +8522,30 @@ export enum IdentityProviderType {
   Twitch = "Twitch",
   Twitter = "Twitter",
   Xbox = "Xbox"
+}
+
+/**
+ * Model identity types provided by FusionAuth.
+ */
+export interface IdentityType {
+  name?: string;
+}
+
+/**
+ * Models the reason that {@link UserIdentity#verified} was set to true or false.
+ *
+ * @author Brady Wied
+ */
+export enum IdentityVerifiedReason {
+  Skipped = "Skipped",
+  Trusted = "Trusted",
+  Unverifiable = "Unverifiable",
+  Implicit = "Implicit",
+  Pending = "Pending",
+  Completed = "Completed",
+  Disabled = "Disabled",
+  Administrative = "Administrative",
+  Import = "Import"
 }
 
 /**
@@ -9026,6 +9186,7 @@ export interface LoginReportResponse {
  */
 export interface LoginRequest extends BaseLoginRequest {
   loginId?: string;
+  loginIdTypes?: Array<string>;
   oneTimePassword?: string;
   password?: string;
   twoFactorTrustId?: string;
@@ -9040,6 +9201,7 @@ export interface LoginResponse {
   changePasswordReason?: ChangePasswordReason;
   configurableMethods?: Array<string>;
   emailVerificationId?: string;
+  identityVerificationId?: string;
   methods?: Array<TwoFactorMethod>;
   pendingIdPLinkId?: string;
   refreshToken?: string;
@@ -9341,6 +9503,7 @@ export enum OAuthErrorReason {
   refresh_token_not_found = "refresh_token_not_found",
   refresh_token_type_not_supported = "refresh_token_type_not_supported",
   invalid_client_id = "invalid_client_id",
+  invalid_expires_in = "invalid_expires_in",
   invalid_user_credentials = "invalid_user_credentials",
   invalid_grant_type = "invalid_grant_type",
   invalid_origin = "invalid_origin",
@@ -9592,6 +9755,7 @@ export interface PasswordlessIdentityProvider {
  */
 export interface PasswordlessLoginRequest extends BaseLoginRequest {
   code?: string;
+  oneTimeCode?: string;
   twoFactorTrustId?: string;
 }
 
@@ -9611,6 +9775,8 @@ export interface PasswordlessSendRequest {
 export interface PasswordlessStartRequest {
   applicationId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
+  loginStrategy?: PasswordlessStrategy;
   state?: Record<string, any>;
 }
 
@@ -9619,6 +9785,15 @@ export interface PasswordlessStartRequest {
  */
 export interface PasswordlessStartResponse {
   code?: string;
+  oneTimeCode?: string;
+}
+
+/**
+ * @author Daniel DeGroff
+ */
+export enum PasswordlessStrategy {
+  ClickableLink = "ClickableLink",
+  FormField = "FormField"
 }
 
 /**
@@ -9642,6 +9817,16 @@ export interface PendingIdPLink {
  */
 export interface PendingResponse {
   users?: Array<User>;
+}
+
+/**
+ * Configuration for unverified phone number identities.
+ *
+ * @author Spencer Witt
+ */
+export interface PhoneUnverifiedOptions {
+  allowPhoneNumberChangeWhenGated?: boolean;
+  behavior?: UnverifiedBehavior;
 }
 
 /**
@@ -9802,18 +9987,6 @@ export interface RateLimitedRequestConfiguration extends Enableable {
 }
 
 /**
- * @author Daniel DeGroff
- */
-export enum RateLimitedRequestType {
-  FailedLogin = "FailedLogin",
-  ForgotPassword = "ForgotPassword",
-  SendEmailVerification = "SendEmailVerification",
-  SendPasswordless = "SendPasswordless",
-  SendRegistrationVerification = "SendRegistrationVerification",
-  SendTwoFactor = "SendTwoFactor"
-}
-
-/**
  * Raw login information for each time a user logs into an application.
  *
  * @author Brian Pontarelli
@@ -9909,6 +10082,7 @@ export interface RecentLoginResponse {
  */
 export interface RefreshRequest extends BaseEventRequest {
   refreshToken?: string;
+  timeToLiveInSeconds?: number;
   token?: string;
 }
 
@@ -10044,6 +10218,7 @@ export interface RegistrationRequest extends BaseEventRequest {
   generateAuthenticationToken?: boolean;
   registration?: UserRegistration;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordIdentityType?: SendSetPasswordIdentityType;
   skipRegistrationVerification?: boolean;
   skipVerification?: boolean;
   user?: User;
@@ -10304,6 +10479,7 @@ export interface SecureIdentity {
   encryptionScheme?: string;
   factor?: number;
   id?: UUID;
+  identities?: Array<UserIdentity>;
   lastLoginInstant?: number;
   password?: string;
   passwordChangeReason?: ChangePasswordReason;
@@ -10348,6 +10524,16 @@ export interface SendResponse {
 export interface EmailTemplateErrors {
   parseErrors?: Record<string, string>;
   renderErrors?: Record<string, string>;
+}
+
+/**
+ * Used to indicate which identity type a password "request" might go to. It could be
+ * used for send set passwords or send password resets.
+ */
+export enum SendSetPasswordIdentityType {
+  email = "email",
+  phone = "phone",
+  doNotSend = "doNotSend"
 }
 
 /**
@@ -10592,6 +10778,7 @@ export interface Tenant {
   oauthConfiguration?: TenantOAuth2Configuration;
   passwordEncryptionConfiguration?: PasswordEncryptionConfiguration;
   passwordValidationRules?: PasswordValidationRules;
+  phoneConfiguration?: TenantPhoneConfiguration;
   rateLimitConfiguration?: TenantRateLimitConfiguration;
   registrationConfiguration?: TenantRegistrationConfiguration;
   scimServerConfiguration?: TenantSCIMServerConfiguration;
@@ -10686,6 +10873,33 @@ export interface MultiFactorSMSMethod extends Enableable {
 }
 
 /**
+ * Hold tenant phone configuration for passwordless and verification cases.
+ *
+ * @author Brady Wied
+ */
+export interface TenantPhoneConfiguration {
+  forgotPasswordTemplateId?: UUID;
+  identityUpdateTemplateId?: UUID;
+  implicitPhoneVerificationAllowed?: boolean;
+  loginIdInUseOnCreateTemplateId?: UUID;
+  loginIdInUseOnUpdateTemplateId?: UUID;
+  loginNewDeviceTemplateId?: UUID;
+  loginSuspiciousTemplateId?: UUID;
+  messengerId?: UUID;
+  passwordlessTemplateId?: UUID;
+  passwordResetSuccessTemplateId?: UUID;
+  passwordUpdateTemplateId?: UUID;
+  setPasswordTemplateId?: UUID;
+  twoFactorMethodAddTemplateId?: UUID;
+  twoFactorMethodRemoveTemplateId?: UUID;
+  unverified?: PhoneUnverifiedOptions;
+  verificationCompleteTemplateId?: UUID;
+  verificationStrategy?: VerificationStrategy;
+  verificationTemplateId?: UUID;
+  verifyPhoneNumber?: boolean;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface TenantRateLimitConfiguration {
@@ -10693,6 +10907,8 @@ export interface TenantRateLimitConfiguration {
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
+  sendPasswordlessPhone?: RateLimitedRequestConfiguration;
+  sendPhoneVerification?: RateLimitedRequestConfiguration;
   sendRegistrationVerification?: RateLimitedRequestConfiguration;
   sendTwoFactor?: RateLimitedRequestConfiguration;
 }
@@ -10894,6 +11110,10 @@ export interface Templates {
   passwordComplete?: string;
   passwordForgot?: string;
   passwordSent?: string;
+  phoneComplete?: string;
+  phoneSent?: string;
+  phoneVerificationRequired?: string;
+  phoneVerify?: string;
   registrationComplete?: string;
   registrationSend?: string;
   registrationSent?: string;
@@ -11157,6 +11377,7 @@ export interface TwoFactorStartRequest {
   applicationId?: UUID;
   code?: string;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
   trustChallenge?: string;
   userId?: UUID;
@@ -11221,7 +11442,7 @@ export interface UsageDataConfiguration extends Enableable {
 }
 
 /**
- * The global view of a User. This object contains all global information about the user including birthdate, registration information
+ * The public, global view of a User. This object contains all global information about the user including birthdate, registration information
  * preferred languages, global attributes, etc.
  *
  * @author Seth Musselman
@@ -11243,6 +11464,7 @@ export interface User extends SecureIdentity {
   middleName?: string;
   mobilePhone?: string;
   parentEmail?: string;
+  phoneNumber?: string;
   preferredLanguages?: Array<string>;
   registrations?: Array<UserRegistration>;
   tenantId?: UUID;
@@ -11609,6 +11831,23 @@ export interface UserEmailVerifiedEvent extends BaseUserEvent {
 }
 
 /**
+ * @author Daniel DeGroff
+ */
+export interface UserIdentity {
+  displayValue?: string;
+  insertInstant?: number;
+  lastLoginInstant?: number;
+  lastUpdateInstant?: number;
+  moderationStatus?: ContentStatus;
+  primary?: boolean;
+  type?: IdentityType;
+  value?: string;
+  verified?: boolean;
+  verifiedInstant?: number;
+  verifiedReason?: IdentityVerifiedReason;
+}
+
+/**
  * Models the User Identity Provider Link Event.
  *
  * @author Rob Davis
@@ -11624,6 +11863,27 @@ export interface UserIdentityProviderLinkEvent extends BaseUserEvent {
  */
 export interface UserIdentityProviderUnlinkEvent extends BaseUserEvent {
   identityProviderLink?: IdentityProviderLink;
+}
+
+/**
+ * Models the user identity update event
+ *
+ * @author Brent Halsey
+ */
+export interface UserIdentityUpdateEvent extends BaseUserEvent {
+  loginIdType?: string;
+  newLoginId?: string;
+  previousLoginId?: string;
+}
+
+/**
+ * Models the user identity verified event
+ *
+ * @author Brady Wied
+ */
+export interface UserIdentityVerifiedEvent extends BaseUserEvent {
+  loginId?: string;
+  loginIdType?: string;
 }
 
 /**
@@ -11656,12 +11916,14 @@ export interface UserLoginFailedReasonCode {
 }
 
 /**
- * Models an event where a user is being created with an "in-use" login Id (email or username).
+ * Models an event where a user is being created with an "in-use" login Id (email, username, or other identities).
  *
  * @author Daniel DeGroff
  */
 export interface UserLoginIdDuplicateOnCreateEvent extends BaseUserEvent {
   duplicateEmail?: string;
+  duplicateIdentities?: Array<IdentityInfo>;
+  duplicatePhoneNumber?: string;
   duplicateUsername?: string;
   existing?: User;
 }
@@ -11866,8 +12128,10 @@ export interface UserRequest extends BaseEventRequest {
   currentPassword?: string;
   disableDomainBlock?: boolean;
   sendSetPasswordEmail?: boolean;
+  sendSetPasswordIdentityType?: SendSetPasswordIdentityType;
   skipVerification?: boolean;
   user?: User;
+  verificationIds?: Array<string>;
 }
 
 /**
@@ -11883,6 +12147,14 @@ export interface UserResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
+}
+
+export interface VerificationId {
+  id?: string;
+  oneTimeCode?: string;
+  type?: IdentityType;
+  value?: string;
 }
 
 /**
@@ -11981,6 +12253,21 @@ export enum VerificationStrategy {
 }
 
 /**
+ * Verify Complete API request object.
+ */
+export interface VerifyCompleteRequest extends BaseEventRequest {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * Verify Complete API response object.
+ */
+export interface VerifyCompleteResponse {
+  state?: Record<string, any>;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface VerifyEmailRequest extends BaseEventRequest {
@@ -12009,6 +12296,40 @@ export interface VerifyRegistrationRequest extends BaseEventRequest {
  * @author Daniel DeGroff
  */
 export interface VerifyRegistrationResponse {
+  oneTimeCode?: string;
+  verificationId?: string;
+}
+
+/**
+ * Identity verify request. Used to administratively verify an identity.
+ */
+export interface VerifyRequest extends BaseEventRequest {
+  loginId?: string;
+  loginIdType?: string;
+}
+
+/**
+ * Verify Send API request object.
+ */
+export interface VerifySendRequest {
+  verificationId?: string;
+}
+
+/**
+ * @author Brady Wied
+ */
+export interface VerifyStartRequest {
+  applicationId?: UUID;
+  loginId?: string;
+  loginIdType?: string;
+  state?: Record<string, any>;
+  verificationStrategy?: VerificationStrategy;
+}
+
+/**
+ * @author Brady Wied
+ */
+export interface VerifyStartResponse {
   oneTimeCode?: string;
   verificationId?: string;
 }
@@ -12206,6 +12527,7 @@ export interface WebAuthnStartRequest {
   applicationId?: UUID;
   credentialId?: UUID;
   loginId?: string;
+  loginIdTypes?: Array<string>;
   state?: Record<string, any>;
   userId?: UUID;
   workflow?: WebAuthnWorkflow;
