@@ -8061,7 +8061,6 @@ export interface GroupMember {
   groupId?: UUID;
   id?: UUID;
   insertInstant?: number;
-  user?: User;
   userId?: UUID;
 }
 
