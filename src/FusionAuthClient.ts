@@ -7988,7 +7988,7 @@ export interface GoogleIdentityProviderProperties {
 }
 
 /**
- * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization
+ * Authorization Grant types as defined by the <a href="https://tools.ietf.org/html/rfc6749">OAuth 2.0 Authorization
  * Framework - RFC 6749</a>.
  * <p>
  * Specific names as defined by <a href="https://tools.ietf.org/html/rfc7591#section-4.1">
@@ -8061,7 +8061,6 @@ export interface GroupMember {
   groupId?: UUID;
   id?: UUID;
   insertInstant?: number;
-  user?: User;
   userId?: UUID;
 }
 
@@ -9502,6 +9501,9 @@ export enum OAuthErrorReason {
   access_token_required = "access_token_required",
   refresh_token_not_found = "refresh_token_not_found",
   refresh_token_type_not_supported = "refresh_token_type_not_supported",
+  id_token_invalid = "id_token_invalid",
+  unsupported_token_type = "unsupported_token_type",
+  token_type_hint_mismatch = "token_type_hint_mismatch",
   invalid_client_id = "invalid_client_id",
   invalid_expires_in = "invalid_expires_in",
   invalid_user_credentials = "invalid_user_credentials",
