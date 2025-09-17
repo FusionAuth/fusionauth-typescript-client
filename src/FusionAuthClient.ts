@@ -106,15 +106,17 @@ export class FusionAuthClient {
    * @param {string} client_secret (Optional) The client secret. This value will be required if client authentication is enabled.
    * @param {string} token The access token used to identify the user.
    * @param {string} user_code The end-user verification code.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<DeviceApprovalResponse>>}
    */
-  approveDevice(client_id: string, client_secret: string, token: string, user_code: string): Promise<ClientResponse<DeviceApprovalResponse>> {
+  approveDevice(client_id: string, client_secret: string, token: string, user_code: string, tenantId: UUID): Promise<ClientResponse<DeviceApprovalResponse>> {
     let body = new URLSearchParams();
 
     body.append('client_id', client_id);
     body.append('client_secret', client_secret);
     body.append('token', token);
     body.append('user_code', user_code);
+    body.append('tenantId', tenantId);
     return this.start<DeviceApprovalResponse, Errors>()
         .withUri('/oauth2/device/approve')
         .withFormData(body)
@@ -276,15 +278,17 @@ export class FusionAuthClient {
    * @param {string} client_secret (Optional) The client secret used to authenticate this request.
    *    This parameter is optional when Basic Authorization is used to authenticate this request.
    * @param {string} scope (Optional) This parameter is used to indicate which target entity you are requesting access. To request access to an entity, use the format target-entity:&lt;target-entity-id&gt;:&lt;roles&gt;. Roles are an optional comma separated list.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  clientCredentialsGrant(client_id: string, client_secret: string, scope: string): Promise<ClientResponse<AccessToken>> {
+  clientCredentialsGrant(client_id: string, client_secret: string, scope: string, tenantId: UUID): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
     body.append('client_id', client_id);
     body.append('client_secret', client_secret);
     body.append('grant_type', 'client_credentials');
     body.append('scope', scope);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1546,9 +1550,10 @@ export class FusionAuthClient {
    *    This parameter is optional when Basic Authorization is used to authenticate this request.
    * @param {string} client_secret (Optional) The client secret. This value will be required if client authentication is enabled.
    * @param {string} redirect_uri The URI to redirect to upon a successful request.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string): Promise<ClientResponse<AccessToken>> {
+  exchangeOAuthCodeForAccessToken(code: string, client_id: string, client_secret: string, redirect_uri: string, tenantId: UUID): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
     body.append('code', code);
@@ -1556,6 +1561,7 @@ export class FusionAuthClient {
     body.append('client_secret', client_secret);
     body.append('grant_type', 'authorization_code');
     body.append('redirect_uri', redirect_uri);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1573,9 +1579,10 @@ export class FusionAuthClient {
    * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
    * @param {string} redirect_uri The URI to redirect to upon a successful request.
    * @param {string} code_verifier The random string generated previously. Will be compared with the code_challenge sent previously, which allows the OAuth provider to authenticate your app.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  exchangeOAuthCodeForAccessTokenUsingPKCE(code: string, client_id: string, client_secret: string, redirect_uri: string, code_verifier: string): Promise<ClientResponse<AccessToken>> {
+  exchangeOAuthCodeForAccessTokenUsingPKCE(code: string, client_id: string, client_secret: string, redirect_uri: string, code_verifier: string, tenantId: UUID): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
     body.append('code', code);
@@ -1584,6 +1591,7 @@ export class FusionAuthClient {
     body.append('grant_type', 'authorization_code');
     body.append('redirect_uri', redirect_uri);
     body.append('code_verifier', code_verifier);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1601,9 +1609,10 @@ export class FusionAuthClient {
    * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
    * @param {string} scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
    * @param {string} user_code (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request. Required if the request is for a universal application.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  exchangeRefreshTokenForAccessToken(refresh_token: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
+  exchangeRefreshTokenForAccessToken(refresh_token: string, client_id: string, client_secret: string, scope: string, user_code: string, tenantId: UUID): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
     body.append('refresh_token', refresh_token);
@@ -1612,6 +1621,7 @@ export class FusionAuthClient {
     body.append('grant_type', 'refresh_token');
     body.append('scope', scope);
     body.append('user_code', user_code);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1644,9 +1654,10 @@ export class FusionAuthClient {
    * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
    * @param {string} scope (Optional) This parameter is optional and if omitted, the same scope requested during the authorization request will be used. If provided the scopes must match those requested during the initial authorization request.
    * @param {string} user_code (Optional) The end-user verification code. This code is required if using this endpoint to approve the Device Authorization.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
-  exchangeUserCredentialsForAccessToken(username: string, password: string, client_id: string, client_secret: string, scope: string, user_code: string): Promise<ClientResponse<AccessToken>> {
+  exchangeUserCredentialsForAccessToken(username: string, password: string, client_id: string, client_secret: string, scope: string, user_code: string, tenantId: UUID): Promise<ClientResponse<AccessToken>> {
     let body = new URLSearchParams();
 
     body.append('username', username);
@@ -1656,6 +1667,7 @@ export class FusionAuthClient {
     body.append('grant_type', 'password');
     body.append('scope', scope);
     body.append('user_code', user_code);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1865,13 +1877,15 @@ export class FusionAuthClient {
    *
    * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application for which this token was generated.
    * @param {string} token The access token returned by this OAuth provider as the result of a successful client credentials grant.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<IntrospectResponse>>}
    */
-  introspectAccessToken(client_id: string, token: string): Promise<ClientResponse<IntrospectResponse>> {
+  introspectAccessToken(client_id: string, token: string, tenantId: UUID): Promise<ClientResponse<IntrospectResponse>> {
     let body = new URLSearchParams();
 
     body.append('client_id', client_id);
     body.append('token', token);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
         .withFormData(body)
@@ -1883,12 +1897,14 @@ export class FusionAuthClient {
    * Inspect an access token issued as the result of the Client Credentials Grant.
    *
    * @param {string} token The access token returned by this OAuth provider as the result of a successful client credentials grant.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<IntrospectResponse>>}
    */
-  introspectClientCredentialsAccessToken(token: string): Promise<ClientResponse<IntrospectResponse>> {
+  introspectClientCredentialsAccessToken(token: string, tenantId: UUID): Promise<ClientResponse<IntrospectResponse>> {
     let body = new URLSearchParams();
 
     body.append('token', token);
+    body.append('tenantId', tenantId);
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
         .withFormData(body)
@@ -3983,9 +3999,10 @@ export class FusionAuthClient {
    * @param {string} client_id The client Id.
    * @param {string} client_secret The client Id.
    * @param {string} user_code The end-user verification code.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<void>>}
    */
-  retrieveUserCode(client_id: string, client_secret: string, user_code: string): Promise<ClientResponse<void>> {
+  retrieveUserCode(client_id: string, client_secret: string, user_code: string, tenantId: UUID): Promise<ClientResponse<void>> {
     let body = new URLSearchParams();
 
     body.append('client_id', client_id);
@@ -3993,6 +4010,7 @@ export class FusionAuthClient {
     body.append('user_code', user_code);
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/user-code')
+        .withParameter('tenantId', tenantId)
         .withFormData(body)
         .withMethod("GET")
         .go();
@@ -4006,14 +4024,16 @@ export class FusionAuthClient {
    * This request will require an API key.
    *
    * @param {string} user_code The end-user verification code.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<void>>}
    */
-  retrieveUserCodeUsingAPIKey(user_code: string): Promise<ClientResponse<void>> {
+  retrieveUserCodeUsingAPIKey(user_code: string, tenantId: UUID): Promise<ClientResponse<void>> {
     let body = new URLSearchParams();
 
     body.append('user_code', user_code);
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/user-code')
+        .withParameter('tenantId', tenantId)
         .withFormData(body)
         .withMethod("GET")
         .go();
@@ -4065,12 +4085,14 @@ export class FusionAuthClient {
    * Call the UserInfo endpoint to retrieve User Claims from the access token issued by FusionAuth.
    *
    * @param {string} encodedJWT The encoded JWT (access token).
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<UserinfoResponse>>}
    */
-  retrieveUserInfoFromAccessToken(encodedJWT: string): Promise<ClientResponse<UserinfoResponse>> {
+  retrieveUserInfoFromAccessToken(encodedJWT: string, tenantId: UUID): Promise<ClientResponse<UserinfoResponse>> {
     return this.startAnonymous<UserinfoResponse, OAuthError>()
         .withUri('/oauth2/userinfo')
         .withAuthorization('Bearer ' + encodedJWT)
+        .withParameter('tenantId', tenantId)
         .withMethod("GET")
         .go();
   }
@@ -5548,13 +5570,15 @@ export class FusionAuthClient {
    *
    * @param {string} user_code The end-user verification code.
    * @param {string} client_id The client Id.
+   * @param {UUID} tenantId (Optional) The Id of the tenant to use for this request.
    * @returns {Promise<ClientResponse<void>>}
    */
-  validateDevice(user_code: string, client_id: string): Promise<ClientResponse<void>> {
+  validateDevice(user_code: string, client_id: string, tenantId: UUID): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/validate')
         .withParameter('user_code', user_code)
         .withParameter('client_id', client_id)
+        .withParameter('tenantId', tenantId)
         .withMethod("GET")
         .go();
   }
