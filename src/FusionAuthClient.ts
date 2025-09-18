@@ -8194,7 +8194,6 @@ export interface GroupResponse {
  * @author Daniel DeGroff
  */
 export interface GroupSearchCriteria extends BaseSearchCriteria {
-  exact?: boolean;
   name?: string;
   tenantId?: UUID;
 }
