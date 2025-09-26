@@ -10245,6 +10245,7 @@ export interface RegistrationRequest extends BaseEventRequest {
   skipRegistrationVerification?: boolean;
   skipVerification?: boolean;
   user?: User;
+  verificationIds?: Array<string>;
 }
 
 /**
