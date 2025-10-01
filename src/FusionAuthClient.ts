@@ -12346,6 +12346,7 @@ export interface VerifyStartRequest {
   applicationId?: UUID;
   loginId?: string;
   loginIdType?: string;
+  skipUserRequirement?: boolean;
   state?: Record<string, any>;
   verificationStrategy?: VerificationStrategy;
 }
