@@ -7923,6 +7923,16 @@ export interface FormResponse {
  */
 export interface FormStep {
   fields?: Array<UUID>;
+  formStepType?: FormStepType;
+}
+
+/**
+ * Which type of step is in use?
+ */
+export enum FormStepType {
+  collectData = "collectData",
+  verifyEmail = "verifyEmail",
+  verifyPhone = "verifyPhone"
 }
 
 /**
