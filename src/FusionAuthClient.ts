@@ -7923,7 +7923,7 @@ export interface FormResponse {
  */
 export interface FormStep {
   fields?: Array<UUID>;
-  formStepType?: FormStepType;
+  type?: FormStepType;
 }
 
 /**
