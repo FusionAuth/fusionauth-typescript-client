@@ -7932,7 +7932,7 @@ export interface FormStep {
 export enum FormStepType {
   collectData = "collectData",
   verifyEmail = "verifyEmail",
-  verifyPhone = "verifyPhone"
+  verifyPhoneNumber = "verifyPhoneNumber"
 }
 
 /**
