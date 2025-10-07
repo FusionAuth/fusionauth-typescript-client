@@ -7923,6 +7923,16 @@ export interface FormResponse {
  */
 export interface FormStep {
   fields?: Array<UUID>;
+  type?: FormStepType;
+}
+
+/**
+ * Denotes the type of form step. This is used to configure different behavior on form steps in the registration flow.
+ */
+export enum FormStepType {
+  collectData = "collectData",
+  verifyEmail = "verifyEmail",
+  verifyPhoneNumber = "verifyPhoneNumber"
 }
 
 /**
