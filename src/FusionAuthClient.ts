@@ -7567,6 +7567,14 @@ export enum EventType {
 }
 
 /**
+ * Represent the various states/expectations of a user in the context of starting verification
+ */
+export enum ExistingUserStrategy {
+  MustExist = "MustExist",
+  MustNotExist = "MustNotExist"
+}
+
+/**
  * An expandable API request.
  *
  * @author Daniel DeGroff
@@ -12355,9 +12363,9 @@ export interface VerifySendRequest {
  */
 export interface VerifyStartRequest {
   applicationId?: UUID;
+  existingUserStrategy?: ExistingUserStrategy;
   loginId?: string;
   loginIdType?: string;
-  skipUserRequirement?: boolean;
   state?: Record<string, any>;
   verificationStrategy?: VerificationStrategy;
 }
