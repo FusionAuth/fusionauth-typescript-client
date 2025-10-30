@@ -7570,8 +7570,8 @@ export enum EventType {
  * Represent the various states/expectations of a user in the context of starting verification
  */
 export enum ExistingUserStrategy {
-  MustExist = "MustExist",
-  MustNotExist = "MustNotExist"
+  mustExist = "mustExist",
+  mustNotExist = "mustNotExist"
 }
 
 /**
