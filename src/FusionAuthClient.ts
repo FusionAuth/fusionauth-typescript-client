@@ -9269,6 +9269,7 @@ export interface IdentityProviderDetails {
   idpEndpoint?: string;
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
