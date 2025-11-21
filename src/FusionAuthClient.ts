@@ -9049,7 +9049,8 @@ export enum LambdaType {
   SCIMServerUserResponseConverter = "SCIMServerUserResponseConverter",
   SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
   UserInfoPopulate = "UserInfoPopulate",
-  LoginValidation = "LoginValidation"
+  LoginValidation = "LoginValidation",
+  MFARequirement = "MFARequirement"
 }
 
 /**
