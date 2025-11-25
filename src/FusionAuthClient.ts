@@ -9409,6 +9409,15 @@ export interface MonthlyActiveUserReportResponse {
 }
 
 /**
+ * Communicate various contexts in which multi-factor authentication can be used.
+ */
+export enum MultiFactorContext {
+  changePassword = "changePassword",
+  login = "login",
+  stepUp = "stepUp"
+}
+
+/**
  * @author Daniel DeGroff
  */
 export enum MultiFactorLoginPolicy {
