@@ -271,13 +271,33 @@ export class FusionAuthClient {
    * 
    * An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
    *
-   * @param {string} loginId The loginId of the User that you intend to change the password for.
+   * @param {string} loginId The loginId (email or username) of the User that you intend to change the password for.
    * @returns {Promise<ClientResponse<void>>}
    */
   checkChangePasswordUsingLoginId(loginId: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/change-password')
-        .withParameter('username', loginId)
+        .withParameter('loginId', loginId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Check to see if the user must obtain a Trust Request Id in order to complete a change password request.
+   * When a user has enabled Two-Factor authentication, before you are allowed to use the Change Password API to change
+   * your password, you must obtain a Trust Request Id by completing a Two-Factor Step-Up authentication.
+   * 
+   * An HTTP status code of 400 with a general error code of [TrustTokenRequired] indicates that a Trust Token is required to make a POST request to this API.
+   *
+   * @param {string} loginId The loginId of the User that you intend to change the password for.
+   * @param {Array<String>} loginIdTypes The identity types that FusionAuth will compare the loginId to.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  checkChangePasswordUsingLoginIdAndLoginIdTypes(loginId: string, loginIdTypes: Array<String>): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/change-password')
+        .withParameter('loginId', loginId)
+        .withParameter('loginIdTypes', loginIdTypes)
         .withMethod("GET")
         .go();
   }
@@ -4085,7 +4105,7 @@ export class FusionAuthClient {
    * Retrieves the user for the loginId, using specific loginIdTypes.
    *
    * @param {string} loginId The email or username of the user.
-   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
+   * @param {Array<String>} loginIdTypes The identity types that FusionAuth will compare the loginId to.
    * @returns {Promise<ClientResponse<UserResponse>>}
    */
   retrieveUserByLoginIdWithLoginIdTypes(loginId: string, loginIdTypes: Array<String>): Promise<ClientResponse<UserResponse>> {
@@ -4344,7 +4364,7 @@ export class FusionAuthClient {
    * @param {string} loginId The userId id.
    * @param {number} start The start instant as UTC milliseconds since Epoch.
    * @param {number} end The end instant as UTC milliseconds since Epoch.
-   * @param {Array<String>} loginIdTypes the identity types that FusionAuth will compare the loginId to.
+   * @param {Array<String>} loginIdTypes The identity types that FusionAuth will compare the loginId to.
    * @returns {Promise<ClientResponse<LoginReportResponse>>}
    */
   retrieveUserLoginReportByLoginIdAndLoginIdTypes(applicationId: UUID, loginId: string, start: number, end: number, loginIdTypes: Array<String>): Promise<ClientResponse<LoginReportResponse>> {
