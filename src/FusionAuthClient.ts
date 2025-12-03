@@ -5960,6 +5960,7 @@ export interface AuthenticationTokenConfiguration extends Enableable {
 export interface LambdaConfiguration {
   accessTokenPopulateId?: UUID;
   idTokenPopulateId?: UUID;
+  multiFactorRequirementId?: UUID;
   samlv2PopulateId?: UUID;
   selfServiceRegistrationValidationId?: UUID;
   userinfoPopulateId?: UUID;
@@ -10865,6 +10866,7 @@ export interface TenantFormConfiguration {
  */
 export interface TenantLambdaConfiguration {
   loginValidationId?: UUID;
+  multiFactorRequirementId?: UUID;
   scimEnterpriseUserRequestConverterId?: UUID;
   scimEnterpriseUserResponseConverterId?: UUID;
   scimGroupRequestConverterId?: UUID;
