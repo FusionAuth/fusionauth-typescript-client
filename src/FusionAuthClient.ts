@@ -6503,6 +6503,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   linkingStrategy?: IdentityProviderLinkingStrategy;
   name?: string;
   tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
@@ -8491,6 +8492,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
@@ -9285,6 +9287,7 @@ export interface IdentityProviderDetails {
   idpEndpoint?: string;
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
