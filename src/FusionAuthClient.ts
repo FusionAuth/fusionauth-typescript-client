@@ -9276,6 +9276,52 @@ export interface IdentityProviderDetails {
 }
 
 /**
+ * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
+ */
+export interface MFAContext {
+  authenticationThreats?: Array<AuthenticationThreats>;
+  eventInfo?: EventInfo;
+  mfaTrust?: MFATrust;
+  registration?: UserRegistration;
+}
+
+/**
+ * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
+ */
+export interface MFAPolicies {
+  applicationLoginPolicy?: MultiFactorLoginPolicy;
+  applicationMultiFactorTrustPolicy?: ApplicationMultiFactorTrustPolicy;
+  tenantLoginPolicy?: MultiFactorLoginPolicy;
+}
+
+/**
+ * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
+ */
+export interface MFARequiredLambdaResult {
+  required?: boolean;
+}
+
+/**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
+export interface MFATrust {
+  applicationId?: UUID;
+  attributes?: Record<string, string>;
+  expirationInstant?: number;
+  id?: string;
+  insertInstant?: number;
+  startInstants?: StartInstant;
+  state?: Record<string, any>;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+export interface StartInstant {
+  applications?: Record<UUID, number>;
+  tenant?: number;
+}
+
+/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -9413,9 +9459,9 @@ export interface MonthlyActiveUserReportResponse {
 }
 
 /**
- * Communicate various contexts in which multi-factor authentication can be used.
+ * Communicate various actions/contexts in which multi-factor authentication can be used.
  */
-export enum MultiFactorContext {
+export enum MultiFactorAction {
   changePassword = "changePassword",
   login = "login",
   stepUp = "stepUp"
