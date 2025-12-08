@@ -9298,6 +9298,9 @@ export interface MFARequiredLambdaResult {
   required?: boolean;
 }
 
+/**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
 export interface MFATrust {
   applicationId?: UUID;
   attributes?: Record<string, string>;
