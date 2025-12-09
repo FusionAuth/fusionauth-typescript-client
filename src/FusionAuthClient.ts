@@ -9281,6 +9281,7 @@ export interface IdentityProviderDetails {
 export interface MFAContext {
   authenticationThreats?: Array<AuthenticationThreats>;
   eventInfo?: EventInfo;
+  jwt?: Record<string, any>;
   mfaTrust?: MFATrust;
   registration?: UserRegistration;
 }
@@ -9299,6 +9300,7 @@ export interface MFAPolicies {
  */
 export interface MFARequiredLambdaResult {
   required?: boolean;
+  sendSuspiciousLoginEvent?: boolean;
 }
 
 /**
@@ -11474,6 +11476,17 @@ export interface TwoFactorStartResponse {
   code?: string;
   methods?: Array<TwoFactorMethod>;
   twoFactorId?: string;
+}
+
+/**
+ * Check the status of two-factor authentication for a user, with more options than on a GET request.
+ */
+export interface TwoFactorStatusRequest extends BaseEventRequest {
+  action?: MultiFactorAction;
+  applicationId?: UUID;
+  token?: string;
+  twoFactorTrustId?: string;
+  userId?: UUID;
 }
 
 /**
