@@ -281,7 +281,7 @@ export class FusionAuthClient {
    * @param {string} ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
    * @returns {Promise<ClientResponse<void>>}
    */
-  checkChangePasswordUsingJWT(encodedJWT: string, ipAddress: string): Promise<ClientResponse<void>> {
+  checkChangePasswordUsingJWTAndIPAddress(encodedJWT: string, ipAddress: string): Promise<ClientResponse<void>> {
     return this.startAnonymous<void, Errors>()
         .withUri('/api/user/change-password')
         .withAuthorization('Bearer ' + encodedJWT)
@@ -319,7 +319,7 @@ export class FusionAuthClient {
    * @param {string} ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
    * @returns {Promise<ClientResponse<void>>}
    */
-  checkChangePasswordUsingLoginId(loginId: string, ipAddress: string): Promise<ClientResponse<void>> {
+  checkChangePasswordUsingLoginIdAndIPAddress(loginId: string, ipAddress: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/change-password')
         .withParameter('loginId', loginId)
@@ -360,7 +360,7 @@ export class FusionAuthClient {
    * @param {string} ipAddress (Optional) IP address of the user changing their password. This is used for MFA risk assessment.
    * @returns {Promise<ClientResponse<void>>}
    */
-  checkChangePasswordUsingLoginIdAndLoginIdTypes(loginId: string, loginIdTypes: Array<String>, ipAddress: string): Promise<ClientResponse<void>> {
+  checkChangePasswordUsingLoginIdAndLoginIdTypesAndIPAddress(loginId: string, loginIdTypes: Array<String>, ipAddress: string): Promise<ClientResponse<void>> {
     return this.start<void, Errors>()
         .withUri('/api/user/change-password')
         .withParameter('loginId', loginId)
