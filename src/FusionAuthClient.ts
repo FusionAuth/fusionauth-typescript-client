@@ -3840,6 +3840,24 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieve a user's two-factor status.
+   * 
+   * This can be used to see if a user will need to complete a two-factor challenge to complete a login,
+   * and optionally identify the state of the two-factor trust across various applications. This operation
+   * provides more payload options than retrieveTwoFactorStatus.
+   *
+   * @param {TwoFactorStatusRequest} request The request object that contains all the information used to check the status.
+   * @returns {Promise<ClientResponse<TwoFactorStatusResponse>>}
+   */
+  retrieveTwoFactorStatusUsing(request: TwoFactorStatusRequest): Promise<ClientResponse<TwoFactorStatusResponse>> {
+    return this.start<TwoFactorStatusResponse, Errors>()
+        .withUri('/api/two-factor/status')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Retrieves the user for the given Id.
    *
    * @param {UUID} userId The Id of the user.
