@@ -3849,7 +3849,7 @@ export class FusionAuthClient {
    * @param {TwoFactorStatusRequest} request The request object that contains all the information used to check the status.
    * @returns {Promise<ClientResponse<TwoFactorStatusResponse>>}
    */
-  retrieveTwoFactorStatusBody(request: TwoFactorStatusRequest): Promise<ClientResponse<TwoFactorStatusResponse>> {
+  retrieveTwoFactorStatusUsing(request: TwoFactorStatusRequest): Promise<ClientResponse<TwoFactorStatusResponse>> {
     return this.start<TwoFactorStatusResponse, Errors>()
         .withUri('/api/two-factor/status')
         .withJSONBody(request)
