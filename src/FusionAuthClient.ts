@@ -9318,6 +9318,7 @@ export interface MFAPolicies {
  */
 export interface MFARequiredLambdaResult {
   required?: boolean;
+  sendSuspiciousLoginEvent?: boolean;
 }
 
 /**
