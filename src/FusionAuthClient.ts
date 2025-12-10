@@ -3805,6 +3805,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the totals report. This allows excluding applicationTotals from the report. An empty list will include the applicationTotals.
+   *
+   * @param {Array<String>} excludes List of fields to exclude in the response. Currently only allows applicationTotals.
+   * @returns {Promise<ClientResponse<TotalsReportResponse>>}
+   */
+  retrieveTotalReportWithExcludes(excludes: Array<String>): Promise<ClientResponse<TotalsReportResponse>> {
+    return this.start<TotalsReportResponse, void>()
+        .withUri('/api/report/totals')
+        .withParameter('excludes', excludes)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieve two-factor recovery codes for a user.
    *
    * @param {UUID} userId The Id of the user to retrieve Two Factor recovery codes.
