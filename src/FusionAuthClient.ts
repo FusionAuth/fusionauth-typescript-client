@@ -10258,6 +10258,7 @@ export interface ReactorStatus {
   expiration?: string;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
+  multiFactorLambdas?: ReactorFeatureStatus;
   scimServer?: ReactorFeatureStatus;
   tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
