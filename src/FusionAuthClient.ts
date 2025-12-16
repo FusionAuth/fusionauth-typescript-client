@@ -6946,8 +6946,8 @@ export enum ContentStatus {
  */
 export interface Context {
   authenticationThreats?: Array<AuthenticationThreats>;
+  encodedJWT?: string;
   eventInfo?: EventInfo;
-  jwt?: Record<string, any>;
   mfaTrust?: Trust;
   policies?: Policies;
   registration?: UserRegistration;
