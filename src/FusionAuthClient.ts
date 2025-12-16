@@ -9397,6 +9397,7 @@ export interface MFAContext {
   eventInfo?: EventInfo;
   jwt?: Record<string, any>;
   mfaTrust?: MFATrust;
+  policies?: MFAPolicies;
   registration?: UserRegistration;
 }
 
