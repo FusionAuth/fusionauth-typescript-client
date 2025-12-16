@@ -6942,6 +6942,18 @@ export enum ContentStatus {
 }
 
 /**
+ * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
+ */
+export interface Context {
+  authenticationThreats?: Array<AuthenticationThreats>;
+  eventInfo?: EventInfo;
+  jwt?: Record<string, any>;
+  policies?: Policies;
+  registration?: UserRegistration;
+  trust?: Trust;
+}
+
+/**
  * A number identifying a cryptographic algorithm. Values should be registered with the <a
  * href="https://www.iana.org/assignments/cose/cose.xhtml#algorithms">IANA COSE Algorithms registry</a>
  *
@@ -9390,55 +9402,6 @@ export interface IdentityProviderDetails {
 }
 
 /**
- * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
- */
-export interface MFAContext {
-  authenticationThreats?: Array<AuthenticationThreats>;
-  eventInfo?: EventInfo;
-  jwt?: Record<string, any>;
-  mfaTrust?: MFATrust;
-  policies?: MFAPolicies;
-  registration?: UserRegistration;
-}
-
-/**
- * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
- */
-export interface MFAPolicies {
-  applicationLoginPolicy?: MultiFactorLoginPolicy;
-  applicationMultiFactorTrustPolicy?: ApplicationMultiFactorTrustPolicy;
-  tenantLoginPolicy?: MultiFactorLoginPolicy;
-}
-
-/**
- * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
- */
-export interface MFARequiredLambdaResult {
-  required?: boolean;
-  sendSuspiciousLoginEvent?: boolean;
-}
-
-/**
- * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
- */
-export interface MFATrust {
-  applicationId?: UUID;
-  attributes?: Record<string, string>;
-  expirationInstant?: number;
-  id?: string;
-  insertInstant?: number;
-  startInstants?: StartInstant;
-  state?: Record<string, any>;
-  tenantId?: UUID;
-  userId?: UUID;
-}
-
-export interface StartInstant {
-  applications?: Record<UUID, number>;
-  tenant?: number;
-}
-
-/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -10030,6 +9993,15 @@ export interface PhoneUnverifiedOptions {
 }
 
 /**
+ * Represents the inbound lambda parameter 'policies' for MFA Required lambdas.
+ */
+export interface Policies {
+  applicationLoginPolicy?: MultiFactorLoginPolicy;
+  applicationMultiFactorTrustPolicy?: ApplicationMultiFactorTrustPolicy;
+  tenantLoginPolicy?: MultiFactorLoginPolicy;
+}
+
+/**
  * @author Michael Sleevi
  */
 export interface PreviewMessageTemplateRequest {
@@ -10479,6 +10451,14 @@ export interface RememberPreviousPasswords extends Enableable {
  */
 export interface Requirable extends Enableable {
   required?: boolean;
+}
+
+/**
+ * Represents the inbound lambda parameter 'result' for MFA Required lambdas.
+ */
+export interface RequiredLambdaResult {
+  required?: boolean;
+  sendSuspiciousLoginEvent?: boolean;
 }
 
 /**
@@ -11433,6 +11413,26 @@ export enum TransactionType {
   SimpleMajority = "SimpleMajority",
   SuperMajority = "SuperMajority",
   AbsoluteMajority = "AbsoluteMajority"
+}
+
+/**
+ * Represents the inbound lambda parameter 'mfaTrust' inside the 'context' parameter for MFA Required lambdas.
+ */
+export interface Trust {
+  applicationId?: UUID;
+  attributes?: Record<string, string>;
+  expirationInstant?: number;
+  id?: string;
+  insertInstant?: number;
+  startInstants?: StartInstant;
+  state?: Record<string, any>;
+  tenantId?: UUID;
+  userId?: UUID;
+}
+
+export interface StartInstant {
+  applications?: Record<UUID, number>;
+  tenant?: number;
 }
 
 /**
