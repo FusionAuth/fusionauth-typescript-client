@@ -6948,9 +6948,9 @@ export interface Context {
   authenticationThreats?: Array<AuthenticationThreats>;
   eventInfo?: EventInfo;
   jwt?: Record<string, any>;
+  mfaTrust?: Trust;
   policies?: Policies;
   registration?: UserRegistration;
-  trust?: Trust;
 }
 
 /**
