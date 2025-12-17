@@ -3805,6 +3805,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the totals report. This allows excluding applicationTotals from the report. An empty list will include the applicationTotals.
+   *
+   * @param {Array<String>} excludes List of fields to exclude in the response. Currently only allows applicationTotals.
+   * @returns {Promise<ClientResponse<TotalsReportResponse>>}
+   */
+  retrieveTotalReportWithExcludes(excludes: Array<String>): Promise<ClientResponse<TotalsReportResponse>> {
+    return this.start<TotalsReportResponse, void>()
+        .withUri('/api/report/totals')
+        .withParameter('excludes', excludes)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieve two-factor recovery codes for a user.
    *
    * @param {UUID} userId The Id of the user to retrieve Two Factor recovery codes.
@@ -6503,6 +6517,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   linkingStrategy?: IdentityProviderLinkingStrategy;
   name?: string;
   tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
@@ -8486,6 +8501,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
@@ -8851,13 +8867,15 @@ export enum KeyAlgorithm {
   HS512 = "HS512",
   RS256 = "RS256",
   RS384 = "RS384",
-  RS512 = "RS512"
+  RS512 = "RS512",
+  Ed25519 = "Ed25519"
 }
 
 export enum KeyType {
   EC = "EC",
   RSA = "RSA",
-  HMAC = "HMAC"
+  HMAC = "HMAC",
+  OKP = "OKP"
 }
 
 /**
@@ -9280,6 +9298,7 @@ export interface IdentityProviderDetails {
   idpEndpoint?: string;
   name?: string;
   oauth2?: IdentityProviderOauth2Configuration;
+  tenantId?: UUID;
   type?: IdentityProviderType;
 }
 
