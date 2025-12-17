@@ -6945,12 +6945,13 @@ export enum ContentStatus {
  * Represents the inbound lambda parameter 'context' for MFA Required lambdas.
  */
 export interface Context {
+  action?: MultiFactorAction;
+  application?: Application;
   authenticationThreats?: Array<AuthenticationThreats>;
   encodedJWT?: string;
   eventInfo?: EventInfo;
   mfaTrust?: Trust;
   policies?: Policies;
-  registration?: UserRegistration;
 }
 
 /**
