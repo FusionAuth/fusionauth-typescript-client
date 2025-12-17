@@ -7696,6 +7696,14 @@ export enum EventType {
 }
 
 /**
+ * Represent the various states/expectations of a user in the context of starting verification
+ */
+export enum ExistingUserStrategy {
+  mustExist = "mustExist",
+  mustNotExist = "mustNotExist"
+}
+
+/**
  * An expandable API request.
  *
  * @author Daniel DeGroff
@@ -8052,6 +8060,16 @@ export interface FormResponse {
  */
 export interface FormStep {
   fields?: Array<UUID>;
+  type?: FormStepType;
+}
+
+/**
+ * Denotes the type of form step. This is used to configure different behavior on form steps in the registration flow.
+ */
+export enum FormStepType {
+  collectData = "collectData",
+  verifyEmail = "verifyEmail",
+  verifyPhoneNumber = "verifyPhoneNumber"
 }
 
 /**
@@ -10398,6 +10416,7 @@ export interface RegistrationRequest extends BaseEventRequest {
   skipRegistrationVerification?: boolean;
   skipVerification?: boolean;
   user?: User;
+  verificationIds?: Array<string>;
 }
 
 /**
@@ -10414,6 +10433,7 @@ export interface RegistrationResponse {
   token?: string;
   tokenExpirationInstant?: number;
   user?: User;
+  verificationIds?: Array<VerificationId>;
 }
 
 /**
@@ -12536,6 +12556,7 @@ export interface VerifySendRequest {
  */
 export interface VerifyStartRequest {
   applicationId?: UUID;
+  existingUserStrategy?: ExistingUserStrategy;
   loginId?: string;
   loginIdType?: string;
   state?: Record<string, any>;
