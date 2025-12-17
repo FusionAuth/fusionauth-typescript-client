@@ -9303,13 +9303,15 @@ export enum KeyAlgorithm {
   HS512 = "HS512",
   RS256 = "RS256",
   RS384 = "RS384",
-  RS512 = "RS512"
+  RS512 = "RS512",
+  Ed25519 = "Ed25519"
 }
 
 export enum KeyType {
   EC = "EC",
   RSA = "RSA",
-  HMAC = "HMAC"
+  HMAC = "HMAC",
+  OKP = "OKP"
 }
 
 /**
