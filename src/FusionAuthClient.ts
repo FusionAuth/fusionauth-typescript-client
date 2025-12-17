@@ -11599,9 +11599,9 @@ export interface TwoFactorStartResponse {
  * Check the status of two-factor authentication for a user, with more options than on a GET request.
  */
 export interface TwoFactorStatusRequest extends BaseEventRequest {
+  accessToken?: string;
   action?: MultiFactorAction;
   applicationId?: UUID;
-  token?: string;
   twoFactorTrustId?: string;
   userId?: UUID;
 }
