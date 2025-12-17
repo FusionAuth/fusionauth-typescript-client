@@ -129,9 +129,26 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<DeviceApprovalResponse>>}
    */
   approveDeviceWithRequest(request: DeviceApprovalRequest): Promise<ClientResponse<DeviceApprovalResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.start<DeviceApprovalResponse, Errors>()
         .withUri('/oauth2/device/approve')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -333,9 +350,26 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   clientCredentialsGrantWithRequest(request: ClientCredentialsGrantRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -1563,9 +1597,23 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<DeviceResponse>>}
    */
   deviceAuthorizeWithRequest(request: DeviceAuthorizationRequest): Promise<ClientResponse<DeviceResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
     return this.startAnonymous<DeviceResponse, OAuthError>()
         .withUri('/oauth2/device_authorize')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -1682,9 +1730,32 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeOAuthCodeForAccessTokenUsingPKCEWithRequest(request: OAuthCodePKCEAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.code !== null && request.code !== undefined) {
+      body.append('code', request.code);
+    }
+    if (request.code_verifier !== null && request.code_verifier !== undefined) {
+      body.append('code_verifier', request.code_verifier);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.redirect_uri !== null && request.redirect_uri !== undefined) {
+      body.append('redirect_uri', request.redirect_uri);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -1697,9 +1768,29 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeOAuthCodeForAccessTokenWithRequest(request: OAuthCodeAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.code !== null && request.code !== undefined) {
+      body.append('code', request.code);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.redirect_uri !== null && request.redirect_uri !== undefined) {
+      body.append('redirect_uri', request.redirect_uri);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -1740,9 +1831,32 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeRefreshTokenForAccessTokenWithRequest(request: RefreshTokenAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.refresh_token !== null && request.refresh_token !== undefined) {
+      body.append('refresh_token', request.refresh_token);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -1799,9 +1913,35 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<AccessToken>>}
    */
   exchangeUserCredentialsForAccessTokenWithRequest(request: UserCredentialsAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.password !== null && request.password !== undefined) {
+      body.append('password', request.password);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
+    if (request.username !== null && request.username !== undefined) {
+      body.append('username', request.username);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -2029,9 +2169,20 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<IntrospectResponse>>}
    */
   introspectAccessTokenWithRequest(request: AccessTokenIntrospectRequest): Promise<ClientResponse<IntrospectResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -2060,9 +2211,17 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<IntrospectResponse>>}
    */
   introspectClientCredentialsAccessTokenWithRequest(request: ClientCredentialsAccessTokenIntrospectRequest): Promise<ClientResponse<IntrospectResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -4215,9 +4374,17 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   retrieveUserCodeUsingAPIKeyWithRequest(request: RetrieveUserCodeUsingAPIKeyRequest): Promise<ClientResponse<void>> {
+    let body = new URLSearchParams();
+
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/user-code')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -4231,9 +4398,23 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   retrieveUserCodeWithRequest(request: RetrieveUserCodeRequest): Promise<ClientResponse<void>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/user-code')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -5786,9 +5967,20 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   validateDeviceWithRequest(request: ValidateDeviceRequest): Promise<ClientResponse<void>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/validate')
-        .withJSONBody(request)
+        .withFormData(body)
         .withMethod("POST")
         .go();
   }
@@ -7157,7 +7349,6 @@ export interface DailyActiveUserReportResponse {
 export interface DeviceApprovalRequest {
   client_id?: string;
   client_secret?: string;
-  metaData?: MetaData;
   tenantId?: UUID;
   token?: string;
   user_code?: string;
@@ -7180,7 +7371,6 @@ export interface DeviceApprovalResponse {
 export interface DeviceAuthorizationRequest {
   client_id?: string;
   client_secret?: string;
-  metaData?: MetaData;
   scope?: string;
   tenantId?: UUID;
 }
