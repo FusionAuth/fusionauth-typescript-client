@@ -8232,6 +8232,19 @@ export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<Extern
 }
 
 /**
+ * Determines if FusionAuth is in FIPS mode based on the system property <code>fusionauth.fips.enabled</code>. This can only be enabled once and
+ * should be enabled when the VM starts or as close to that point as possible.
+ * <p>
+ * Once this has been enabled, it cannot be disabled.
+ * <p>
+ * This also provides some helpers for FIPS things such as password length requirements.
+ *
+ * @author Brian Pontarelli & Daniel DeGroff
+ */
+export interface FIPS {
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface FacebookApplicationConfiguration extends BaseIdentityProviderApplicationConfiguration {
