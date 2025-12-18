@@ -81,7 +81,6 @@ jobs:
         if: inputs.command == 'release' || inputs.command == 'publish'
         run: |
           echo "color=false" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ env.API_KEY }}" >> ~/.npmrc
           chmod 600 ~/.npmrc
 
       - name: release to svn
