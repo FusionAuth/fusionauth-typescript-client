@@ -77,12 +77,12 @@ jobs:
             --output text | \
             jq -r 'to_entries[] | [.key, .value] | @tsv')
 
-      - name: create npmrc
-        if: inputs.command == 'release' || inputs.command == 'publish'
-        run: |
-          echo "color=false" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ env.API_KEY }}" >> ~/.npmrc
-          chmod 600 ~/.npmrc
+      - name: setup node for publishing
+        if: inputs.command == 'publish'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org' # This generates the necessary .npmrc
 
       - name: release to svn
         if: inputs.command == 'release'
@@ -90,4 +90,8 @@ jobs:
 
       - name: publish to npmjs
         if: inputs.command == 'publish'
-        run: sb publish
+        run: |
+          npm install -g npm@latest
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: "sigstore" # npm uses OIDC when this is any non-empty string

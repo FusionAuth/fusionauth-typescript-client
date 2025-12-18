@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024, FusionAuth, All Rights Reserved
+ * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ target(name: "test", description: "Runs the tests", dependsOn: ["compile"]) {
 }
 
 target(name: "publish", description: "Publish in NPM", dependsOn: ["clean", "int"]) {
-  def npmPublish = 'npm publish --access=public'.execute()
+  def npmPublish = 'npm publish --access=public --provenance'.execute()
   npmPublish.consumeProcessOutput(System.out, System.err)
 }
 
