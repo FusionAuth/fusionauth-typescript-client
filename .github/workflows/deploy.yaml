@@ -77,12 +77,6 @@ jobs:
             --output text | \
             jq -r 'to_entries[] | [.key, .value] | @tsv')
 
-      - name: create npmrc
-        if: inputs.command == 'release' || inputs.command == 'publish'
-        run: |
-          echo "color=false" > ~/.npmrc
-          chmod 600 ~/.npmrc
-
       - name: release to svn
         if: inputs.command == 'release'
         run: sb release
