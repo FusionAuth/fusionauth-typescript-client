@@ -77,6 +77,13 @@ jobs:
             --output text | \
             jq -r 'to_entries[] | [.key, .value] | @tsv')
 
+      - name: setup node for publishing
+        if: inputs.command == 'publish'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org' # This generates the necessary .npmrc
+
       - name: release to svn
         if: inputs.command == 'release'
         run: sb release
