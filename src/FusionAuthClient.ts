@@ -6067,21 +6067,12 @@ export class FusionAuthClient {
    * @returns {Promise<ClientResponse<void>>}
    */
   validateDeviceWithRequest(request: ValidateDeviceRequest): Promise<ClientResponse<void>> {
-    let body = new URLSearchParams();
-
-    if (request.client_id !== null && request.client_id !== undefined) {
-      body.append('client_id', request.client_id);
-    }
-    if (request.tenantId !== null && request.tenantId !== undefined) {
-      body.append('tenantId', request.tenantId.toString());
-    }
-    if (request.user_code !== null && request.user_code !== undefined) {
-      body.append('user_code', request.user_code);
-    }
     return this.startAnonymous<void, void>()
         .withUri('/oauth2/device/validate')
-        .withFormData(body)
-        .withMethod("POST")
+        .withParameter('client_id', request.client_id)
+        .withParameter('tenantId', request.tenantId != null ? request.tenantId.toString() : null)
+        .withParameter('user_code', request.user_code)
+        .withMethod("GET")
         .go();
   }
 
