@@ -123,6 +123,37 @@ export class FusionAuthClient {
   }
 
   /**
+   * Approve a device grant.
+   *
+   * @param {DeviceApprovalRequest} request The request object containing the device approval information and optional tenantId.
+   * @returns {Promise<ClientResponse<DeviceApprovalResponse>>}
+   */
+  approveDeviceWithRequest(request: DeviceApprovalRequest): Promise<ClientResponse<DeviceApprovalResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
+    return this.start<DeviceApprovalResponse, Errors>()
+        .withUri('/oauth2/device/approve')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Cancels the user action.
    *
    * @param {UUID} actionId The action Id of the action to cancel.
@@ -387,6 +418,37 @@ export class FusionAuthClient {
     body.append('client_secret', client_secret);
     body.append('grant_type', 'client_credentials');
     body.append('scope', scope);
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Make a Client Credentials grant request to obtain an access token.
+   *
+   * @param {ClientCredentialsGrantRequest} request The client credentials grant request containing client authentication, scope and optional tenantId.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  clientCredentialsGrantWithRequest(request: ClientCredentialsGrantRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1590,6 +1652,55 @@ export class FusionAuthClient {
   }
 
   /**
+   * Start the Device Authorization flow using form-encoded parameters
+   *
+   * @param {string} client_id The unique client identifier. The client Id is the Id of the FusionAuth Application in which you are attempting to authenticate.
+   * @param {string} client_secret (Optional) The client secret. This value may optionally be provided in the request body instead of the Authorization header.
+   * @param {string} scope (Optional) A space-delimited string of the requested scopes. Defaults to all scopes configured in the Application's OAuth configuration.
+   * @returns {Promise<ClientResponse<DeviceResponse>>}
+   */
+  deviceAuthorize(client_id: string, client_secret: string, scope: string): Promise<ClientResponse<DeviceResponse>> {
+    let body = new URLSearchParams();
+
+    body.append('client_id', client_id);
+    body.append('client_secret', client_secret);
+    body.append('scope', scope);
+    return this.startAnonymous<DeviceResponse, OAuthError>()
+        .withUri('/oauth2/device_authorize')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Start the Device Authorization flow using a request body
+   *
+   * @param {DeviceAuthorizationRequest} request The device authorization request containing client authentication, scope, and optional device metadata.
+   * @returns {Promise<ClientResponse<DeviceResponse>>}
+   */
+  deviceAuthorizeWithRequest(request: DeviceAuthorizationRequest): Promise<ClientResponse<DeviceResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    return this.startAnonymous<DeviceResponse, OAuthError>()
+        .withUri('/oauth2/device_authorize')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Disable two-factor authentication for a user.
    *
    * @param {UUID} userId The Id of the User for which you're disabling two-factor authentication.
@@ -1694,6 +1805,79 @@ export class FusionAuthClient {
   }
 
   /**
+   * Exchanges an OAuth authorization code and code_verifier for an access token.
+   * Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a code_verifier for an access token.
+   *
+   * @param {OAuthCodePKCEAccessTokenRequest} request The PKCE OAuth code access token exchange request.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeOAuthCodeForAccessTokenUsingPKCEWithRequest(request: OAuthCodePKCEAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.code !== null && request.code !== undefined) {
+      body.append('code', request.code);
+    }
+    if (request.code_verifier !== null && request.code_verifier !== undefined) {
+      body.append('code_verifier', request.code_verifier);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.redirect_uri !== null && request.redirect_uri !== undefined) {
+      body.append('redirect_uri', request.redirect_uri);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Exchanges an OAuth authorization code for an access token.
+   * Makes a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint for an access token.
+   *
+   * @param {OAuthCodeAccessTokenRequest} request The OAuth code access token exchange request.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeOAuthCodeForAccessTokenWithRequest(request: OAuthCodeAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.code !== null && request.code !== undefined) {
+      body.append('code', request.code);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.redirect_uri !== null && request.redirect_uri !== undefined) {
+      body.append('redirect_uri', request.redirect_uri);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Exchange a Refresh Token for an Access Token.
    * If you will be using the Refresh Token Grant, you will make a request to the Token endpoint to exchange the user’s refresh token for an access token.
    *
@@ -1714,6 +1898,44 @@ export class FusionAuthClient {
     body.append('grant_type', 'refresh_token');
     body.append('scope', scope);
     body.append('user_code', user_code);
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Exchange a Refresh Token for an Access Token.
+   * If you will be using the Refresh Token Grant, you will make a request to the Token endpoint to exchange the user’s refresh token for an access token.
+   *
+   * @param {RefreshTokenAccessTokenRequest} request The refresh token access token exchange request.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeRefreshTokenForAccessTokenWithRequest(request: RefreshTokenAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.refresh_token !== null && request.refresh_token !== undefined) {
+      body.append('refresh_token', request.refresh_token);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1758,6 +1980,47 @@ export class FusionAuthClient {
     body.append('grant_type', 'password');
     body.append('scope', scope);
     body.append('user_code', user_code);
+    return this.startAnonymous<AccessToken, OAuthError>()
+        .withUri('/oauth2/token')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Exchange User Credentials for a Token.
+   * If you will be using the Resource Owner Password Credential Grant, you will make a request to the Token endpoint to exchange the user’s email and password for an access token.
+   *
+   * @param {UserCredentialsAccessTokenRequest} request The user credentials access token exchange request.
+   * @returns {Promise<ClientResponse<AccessToken>>}
+   */
+  exchangeUserCredentialsForAccessTokenWithRequest(request: UserCredentialsAccessTokenRequest): Promise<ClientResponse<AccessToken>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.grant_type !== null && request.grant_type !== undefined) {
+      body.append('grant_type', request.grant_type);
+    }
+    if (request.password !== null && request.password !== undefined) {
+      body.append('password', request.password);
+    }
+    if (request.scope !== null && request.scope !== undefined) {
+      body.append('scope', request.scope);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
+    if (request.username !== null && request.username !== undefined) {
+      body.append('username', request.username);
+    }
     return this.startAnonymous<AccessToken, OAuthError>()
         .withUri('/oauth2/token')
         .withFormData(body)
@@ -1982,6 +2245,31 @@ export class FusionAuthClient {
   }
 
   /**
+   * Inspect an access token issued as the result of the User based grant such as the Authorization Code Grant, Implicit Grant, the User Credentials Grant or the Refresh Grant.
+   *
+   * @param {AccessTokenIntrospectRequest} request The access token introspection request.
+   * @returns {Promise<ClientResponse<IntrospectResponse>>}
+   */
+  introspectAccessTokenWithRequest(request: AccessTokenIntrospectRequest): Promise<ClientResponse<IntrospectResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
+    return this.startAnonymous<IntrospectResponse, OAuthError>()
+        .withUri('/oauth2/introspect')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Inspect an access token issued as the result of the Client Credentials Grant.
    *
    * @param {string} token The access token returned by this OAuth provider as the result of a successful client credentials grant.
@@ -1991,6 +2279,28 @@ export class FusionAuthClient {
     let body = new URLSearchParams();
 
     body.append('token', token);
+    return this.startAnonymous<IntrospectResponse, OAuthError>()
+        .withUri('/oauth2/introspect')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Inspect an access token issued as the result of the Client Credentials Grant.
+   *
+   * @param {ClientCredentialsAccessTokenIntrospectRequest} request The client credentials access token.
+   * @returns {Promise<ClientResponse<IntrospectResponse>>}
+   */
+  introspectClientCredentialsAccessTokenWithRequest(request: ClientCredentialsAccessTokenIntrospectRequest): Promise<ClientResponse<IntrospectResponse>> {
+    let body = new URLSearchParams();
+
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId);
+    }
+    if (request.token !== null && request.token !== undefined) {
+      body.append('token', request.token);
+    }
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
         .withFormData(body)
@@ -4154,6 +4464,62 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieve a user_code that is part of an in-progress Device Authorization Grant.
+   * 
+   * This API is useful if you want to build your own login workflow to complete a device grant.
+   * 
+   * This request will require an API key.
+   *
+   * @param {RetrieveUserCodeUsingAPIKeyRequest} request The user code retrieval request including optional tenantId.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  retrieveUserCodeUsingAPIKeyWithRequest(request: RetrieveUserCodeUsingAPIKeyRequest): Promise<ClientResponse<void>> {
+    let body = new URLSearchParams();
+
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
+    return this.startAnonymous<void, void>()
+        .withUri('/oauth2/device/user-code')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Retrieve a user_code that is part of an in-progress Device Authorization Grant.
+   * 
+   * This API is useful if you want to build your own login workflow to complete a device grant.
+   *
+   * @param {RetrieveUserCodeRequest} request The user code retrieval request.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  retrieveUserCodeWithRequest(request: RetrieveUserCodeRequest): Promise<ClientResponse<void>> {
+    let body = new URLSearchParams();
+
+    if (request.client_id !== null && request.client_id !== undefined) {
+      body.append('client_id', request.client_id);
+    }
+    if (request.client_secret !== null && request.client_secret !== undefined) {
+      body.append('client_secret', request.client_secret);
+    }
+    if (request.tenantId !== null && request.tenantId !== undefined) {
+      body.append('tenantId', request.tenantId.toString());
+    }
+    if (request.user_code !== null && request.user_code !== undefined) {
+      body.append('user_code', request.user_code);
+    }
+    return this.startAnonymous<void, void>()
+        .withUri('/oauth2/device/user-code')
+        .withFormData(body)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Retrieves all the comments for the user with the given Id.
    *
    * @param {UUID} userId The Id of the user.
@@ -5694,6 +6060,23 @@ export class FusionAuthClient {
   }
 
   /**
+   * Validates the end-user provided user_code from the user-interaction of the Device Authorization Grant.
+   * If you build your own activation form you should validate the user provided code prior to beginning the Authorization grant.
+   *
+   * @param {ValidateDeviceRequest} request The device validation request.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  validateDeviceWithRequest(request: ValidateDeviceRequest): Promise<ClientResponse<void>> {
+    return this.startAnonymous<void, void>()
+        .withUri('/oauth2/device/validate')
+        .withParameter('client_id', request.client_id)
+        .withParameter('tenantId', request.tenantId != null ? request.tenantId.toString() : null)
+        .withParameter('user_code', request.user_code)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Validates the provided JWT (encoded JWT string) to ensure the token is valid. A valid access token is properly
    * signed and not expired.
    * <p>
@@ -5932,6 +6315,17 @@ export interface AccessToken {
   scope?: string;
   token_type?: TokenType;
   userId?: UUID;
+}
+
+/**
+ * The request object for introspecting an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface AccessTokenIntrospectRequest {
+  client_id?: string;
+  tenantId?: string;
+  token?: string;
 }
 
 /**
@@ -6813,6 +7207,29 @@ export enum ClientAuthenticationPolicy {
 }
 
 /**
+ * Contains the parameters used to introspect an access token that was obtained via the client credentials grant.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface ClientCredentialsAccessTokenIntrospectRequest {
+  tenantId?: string;
+  token?: string;
+}
+
+/**
+ * The request object to make a Client Credentials grant request to obtain an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface ClientCredentialsGrantRequest {
+  client_id?: string;
+  client_secret?: string;
+  grant_type?: string;
+  scope?: string;
+  tenantId?: string;
+}
+
+/**
  * @author Trevor Smith
  */
 export interface ConnectorPolicy {
@@ -7030,6 +7447,19 @@ export interface DailyActiveUserReportResponse {
 }
 
 /**
+ * The request object to approve a device grant.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface DeviceApprovalRequest {
+  client_id?: string;
+  client_secret?: string;
+  tenantId?: UUID;
+  token?: string;
+  user_code?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface DeviceApprovalResponse {
@@ -7038,6 +7468,16 @@ export interface DeviceApprovalResponse {
   identityProviderLink?: IdentityProviderLink;
   tenantId?: UUID;
   userId?: UUID;
+}
+
+/**
+ * @author Lyle Schemmerling
+ */
+export interface DeviceAuthorizationRequest {
+  client_id?: string;
+  client_secret?: string;
+  scope?: string;
+  tenantId?: UUID;
 }
 
 /**
@@ -9664,6 +10104,36 @@ export enum OAuthApplicationRelationship {
 }
 
 /**
+ * The request object for exchanging an OAuth authorization code for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface OAuthCodeAccessTokenRequest {
+  client_id?: string;
+  client_secret?: string;
+  code?: string;
+  grant_type?: string;
+  redirect_uri?: string;
+  tenantId?: string;
+}
+
+/**
+ * The request object to make a request to the Token endpoint to exchange the authorization code returned from the Authorize endpoint and a
+ * code_verifier for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface OAuthCodePKCEAccessTokenRequest {
+  client_id?: string;
+  client_secret?: string;
+  code?: string;
+  code_verifier?: string;
+  grant_type?: string;
+  redirect_uri?: string;
+  tenantId?: UUID;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface OAuthConfigurationResponse {
@@ -10323,6 +10793,21 @@ export interface MetaData {
 }
 
 /**
+ * The request object to exchange a Refresh Token for an Access Token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface RefreshTokenAccessTokenRequest {
+  client_id?: string;
+  client_secret?: string;
+  grant_type?: string;
+  refresh_token?: string;
+  scope?: string;
+  tenantId?: UUID;
+  user_code?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export enum RefreshTokenExpirationPolicy {
@@ -10515,6 +11000,28 @@ export enum ResidentKeyRequirement {
   discouraged = "discouraged",
   preferred = "preferred",
   required = "required"
+}
+
+/**
+ * The request object for retrieving a user code that is part of an in-progress Device Authorization Grant.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface RetrieveUserCodeRequest {
+  client_id?: string;
+  client_secret?: string;
+  tenantId?: UUID;
+  user_code?: string;
+}
+
+/**
+ * The request object for retrieving a user code that is part of an in-progress Device Authorization Grant using an API key
+ *
+ * @author Lyle Schemmerling
+ */
+export interface RetrieveUserCodeUsingAPIKeyRequest {
+  tenantId?: UUID;
+  user_code?: string;
 }
 
 /**
@@ -12000,6 +12507,22 @@ export interface UserCreateEvent extends BaseUserEvent {
 }
 
 /**
+ * The request object for exchanging user credentials (username and password) for an access token.
+ *
+ * @author Lyle Schemmerling
+ */
+export interface UserCredentialsAccessTokenRequest {
+  client_id?: string;
+  client_secret?: string;
+  grant_type?: string;
+  password?: string;
+  scope?: string;
+  tenantId?: string;
+  user_code?: string;
+  username?: string;
+}
+
+/**
  * Models the User Deactivate Event.
  *
  * @author Brian Pontarelli
@@ -12484,6 +13007,17 @@ export enum UserVerificationRequirement {
  * @author Daniel DeGroff
  */
 export interface UserinfoResponse extends Record<string, any> {
+}
+
+/**
+ * The request object for validating an end-user provided user_code from the user-interaction of the Device Authorization Grant
+ *
+ * @author Lyle Schemmerling
+ */
+export interface ValidateDeviceRequest {
+  client_id?: string;
+  tenantId?: UUID;
+  user_code?: string;
 }
 
 /**
