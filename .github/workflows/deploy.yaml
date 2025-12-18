@@ -90,6 +90,6 @@ jobs:
 
       - name: publish to npmjs
         if: inputs.command == 'publish'
-        run: npm publish --provenance
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: "sigstore" # npm uses OIDC when this is any non-empty string
