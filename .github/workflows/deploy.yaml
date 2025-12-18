@@ -88,11 +88,6 @@ jobs:
         if: inputs.command == 'release'
         run: sb release
 
-      - name: Debug OIDC Claims
-        run: |
-          ID_TOKEN=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://registry.npmjs.org" | jq -r .value)
-          echo "JWT Subject: $(echo $ID_TOKEN | cut -d. -f2 | base64 -d | jq -r .sub)"
-
       - name: publish to npmjs
         if: inputs.command == 'publish'
         run: |
