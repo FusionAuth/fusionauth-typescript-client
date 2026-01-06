@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
+* Copyright (c) 2019-2026, FusionAuth, All Rights Reserved
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -10253,7 +10253,8 @@ export enum OAuthErrorType {
   two_factor_required = "two_factor_required",
   authorization_pending = "authorization_pending",
   expired_token = "expired_token",
-  unsupported_token_type = "unsupported_token_type"
+  unsupported_token_type = "unsupported_token_type",
+  invalid_dpop_proof = "invalid_dpop_proof"
 }
 
 /**
@@ -11919,13 +11920,15 @@ export interface TimeBasedDeletePolicy extends Enableable {
  * <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">
  * Draft RFC on OAuth 2.0 Message Authentication Code (MAC) Tokens</a>
  * </li>
+ * <li>DPoP Token type as defined by <a href="https://datatracker.ietf.org/doc/html/rfc9449"></li>
  * </ul>
  *
  * @author Daniel DeGroff
  */
 export enum TokenType {
   Bearer = "Bearer",
-  MAC = "MAC"
+  MAC = "MAC",
+  DPoP = "DPoP"
 }
 
 /**
