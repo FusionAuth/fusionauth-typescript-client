@@ -6817,6 +6817,7 @@ export interface AuditLog {
   newValue?: any;
   oldValue?: any;
   reason?: string;
+  tenantId?: UUID;
 }
 
 /**
@@ -6861,6 +6862,7 @@ export interface AuditLogSearchCriteria extends BaseSearchCriteria {
   oldValue?: string;
   reason?: string;
   start?: number;
+  tenantId?: UUID;
   user?: string;
 }
 
