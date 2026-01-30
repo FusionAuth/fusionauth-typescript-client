@@ -4693,20 +4693,6 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the user for the given Id. This method does not use an API key, instead it uses a JSON Web Token (JWT) for authentication.
-   *
-   * @param {string} encodedJWT The encoded JWT (access token).
-   * @returns {Promise<ClientResponse<UserResponse>>}
-   */
-  retrieveUserUsingJWT(encodedJWT: string): Promise<ClientResponse<UserResponse>> {
-    return this.startAnonymous<UserResponse, Errors>()
-        .withUri('/api/user')
-        .withAuthorization('Bearer ' + encodedJWT)
-        .withMethod("GET")
-        .go();
-  }
-
-  /**
    * Retrieves the FusionAuth version string.
    *
    * @returns {Promise<ClientResponse<VersionResponse>>}
