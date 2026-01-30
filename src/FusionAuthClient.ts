@@ -7013,6 +7013,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   lastUpdateInstant?: number;
   linkingStrategy?: IdentityProviderLinkingStrategy;
   name?: string;
+  source?: IdentityProviderSource;
   tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
   tenantId?: UUID;
   type?: IdentityProviderType;
@@ -9075,6 +9076,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
+  source?: IdentityProviderSource;
   tenantId?: UUID;
   type?: IdentityProviderType;
 }
@@ -9096,6 +9098,14 @@ export interface IdentityProviderSearchRequest {
 export interface IdentityProviderSearchResponse {
   identityProviders?: Array<BaseIdentityProvider<any>>;
   total?: number;
+}
+
+/**
+ * The source of an identity provider configuration.
+ */
+export enum IdentityProviderSource {
+  System = "System",
+  TenantManager = "TenantManager"
 }
 
 /**
