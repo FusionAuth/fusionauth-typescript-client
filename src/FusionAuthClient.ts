@@ -9426,6 +9426,7 @@ export interface Key {
   privateKey?: string;
   publicKey?: string;
   secret?: string;
+  source?: KeySource;
   type?: KeyType;
 }
 
@@ -9453,6 +9454,14 @@ export enum KeyAlgorithm {
   RS384 = "RS384",
   RS512 = "RS512",
   Ed25519 = "Ed25519"
+}
+
+/**
+ * The source of a key.
+ */
+export enum KeySource {
+  System = "System",
+  TenantManager = "TenantManager"
 }
 
 export enum KeyType {
@@ -9489,6 +9498,7 @@ export interface KeyResponse {
 export interface KeySearchCriteria extends BaseSearchCriteria {
   algorithm?: KeyAlgorithm;
   name?: string;
+  source?: KeySource;
   type?: KeyType;
 }
 
