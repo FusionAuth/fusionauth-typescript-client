@@ -12179,6 +12179,7 @@ export interface TwoFactorTrust {
  * @author Lyle Schemmerling
  */
 export interface UniversalApplicationConfiguration {
+  allowTenantManagerIdentityProviders?: boolean;
   universal?: boolean;
 }
 
