@@ -6485,6 +6485,7 @@ export interface PasswordlessConfiguration extends Enableable {
 
 export interface RegistrationConfiguration extends Enableable {
   birthDate?: Requirable;
+  completeRegistration?: boolean;
   confirmPassword?: boolean;
   firstName?: Requirable;
   formId?: UUID;
