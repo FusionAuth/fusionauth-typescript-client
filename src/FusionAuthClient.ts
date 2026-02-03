@@ -11416,6 +11416,7 @@ export interface SupportsPostBindings {
  */
 export interface SystemConfiguration {
   auditLogConfiguration?: AuditLogConfiguration;
+  brandName?: string;
   corsConfiguration?: CORSConfiguration;
   data?: Record<string, any>;
   eventLogConfiguration?: EventLogConfiguration;
@@ -11423,6 +11424,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  tenantManagerAttributeFormId?: UUID;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
   usageDataConfiguration?: UsageDataConfiguration;
