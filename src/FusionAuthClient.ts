@@ -11416,7 +11416,6 @@ export interface SupportsPostBindings {
  */
 export interface SystemConfiguration {
   auditLogConfiguration?: AuditLogConfiguration;
-  brandName?: string;
   corsConfiguration?: CORSConfiguration;
   data?: Record<string, any>;
   eventLogConfiguration?: EventLogConfiguration;
@@ -11424,7 +11423,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
-  tenantManagerAttributeFormId?: UUID;
+  tenantManagerConfiguration?: TenantManagerConfiguration;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
   usageDataConfiguration?: UsageDataConfiguration;
@@ -11445,6 +11444,11 @@ export interface EventLogConfiguration {
 
 export interface LoginRecordConfiguration {
   delete?: DeleteConfiguration;
+}
+
+export interface TenantManagerConfiguration {
+  attributeFormId?: UUID;
+  brandName?: string;
 }
 
 export interface UIConfiguration {
