@@ -11423,6 +11423,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  tenantManagerConfiguration?: TenantManagerConfiguration;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
   usageDataConfiguration?: UsageDataConfiguration;
@@ -11443,6 +11444,11 @@ export interface EventLogConfiguration {
 
 export interface LoginRecordConfiguration {
   delete?: DeleteConfiguration;
+}
+
+export interface TenantManagerConfiguration {
+  attributeFormId?: UUID;
+  brandName?: string;
 }
 
 export interface UIConfiguration {
