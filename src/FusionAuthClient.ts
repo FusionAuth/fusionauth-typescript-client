@@ -6485,6 +6485,7 @@ export interface PasswordlessConfiguration extends Enableable {
 
 export interface RegistrationConfiguration extends Enableable {
   birthDate?: Requirable;
+  completeRegistration?: boolean;
   confirmPassword?: boolean;
   firstName?: Requirable;
   formId?: UUID;
@@ -12194,6 +12195,7 @@ export interface TwoFactorTrust {
  * @author Lyle Schemmerling
  */
 export interface UniversalApplicationConfiguration {
+  allowTenantManagerIdentityProviders?: boolean;
   universal?: boolean;
 }
 
