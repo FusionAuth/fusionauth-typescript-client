@@ -11602,6 +11602,17 @@ export interface TenantLoginConfiguration {
 }
 
 /**
+ * Configuration object for identity provider types allowed in Tenant Manager
+ */
+export interface TenantManagerIdentityProviderTypeConfiguration extends Enableable {
+  defaultAttributeMappings?: Record<string, string>;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  linkingStrategy?: IdentityProviderLinkingStrategy;
+  type?: IdentityProviderType;
+}
+
+/**
  * @author Mikey Sleevi
  */
 export interface TenantMultiFactorConfiguration {
