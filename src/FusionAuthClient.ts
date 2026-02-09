@@ -11450,6 +11450,7 @@ export interface LoginRecordConfiguration {
 export interface TenantManagerConfiguration {
   attributeFormId?: UUID;
   brandName?: string;
+  identityProviderTypeConfigurations?: Record<IdentityProviderType, TenantManagerIdentityProviderTypeConfiguration>;
 }
 
 export interface UIConfiguration {
