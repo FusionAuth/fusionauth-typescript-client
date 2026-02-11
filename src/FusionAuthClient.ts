@@ -894,6 +894,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @param {TenantManagerIdentityProviderTypeConfigurationRequest} request The request object that contains all the information used to create the tenant manager identity provider type configuration.
+   * @returns {Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>>}
+   */
+  createTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType, request: TenantManagerIdentityProviderTypeConfigurationRequest): Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>> {
+    return this.start<TenantManagerIdentityProviderTypeConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
    *
    * @param {UUID} themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
@@ -1469,6 +1485,20 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withParameter('async', true)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
         .withMethod("DELETE")
         .go();
   }
@@ -5924,6 +5954,22 @@ export class FusionAuthClient {
     return this.start<TenantResponse, Errors>()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @param {TenantManagerIdentityProviderTypeConfigurationRequest} request The request object that contains the updated tenant manager identity provider type configuration.
+   * @returns {Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>>}
+   */
+  updateTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType, request: TenantManagerIdentityProviderTypeConfigurationRequest): Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>> {
+    return this.start<TenantManagerIdentityProviderTypeConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -11611,6 +11657,20 @@ export interface TenantManagerIdentityProviderTypeConfiguration extends Enableab
   lastUpdateInstant?: number;
   linkingStrategy?: IdentityProviderLinkingStrategy;
   type?: IdentityProviderType;
+}
+
+/**
+ * The Tenant Manager IdP type configuration request object
+ */
+export interface TenantManagerIdentityProviderTypeConfigurationRequest {
+  typeConfiguration?: TenantManagerIdentityProviderTypeConfiguration;
+}
+
+/**
+ * The Tenant Manager IdP type configuration request object
+ */
+export interface TenantManagerIdentityProviderTypeConfigurationResponse {
+  typeConfiguration?: TenantManagerIdentityProviderTypeConfiguration;
 }
 
 /**
