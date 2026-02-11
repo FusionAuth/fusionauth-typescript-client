@@ -11667,7 +11667,7 @@ export interface TenantManagerIdentityProviderTypeConfigurationRequest {
 }
 
 /**
- * The Tenant Manager IdP type configuration request object
+ * The Tenant Manager IdP type configuration response object
  */
 export interface TenantManagerIdentityProviderTypeConfigurationResponse {
   typeConfiguration?: TenantManagerIdentityProviderTypeConfiguration;
