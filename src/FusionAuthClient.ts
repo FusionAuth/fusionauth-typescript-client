@@ -1638,6 +1638,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Deletes all of the WebAuthn credentials for the given User Id.
+   *
+   * @param {UUID} userId The unique Id of the User to delete WebAuthn passkeys for.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteWebAuthnCredentialsForUser(userId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/webauthn')
+        .withParameter('userId', userId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
    * Deletes the webhook for the given Id.
    *
    * @param {UUID} webhookId The Id of the webhook to delete.
@@ -2424,7 +2438,7 @@ export class FusionAuthClient {
   }
 
   /**
-   * Retrieves the identity provider for the given domain. A 200 response code indicates the domain is managed
+   * Retrieves any global identity providers for the given domain. A 200 response code indicates the domain is managed
    * by a registered identity provider. A 404 indicates the domain is not managed.
    *
    * @param {string} domain The domain or email address to lookup.
@@ -2434,6 +2448,24 @@ export class FusionAuthClient {
     return this.start<LookupResponse, void>()
         .withUri('/api/identity-provider/lookup')
         .withParameter('domain', domain)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the identity provider for the given domain and tenantId. A 200 response code indicates the domain is managed
+   * by a registered identity provider. A 404 indicates the domain is not managed.
+   *
+   * @param {string} domain The domain or email address to lookup.
+   * @param {UUID} tenantId If provided, the API searches for an identity provider scoped to the corresponding tenant that manages the requested domain.
+   *    If no result is found, the API then searches for global identity providers.
+   * @returns {Promise<ClientResponse<LookupResponse>>}
+   */
+  lookupIdentityProviderByTenantId(domain: string, tenantId: UUID): Promise<ClientResponse<LookupResponse>> {
+    return this.start<LookupResponse, void>()
+        .withUri('/api/identity-provider/lookup')
+        .withParameter('domain', domain)
+        .withParameter('tenantId', tenantId)
         .withMethod("GET")
         .go();
   }
