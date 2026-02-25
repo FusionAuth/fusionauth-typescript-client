@@ -10413,6 +10413,7 @@ export interface PasswordEncryptionConfiguration {
  */
 export interface PasswordValidationRules {
   breachDetection?: PasswordBreachDetection;
+  disallowUserLoginId?: boolean;
   maxLength?: number;
   minLength?: number;
   rememberPreviousPasswords?: RememberPreviousPasswords;
