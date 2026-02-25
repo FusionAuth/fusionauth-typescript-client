@@ -10272,7 +10272,8 @@ export enum OAuthErrorType {
   two_factor_required = "two_factor_required",
   authorization_pending = "authorization_pending",
   expired_token = "expired_token",
-  unsupported_token_type = "unsupported_token_type"
+  unsupported_token_type = "unsupported_token_type",
+  invalid_dpop_proof = "invalid_dpop_proof"
 }
 
 /**
@@ -10340,6 +10341,7 @@ export interface OpenIdConfiguration {
   backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
   device_authorization_endpoint?: string;
+  dpop_signing_alg_values_supported?: Array<string>;
   end_session_endpoint?: string;
   frontchannel_logout_supported?: boolean;
   grant_types_supported?: Array<string>;
@@ -10751,6 +10753,7 @@ export interface ReactorStatus {
   applicationThemes?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
+  dPoP?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   expiration?: string;
   licenseAttributes?: Record<string, string>;
@@ -11939,13 +11942,15 @@ export interface TimeBasedDeletePolicy extends Enableable {
  * <a href="https://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-05">
  * Draft RFC on OAuth 2.0 Message Authentication Code (MAC) Tokens</a>
  * </li>
+ * <li>DPoP Token type as defined by <a href="https://datatracker.ietf.org/doc/html/rfc9449">RFC 9449</a></li>
  * </ul>
  *
  * @author Daniel DeGroff
  */
 export enum TokenType {
   Bearer = "Bearer",
-  MAC = "MAC"
+  MAC = "MAC",
+  DPoP = "DPoP"
 }
 
 /**
