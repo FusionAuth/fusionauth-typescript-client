@@ -7384,6 +7384,7 @@ export interface Context {
   action?: MultiFactorAction;
   application?: Application;
   authenticationThreats?: Array<AuthenticationThreats>;
+  authenticationType?: string;
   eventInfo?: EventInfo;
   mfaTrust?: Trust;
   policies?: Policies;
