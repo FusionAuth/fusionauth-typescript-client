@@ -43,7 +43,6 @@
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.4",
-    "@types/node-fetch": "^2.5.7",
     "browserify": "^16.5.1",
     "browserify-shim": "^3.8.14",
     "chai": "^4.2.0",
@@ -66,7 +65,8 @@
     "url": "global:window"
   },
   "dependencies": {
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "@types/node-fetch": "^2.5.7"
   },
   "browser": "dist/fusionauth-typescript-client.min.js"
 }
