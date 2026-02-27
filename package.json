@@ -68,5 +68,10 @@
   "dependencies": {
     "node-fetch": "^2.6.1"
   },
-  "browser": "dist/fusionauth-typescript-client.min.js"
+  "browser": "dist/fusionauth-typescript-client.min.js",
+  "overrides": {
+    "qs": "6.14.1",
+    "ws": "8.17.1",
+    "terser": "4.8.1"
+  }
 }
