@@ -10,7 +10,7 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      command:
+      command:  # be careful when editing these, fusionauth-app expects certain commands
         type: choice
         options:
           - build    # build only
