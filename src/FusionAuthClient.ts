@@ -10340,6 +10340,7 @@ export interface OpenIdConfiguration {
   authorization_endpoint?: string;
   backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
+  code_challenge_methods_supported?: Array<string>;
   device_authorization_endpoint?: string;
   dpop_signing_alg_values_supported?: Array<string>;
   end_session_endpoint?: string;
