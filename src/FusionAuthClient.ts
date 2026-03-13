@@ -10759,6 +10759,7 @@ export interface ReactorStatus {
   dPoP?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   expiration?: string;
+  ipGeoLocation?: ReactorFeatureStatus;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
   multiFactorLambdas?: ReactorFeatureStatus;
