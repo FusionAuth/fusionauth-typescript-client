@@ -6499,6 +6499,8 @@ export interface LoginConfiguration {
 }
 
 export interface PasswordlessConfiguration extends Enableable {
+  emailLoginStrategy?: PasswordlessStrategy;
+  phoneLoginStrategy?: PasswordlessStrategy;
 }
 
 export interface RegistrationConfiguration extends Enableable {
