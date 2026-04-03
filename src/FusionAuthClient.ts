@@ -2276,6 +2276,9 @@ export class FusionAuthClient {
     if (request.token !== null && request.token !== undefined) {
       body.append('token', request.token);
     }
+    if (request.token_type_hint !== null && request.token_type_hint !== undefined) {
+      body.append('token_type_hint', request.token_type_hint);
+    }
     return this.startAnonymous<IntrospectResponse, OAuthError>()
         .withUri('/oauth2/introspect')
         .withFormData(body)
@@ -6344,6 +6347,7 @@ export interface AccessTokenIntrospectRequest {
   client_id?: string;
   tenantId?: string;
   token?: string;
+  token_type_hint?: string;
 }
 
 /**
