@@ -6624,6 +6624,7 @@ export interface ApplicationMultiFactorConfiguration {
   loginPolicy?: MultiFactorLoginPolicy;
   sms?: MultiFactorSMSTemplate;
   trustPolicy?: ApplicationMultiFactorTrustPolicy;
+  voice?: MultiFactorVoiceTemplate;
 }
 
 export interface MultiFactorEmailTemplate {
@@ -6631,6 +6632,10 @@ export interface MultiFactorEmailTemplate {
 }
 
 export interface MultiFactorSMSTemplate {
+  templateId?: UUID;
+}
+
+export interface MultiFactorVoiceTemplate {
   templateId?: UUID;
 }
 
@@ -7070,6 +7075,7 @@ export interface BaseMessengerConfiguration {
   id?: UUID;
   insertInstant?: number;
   lastUpdateInstant?: number;
+  messageTypes?: Array<MessageType>;
   name?: string;
   transport?: string;
   type?: MessengerType;
@@ -9989,7 +9995,8 @@ export interface MessageTemplateResponse {
  * @author Mikey Sleevi
  */
 export enum MessageType {
-  SMS = "SMS"
+  SMS = "SMS",
+  Voice = "Voice"
 }
 
 /**
@@ -10009,6 +10016,7 @@ export interface MessengerResponse {
 
 /**
  * @author Daniel DeGroff
+ * @deprecated since 1.65.0,  use {@code MessageType} instead
  */
 export interface MessengerTransport {
 }
@@ -10550,6 +10558,7 @@ export interface PreviewMessageTemplateRequest {
 export interface PreviewMessageTemplateResponse {
   errors?: Errors;
   message?: SMSMessage;
+  previewMessage?: Message;
 }
 
 /**
@@ -11613,6 +11622,7 @@ export interface TenantMultiFactorConfiguration {
   email?: MultiFactorEmailMethod;
   loginPolicy?: MultiFactorLoginPolicy;
   sms?: MultiFactorSMSMethod;
+  voice?: MultiFactorVoiceMethod;
 }
 
 export interface MultiFactorAuthenticatorMethod extends Enableable {
@@ -11626,6 +11636,11 @@ export interface MultiFactorEmailMethod extends Enableable {
 }
 
 export interface MultiFactorSMSMethod extends Enableable {
+  messengerId?: UUID;
+  templateId?: UUID;
+}
+
+export interface MultiFactorVoiceMethod extends Enableable {
   messengerId?: UUID;
   templateId?: UUID;
 }
@@ -12144,6 +12159,7 @@ export interface TwoFactorResponse {
 export interface TwoFactorSendRequest {
   applicationId?: UUID;
   email?: string;
+  messageType?: MessageType;
   method?: string;
   methodId?: string;
   mobilePhone?: string;
@@ -13158,6 +13174,23 @@ export interface VerifyStartResponse {
  */
 export interface VersionResponse {
   version?: string;
+}
+
+/**
+ * @author Daniel King
+ */
+export interface VoiceMessage {
+  locale?: string;
+  message?: string;
+  phoneNumber?: string;
+}
+
+/**
+ * @author Daniel King
+ */
+export interface VoiceMessageTemplate extends MessageTemplate {
+  defaultTemplate?: string;
+  localizedTemplates?: LocalizedStrings;
 }
 
 /**
