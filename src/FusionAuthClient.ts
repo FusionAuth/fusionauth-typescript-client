@@ -894,6 +894,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @param {TenantManagerIdentityProviderTypeConfigurationRequest} request The request object that contains all the information used to create the tenant manager identity provider type configuration.
+   * @returns {Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>>}
+   */
+  createTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType, request: TenantManagerIdentityProviderTypeConfigurationRequest): Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>> {
+    return this.start<TenantManagerIdentityProviderTypeConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a Theme. You can optionally specify an Id for the theme, if not provided one will be generated.
    *
    * @param {UUID} themeId (Optional) The Id for the theme. If not provided a secure random UUID will be generated.
@@ -1469,6 +1485,20 @@ export class FusionAuthClient {
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
         .withParameter('async', true)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
         .withMethod("DELETE")
         .go();
   }
@@ -2862,6 +2892,36 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates, via PATCH, the Tenant Manager configuration.
+   *
+   * @param {TenantManagerConfigurationRequest} request The request that contains just the new Tenant Manager configuration information.
+   * @returns {Promise<ClientResponse<TenantManagerConfigurationResponse>>}
+   */
+  patchTenantManagerConfiguration(request: TenantManagerConfigurationRequest): Promise<ClientResponse<TenantManagerConfigurationResponse>> {
+    return this.start<TenantManagerConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager')
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Patches the tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @param {TenantManagerIdentityProviderTypeConfigurationRequest} request The request object that contains the new tenant manager identity provider type configuration information.
+   * @returns {Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>>}
+   */
+  patchTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType, request: TenantManagerIdentityProviderTypeConfigurationRequest): Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>> {
+    return this.start<TenantManagerIdentityProviderTypeConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
    * Updates, via PATCH, the theme with the given Id.
    *
    * @param {UUID} themeId The Id of the theme to update.
@@ -3610,6 +3670,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Retrieves the results for an identity provider connection test.
+   *
+   * @param {string} connectionTestId The connection test id to retrieve results for.
+   * @returns {Promise<ClientResponse<IdentityProviderConnectionTestResponse>>}
+   */
+  retrieveIdentityProviderConnectionTestResults(connectionTestId: string): Promise<ClientResponse<IdentityProviderConnectionTestResponse>> {
+    return this.start<IdentityProviderConnectionTestResponse, Errors>()
+        .withUri('/api/identity-provider/test')
+        .withParameter('connectionTestId', connectionTestId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Retrieves all the identity providers.
    *
    * @returns {Promise<ClientResponse<IdentityProviderResponse>>}
@@ -4176,6 +4250,18 @@ export class FusionAuthClient {
     return this.start<TenantResponse, Errors>()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the Tenant Manager configuration.
+   *
+   * @returns {Promise<ClientResponse<TenantManagerConfigurationResponse>>}
+   */
+  retrieveTenantManagerConfiguration(): Promise<ClientResponse<TenantManagerConfigurationResponse>> {
+    return this.start<TenantManagerConfigurationResponse, void>()
+        .withUri('/api/tenant-manager')
         .withMethod("GET")
         .go();
   }
@@ -5442,6 +5528,20 @@ export class FusionAuthClient {
   }
 
   /**
+   * Begins an identity provider connection test.
+   *
+   * @param {IdentityProviderConnectionTestRequest} request The request that contains information on the connection test.
+   * @returns {Promise<ClientResponse<IdentityProviderConnectionTestResponse>>}
+   */
+  startIdentityProviderConnectionTest(request: IdentityProviderConnectionTestRequest): Promise<ClientResponse<IdentityProviderConnectionTestResponse>> {
+    return this.start<IdentityProviderConnectionTestResponse, Errors>()
+        .withUri('/api/identity-provider/test')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Begins a login request for a 3rd party login that requires user interaction such as HYPR.
    *
    * @param {IdentityProviderStartLoginRequest} request The third-party login request that contains information from the third-party login
@@ -5945,6 +6045,36 @@ export class FusionAuthClient {
     return this.start<TenantResponse, Errors>()
         .withUri('/api/tenant')
         .withUriSegment(tenantId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the Tenant Manager configuration.
+   *
+   * @param {TenantManagerConfigurationRequest} request The request that contains all the new Tenant Manager configuration information.
+   * @returns {Promise<ClientResponse<TenantManagerConfigurationResponse>>}
+   */
+  updateTenantManagerConfiguration(request: TenantManagerConfigurationRequest): Promise<ClientResponse<TenantManagerConfigurationResponse>> {
+    return this.start<TenantManagerConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager')
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the tenant manager identity provider type configuration for the given identity provider type.
+   *
+   * @param {IdentityProviderType} type The type of the identity provider.
+   * @param {TenantManagerIdentityProviderTypeConfigurationRequest} request The request object that contains the updated tenant manager identity provider type configuration.
+   * @returns {Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>>}
+   */
+  updateTenantManagerIdentityProviderTypeConfiguration(type: IdentityProviderType, request: TenantManagerIdentityProviderTypeConfigurationRequest): Promise<ClientResponse<TenantManagerIdentityProviderTypeConfigurationResponse>> {
+    return this.start<TenantManagerIdentityProviderTypeConfigurationResponse, Errors>()
+        .withUri('/api/tenant-manager/identity-provider')
+        .withUriSegment(type)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -6509,6 +6639,7 @@ export interface PasswordlessConfiguration extends Enableable {
 
 export interface RegistrationConfiguration extends Enableable {
   birthDate?: Requirable;
+  completeRegistration?: boolean;
   confirmPassword?: boolean;
   firstName?: Requirable;
   formId?: UUID;
@@ -6759,6 +6890,7 @@ export interface ApplicationSearchCriteria extends BaseSearchCriteria {
   name?: string;
   state?: ObjectState;
   tenantId?: UUID;
+  universal?: boolean;
 }
 
 /**
@@ -6846,6 +6978,7 @@ export interface AuditLog {
   newValue?: any;
   oldValue?: any;
   reason?: string;
+  tenantId?: UUID;
 }
 
 /**
@@ -6890,6 +7023,7 @@ export interface AuditLogSearchCriteria extends BaseSearchCriteria {
   oldValue?: string;
   reason?: string;
   start?: number;
+  tenantId?: UUID;
   user?: string;
 }
 
@@ -7032,6 +7166,7 @@ export interface BaseGroupEvent extends BaseEvent {
 // Do not require a setter for 'type', it is defined by the concrete class and is not mutable
 export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationConfiguration> extends Enableable {
   applicationConfiguration?: Record<UUID, D>;
+  attributeMappings?: Record<string, string>;
   data?: Record<string, any>;
   debug?: boolean;
   id?: UUID;
@@ -7040,6 +7175,7 @@ export interface BaseIdentityProvider<D extends BaseIdentityProviderApplicationC
   lastUpdateInstant?: number;
   linkingStrategy?: IdentityProviderLinkingStrategy;
   name?: string;
+  source?: string;
   tenantConfiguration?: Record<UUID, IdentityProviderTenantConfiguration>;
   tenantId?: UUID;
   type?: IdentityProviderType;
@@ -8217,6 +8353,7 @@ export interface ExternalIdentifierConfiguration {
   emailVerificationIdTimeToLiveInSeconds?: number;
   emailVerificationOneTimeCodeGenerator?: SecureGeneratorConfiguration;
   externalAuthenticationIdTimeToLiveInSeconds?: number;
+  identityProviderConnectionTestTimeToLiveInSeconds?: number;
   loginIntentTimeToLiveInSeconds?: number;
   oneTimePasswordTimeToLiveInSeconds?: number;
   passwordlessLoginGenerator?: SecureGeneratorConfiguration;
@@ -8398,6 +8535,16 @@ export interface FamilyRequest {
 export interface FamilyResponse {
   families?: Array<Family>;
   family?: Family;
+}
+
+/**
+ * Components of a Favicon in an HTML {@code <head>} element.
+ */
+export interface Favicon {
+  href?: string;
+  rel?: string;
+  sizes?: string;
+  type?: string;
 }
 
 /**
@@ -8972,6 +9119,41 @@ export interface IPAccessControlListSearchResponse {
 }
 
 /**
+ * A request for interacting with the identity provider connection test API
+ */
+export interface IdentityProviderConnectionTestRequest {
+  identityProviderId?: UUID;
+  tenantId?: UUID;
+}
+
+/**
+ * A response for the identity provider connection test API
+ */
+export interface IdentityProviderConnectionTestResponse {
+  connectionTestId?: string;
+  result?: IdentityProviderConnectionTestResult;
+}
+
+/**
+ * The results of an identity provider connection test.
+ */
+export interface IdentityProviderConnectionTestResult {
+  email?: string;
+  identityProviderId?: UUID;
+  identityProviderUserId?: string;
+  startInstant?: number;
+  steps?: Array<IdentityProviderLoginStep>;
+  success?: boolean;
+  username?: string;
+}
+
+export interface IdentityProviderLoginStep {
+  detail?: string;
+  success?: boolean;
+  title?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface IdentityProviderLimitUserLinkingPolicy extends Enableable {
@@ -9042,6 +9224,7 @@ export enum IdentityProviderLoginMethod {
  * @author Brian Pontarelli
  */
 export interface IdentityProviderLoginRequest extends BaseLoginRequest {
+  connectionTestId?: string;
   data?: Record<string, string>;
   encodedJWT?: string;
   identityProviderId?: UUID;
@@ -9104,6 +9287,7 @@ export interface IdentityProviderResponse {
 export interface IdentityProviderSearchCriteria extends BaseSearchCriteria {
   applicationId?: UUID;
   name?: string;
+  source?: string;
   tenantId?: UUID;
   type?: IdentityProviderType;
 }
@@ -9131,6 +9315,7 @@ export interface IdentityProviderSearchResponse {
  * @author Daniel DeGroff
  */
 export interface IdentityProviderStartLoginRequest extends BaseLoginRequest {
+  connectionTestId?: string;
   data?: Record<string, string>;
   identityProviderId?: UUID;
   loginId?: string;
@@ -10558,7 +10743,7 @@ export interface PreviewMessageTemplateRequest {
 export interface PreviewMessageTemplateResponse {
   errors?: Errors;
   message?: SMSMessage;
-  previewMessage?: Message;
+  previewMessage?: string;
 }
 
 /**
@@ -11319,6 +11504,7 @@ export interface SimpleThemeVariables {
   deleteButtonTextFocusColor?: string;
   errorFontColor?: string;
   errorIconColor?: string;
+  favicons?: Array<Favicon>;
   fontColor?: string;
   fontFamily?: string;
   footerDisplay?: boolean;
@@ -11612,6 +11798,64 @@ export interface TenantLambdaConfiguration {
  */
 export interface TenantLoginConfiguration {
   requireAuthentication?: boolean;
+}
+
+/**
+ * Tenant Manager application configuration.
+ */
+export interface TenantManagerApplicationConfiguration {
+  applicationId?: UUID;
+}
+
+/**
+ * Configuration object for the Tenant Manager.
+ */
+export interface TenantManagerConfiguration {
+  applicationConfigurations?: Array<TenantManagerApplicationConfiguration>;
+  attributeFormId?: UUID;
+  brandName?: string;
+  identityProviderTypeConfigurations?: Record<string, TenantManagerIdentityProviderTypeConfiguration>;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+}
+
+/**
+ * The Tenant Manager configuration request object
+ */
+export interface TenantManagerConfigurationRequest {
+  tenantManagerConfiguration?: TenantManagerConfiguration;
+}
+
+/**
+ * The Tenant Manager configuration response object
+ */
+export interface TenantManagerConfigurationResponse {
+  tenantManagerConfiguration?: TenantManagerConfiguration;
+}
+
+/**
+ * Configuration object for identity provider types allowed in Tenant Manager
+ */
+export interface TenantManagerIdentityProviderTypeConfiguration extends Enableable {
+  defaultAttributeMappings?: Record<string, string>;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  linkingStrategy?: IdentityProviderLinkingStrategy;
+  type?: IdentityProviderType;
+}
+
+/**
+ * The Tenant Manager IdP type configuration request object
+ */
+export interface TenantManagerIdentityProviderTypeConfigurationRequest {
+  typeConfiguration?: TenantManagerIdentityProviderTypeConfiguration;
+}
+
+/**
+ * The Tenant Manager IdP type configuration response object
+ */
+export interface TenantManagerIdentityProviderTypeConfigurationResponse {
+  typeConfiguration?: TenantManagerIdentityProviderTypeConfiguration;
 }
 
 /**
