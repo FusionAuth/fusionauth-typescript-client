@@ -11350,8 +11350,10 @@ export interface SAMLv2IdpInitiatedConfiguration extends Enableable {
  * @author Michael Sleevi
  */
 export interface SMSMessage {
+  code?: string;
   phoneNumber?: string;
   textMessage?: string;
+  userId?: UUID;
 }
 
 /**
@@ -13424,9 +13426,11 @@ export interface VersionResponse {
  * @author Daniel King
  */
 export interface VoiceMessage {
+  code?: string;
   locale?: string;
   message?: string;
   phoneNumber?: string;
+  userId?: UUID;
 }
 
 /**
