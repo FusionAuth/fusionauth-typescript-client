@@ -10960,6 +10960,7 @@ export interface ReactorStatus {
   entityManagement?: ReactorFeatureStatus;
   expiration?: string;
   ipGeoLocation?: ReactorFeatureStatus;
+  legacyAdapter?: ReactorFeatureStatus;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
   multiFactorLambdas?: ReactorFeatureStatus;
@@ -12513,6 +12514,7 @@ export interface User extends SecureIdentity {
   insertInstant?: number;
   lastName?: string;
   lastUpdateInstant?: number;
+  legacyIdentifier?: string;
   memberships?: Array<GroupMember>;
   middleName?: string;
   mobilePhone?: string;
