@@ -10292,6 +10292,7 @@ export interface NonTransactionalEvent {
 export interface OAuth2Configuration {
   authorizedOriginURLs?: Array<string>;
   authorizedRedirectURLs?: Array<string>;
+  authorizedResourceUris?: Array<string>;
   authorizedURLValidationPolicy?: Oauth2AuthorizedURLValidationPolicy;
   clientAuthenticationPolicy?: ClientAuthenticationPolicy;
   clientId?: string;
@@ -10474,7 +10475,8 @@ export enum OAuthErrorType {
   authorization_pending = "authorization_pending",
   expired_token = "expired_token",
   unsupported_token_type = "unsupported_token_type",
-  invalid_dpop_proof = "invalid_dpop_proof"
+  invalid_dpop_proof = "invalid_dpop_proof",
+  invalid_target = "invalid_target"
 }
 
 /**
@@ -11017,6 +11019,7 @@ export interface RefreshToken {
 export interface MetaData {
   data?: Record<string, any>;
   device?: DeviceInfo;
+  resources?: Array<string>;
   scopes?: Array<string>;
 }
 
