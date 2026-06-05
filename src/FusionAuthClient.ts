@@ -6097,6 +6097,22 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates the two-factor method for the given user using a JSON body.
+   *
+   * @param {UUID} userId The Id of the user to update.
+   * @param {TwoFactorUpdateRequest} request The request information that contains the name and methodId along with any event information.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  updateTwoFactor(userId: UUID, request: TwoFactorUpdateRequest): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/user/two-factor')
+        .withUriSegment(userId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
    * Updates the user with the given Id.
    *
    * @param {UUID} userId The Id of the user to update.
@@ -12095,6 +12111,7 @@ export interface Templates {
   accountEdit?: string;
   accountIndex?: string;
   accountTwoFactorDisable?: string;
+  accountTwoFactorEdit?: string;
   accountTwoFactorEnable?: string;
   accountTwoFactorIndex?: string;
   accountWebAuthnAdd?: string;
@@ -12370,6 +12387,7 @@ export interface TwoFactorMethod {
   lastUsed?: boolean;
   method?: string;
   mobilePhone?: string;
+  name?: string;
   secret?: string;
 }
 
@@ -12390,6 +12408,7 @@ export interface TwoFactorRequest extends BaseEventRequest {
   email?: string;
   method?: string;
   mobilePhone?: string;
+  name?: string;
   secret?: string;
   secretBase32Encoded?: string;
   twoFactorId?: string;
@@ -12461,6 +12480,14 @@ export interface TwoFactorTrust {
   applicationId?: UUID;
   expiration?: number;
   startInstant?: number;
+}
+
+/**
+ * Request to update an existing two-factor method for a user.
+ */
+export interface TwoFactorUpdateRequest extends BaseEventRequest {
+  methodId?: string;
+  name?: string;
 }
 
 /**
