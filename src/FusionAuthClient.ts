@@ -7761,6 +7761,7 @@ export interface EmailAddress {
  */
 export interface EmailConfiguration {
   additionalHeaders?: Array<EmailHeader>;
+  adminTwoFactorMethodRemoveEmailTemplateId?: UUID;
   debug?: boolean;
   defaultFromEmail?: string;
   defaultFromName?: string;
@@ -11917,6 +11918,7 @@ export interface MultiFactorVoiceMethod extends Enableable {
  * @author Brady Wied
  */
 export interface TenantPhoneConfiguration {
+  adminTwoFactorMethodRemoveTemplateId?: UUID;
   forgotPasswordTemplateId?: UUID;
   identityUpdateTemplateId?: UUID;
   implicitPhoneVerificationAllowed?: boolean;
