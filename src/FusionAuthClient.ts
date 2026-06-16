@@ -6581,6 +6581,7 @@ export interface Application {
   accessControlConfiguration?: ApplicationAccessControlConfiguration;
   active?: boolean;
   authenticationTokenConfiguration?: AuthenticationTokenConfiguration;
+  baseURL?: string;
   cleanSpeakConfiguration?: CleanSpeakConfiguration;
   data?: Record<string, any>;
   emailConfiguration?: ApplicationEmailConfiguration;
@@ -11727,6 +11728,7 @@ export enum SystemTrustedProxyConfigurationPolicy {
  */
 export interface Tenant {
   accessControlConfiguration?: TenantAccessControlConfiguration;
+  baseURL?: string;
   captchaConfiguration?: TenantCaptchaConfiguration;
   configured?: boolean;
   connectorPolicies?: Array<ConnectorPolicy>;
