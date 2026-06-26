@@ -7065,7 +7065,16 @@ export interface AuditLogSearchResponse {
  * @author Brett Pontarelli
  */
 export enum AuthenticationThreats {
-  ImpossibleTravel = "ImpossibleTravel"
+  BotDetected = "BotDetected",
+  BlocklistedIp = "BlocklistedIp",
+  DormantAccount = "DormantAccount",
+  DormantPassword = "DormantPassword",
+  ImpossibleTravel = "ImpossibleTravel",
+  RecentIdentityChange = "RecentIdentityChange",
+  RecentPasswordChange = "RecentPasswordChange",
+  SuspiciousUserAgent = "SuspiciousUserAgent",
+  UnrecognizedDevice = "UnrecognizedDevice",
+  UntrustedDevice = "UntrustedDevice"
 }
 
 /**
@@ -7215,6 +7224,7 @@ export interface BaseIdentityProviderApplicationConfiguration extends Enableable
  */
 export interface BaseLoginRequest extends BaseEventRequest {
   applicationId?: UUID;
+  botDetectionScore?: number;
   ipAddress?: string;
   metaData?: MetaData;
   newDevice?: boolean;
@@ -7413,6 +7423,29 @@ export interface ClientCredentialsGrantRequest {
 }
 
 /**
+ * Represents the inbound lambda parameter 'clientRisk' inside the 'context' parameter for MFA Required lambdas.
+ */
+export interface ClientRisk {
+  status?: string;
+}
+
+/**
+ * Flags to enable or disable specific risk signals that contribute to the composite client risk calculation.
+ */
+export interface ClientRiskConfiguration extends Enableable {
+  blocklistedIp?: boolean;
+  botDetected?: boolean;
+  dormantAccount?: boolean;
+  dormantPassword?: boolean;
+  impossibleTravel?: boolean;
+  recentIdentityChange?: boolean;
+  recentPasswordChange?: boolean;
+  suspiciousUserAgent?: boolean;
+  unrecognizedDevice?: boolean;
+  untrustedDevice?: boolean;
+}
+
+/**
  * @author Trevor Smith
  */
 export interface ConnectorPolicy {
@@ -7550,6 +7583,7 @@ export interface Context {
   application?: Application;
   authenticationThreats?: Array<AuthenticationThreats>;
   authenticationType?: string;
+  clientRisk?: ClientRisk;
   eventInfo?: EventInfo;
   mfaTrust?: Trust;
   policies?: Policies;
@@ -8298,6 +8332,7 @@ export enum EventType {
   UserLoginNewDevice = "user.login.new-device",
   UserLoginSuccess = "user.login.success",
   UserLoginSuspicious = "user.login.suspicious",
+  UserTwoFactorChallenge = "user.two-factor.challenge",
   UserPasswordBreach = "user.password.breach",
   UserPasswordResetSend = "user.password.reset.send",
   UserPasswordResetStart = "user.password.reset.start",
@@ -8317,7 +8352,9 @@ export enum EventType {
   UserUpdateComplete = "user.update.complete",
   Test = "test",
   UserIdentityVerified = "user.identity.verified",
-  UserIdentityUpdate = "user.identity.update"
+  UserIdentityUpdate = "user.identity.update",
+  UserTwoFactorFailedAttempt = "user.two-factor.failed-attempt",
+  UserTwoFactorSuccess = "user.two-factor.success"
 }
 
 /**
@@ -10112,6 +10149,15 @@ export interface IdentityProviderDetails {
 }
 
 /**
+ * Reactor metric with counts of MFA challenges, successes, and failures for a tenant.
+ */
+export interface MFATenantMetric {
+  challengeCount?: number;
+  failedAttemptCount?: number;
+  successCount?: number;
+}
+
+/**
  * This class contains the managed fields that are also put into the database during FusionAuth setup.
  * <p>
  * Internal Note: These fields are also declared in SQL in order to bootstrap the system. These need to stay in sync.
@@ -10263,6 +10309,8 @@ export enum MultiFactorAction {
  * @author Daniel DeGroff
  */
 export enum MultiFactorLoginPolicy {
+  ChallengeOnHighRisk = "ChallengeOnHighRisk",
+  ChallengeOnMediumRisk = "ChallengeOnMediumRisk",
   Disabled = "Disabled",
   Enabled = "Enabled",
   Required = "Required"
@@ -10935,6 +10983,7 @@ export enum ReactorFeatureStatus {
  */
 export interface ReactorMetrics {
   breachedPasswordMetrics?: Record<UUID, BreachedPasswordTenantMetric>;
+  mfaMetrics?: Record<UUID, MFATenantMetric>;
 }
 
 /**
@@ -10975,11 +11024,15 @@ export interface ReactorStatus {
   applicationMultiFactorAuthentication?: ReactorFeatureStatus;
   applicationThemes?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
+  clientRiskConfiguration?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
   dPoP?: ReactorFeatureStatus;
   entityManagement?: ReactorFeatureStatus;
   expiration?: string;
+  imfaWebhooks?: ReactorFeatureStatus;
+  intelligentMFA?: ReactorFeatureStatus;
   ipGeoLocation?: ReactorFeatureStatus;
+  ipReputation?: ReactorFeatureStatus;
   legacyAdapter?: ReactorFeatureStatus;
   licenseAttributes?: Record<string, string>;
   licensed?: boolean;
@@ -10988,6 +11041,7 @@ export interface ReactorStatus {
   tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
   universalApplication?: ReactorFeatureStatus;
+  userAgentReputation?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
   webAuthnPlatformAuthenticators?: ReactorFeatureStatus;
   webAuthnRoamingAuthenticators?: ReactorFeatureStatus;
@@ -11730,6 +11784,7 @@ export interface Tenant {
   accessControlConfiguration?: TenantAccessControlConfiguration;
   baseURL?: string;
   captchaConfiguration?: TenantCaptchaConfiguration;
+  clientRiskConfiguration?: ClientRiskConfiguration;
   configured?: boolean;
   connectorPolicies?: Array<ConnectorPolicy>;
   data?: Record<string, any>;
@@ -11888,6 +11943,7 @@ export interface TenantManagerIdentityProviderTypeConfigurationResponse {
  */
 export interface TenantMultiFactorConfiguration {
   authenticator?: MultiFactorAuthenticatorMethod;
+  debug?: boolean;
   email?: MultiFactorEmailMethod;
   loginPolicy?: MultiFactorLoginPolicy;
   sms?: MultiFactorSMSMethod;
@@ -13281,11 +13337,29 @@ export enum UserState {
 }
 
 /**
+ * Models the User Two Factor Challenge Event. Fired when a two-factor challenge is started (before the user submits a code).
+ */
+export interface UserTwoFactorChallengeEvent extends BaseUserEvent {
+  applicationId?: UUID;
+  clientRisk?: string;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface UserTwoFactorConfiguration {
   methods?: Array<TwoFactorMethod>;
   recoveryCodes?: Array<string>;
+}
+
+/**
+ * Models the User Two Factor Failed Attempt Event. Fired when a user fails a two-factor challenge.
+ */
+export interface UserTwoFactorFailedAttemptEvent extends BaseUserEvent {
+  applicationId?: UUID;
+  clientRisk?: string;
+  messageType?: string;
+  method?: string;
 }
 
 /**
@@ -13304,6 +13378,16 @@ export interface UserTwoFactorMethodAddEvent extends BaseUserEvent {
  */
 export interface UserTwoFactorMethodRemoveEvent extends BaseUserEvent {
   method?: TwoFactorMethod;
+}
+
+/**
+ * Models the User Two Factor Success Event. Fired when a user successfully completes a two-factor challenge.
+ */
+export interface UserTwoFactorSuccessEvent extends BaseUserEvent {
+  applicationId?: UUID;
+  clientRisk?: string;
+  messageType?: string;
+  method?: string;
 }
 
 /**
