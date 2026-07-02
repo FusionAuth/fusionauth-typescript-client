@@ -4544,50 +4544,6 @@ export class FusionAuthClient {
    * Retrieve a user_code that is part of an in-progress Device Authorization Grant.
    * 
    * This API is useful if you want to build your own login workflow to complete a device grant.
-   *
-   * @param {string} client_id The client Id.
-   * @param {string} client_secret The client Id.
-   * @param {string} user_code The end-user verification code.
-   * @returns {Promise<ClientResponse<void>>}
-   */
-  retrieveUserCode(client_id: string, client_secret: string, user_code: string): Promise<ClientResponse<void>> {
-    let body = new URLSearchParams();
-
-    body.append('client_id', client_id);
-    body.append('client_secret', client_secret);
-    body.append('user_code', user_code);
-    return this.startAnonymous<void, void>()
-        .withUri('/oauth2/device/user-code')
-        .withFormData(body)
-        .withMethod("GET")
-        .go();
-  }
-
-  /**
-   * Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-   * 
-   * This API is useful if you want to build your own login workflow to complete a device grant.
-   * 
-   * This request will require an API key.
-   *
-   * @param {string} user_code The end-user verification code.
-   * @returns {Promise<ClientResponse<void>>}
-   */
-  retrieveUserCodeUsingAPIKey(user_code: string): Promise<ClientResponse<void>> {
-    let body = new URLSearchParams();
-
-    body.append('user_code', user_code);
-    return this.startAnonymous<void, void>()
-        .withUri('/oauth2/device/user-code')
-        .withFormData(body)
-        .withMethod("GET")
-        .go();
-  }
-
-  /**
-   * Retrieve a user_code that is part of an in-progress Device Authorization Grant.
-   * 
-   * This API is useful if you want to build your own login workflow to complete a device grant.
    * 
    * This request will require an API key.
    *
@@ -5092,6 +5048,26 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches consents with the specified criteria and pagination.
+   *
+   * @param {string} name (Optional) The name of the consent to search for. Supports wildcard search using *.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, name.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @returns {Promise<ClientResponse<ConsentSearchResponse>>}
+   */
+  searchConsentsByParameters(name: string, numberOfResults: number, orderBy: string, startRow: number): Promise<ClientResponse<ConsentSearchResponse>> {
+    return this.start<ConsentSearchResponse, Errors>()
+        .withUri('/api/consent/search')
+        .withParameter('name', name)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Searches email templates with the specified criteria and pagination.
    *
    * @param {EmailTemplateSearchRequest} request The search criteria and pagination information.
@@ -5148,6 +5124,30 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches entity grants with the specified criteria and pagination.
+   *
+   * @param {UUID} entityId (Optional) The entity Id to search for grants on.
+   * @param {string} name (Optional) The name of the entity grant to search for. Supports wildcard search using *.
+   * @param {UUID} userId (Optional) The user Id to search for grants on.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @returns {Promise<ClientResponse<EntityGrantSearchResponse>>}
+   */
+  searchEntityGrantsByParameters(entityId: UUID, name: string, userId: UUID, numberOfResults: number, orderBy: string, startRow: number): Promise<ClientResponse<EntityGrantSearchResponse>> {
+    return this.start<EntityGrantSearchResponse, Errors>()
+        .withUri('/api/entity/grant/search')
+        .withParameter('entityId', entityId)
+        .withParameter('name', name)
+        .withParameter('userId', userId)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Searches the entity types with the specified criteria and pagination.
    *
    * @param {EntityTypeSearchRequest} request The search criteria and pagination information.
@@ -5158,6 +5158,26 @@ export class FusionAuthClient {
         .withUri('/api/entity/type/search')
         .withJSONBody(request)
         .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches entity types with the specified criteria and pagination.
+   *
+   * @param {string} name The name of the entity type to search for. Use * to return all entity types.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: insertInstant, lastUpdateInstant, name.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @returns {Promise<ClientResponse<EntityTypeSearchResponse>>}
+   */
+  searchEntityTypesByParameters(name: string, numberOfResults: number, orderBy: string, startRow: number): Promise<ClientResponse<EntityTypeSearchResponse>> {
+    return this.start<EntityTypeSearchResponse, Errors>()
+        .withUri('/api/entity/type/search')
+        .withParameter('name', name)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withMethod("GET")
         .go();
   }
 
@@ -5218,6 +5238,26 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches IP access control lists with the specified criteria and pagination.
+   *
+   * @param {string} name (Optional) The name of the IP access control list to search for. Supports wildcard search using *.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: id, insertInstant, lastUpdateInstant, name.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @returns {Promise<ClientResponse<IPAccessControlListSearchResponse>>}
+   */
+  searchIPAccessControlListsByParameters(name: string, numberOfResults: number, orderBy: string, startRow: number): Promise<ClientResponse<IPAccessControlListSearchResponse>> {
+    return this.start<IPAccessControlListSearchResponse, Errors>()
+        .withUri('/api/ip-acl/search')
+        .withParameter('name', name)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Searches identity providers with the specified criteria and pagination.
    *
    * @param {IdentityProviderSearchRequest} request The search criteria and pagination information.
@@ -5232,6 +5272,32 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches identity providers with the specified criteria and pagination.
+   *
+   * @param {UUID} applicationId (Optional) The application Id to search for identity providers.
+   * @param {string} name (Optional) The name of the identity provider to search for. Supports wildcard search using *.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: enabled, id, insertInstant, name, type.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @param {UUID} tenantId (Optional) The tenant Id to restrict the results to.
+   * @param {string} type (Optional) The type of identity provider to search for.
+   * @returns {Promise<ClientResponse<IdentityProviderSearchResponse>>}
+   */
+  searchIdentityProvidersByParameters(applicationId: UUID, name: string, numberOfResults: number, orderBy: string, startRow: number, tenantId: UUID, type: string): Promise<ClientResponse<IdentityProviderSearchResponse>> {
+    return this.start<IdentityProviderSearchResponse, Errors>()
+        .withUri('/api/identity-provider/search')
+        .withParameter('applicationId', applicationId)
+        .withParameter('name', name)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withParameter('tenantId', tenantId)
+        .withParameter('type', type)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
    * Searches keys with the specified criteria and pagination.
    *
    * @param {KeySearchRequest} request The search criteria and pagination information.
@@ -5242,6 +5308,30 @@ export class FusionAuthClient {
         .withUri('/api/key/search')
         .withJSONBody(request)
         .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches keys with the specified criteria and pagination.
+   *
+   * @param {string} algorithm (Optional) The algorithm of the key to search for.
+   * @param {string} name (Optional) The name of the key to search for. Supports wildcard search using *.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: algorithm, expiration, id, insertInstant, name, type.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @param {string} type (Optional) The type of key to search for. Supported values: EC, HMAC, OKP, RSA.
+   * @returns {Promise<ClientResponse<KeySearchResponse>>}
+   */
+  searchKeysByParameters(algorithm: string, name: string, numberOfResults: number, orderBy: string, startRow: number, type: string): Promise<ClientResponse<KeySearchResponse>> {
+    return this.start<KeySearchResponse, Errors>()
+        .withUri('/api/key/search')
+        .withParameter('algorithm', algorithm)
+        .withParameter('name', name)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withParameter('type', type)
+        .withMethod("GET")
         .go();
   }
 
@@ -5402,6 +5492,30 @@ export class FusionAuthClient {
         .withUri('/api/webhook/search')
         .withJSONBody(request)
         .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches webhooks with the specified criteria and pagination.
+   *
+   * @param {string} description (Optional) The description of the webhook to search for. Supports wildcard search using *.
+   * @param {number} numberOfResults (Optional) The number of results to return. Defaults to 25.
+   * @param {string} orderBy (Optional) The field to order the results by. Supported values: description, id, insertInstant, url.
+   * @param {number} startRow (Optional) The offset into the total results. Defaults to 0.
+   * @param {UUID} tenantId (Optional) The tenant Id to restrict the results to.
+   * @param {string} url (Optional) The URL of the webhook to search for. Supports wildcard search using *.
+   * @returns {Promise<ClientResponse<WebhookSearchResponse>>}
+   */
+  searchWebhooksByParameters(description: string, numberOfResults: number, orderBy: string, startRow: number, tenantId: UUID, url: string): Promise<ClientResponse<WebhookSearchResponse>> {
+    return this.start<WebhookSearchResponse, Errors>()
+        .withUri('/api/webhook/search')
+        .withParameter('description', description)
+        .withParameter('numberOfResults', numberOfResults)
+        .withParameter('orderBy', orderBy)
+        .withParameter('startRow', startRow)
+        .withParameter('tenantId', tenantId)
+        .withParameter('url', url)
+        .withMethod("GET")
         .go();
   }
 
