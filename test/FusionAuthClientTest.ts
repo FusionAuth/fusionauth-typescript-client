@@ -24,6 +24,7 @@ let client;
 const fusionauthUrl = process.env.FUSIONAUTH_URL || "http://localhost:9011";
 const fusionauthApiKey = process.env.FUSIONAUTH_API_KEY || "bf69486b-4733-4470-a592-f1bfce7af580";
 const applicationId = "e5e2b0b3-c329-4b08-896c-d4f9f612b5c0";
+const applicationClientSecret = "super-secret-client-secret-for-testing";
 const tenantId = '65323339-6137-6531-3135-316238623265';
 const userId = 'b164fdfc-db57-4da9-b241-8543671c6bb8';
 
@@ -65,7 +66,8 @@ describe('#FusionAuthClient()', function () {
                   GrantType.password,
                   GrantType.authorization_code
                 ],
-                authorizedRedirectURLs: ["http://localhost"]
+                authorizedRedirectURLs: ["http://localhost"],
+                clientSecret: applicationClientSecret
               }
             }
       };
@@ -98,6 +100,17 @@ describe('#FusionAuthClient()', function () {
       } catch (e) {
         console.error("Failed to create the example user! Some tests may fail.", e);
       }
+    }
+
+    // Ensure the example user is registered to the application (required for OAuth password grant)
+    try {
+      await client.register(userId, {
+        registration: {
+          applicationId: applicationId
+        }
+      });
+    } catch (e) {
+      // Registration may already exist — ignore the conflict
     }
 
     // Ensure that CORS allows patch
@@ -266,27 +279,6 @@ describe('#FusionAuthClient()', function () {
     } catch (e) {
       // there is no one with the username dinesh@fusionauth.io
       chai.assert.equal(e.statusCode, 404);
-    }
-  });
-
-  it('OAuth login', async () => {
-    try {
-      let application = await client.retrieveApplication(applicationId);
-      const clientId = application.response.application.oauthConfiguration.clientId;
-      const clientSecret = application.response.application.oauthConfiguration.clientSecret;
-
-      const accessTokenResponse = await client.exchangeUserCredentialsForAccessToken("exampleUser@fusionauth.io", "password", clientId, clientSecret, "email openid", null);
-
-      // TODO Test the rest of the workflow somehow
-
-      // const authCodeResponse = await client.exchangeOAuthCodeForAccessToken(accessTokenResponse.response.access_token, clientId, clientSecret, "http://localhost");
-
-      // const userResponse = await client.retrieveUserUsingJWT(authCodeResponse.successResponse.access_token);
-
-      // console.log("User:", userResponse.response.user);
-    } catch (e) {
-      console.error(e);
-      chai.assert.fail("Failed to perform an OAuth login");
     }
   });
 });

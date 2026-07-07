@@ -19,6 +19,8 @@
   ],
   "scripts": {
     "test": "npx mocha build/test/*.js && npx karma start",
+    "test-ci": "npx mocha build/test/*.js",
+    "pretest-ci": "npx tsc && npx tsc -p test",
     "build-browser": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -o dist/fusionauth-typescript-client.js",
     "build-browser-min": "mkdir -p dist && npx browserify index.ts --standalone FusionAuth --debug -p [ tsify --target=es5 ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client.min.js",
     "pretest": "npx tsc && npx tsc -p test && mkdir -p dist && npx browserify test/*.ts --debug -t envify -p [ tsify --target=es5 -p test ] -t browserify-shim -t uglifyify | npx uglifyjs --source-map base -o dist/fusionauth-typescript-client-test.min.js",

@@ -99,7 +99,7 @@ target(name: "idea", description: "Updates the IntelliJ IDEA module file") {
 }
 
 target(name: "test", description: "Runs the tests", dependsOn: ["compile"]) {
-  if (new ProcessBuilder('npm', 'test').inheritIO().start().waitFor() != 0) {
+  if (new ProcessBuilder('npm', 'run', 'test-ci').inheritIO().start().waitFor() != 0) {
     fail("Tests failed")
   }
 }

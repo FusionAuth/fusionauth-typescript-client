@@ -1,0 +1,226 @@
+{
+  "variables": {
+    "adminEmail": "admin@fusionauth.io",
+    "password": "password",
+    "defaultTenantId": "30663132-6464-6665-3032-326466613934",
+    "piedPiperApplicationId": "85a03867-dccf-4882-adde-1a79aeec50df"
+  },
+  "apiKeys": [
+    {
+      "key": "bf69486b-4733-4470-a592-f1bfce7af580",
+      "description": "Standard development API key"
+    }
+  ],
+  "requests": [
+    {
+      "method": "POST",
+      "url": "/api/application/#{piedPiperApplicationId}",
+      "body": {
+        "application": {
+          "name": "Pied Piper",
+          "roles": [
+            {
+              "name": "dev"
+            },
+            {
+              "name": "ceo"
+            },
+            {
+              "name": "intern"
+            }
+          ],
+          "loginConfiguration": {
+            "generateRefreshTokens": true
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000001",
+      "body": {
+        "user": {
+          "birthDate": "1981-06-04",
+          "email": "#{adminEmail}",
+          "firstName": "Erlich",
+          "lastName": "Bachman",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper",
+            "PreviousCompany": "Aviato",
+            "user_type": "iconclast"
+          }
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000001",
+      "body": {
+        "registration": {
+          "applicationId": "#{piedPiperApplicationId}"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000002",
+      "body": {
+        "user": {
+          "email": "jared@fusionauth.io",
+          "firstName": "Jared",
+          "lastName": "Dunn",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-jared.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000003",
+      "body": {
+        "user": {
+          "email": "nelson@fusionauth.io",
+          "firstName": "Nelson",
+          "lastName": "Bighetti",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-big-head.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000004",
+      "body": {
+        "user": {
+          "email": "dinesh@fusionauth.io",
+          "firstName": "Dinish",
+          "lastName": "Chugtai",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-dinesh.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000005",
+      "body": {
+        "user": {
+          "email": "gilfoyle@fusionauth.io",
+          "firstName": "Bertram",
+          "lastName": "Gilfoyle",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-gilfoyle.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000006",
+      "body": {
+        "user": {
+          "email": "richard@fusionauth.io",
+          "firstName": "Richard",
+          "lastName": "Hendricks",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-richard.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000007",
+      "body": {
+        "user": {
+          "email": "monica@fusionauth.io",
+          "firstName": "Monica",
+          "lastName": "Hall",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-monica.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "url": "/api/user/registration/00000000-0000-0000-0000-000000000008",
+      "body": {
+        "user": {
+          "email": "jian@fusionauth.io",
+          "firstName": "Jìan",
+          "lastName": "Yáng",
+          "password": "#{password}",
+          "data": {
+            "Company": "PiedPiper"
+          },
+          "imageUrl": "https://local.fusionauth.io/images/doc-profile-pictures/photo-jian-yang.png"
+        },
+        "registration": {
+          "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
+          "roles": [
+            "admin"
+          ]
+        }
+      }
+    }
+  ]
+}
