@@ -7264,6 +7264,13 @@ export interface BaseElasticSearchCriteria extends BaseSearchCriteria {
 }
 
 /**
+ * Base class for all {@link Entity}-related events.
+ */
+export interface BaseEntityEvent extends BaseEvent {
+  entity?: Entity;
+}
+
+/**
  * Base class for all FusionAuth events.
  *
  * @author Brian Pontarelli
@@ -8059,6 +8066,36 @@ export interface Entity {
 }
 
 /**
+ * Models the Entity Create Complete Event.
+ * <p>
+ * This is different than the entity.create event in that it will be sent after the entity has been created. This event cannot be made
+ * transactional.
+ */
+export interface EntityCreateCompleteEvent extends BaseEntityEvent {
+}
+
+/**
+ * Models the Entity Create Event.
+ */
+export interface EntityCreateEvent extends BaseEntityEvent {
+}
+
+/**
+ * Models the Entity Delete Complete Event.
+ * <p>
+ * This is different than the entity.delete event in that it will be sent after the entity has been deleted. This event cannot be made
+ * transactional.
+ */
+export interface EntityDeleteCompleteEvent extends BaseEntityEvent {
+}
+
+/**
+ * Models the Entity Delete Event.
+ */
+export interface EntityDeleteEvent extends BaseEntityEvent {
+}
+
+/**
  * A grant for an entity to a user or another entity.
  *
  * @author Brian Pontarelli
@@ -8254,6 +8291,23 @@ export interface EntityTypeSearchRequest {
 export interface EntityTypeSearchResponse {
   entityTypes?: Array<EntityType>;
   total?: number;
+}
+
+/**
+ * Models the Entity Update Complete Event.
+ * <p>
+ * This is different than the entity.update event in that it will be sent after the entity has been updated. This event cannot be made
+ * transactional.
+ */
+export interface EntityUpdateCompleteEvent extends BaseEntityEvent {
+  original?: Entity;
+}
+
+/**
+ * Models the Entity Update Event.
+ */
+export interface EntityUpdateEvent extends BaseEntityEvent {
+  original?: Entity;
 }
 
 /**
@@ -8468,7 +8522,13 @@ export enum EventType {
   UserIdentityVerified = "user.identity.verified",
   UserIdentityUpdate = "user.identity.update",
   UserTwoFactorFailedAttempt = "user.two-factor.failed-attempt",
-  UserTwoFactorSuccess = "user.two-factor.success"
+  UserTwoFactorSuccess = "user.two-factor.success",
+  EntityCreate = "entity.create",
+  EntityCreateComplete = "entity.create.complete",
+  EntityDelete = "entity.delete",
+  EntityDeleteComplete = "entity.delete.complete",
+  EntityUpdate = "entity.update",
+  EntityUpdateComplete = "entity.update.complete"
 }
 
 /**
