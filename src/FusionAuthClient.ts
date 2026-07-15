@@ -10781,6 +10781,7 @@ export enum ObjectState {
  */
 export interface OpenIdConfiguration {
   authorization_endpoint?: string;
+  authorization_response_iss_parameter_supported?: boolean;
   backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
   code_challenge_methods_supported?: Array<string>;
