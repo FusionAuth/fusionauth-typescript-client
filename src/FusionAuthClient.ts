@@ -10857,6 +10857,14 @@ export interface PasswordEncryptionConfiguration {
 }
 
 /**
+ * Indicates whether a password is plaintext or hashed
+ */
+export enum PasswordType {
+  PLAINTEXT = "PLAINTEXT",
+  HASHED = "HASHED"
+}
+
+/**
  * @author Derek Klatt
  */
 export interface PasswordValidationRules {
@@ -13463,6 +13471,7 @@ export interface UserRequest extends BaseEventRequest {
   applicationId?: UUID;
   currentPassword?: string;
   disableDomainBlock?: boolean;
+  passwordFieldType?: PasswordType;
   sendSetPasswordEmail?: boolean;
   sendSetPasswordIdentityType?: SendSetPasswordIdentityType;
   skipVerification?: boolean;
