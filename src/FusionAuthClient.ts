@@ -6809,6 +6809,7 @@ export interface SAMLv2Configuration extends Enableable {
   logout?: SAMLv2Logout;
   logoutURL?: string;
   requireSignedRequests?: boolean;
+  verificationKeyIds?: Array<UUID>;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
   xmlSignatureLocation?: XMLSignatureLocation;
 }
@@ -6833,6 +6834,7 @@ export interface SAMLv2Logout {
   keyId?: UUID;
   requireSignedRequests?: boolean;
   singleLogout?: SAMLv2SingleLogout;
+  verificationKeyIds?: Array<UUID>;
   xmlSignatureC14nMethod?: CanonicalizationMethod;
 }
 
@@ -7375,6 +7377,7 @@ export interface BaseSAMLv2IdentityProvider<D extends BaseIdentityProviderApplic
   uniqueIdClaim?: string;
   useNameIdForEmail?: boolean;
   usernameClaim?: string;
+  verificationKeyIds?: Array<UUID>;
 }
 
 /**
@@ -8226,6 +8229,7 @@ export interface EntityType {
  */
 export interface EntityJWTConfiguration extends Enableable {
   accessTokenKeyId?: UUID;
+  accessTokenVerificationKeyIds?: Array<UUID>;
   timeToLiveInSeconds?: number;
 }
 
@@ -8626,6 +8630,7 @@ export interface ExternalJWTIdentityProvider extends BaseIdentityProvider<Extern
   headerKeyParameter?: string;
   oauth2?: IdentityProviderOauth2Configuration;
   uniqueIdentityClaim?: string;
+  verificationKeyIds?: Array<UUID>;
 }
 
 /**
@@ -9745,7 +9750,9 @@ export interface JWT {
  */
 export interface JWTConfiguration extends Enableable {
   accessTokenKeyId?: UUID;
+  accessTokenVerificationKeyIds?: Array<UUID>;
   idTokenKeyId?: UUID;
+  idTokenVerificationKeyIds?: Array<UUID>;
   refreshTokenExpirationPolicy?: RefreshTokenExpirationPolicy;
   refreshTokenOneTimeUseConfiguration?: RefreshTokenOneTimeUseConfiguration;
   refreshTokenRevocationPolicy?: RefreshTokenRevocationPolicy;
@@ -9954,7 +9961,8 @@ export interface KeySearchResponse {
 export enum KeyUse {
   SignOnly = "SignOnly",
   SignAndVerify = "SignAndVerify",
-  VerifyOnly = "VerifyOnly"
+  VerifyOnly = "VerifyOnly",
+  None = "None"
 }
 
 /**
