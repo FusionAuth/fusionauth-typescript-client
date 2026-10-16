@@ -6591,6 +6591,7 @@ export interface AccessToken {
   access_token?: string;
   expires_in?: number;
   id_token?: string;
+  issued_token_type?: string;
   refresh_token?: string;
   refresh_token_id?: UUID;
   scope?: string;
@@ -8056,6 +8057,7 @@ export interface Enableable {
  * @author Brian Pontarelli
  */
 export interface Entity {
+  actAsTokenExchangeClient?: boolean;
   clientId?: string;
   clientSecret?: string;
   data?: Record<string, any>;
@@ -8532,7 +8534,9 @@ export enum EventType {
   EntityDelete = "entity.delete",
   EntityDeleteComplete = "entity.delete.complete",
   EntityUpdate = "entity.update",
-  EntityUpdateComplete = "entity.update.complete"
+  EntityUpdateComplete = "entity.update.complete",
+  TokenExchange = "token.exchange",
+  TokenExchangeComplete = "token.exchange.complete"
 }
 
 /**
@@ -9033,6 +9037,7 @@ export enum GrantType {
   implicit = "implicit",
   password = "password",
   client_credentials = "client_credentials",
+  token_exchange = "urn:ietf:params:oauth:grant-type:token-exchange",
   refresh_token = "refresh_token",
   unknown = "unknown",
   device_code = "urn:ietf:params:oauth:grant-type:device_code"
@@ -10108,7 +10113,9 @@ export enum LambdaType {
   SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
   UserInfoPopulate = "UserInfoPopulate",
   LoginValidation = "LoginValidation",
-  MFARequirement = "MFARequirement"
+  MFARequirement = "MFARequirement",
+  TokenExchangePolicy = "TokenExchangePolicy",
+  TokenExchangePopulate = "TokenExchangePopulate"
 }
 
 /**
@@ -10665,6 +10672,7 @@ export enum OAuthErrorReason {
   invalid_entity_permission_scope = "invalid_entity_permission_scope",
   invalid_user_id = "invalid_user_id",
   invalid_tenant_id = "invalid_tenant_id",
+  resource_parameter_not_supported = "resource_parameter_not_supported",
   grant_type_disabled = "grant_type_disabled",
   missing_client_id = "missing_client_id",
   missing_client_secret = "missing_client_secret",
@@ -10706,7 +10714,15 @@ export enum OAuthErrorReason {
   registration_missing_requirement = "registration_missing_requirement",
   registration_required = "registration_required",
   registration_verification_required = "registration_verification_required",
-  consent_required = "consent_required"
+  consent_required = "consent_required",
+  audience_required = "audience_required",
+  invalid_audience = "invalid_audience",
+  invalid_intent = "invalid_intent",
+  invalid_jwt = "invalid_jwt",
+  invalid_scope = "invalid_scope",
+  invalid_state = "invalid_state",
+  invalid_resource = "invalid_resource",
+  lambda_denied = "lambda_denied"
 }
 
 export enum OAuthErrorType {
@@ -11237,6 +11253,7 @@ export interface ReactorStatus {
   scimServer?: ReactorFeatureStatus;
   tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  tokenExchange?: ReactorFeatureStatus;
   universalApplication?: ReactorFeatureStatus;
   userAgentReputation?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
@@ -11885,6 +11902,16 @@ export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplica
 }
 
 /**
+ * How much confidence we have in the validation of the subject token that was presented. These values are specified by the ARC and are
+ * stored by name, so they may not be renamed without a migration.
+ */
+export enum SubjectTokenValidationStatus {
+  AUTHORITATIVE = "AUTHORITATIVE",
+  BEST_EFFORT = "BEST_EFFORT",
+  FAILED = "FAILED"
+}
+
+/**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
  * @author Brian Pontarelli
@@ -11904,6 +11931,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  tokenExchangeAuditLogConfiguration?: TokenExchangeAuditLogConfiguration;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
   usageDataConfiguration?: UsageDataConfiguration;
@@ -12014,6 +12042,7 @@ export interface Tenant {
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
+  tokenExchangeConfiguration?: TenantTokenExchangeConfiguration;
   userDeletePolicy?: TenantUserDeletePolicy;
   usernameConfiguration?: TenantUsernameConfiguration;
   webAuthnConfiguration?: TenantWebAuthnConfiguration;
@@ -12279,6 +12308,18 @@ export interface TenantSearchResponse {
 }
 
 /**
+ * Tenant level configuration for RFC 8693 token exchange.
+ */
+export interface TenantTokenExchangeConfiguration extends Enableable {
+  allowedIssuers?: Array<string>;
+  debug?: boolean;
+  maxClaimDepth?: number;
+  policyEngine?: TokenExchangePolicyEngine;
+  policyEngineLambdaId?: UUID;
+  populateLambdaId?: UUID;
+}
+
+/**
  * @author Daniel DeGroff
  */
 export interface TenantUnverifiedConfiguration {
@@ -12482,6 +12523,175 @@ export enum ThemeType {
 export interface TimeBasedDeletePolicy extends Enableable {
   enabledInstant?: number;
   numberOfDaysToRetain?: number;
+}
+
+/**
+ * An audit record for a single token exchange attempt. Exactly one of these is written for every attempt, whether it succeeded or failed,
+ * so this is the authoritative record of who exchanged what for what.
+ */
+export interface TokenExchangeAuditLog {
+  actChain?: string;
+  delegationSemantics?: TokenExchangeDelegationSemantics;
+  eventId?: UUID;
+  exchangerClientId?: UUID;
+  grantedAudience?: string;
+  grantedScope?: string;
+  insertInstant?: number;
+  intent?: string;
+  issuedTokenJti?: string;
+  outcome?: TokenExchangeOutcome;
+  policyDecision?: TokenExchangePolicyDecision;
+  policyDecisionDurationMs?: number;
+  policyEngine?: TokenExchangePolicyEngine;
+  requestedAudience?: string;
+  subjectTokenIss?: string;
+  subjectTokenJti?: string;
+  subjectTokenSub?: string;
+  subjectTokenType?: string;
+  subjectTokenValidationStatus?: SubjectTokenValidationStatus;
+  tenantId?: UUID;
+}
+
+/**
+ * Token exchange audit log chain response.
+ */
+export interface TokenExchangeAuditLogChainResponse {
+  tokenExchangeAuditLogs?: Array<TokenExchangeAuditLog>;
+}
+
+/**
+ * The system configuration for token exchange audit log data.
+ * <p>
+ * Deleting these entries is mandatory, so this configuration intentionally has no enabled flag. Token exchange volume can be high enough
+ * that retaining entries indefinitely would grow the database without bound. Longer retention is served by ingesting the token exchange
+ * webhooks into external storage.
+ */
+export interface TokenExchangeAuditLogConfiguration {
+  numberOfDaysToRetain?: number;
+}
+
+/**
+ * Search criteria for the token exchange audit log. Filterable on exactly {@code tenantId}, {@code exchangerClientId}, {@code outcome},
+ * and an exchange instant range — no other fields, per the ARC decision to limit the index count on this table.
+ */
+export interface TokenExchangeAuditLogSearchCriteria extends BaseSearchCriteria {
+  end?: number;
+  exchangerClientId?: UUID;
+  outcome?: TokenExchangeOutcome;
+  start?: number;
+  tenantId?: UUID;
+}
+
+/**
+ * Token exchange audit log search request.
+ */
+export interface TokenExchangeAuditLogSearchRequest {
+  search?: TokenExchangeAuditLogSearchCriteria;
+}
+
+/**
+ * Token exchange audit log search response.
+ */
+export interface TokenExchangeAuditLogSearchResponse {
+  tokenExchangeAuditLogs?: Array<TokenExchangeAuditLog>;
+  total?: number;
+}
+
+/**
+ * Models the Token Exchange Complete event. This is a non-transactional variant of the token.exchange event.
+ * Delivery failure does not block or fail the token exchange request.
+ */
+export interface TokenExchangeCompleteEvent extends TokenExchangeEvent {
+}
+
+/**
+ * The delegation semantics applied to the issued token. These are RFC 8693 terms.
+ * FusionAuth does not support token exchange impersonation.
+ */
+export enum TokenExchangeDelegationSemantics {
+  DELEGATION = "DELEGATION",
+  IMPERSONATION = "IMPERSONATION"
+}
+
+/**
+ * Models the Token Exchange event. This event fires for every token exchange attempt (success and failure).
+ *
+ * @author FusionAuth
+ */
+export interface TokenExchangeEvent extends BaseEvent {
+  actChain?: any;
+  exchangerClientId?: UUID;
+  intent?: string;
+  issuedToken?: IssuedTokenInfo;
+  outcome?: TokenExchangeOutcome;
+  policy?: PolicyInfo;
+  requestedAudience?: Array<string>;
+  subjectToken?: SubjectTokenInfo;
+}
+
+/**
+ * Nested structure for issued token information in the webhook payload.
+ */
+export interface IssuedTokenInfo {
+  delegationSemantics?: TokenExchangeDelegationSemantics;
+  grantedAudience?: Array<string>;
+  grantedScope?: string;
+  jti?: string;
+}
+
+/**
+ * Nested structure for policy evaluation information in the webhook payload.
+ */
+export interface PolicyInfo {
+  decision?: TokenExchangePolicyDecision;
+  decisionDurationMs?: number;
+  engine?: TokenExchangePolicyEngine;
+}
+
+/**
+ * Nested structure for subject token information in the webhook payload.
+ */
+export interface SubjectTokenInfo {
+  iss?: string;
+  jti?: string;
+  sub?: string;
+  type?: string;
+  validationStatus?: SubjectTokenValidationStatus;
+}
+
+/**
+ * The terminal outcome of a token exchange attempt. Every failure stage gets a distinct value so a denial can be attributed to the stage
+ * that rejected it.
+ */
+export enum TokenExchangeOutcome {
+  CLIENT_AUTHENTICATION_FAILED = "CLIENT_AUTHENTICATION_FAILED",
+  CLIENT_DISALLOWED = "CLIENT_DISALLOWED",
+  CLIENT_REQUEST_FAILURE = "CLIENT_REQUEST_FAILURE",
+  DEPTH_EXCEEDED = "DEPTH_EXCEEDED",
+  POLICY_DENIED = "POLICY_DENIED",
+  POLICY_LAMBDA_ERROR = "POLICY_LAMBDA_ERROR",
+  POPULATE_LAMBDA_ERROR = "POPULATE_LAMBDA_ERROR",
+  SUBJECT_TOKEN_INVALID = "SUBJECT_TOKEN_INVALID",
+  SUCCESS = "SUCCESS",
+  TENANT_DISALLOWED = "TENANT_DISALLOWED",
+  WEBHOOK_FAILURE = "WEBHOOK_FAILURE"
+}
+
+/**
+ * The decision returned by the policy engine.
+ */
+export enum TokenExchangePolicyDecision {
+  ALLOW = "ALLOW",
+  DENY = "DENY",
+  ERROR = "ERROR"
+}
+
+/**
+ * The policy engine used to authorize an RFC 8693 token exchange request.
+ */
+export enum TokenExchangePolicyEngine {
+  ENTITY = "ENTITY",
+  LAMBDA = "LAMBDA"
 }
 
 /**
