@@ -11237,6 +11237,7 @@ export interface ReactorStatus {
   applicationMultiFactorAuthentication?: ReactorFeatureStatus;
   applicationThemes?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
+  cimd?: ReactorFeatureStatus;
   clientRiskConfiguration?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
   dPoP?: ReactorFeatureStatus;
