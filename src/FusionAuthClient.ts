@@ -599,6 +599,42 @@ export class FusionAuthClient {
   }
 
   /**
+   * Creates a CIMD domain. You can optionally provide an Id for the CIMD domain, if not provided one will be generated.
+   *
+   * @param {UUID} domainId (Optional) The Id to use for the CIMD domain. If not provided a secure random UUID will be generated.
+   * @param {CimdDomainRequest} request The request object that contains all the information used to create the CIMD domain.
+   * @returns {Promise<ClientResponse<CimdDomainResponse>>}
+   */
+  createCimdDomain(domainId: UUID, request: CimdDomainRequest): Promise<ClientResponse<CimdDomainResponse>> {
+    return this.start<CimdDomainResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Creates a new custom OAuth scope for a CIMD Domain. You must specify the Id of the CIMD domain you are creating the scope for.
+   * You can optionally specify an Id for the OAuth scope on the URL, if not provided one will be generated.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain to create the OAuth scope on.
+   * @param {UUID} scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
+   * @param {CimdDomainOAuthScopeRequest} request The request object that contains all the information used to create the OAuth scope.
+   * @returns {Promise<ClientResponse<CimdDomainOAuthScopeResponse>>}
+   */
+  createCimdDomainOAuthScope(domainId: UUID, scopeId: UUID, request: CimdDomainOAuthScopeRequest): Promise<ClientResponse<CimdDomainOAuthScopeResponse>> {
+    return this.start<CimdDomainOAuthScopeResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Creates a connector.  You can optionally specify an Id for the connector, if not provided one will be generated.
    *
    * @param {UUID} connectorId (Optional) The Id for the connector. If not provided a secure random UUID will be generated.
@@ -863,7 +899,7 @@ export class FusionAuthClient {
    *
    * @param {UUID} applicationId The Id of the application to create the OAuth scope on.
    * @param {UUID} scopeId (Optional) The Id of the OAuth scope. If not provided a secure random UUID will be generated.
-   * @param {ApplicationOAuthScopeRequest} request The request object that contains all the information used to create the OAuth OAuth scope.
+   * @param {ApplicationOAuthScopeRequest} request The request object that contains all the information used to create the OAuth scope.
    * @returns {Promise<ClientResponse<ApplicationOAuthScopeResponse>>}
    */
   createOAuthScope(applicationId: UUID, scopeId: UUID, request: ApplicationOAuthScopeRequest): Promise<ClientResponse<ApplicationOAuthScopeResponse>> {
@@ -1155,6 +1191,52 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withUriSegment("role")
         .withUriSegment(roleId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the CIMD client registration for the given Id, along with its refresh tokens.
+   *
+   * @param {UUID} registrationId The Id of the CIMD client registration to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteCimdClientRegistration(registrationId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/cimd/registration')
+        .withUriSegment(registrationId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Deletes the CIMD domain for the given Id.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteCimdDomain(domainId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withMethod("DELETE")
+        .go();
+  }
+
+  /**
+   * Hard deletes a custom OAuth scope for a CIMD Domain.
+   * OAuth workflows that are still requesting the deleted OAuth scope may fail depending on the CIMD domain's unknown scope policy.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to delete.
+   * @returns {Promise<ClientResponse<void>>}
+   */
+  deleteCimdDomainOAuthScope(domainId: UUID, scopeId: UUID): Promise<ClientResponse<void>> {
+    return this.start<void, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
         .withMethod("DELETE")
         .go();
   }
@@ -2586,6 +2668,41 @@ export class FusionAuthClient {
   }
 
   /**
+   * Updates, via PATCH, the CIMD domain with the given Id.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain to update.
+   * @param {CimdDomainRequest} request The request that contains just the new CIMD domain information.
+   * @returns {Promise<ClientResponse<CimdDomainResponse>>}
+   */
+  patchCimdDomain(domainId: UUID, request: CimdDomainRequest): Promise<ClientResponse<CimdDomainResponse>> {
+    return this.start<CimdDomainResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
+   * Updates, via PATCH, the custom OAuth scope with the given Id for the CIMD domain.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to update.
+   * @param {CimdDomainOAuthScopeRequest} request The request that contains just the new OAuth scope information.
+   * @returns {Promise<ClientResponse<CimdDomainOAuthScopeResponse>>}
+   */
+  patchCimdDomainOAuthScope(domainId: UUID, scopeId: UUID, request: CimdDomainOAuthScopeRequest): Promise<ClientResponse<CimdDomainOAuthScopeResponse>> {
+    return this.start<CimdDomainOAuthScopeResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
+        .withJSONBody(request)
+        .withMethod("PATCH")
+        .go();
+  }
+
+  /**
    * Updates, via PATCH, the connector with the given Id.
    *
    * @param {UUID} connectorId The Id of the connector to update.
@@ -3329,6 +3446,63 @@ export class FusionAuthClient {
     return this.start<AuditLogResponse, Errors>()
         .withUri('/api/system/audit-log')
         .withUriSegment(auditLogId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the CIMD client registration for the given Id.
+   *
+   * @param {UUID} registrationId The Id of the CIMD client registration.
+   * @returns {Promise<ClientResponse<CimdClientRegistrationResponse>>}
+   */
+  retrieveCimdClientRegistration(registrationId: UUID): Promise<ClientResponse<CimdClientRegistrationResponse>> {
+    return this.start<CimdClientRegistrationResponse, Errors>()
+        .withUri('/api/cimd/registration')
+        .withUriSegment(registrationId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves the CIMD domain for the given Id.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain.
+   * @returns {Promise<ClientResponse<CimdDomainResponse>>}
+   */
+  retrieveCimdDomain(domainId: UUID): Promise<ClientResponse<CimdDomainResponse>> {
+    return this.start<CimdDomainResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves a custom OAuth scope for a CIMD Domain.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to retrieve.
+   * @returns {Promise<ClientResponse<CimdDomainOAuthScopeResponse>>}
+   */
+  retrieveCimdDomainOAuthScope(domainId: UUID, scopeId: UUID): Promise<ClientResponse<CimdDomainOAuthScopeResponse>> {
+    return this.start<CimdDomainOAuthScopeResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
+        .withMethod("GET")
+        .go();
+  }
+
+  /**
+   * Retrieves all the CIMD domains for the tenant in context.
+   *
+   * @returns {Promise<ClientResponse<CimdDomainResponse>>}
+   */
+  retrieveCimdDomains(): Promise<ClientResponse<CimdDomainResponse>> {
+    return this.start<CimdDomainResponse, Errors>()
+        .withUri('/api/cimd/domain')
         .withMethod("GET")
         .go();
   }
@@ -5034,6 +5208,34 @@ export class FusionAuthClient {
   }
 
   /**
+   * Searches the CIMD client registrations with the specified criteria and pagination.
+   *
+   * @param {CimdClientRegistrationSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<CimdClientRegistrationSearchResponse>>}
+   */
+  searchCimdClientRegistrations(request: CimdClientRegistrationSearchRequest): Promise<ClientResponse<CimdClientRegistrationSearchResponse>> {
+    return this.start<CimdClientRegistrationSearchResponse, Errors>()
+        .withUri('/api/cimd/registration/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
+   * Searches the CIMD domains with the specified criteria and pagination.
+   *
+   * @param {CimdDomainSearchRequest} request The search criteria and pagination information.
+   * @returns {Promise<ClientResponse<CimdDomainSearchResponse>>}
+   */
+  searchCimdDomains(request: CimdDomainSearchRequest): Promise<ClientResponse<CimdDomainSearchResponse>> {
+    return this.start<CimdDomainSearchResponse, Errors>()
+        .withUri('/api/cimd/domain/search')
+        .withJSONBody(request)
+        .withMethod("POST")
+        .go();
+  }
+
+  /**
    * Searches consents with the specified criteria and pagination.
    *
    * @param {ConsentSearchRequest} request The search criteria and pagination information.
@@ -5807,6 +6009,41 @@ export class FusionAuthClient {
         .withUriSegment(applicationId)
         .withUriSegment("role")
         .withUriSegment(roleId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the CIMD domain with the given Id.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain to update.
+   * @param {CimdDomainRequest} request The request that contains all the new CIMD domain information.
+   * @returns {Promise<ClientResponse<CimdDomainResponse>>}
+   */
+  updateCimdDomain(domainId: UUID, request: CimdDomainRequest): Promise<ClientResponse<CimdDomainResponse>> {
+    return this.start<CimdDomainResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withJSONBody(request)
+        .withMethod("PUT")
+        .go();
+  }
+
+  /**
+   * Updates the OAuth scope with the given Id for the CIMD domain.
+   *
+   * @param {UUID} domainId The Id of the CIMD domain that the OAuth scope belongs to.
+   * @param {UUID} scopeId The Id of the OAuth scope to update.
+   * @param {CimdDomainOAuthScopeRequest} request The request that contains all the new OAuth scope information.
+   * @returns {Promise<ClientResponse<CimdDomainOAuthScopeResponse>>}
+   */
+  updateCimdDomainOAuthScope(domainId: UUID, scopeId: UUID, request: CimdDomainOAuthScopeRequest): Promise<ClientResponse<CimdDomainOAuthScopeResponse>> {
+    return this.start<CimdDomainOAuthScopeResponse, Errors>()
+        .withUri('/api/cimd/domain')
+        .withUriSegment(domainId)
+        .withUriSegment("scope")
+        .withUriSegment(scopeId)
         .withJSONBody(request)
         .withMethod("PUT")
         .go();
@@ -6591,6 +6828,7 @@ export interface AccessToken {
   access_token?: string;
   expires_in?: number;
   id_token?: string;
+  issued_token_type?: string;
   refresh_token?: string;
   refresh_token_id?: UUID;
   scope?: string;
@@ -7499,6 +7737,217 @@ export interface ChangePasswordResponse {
 }
 
 /**
+ * A CIMD (Client ID Metadata Document) client registration. Represents one concrete, fetched {@code client_id} URL registered against
+ * a {@link CimdDomain}.
+ */
+export interface CimdClientRegistration {
+  cacheExpirationInstant?: number;
+  cimdDomainId?: UUID;
+  clientIdUrl?: string;
+  clientName?: string;
+  clientUri?: string;
+  data?: Record<string, any>;
+  graceExpirationInstant?: number;
+  id?: UUID;
+  insertInstant?: number;
+  jwtPopulateLambdaId?: UUID;
+  lastUpdateInstant?: number;
+  overridesByResource?: Record<string, CimdClientRegistrationResourceOverride>;
+  redirectUris?: Array<string>;
+  state?: CimdClientRegistrationState;
+  tenantId?: UUID;
+}
+
+/**
+ * The decision returned by a CIMD Client Registration lambda.
+ */
+export enum CimdClientRegistrationDecision {
+  ALLOW = "ALLOW",
+  DENY = "DENY",
+  REVOKE = "REVOKE"
+}
+
+/**
+ * Application configuration overrides for one OAuth resource requested by a CIMD client registration.
+ */
+export interface CimdClientRegistrationResourceOverride {
+  providedScopePolicy?: ProvidedScopePolicy;
+  scopes?: Array<ApplicationOAuthScope>;
+}
+
+/**
+ * CIMD client registration API response object.
+ */
+export interface CimdClientRegistrationResponse {
+  registration?: CimdClientRegistration;
+}
+
+/**
+ * Search criteria for CIMD client registrations.
+ */
+export interface CimdClientRegistrationSearchCriteria extends BaseSearchCriteria {
+  cimdDomainId?: UUID;
+  clientId?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for CIMD client registrations.
+ */
+export interface CimdClientRegistrationSearchRequest {
+  search?: CimdClientRegistrationSearchCriteria;
+}
+
+/**
+ * CIMD client registration search response.
+ */
+export interface CimdClientRegistrationSearchResponse {
+  registrations?: Array<CimdClientRegistration>;
+  total?: number;
+}
+
+/**
+ * The computed lifecycle state of a {@link CimdClientRegistration}. Never persisted; derived at read time from
+ * {@code cacheExpirationInstant} and {@code graceExpirationInstant}.
+ */
+export enum CimdClientRegistrationState {
+  Active = "Active",
+  Grace = "Grace",
+  Expired = "Expired"
+}
+
+/**
+ * A CIMD (Client ID Metadata Document) domain. Represents one trusted {@code client_id} domain (or the wildcard {@code *} for open mode)
+ * within a tenant.
+ */
+export interface CimdDomain {
+  allowLocalhostRedirectUris?: boolean;
+  authorizedResourceUris?: Array<string>;
+  consentMode?: OAuthScopeConsentMode;
+  data?: Record<string, any>;
+  debug?: boolean;
+  domain?: string;
+  gracePeriodInSeconds?: number;
+  id?: UUID;
+  insertInstant?: number;
+  jwtPopulateLambdaId?: UUID;
+  lastUpdateInstant?: number;
+  maxCacheTtlInSeconds?: number;
+  name?: string;
+  providedScopePolicy?: ProvidedScopePolicy;
+  registrationLambdaId?: UUID;
+  scopes?: Array<CimdDomainOAuthScope>;
+  tenantId?: UUID;
+}
+
+/**
+ * A custom OAuth scope for a CIMD domain.
+ */
+export interface CimdDomainOAuthScope {
+  data?: Record<string, any>;
+  defaultConsentDetail?: string;
+  defaultConsentMessage?: string;
+  description?: string;
+  domainId?: UUID;
+  id?: UUID;
+  insertInstant?: number;
+  lastUpdateInstant?: number;
+  name?: string;
+  required?: boolean;
+}
+
+/**
+ * The CIMD domain OAuth scope API request object.
+ */
+export interface CimdDomainOAuthScopeRequest {
+  scope?: CimdDomainOAuthScope;
+}
+
+/**
+ * The CIMD domain OAuth scope API response object.
+ */
+export interface CimdDomainOAuthScopeResponse {
+  scope?: CimdDomainOAuthScope;
+}
+
+/**
+ * CIMD domain API request object.
+ */
+export interface CimdDomainRequest {
+  domain?: CimdDomain;
+}
+
+/**
+ * CIMD domain API response object.
+ */
+export interface CimdDomainResponse {
+  domain?: CimdDomain;
+  domains?: Array<CimdDomain>;
+}
+
+/**
+ * Search criteria for CIMD domains.
+ */
+export interface CimdDomainSearchCriteria extends BaseSearchCriteria {
+  domain?: string;
+  name?: string;
+  tenantId?: UUID;
+}
+
+/**
+ * Search request for CIMD domains.
+ */
+export interface CimdDomainSearchRequest {
+  search?: CimdDomainSearchCriteria;
+}
+
+/**
+ * CIMD domain search response.
+ */
+export interface CimdDomainSearchResponse {
+  domains?: Array<CimdDomain>;
+  total?: number;
+}
+
+/**
+ * Models the CIMD Registration Failed Event.
+ * <p>
+ * This event is fired when a CIMD client registration fails. This event cannot be made transactional.
+ */
+export interface CimdRegistrationFailedEvent extends BaseEvent {
+  cimdDomainId?: UUID;
+  clientId?: string;
+  reason?: CimdRegistrationFailedReason;
+  resource?: string;
+}
+
+/**
+ * Information about why a CIMD client registration failed.
+ */
+export interface CimdRegistrationFailedReason {
+  code?: string;
+}
+
+/**
+ * Reasons why a CIMD client registration failed.
+ */
+export interface CimdRegistrationFailedReasonCode {
+}
+
+/**
+ * Models the CIMD Registration Success Event.
+ * <p>
+ * This event is fired when a CIMD client registration succeeds. This event cannot be made transactional.
+ */
+export interface CimdRegistrationSuccessEvent extends BaseEvent {
+  cimdClientRegistrationId?: UUID;
+  cimdDomainId?: UUID;
+  clientId?: string;
+  clientName?: string;
+  resource?: string;
+}
+
+/**
  * CleanSpeak configuration at the system and application level.
  *
  * @author Brian Pontarelli
@@ -7544,6 +7993,41 @@ export interface ClientCredentialsGrantRequest {
   grant_type?: string;
   scope?: string;
   tenantId?: string;
+}
+
+/**
+ * Represents the inbound lambda parameter 'clientMetadata' for CIMD Client Registration lambdas.
+ */
+export interface ClientMetadata {
+  clientId?: string;
+  clientIdHost?: string;
+  clientIdPath?: string;
+  clientName?: string;
+  clientUri?: string;
+  clientUriHost?: string;
+  clientUriPath?: string;
+  redirectUris?: Array<string>;
+}
+
+/**
+ * Represents the inbound lambda parameter 'context' for CIMD Client Registration lambdas.
+ */
+export interface ClientRegistrationContext {
+  authenticationThreats?: Array<AuthenticationThreats>;
+  eventInfo?: EventInfo;
+  resource?: string;
+}
+
+/**
+ * Represents the outbound parameter 'result' for CIMD Client Registration lambdas. The parameter is pre-populated with defaults from the CIMD Domain
+ * configuration
+ */
+export interface ClientRegistrationLambdaResult {
+  decision?: CimdClientRegistrationDecision;
+  jwtPopulateLambdaId?: UUID;
+  providedScopePolicy?: ProvidedScopePolicy;
+  scopes?: Array<CimdDomainOAuthScope>;
+  ttlInSeconds?: number;
 }
 
 /**
@@ -8056,6 +8540,7 @@ export interface Enableable {
  * @author Brian Pontarelli
  */
 export interface Entity {
+  actAsTokenExchangeClient?: boolean;
   clientId?: string;
   clientSecret?: string;
   data?: Record<string, any>;
@@ -8532,7 +9017,11 @@ export enum EventType {
   EntityDelete = "entity.delete",
   EntityDeleteComplete = "entity.delete.complete",
   EntityUpdate = "entity.update",
-  EntityUpdateComplete = "entity.update.complete"
+  EntityUpdateComplete = "entity.update.complete",
+  TokenExchange = "token.exchange",
+  TokenExchangeComplete = "token.exchange.complete",
+  CimdRegistrationSuccess = "cimd.registration.success",
+  CimdRegistrationFailed = "cimd.registration.failed"
 }
 
 /**
@@ -9033,6 +9522,7 @@ export enum GrantType {
   implicit = "implicit",
   password = "password",
   client_credentials = "client_credentials",
+  token_exchange = "urn:ietf:params:oauth:grant-type:token-exchange",
   refresh_token = "refresh_token",
   unknown = "unknown",
   device_code = "urn:ietf:params:oauth:grant-type:device_code"
@@ -9779,8 +10269,10 @@ export interface JWTPublicKeyUpdateEvent extends BaseEvent {
  */
 export interface JWTRefreshEvent extends BaseEvent {
   applicationId?: UUID;
+  cimdDomainId?: UUID;
   original?: string;
   refreshToken?: string;
+  resources?: Array<string>;
   token?: string;
   userId?: UUID;
 }
@@ -9808,7 +10300,9 @@ export interface JWTRefreshResponse {
 export interface JWTRefreshTokenRevokeEvent extends BaseEvent {
   applicationId?: UUID;
   applicationTimeToLiveInSeconds?: Record<UUID, number>;
+  cimdDomainId?: UUID;
   refreshToken?: RefreshToken;
+  resources?: Array<string>;
   user?: User;
   userId?: UUID;
 }
@@ -10108,7 +10602,10 @@ export enum LambdaType {
   SelfServiceRegistrationValidation = "SelfServiceRegistrationValidation",
   UserInfoPopulate = "UserInfoPopulate",
   LoginValidation = "LoginValidation",
-  MFARequirement = "MFARequirement"
+  MFARequirement = "MFARequirement",
+  TokenExchangePolicy = "TokenExchangePolicy",
+  TokenExchangePopulate = "TokenExchangePopulate",
+  CimdClientRegistration = "CimdClientRegistration"
 }
 
 /**
@@ -10654,6 +11151,7 @@ export enum OAuthErrorReason {
   invalid_pkce_code_challenge_method = "invalid_pkce_code_challenge_method",
   invalid_prompt = "invalid_prompt",
   invalid_redirect_uri = "invalid_redirect_uri",
+  invalid_resource_cardinality = "invalid_resource_cardinality",
   invalid_response_mode = "invalid_response_mode",
   invalid_response_type = "invalid_response_type",
   invalid_id_token_hint = "invalid_id_token_hint",
@@ -10665,6 +11163,7 @@ export enum OAuthErrorReason {
   invalid_entity_permission_scope = "invalid_entity_permission_scope",
   invalid_user_id = "invalid_user_id",
   invalid_tenant_id = "invalid_tenant_id",
+  resource_parameter_not_supported = "resource_parameter_not_supported",
   grant_type_disabled = "grant_type_disabled",
   missing_client_id = "missing_client_id",
   missing_client_secret = "missing_client_secret",
@@ -10706,7 +11205,15 @@ export enum OAuthErrorReason {
   registration_missing_requirement = "registration_missing_requirement",
   registration_required = "registration_required",
   registration_verification_required = "registration_verification_required",
-  consent_required = "consent_required"
+  consent_required = "consent_required",
+  audience_required = "audience_required",
+  invalid_audience = "invalid_audience",
+  invalid_intent = "invalid_intent",
+  invalid_jwt = "invalid_jwt",
+  invalid_scope = "invalid_scope",
+  invalid_state = "invalid_state",
+  invalid_resource = "invalid_resource",
+  lambda_denied = "lambda_denied"
 }
 
 export enum OAuthErrorType {
@@ -10798,6 +11305,7 @@ export interface OpenIdConfiguration {
   authorization_response_iss_parameter_supported?: boolean;
   backchannel_logout_supported?: boolean;
   claims_supported?: Array<string>;
+  client_id_metadata_document_supported?: boolean;
   code_challenge_methods_supported?: Array<string>;
   device_authorization_endpoint?: string;
   dpop_signing_alg_values_supported?: Array<string>;
@@ -10992,6 +11500,44 @@ export interface Policies {
   applicationLoginPolicy?: MultiFactorLoginPolicy;
   applicationMultiFactorTrustPolicy?: ApplicationMultiFactorTrustPolicy;
   tenantLoginPolicy?: MultiFactorLoginPolicy;
+}
+
+/**
+ * Immutable context provided to a Token Exchange Policy Lambda.
+ */
+export interface PolicyLambdaContext {
+  tenantId?: UUID;
+}
+
+/**
+ * Immutable request data provided to a Token Exchange Policy Lambda.
+ */
+export interface PolicyLambdaExchange {
+  clientId?: string;
+  requestedAudiencesAndResources?: Array<string>;
+  requestedScopes?: Array<string>;
+  subjectTokenClaims?: Record<string, any>;
+  subjectTokenValidationStatus?: SubjectTokenValidationStatus;
+}
+
+/**
+ * Mutable decision written by a Token Exchange Policy Lambda.
+ */
+export interface PolicyLambdaResult {
+  decision?: TokenExchangePolicyDecision;
+  denial?: Denial;
+  granted?: Granted;
+}
+
+export interface Denial {
+  error_code?: string;
+  error_description?: string;
+}
+
+export interface Granted {
+  aud?: Array<string>;
+  expires_in?: number;
+  scope?: Array<string>;
 }
 
 /**
@@ -11221,6 +11767,7 @@ export interface ReactorStatus {
   applicationMultiFactorAuthentication?: ReactorFeatureStatus;
   applicationThemes?: ReactorFeatureStatus;
   breachedPasswordDetection?: ReactorFeatureStatus;
+  cimd?: ReactorFeatureStatus;
   clientRiskConfiguration?: ReactorFeatureStatus;
   connectors?: ReactorFeatureStatus;
   dPoP?: ReactorFeatureStatus;
@@ -11237,6 +11784,7 @@ export interface ReactorStatus {
   scimServer?: ReactorFeatureStatus;
   tenantManagerApplication?: ReactorFeatureStatus;
   threatDetection?: ReactorFeatureStatus;
+  tokenExchange?: ReactorFeatureStatus;
   universalApplication?: ReactorFeatureStatus;
   userAgentReputation?: ReactorFeatureStatus;
   webAuthn?: ReactorFeatureStatus;
@@ -11275,6 +11823,7 @@ export interface RefreshResponse {
  */
 export interface RefreshToken {
   applicationId?: UUID;
+  cimdClientRegistrationId?: UUID;
   data?: Record<string, any>;
   id?: UUID;
   insertInstant?: number;
@@ -11885,6 +12434,16 @@ export interface SteamIdentityProvider extends BaseIdentityProvider<SteamApplica
 }
 
 /**
+ * How much confidence we have in the validation of the subject token that was presented. These values are specified by the ARC and are
+ * stored by name, so they may not be renamed without a migration.
+ */
+export enum SubjectTokenValidationStatus {
+  AUTHORITATIVE = "AUTHORITATIVE",
+  BEST_EFFORT = "BEST_EFFORT",
+  FAILED = "FAILED"
+}
+
+/**
  * Helper interface that indicates an identity provider can be federated to using the HTTP POST method.
  *
  * @author Brian Pontarelli
@@ -11904,6 +12463,7 @@ export interface SystemConfiguration {
   lastUpdateInstant?: number;
   loginRecordConfiguration?: LoginRecordConfiguration;
   reportTimezone?: string;
+  tokenExchangeAuditLogConfiguration?: TokenExchangeAuditLogConfiguration;
   trustedProxyConfiguration?: SystemTrustedProxyConfiguration;
   uiConfiguration?: UIConfiguration;
   usageDataConfiguration?: UsageDataConfiguration;
@@ -12014,6 +12574,7 @@ export interface Tenant {
   ssoConfiguration?: TenantSSOConfiguration;
   state?: ObjectState;
   themeId?: UUID;
+  tokenExchangeConfiguration?: TenantTokenExchangeConfiguration;
   userDeletePolicy?: TenantUserDeletePolicy;
   usernameConfiguration?: TenantUsernameConfiguration;
   webAuthnConfiguration?: TenantWebAuthnConfiguration;
@@ -12199,6 +12760,7 @@ export interface TenantPhoneConfiguration {
  * @author Daniel DeGroff
  */
 export interface TenantRateLimitConfiguration {
+  cimdClientRegistration?: RateLimitedRequestConfiguration;
   failedLogin?: RateLimitedRequestConfiguration;
   forgotPassword?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
@@ -12276,6 +12838,18 @@ export interface TenantSearchRequest {
 export interface TenantSearchResponse {
   tenants?: Array<Tenant>;
   total?: number;
+}
+
+/**
+ * Tenant level configuration for RFC 8693 token exchange.
+ */
+export interface TenantTokenExchangeConfiguration extends Enableable {
+  allowedIssuers?: Array<string>;
+  debug?: boolean;
+  maxClaimDepth?: number;
+  policyEngine?: TokenExchangePolicyEngine;
+  policyEngineLambdaId?: UUID;
+  populateLambdaId?: UUID;
 }
 
 /**
@@ -12482,6 +13056,175 @@ export enum ThemeType {
 export interface TimeBasedDeletePolicy extends Enableable {
   enabledInstant?: number;
   numberOfDaysToRetain?: number;
+}
+
+/**
+ * An audit record for a single token exchange attempt. Exactly one of these is written for every attempt, whether it succeeded or failed,
+ * so this is the authoritative record of who exchanged what for what.
+ */
+export interface TokenExchangeAuditLog {
+  actChain?: string;
+  delegationSemantics?: TokenExchangeDelegationSemantics;
+  eventId?: UUID;
+  exchangerClientId?: UUID;
+  grantedAudience?: string;
+  grantedScope?: string;
+  insertInstant?: number;
+  intent?: string;
+  issuedTokenJti?: string;
+  outcome?: TokenExchangeOutcome;
+  policyDecision?: TokenExchangePolicyDecision;
+  policyDecisionDurationMs?: number;
+  policyEngine?: TokenExchangePolicyEngine;
+  requestedAudience?: string;
+  subjectTokenIss?: string;
+  subjectTokenJti?: string;
+  subjectTokenSub?: string;
+  subjectTokenType?: string;
+  subjectTokenValidationStatus?: SubjectTokenValidationStatus;
+  tenantId?: UUID;
+}
+
+/**
+ * Token exchange audit log chain response.
+ */
+export interface TokenExchangeAuditLogChainResponse {
+  tokenExchangeAuditLogs?: Array<TokenExchangeAuditLog>;
+}
+
+/**
+ * The system configuration for token exchange audit log data.
+ * <p>
+ * Deleting these entries is mandatory, so this configuration intentionally has no enabled flag. Token exchange volume can be high enough
+ * that retaining entries indefinitely would grow the database without bound. Longer retention is served by ingesting the token exchange
+ * webhooks into external storage.
+ */
+export interface TokenExchangeAuditLogConfiguration {
+  numberOfDaysToRetain?: number;
+}
+
+/**
+ * Search criteria for the token exchange audit log. Filterable on exactly {@code tenantId}, {@code exchangerClientId}, {@code outcome},
+ * and an exchange instant range — no other fields, per the ARC decision to limit the index count on this table.
+ */
+export interface TokenExchangeAuditLogSearchCriteria extends BaseSearchCriteria {
+  end?: number;
+  exchangerClientId?: UUID;
+  outcome?: TokenExchangeOutcome;
+  start?: number;
+  tenantId?: UUID;
+}
+
+/**
+ * Token exchange audit log search request.
+ */
+export interface TokenExchangeAuditLogSearchRequest {
+  search?: TokenExchangeAuditLogSearchCriteria;
+}
+
+/**
+ * Token exchange audit log search response.
+ */
+export interface TokenExchangeAuditLogSearchResponse {
+  tokenExchangeAuditLogs?: Array<TokenExchangeAuditLog>;
+  total?: number;
+}
+
+/**
+ * Models the Token Exchange Complete event. This is a non-transactional variant of the token.exchange event.
+ * Delivery failure does not block or fail the token exchange request.
+ */
+export interface TokenExchangeCompleteEvent extends TokenExchangeEvent {
+}
+
+/**
+ * The delegation semantics applied to the issued token. These are RFC 8693 terms.
+ * FusionAuth does not support token exchange impersonation.
+ */
+export enum TokenExchangeDelegationSemantics {
+  DELEGATION = "DELEGATION",
+  IMPERSONATION = "IMPERSONATION"
+}
+
+/**
+ * Models the Token Exchange event. This event fires for every token exchange attempt (success and failure).
+ *
+ * @author FusionAuth
+ */
+export interface TokenExchangeEvent extends BaseEvent {
+  actChain?: any;
+  exchangerClientId?: UUID;
+  intent?: string;
+  issuedToken?: IssuedTokenInfo;
+  outcome?: TokenExchangeOutcome;
+  policy?: PolicyInfo;
+  requestedAudience?: Array<string>;
+  subjectToken?: SubjectTokenInfo;
+}
+
+/**
+ * Nested structure for issued token information in the webhook payload.
+ */
+export interface IssuedTokenInfo {
+  delegationSemantics?: TokenExchangeDelegationSemantics;
+  grantedAudience?: Array<string>;
+  grantedScope?: string;
+  jti?: string;
+}
+
+/**
+ * Nested structure for policy evaluation information in the webhook payload.
+ */
+export interface PolicyInfo {
+  decision?: TokenExchangePolicyDecision;
+  decisionDurationMs?: number;
+  engine?: TokenExchangePolicyEngine;
+}
+
+/**
+ * Nested structure for subject token information in the webhook payload.
+ */
+export interface SubjectTokenInfo {
+  iss?: string;
+  jti?: string;
+  sub?: string;
+  type?: string;
+  validationStatus?: SubjectTokenValidationStatus;
+}
+
+/**
+ * The terminal outcome of a token exchange attempt. Every failure stage gets a distinct value so a denial can be attributed to the stage
+ * that rejected it.
+ */
+export enum TokenExchangeOutcome {
+  CLIENT_AUTHENTICATION_FAILED = "CLIENT_AUTHENTICATION_FAILED",
+  CLIENT_DISALLOWED = "CLIENT_DISALLOWED",
+  CLIENT_REQUEST_FAILURE = "CLIENT_REQUEST_FAILURE",
+  DEPTH_EXCEEDED = "DEPTH_EXCEEDED",
+  POLICY_DENIED = "POLICY_DENIED",
+  POLICY_LAMBDA_ERROR = "POLICY_LAMBDA_ERROR",
+  POPULATE_LAMBDA_ERROR = "POPULATE_LAMBDA_ERROR",
+  SUBJECT_TOKEN_INVALID = "SUBJECT_TOKEN_INVALID",
+  SUCCESS = "SUCCESS",
+  TENANT_DISALLOWED = "TENANT_DISALLOWED",
+  WEBHOOK_FAILURE = "WEBHOOK_FAILURE"
+}
+
+/**
+ * The decision returned by the policy engine.
+ */
+export enum TokenExchangePolicyDecision {
+  ALLOW = "ALLOW",
+  DENY = "DENY",
+  ERROR = "ERROR"
+}
+
+/**
+ * The policy engine used to authorize an RFC 8693 token exchange request.
+ */
+export enum TokenExchangePolicyEngine {
+  ENTITY = "ENTITY",
+  LAMBDA = "LAMBDA"
 }
 
 /**
@@ -13252,6 +13995,7 @@ export interface UserIdentityVerifiedEvent extends BaseUserEvent {
 export interface UserLoginFailedEvent extends BaseUserEvent {
   applicationId?: UUID;
   authenticationType?: string;
+  cimdDomainId?: UUID;
   ipAddress?: string;
   reason?: UserLoginFailedReason;
 }
@@ -13310,6 +14054,7 @@ export interface UserLoginNewDeviceEvent extends UserLoginSuccessEvent {
 export interface UserLoginSuccessEvent extends BaseUserEvent {
   applicationId?: UUID;
   authenticationType?: string;
+  cimdDomainId?: UUID;
   connectorId?: UUID;
   identityProviderId?: UUID;
   identityProviderName?: string;
