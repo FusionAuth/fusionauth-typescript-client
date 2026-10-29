@@ -39,6 +39,14 @@ jobs:
           java-version: 21
           java-package: jre
 
+      - name: setup mise
+        uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d # v5.2.4
+        with:
+          version: 2026.10.21
+
+      - name: install dependencies
+        run: mise run install
+
       - name: install savant
         run: |
           curl -O https://repository.savantbuild.org/org/savantbuild/savant-core/2.0.0/savant-2.0.0.tar.gz
@@ -76,13 +84,6 @@ jobs:
             --query SecretString \
             --output text | \
             jq -r 'to_entries[] | [.key, .value] | @tsv')
-
-      - name: setup node for publishing
-        if: inputs.command == 'publish'
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          registry-url: 'https://registry.npmjs.org' # This generates the necessary .npmrc
 
       - name: release to svn
         if: inputs.command == 'release'

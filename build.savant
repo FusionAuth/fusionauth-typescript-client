@@ -1,17 +1,5 @@
 /*
- * Copyright (c) 2019-2025, FusionAuth, All Rights Reserved
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the specific
- * language governing permissions and limitations under the License.
+ * Copyright (c) 2019-2026, FusionAuth, All Rights Reserved
  */
 
 project(group: "io.fusionauth", name: "fusionauth-typescript-client", version: "1.71.0", licenses: ["ApacheV2_0"]) {
@@ -41,30 +29,14 @@ file = loadPlugin(id: "org.savantbuild.plugin:file:2.0.0")
 idea = loadPlugin(id: "org.savantbuild.plugin:idea:2.0.0")
 release = loadPlugin(id: "org.savantbuild.plugin:release-git:2.0.0")
 
-target(name: "init", description: "Initializes the project") {
-  def proc = 'npm ci'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to run npm install")
-  }
-}
-
-target(name: "clean", description: "Cleans build directory", dependsOn: ["init"]) {
+target(name: "clean", description: "Cleans build directory") {
   file.prune(dir: "build")
   file.delete {
     fileSet(dir: ".", includePatterns: [~/.+\.zip/])
   }
 }
 
-target(name: "compile", description: "Builds the js files", dependsOn: ["init"]) {
-  def proc = 'npm ci'.execute()
-  proc.consumeProcessOutput(System.out, System.err)
-  proc.waitFor()
-  if (proc.exitValue() != 0) {
-    fail("Failed to get deps or compile typescript")
-  }
-
+target(name: "compile", description: "Builds the js files") {
   proc = 'npm run build-browser'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
