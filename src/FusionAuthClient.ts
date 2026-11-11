@@ -12763,6 +12763,7 @@ export interface TenantRateLimitConfiguration {
   cimdClientRegistration?: RateLimitedRequestConfiguration;
   failedLogin?: RateLimitedRequestConfiguration;
   forgotPassword?: RateLimitedRequestConfiguration;
+  passwordlessLogin?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
   sendPasswordlessPhone?: RateLimitedRequestConfiguration;
