@@ -12894,6 +12894,7 @@ export enum UniqueUsernameStrategy {
  * @author Spencer Witt
  */
 export interface TenantWebAuthnConfiguration extends Enableable {
+  allowedOrigins?: Array<string>;
   bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
   debug?: boolean;
   reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;
