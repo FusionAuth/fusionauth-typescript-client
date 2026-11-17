@@ -12763,6 +12763,7 @@ export interface TenantRateLimitConfiguration {
   cimdClientRegistration?: RateLimitedRequestConfiguration;
   failedLogin?: RateLimitedRequestConfiguration;
   forgotPassword?: RateLimitedRequestConfiguration;
+  passwordlessLogin?: RateLimitedRequestConfiguration;
   sendEmailVerification?: RateLimitedRequestConfiguration;
   sendPasswordless?: RateLimitedRequestConfiguration;
   sendPasswordlessPhone?: RateLimitedRequestConfiguration;
@@ -12893,6 +12894,7 @@ export enum UniqueUsernameStrategy {
  * @author Spencer Witt
  */
 export interface TenantWebAuthnConfiguration extends Enableable {
+  allowedOrigins?: Array<string>;
   bootstrapWorkflow?: TenantWebAuthnWorkflowConfiguration;
   debug?: boolean;
   reauthenticationWorkflow?: TenantWebAuthnWorkflowConfiguration;

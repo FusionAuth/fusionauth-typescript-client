@@ -1,0 +1,6 @@
+[tools]
+node = "22"
+
+[tasks.install]
+description="Installs dependencies"
+run = "npm ci"
