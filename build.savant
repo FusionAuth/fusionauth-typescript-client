@@ -37,6 +37,13 @@ target(name: "clean", description: "Cleans build directory") {
 }
 
 target(name: "compile", description: "Builds the js files") {
+  def proc = 'npm ci'.execute()
+  proc.consumeProcessOutput(System.out, System.err)
+  proc.waitFor()
+  if (proc.exitValue() != 0) {
+    fail("Failed to get deps or compile typescript")
+  }
+  
   proc = 'npm run build-browser'.execute()
   proc.consumeProcessOutput(System.out, System.err)
   proc.waitFor()
